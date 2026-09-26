@@ -89,6 +89,19 @@ h1{font-family:var(--display);font-weight:700;font-size:2rem;line-height:1.1;mar
 @keyframes arFall{to{top:105%;transform:rotate(720deg)}}
 @media (max-width:480px){.ar-opts{grid-template-columns:1fr}.ar-qs{font-size:1.2rem}.ar-side{min-width:48px;font-size:24px}}
 
+
+#grpOv{position:fixed;inset:0;z-index:10050;display:none;align-items:flex-start;justify-content:center;background:rgba(10,14,30,.6);padding:max(16px,env(safe-area-inset-top)) 12px 16px;overflow:auto;font-family:var(--body)}
+#grpOv.on{display:flex}
+.gr-new{background:var(--soft);border:2px solid var(--ok);border-radius:16px;padding:12px;margin:8px 0;text-align:center}
+.gr-code{font-family:ui-monospace,Menlo,monospace;font-size:1.6rem;font-weight:900;letter-spacing:.08em;margin:6px 0;user-select:all}
+.gr-c{font-family:ui-monospace,Menlo,monospace;color:var(--muted);font-weight:700}
+.gr-btns{margin-left:auto;display:flex;gap:6px}.gr-btns button{margin:0!important}.ar-g button.sec{background:var(--card);color:var(--text);border:1px solid var(--line)}
+.gr-join{display:flex;gap:8px}.gr-join input{flex:1;min-width:0;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--soft);color:var(--text);padding:0 12px;font-size:16px;font-family:ui-monospace,Menlo,monospace;text-transform:uppercase}
+.gr-join button{height:46px;border:0;border-radius:12px;background:var(--W);color:#fff;font-weight:800;padding:0 16px;cursor:pointer}
+.ar-cb{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.ar-go.sec{background:var(--soft);color:var(--text);border:1px solid var(--line)}
+.rk-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}.rk-tabs button{border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:999px;padding:5px 12px;font-weight:800;font-size:.85rem;cursor:pointer}.rk-tabs button.on{background:var(--W);border-color:var(--W);color:#fff}
+@media (max-width:560px){.ar-card{flex-direction:column;align-items:stretch}.ar-cb{justify-content:stretch}.ar-cb .ar-go{flex:1}}
+
 .rank{margin:18px 0 6px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 14px 10px}
 .rank h2{margin:0 0 8px;font-family:var(--display);font-weight:600;font-size:1.25rem}
 .rank table{width:100%;max-width:620px;border-collapse:collapse;font-size:.95rem}
@@ -244,13 +257,13 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   <div class="grid" id="grid"></div>
   <div id="arena"></div>
   <div id="rank"></div>
-  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt.<br><span class="ver">Version 6.3 · 27.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
+  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt.<br><span class="ver">Version 6.4 · 27.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
 </div>
 <script>
 /* ===== Familien-Sync (Supabase) ===== */
 (function(){
   const SB_URL='https://vhmxzlztbpjwfytnyhbv.supabase.co',SB_KEY='sb_publishable_x23BTTRX3UJBmXf0gGhyvQ_osygIIcE';
-  const TRACK=/^(nutzer-alle|lernzentrale-v1|lz-ergebnisse|lernplan-|lzp-|winkelakademie|wasserzauberschule|unit6-progress|detektivbuero|lz-story@|lz-arena-)/;window.__LZSB={url:SB_URL,key:SB_KEY};
+  const TRACK=/^(nutzer-alle|lernzentrale-v1|lz-ergebnisse|lernplan-|lzp-|winkelakademie|wasserzauberschule|unit6-progress|detektivbuero|lz-story@|lz-arena-|lz-groups@)/;window.__LZSB={url:SB_URL,key:SB_KEY};
   const P=Storage.prototype,oSet=P.setItem,oRem=P.removeItem;
   window.__lsSet=(k,v)=>oSet.call(localStorage,k,v);
   const LS=k=>{try{return localStorage.getItem(k);}catch(e){return null;}};
@@ -269,6 +282,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   async function rpc(fn,body){
     const r=await fetch(SB_URL.replace(/\/+$/,'')+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY},body:JSON.stringify(body)});
     if(!r.ok)throw new Error('HTTP '+r.status);const t=await r.text();return t?JSON.parse(t):null;}
+  window.__lzRpc=rpc;
   async function flush(){
     if(!on()||!synced())return;const ks=[...dirty];if(!ks.length)return;dirty.clear();
     const items=ks.map(k=>({k,v:LS(k),ts:TS[k]||Date.now()}));
@@ -281,7 +295,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
     const del=[...new Set([...(A.del||[]),...(B.del||[])])];
     const m=new Map();
     B.list.forEach(u=>{if(u&&u.id)m.set(u.id,u);});
-    A.list.forEach(u=>{if(!u||!u.id)return;const x=m.get(u.id);if(!x||(u.t||0)>(x.t||0))m.set(u.id,u);});
+    A.list.forEach(u=>{if(!u||!u.id)return;const x=m.get(u.id);if(!x||(u.t||0)>(x.t||0))m.set(u.id,u);if(x){const ga=u.gid,gb=x.gid,g=ga&&gb?(ga<gb?ga:gb):(ga||gb);const w=m.get(u.id);if(g&&w.gid!==g)m.set(u.id,Object.assign({},w,{gid:g}));}});
     const order=[...A.list.map(u=>u&&u.id),...B.list.map(u=>u&&u.id)].filter((id,i,a)=>id&&a.indexOf(id)===i);
     const list=order.map(id=>m.get(id)).filter(u=>u&&!del.includes(u.id));
     const n=Math.max(A.n||1,B.n||1);
@@ -328,12 +342,12 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
     const el=document.getElementById('lzcloud'),top=document.getElementById('lzsync');
     if(!/^https:\/\//.test(SB_URL)){if(el)el.textContent='📱 Fortschritt wird auf diesem Gerät gespeichert.';if(top)top.innerHTML='';return;}
     if(!on()){
-      if(el)el.innerHTML='📱 Nur auf diesem Gerät gespeichert · <a href="#" data-fam="1">☁️ Lerngruppe beitreten</a>';
-      if(top&&!top.querySelector('.sync'))top.innerHTML='<div class="sync"><p><b>☁️ Lerngruppe beitreten</b><br>Mit eurem Lerngruppen-Code (mind. 12 Zeichen) sind Personen, Punkte und Noten auf allen Geräten gleich.</p><input id="lzfamin" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Lerngruppen-Code"><button type="button" data-famgo="1">Beitreten</button><div class="nuerr" id="lzfamerr"></div></div>';
+      if(el)el.innerHTML='📱 Nur auf diesem Gerät gespeichert · <a href="#" data-fam="1">Geräte verbinden</a>';
+      if(top&&!top.querySelector('.sync'))top.innerHTML='<div class="sync"><p><b>📱 Eigene Geräte verbinden</b><br>Mit einem Geräte-Code (mind. 12 Zeichen) ist der ganze Lernstand – Personen, Punkte, Noten, Lernpläne – auf iPad und Handy gleich. Nur für die eigenen Geräte, nicht weitergeben.</p><input id="lzfamin" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Geräte-Code"><button type="button" data-famgo="1">Verbinden</button><div class="nuerr" id="lzfamerr"></div></div>';
       return;}
-    const t=err?'⚠️ Gerade keine Verbindung – wird nachgeholt':'☁️ Mit der Lerngruppe synchronisiert'+(last?' ('+hh(new Date(last))+')':'');
-    if(el)el.innerHTML=t+' · <a href="#" data-fam="1">Lerngruppe wechseln</a>';
-    if(top)top.innerHTML='<button type="button" class="syncpill'+(err?' err':'')+'" data-fam="1" title="Lerngruppe wechseln">'+(err?'⚠️ Offline – wird nachgeholt':'☁️ Lerngruppe verbunden'+(last?' · '+hh(new Date(last)):''))+'<span class="syncedit">✏️ Lerngruppe wechseln</span></button>';}
+    const t=err?'⚠️ Gerade keine Verbindung – wird nachgeholt':'📱 Geräte verbunden'+(last?' ('+hh(new Date(last))+')':'');
+    if(el)el.innerHTML=t+' · <a href="#" data-fam="1">Geräte-Code ändern</a>';
+    if(top)top.innerHTML='<button type="button" class="syncpill'+(err?' err':'')+'" data-fam="1" title="Geräte-Code ändern">'+(err?'⚠️ Offline – wird nachgeholt':'📱 Geräte verbunden'+(last?' · '+hh(new Date(last)):''))+'<span class="syncedit">✏️ Geräte-Code ändern</span></button>';}
   function famSet(v){oSet.call(localStorage,'lz-fam',v);oRem.call(localStorage,'lz-synced');const top=document.getElementById('lzsync');if(top)top.innerHTML='';setStat();pull();}
   document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-famgo]');if(!b)return;e.preventDefault();
     const i=document.getElementById('lzfamin'),er=document.getElementById('lzfamerr'),v=(i&&i.value||'').trim();
@@ -341,7 +355,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='lzfamin'){e.preventDefault();const b=document.querySelector('[data-famgo]');if(b)b.click();}});
   window.lzCloudStat=setStat;
   document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('[data-fam]');if(!a)return;e.preventDefault();
-    const c=prompt('Lerngruppen-Code eingeben (mindestens 12 Zeichen).\nAuf allen Geräten derselbe Code:',fam());
+    const c=prompt('Geräte-Code eingeben (mindestens 12 Zeichen).\nNur für die eigenen Geräte – nicht an andere weitergeben.\nAuf allen Geräten derselbe Code:',fam());
     if(c===null)return;const v=c.trim();
     if(!v){oRem.call(localStorage,'lz-fam');oRem.call(localStorage,'lz-synced');const top=document.getElementById('lzsync');if(top)top.innerHTML='';setStat();return;}
     if(v.length<12){alert('Der Code muss mindestens 12 Zeichen lang sein.');return;}
@@ -389,6 +403,7 @@ function loadAll(){lzAdopt();
     JW("nutzer-alle",NU);}
   if(!NU.list.some(u=>u.id===NU.cur))NU.cur=NU.list[0].id;
   if(nuRecover(NU))JW("nutzer-alle",NU);window.__nuLoadCur=NU.cur;
+  if(NU.list.some(u=>!u.gid)&&!(localStorage.getItem("lz-fam")&&localStorage.getItem("lz-synced")!==localStorage.getItem("lz-fam"))){NU.list.forEach(u=>{if(!u.gid){u.gid="p"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);u.t=Date.now();}});JW("nutzer-alle",NU);}
   LPC={};PC={};
   if(!S.mig2){["W","Z","E"].forEach(k=>{const o=S[k]||{};
       if(o.code&&!J(LPK[k],null)){const r=parse(k,o.code);if(!r.err)JW(LPK[k],{n:r.n,done:r.done,today:1,ok:[]});}
@@ -649,16 +664,29 @@ function renderWho(){
   document.getElementById("who").innerHTML=h;
 }
 const RKA=[["W","winkelakademie-v1",3,"📐"],["Z","wasserzauberschule-v1",3,"🪄"],["E","unit6-progress",3,"🐚"],["D","detektivbuero-v1",1,"🕵️"]];
+window.RK_TAB=window.RK_TAB||"";
 function rankHTML(){
-  const L=people().filter(u=>u&&u.id),f=n=>(+n||0).toLocaleString("de-DE");
-  const rows=L.map(u=>{const v=RKA.map(([k,b,r])=>{const o=J(u.id==="u1"?b:b+("@"+u.id).repeat(r),null);return o&&typeof o==="object"?Math.max(0,+o.xp||0):0;});const ar=J("lz-arena-pts@"+u.id,{})||{};return{u,v,t:v.reduce((a,b)=>a+b,0),ar:Math.max(0,+ar.p||0)};});
-  rows.sort((a,b)=>b.t-a.t||a.u.name.localeCompare(b.u.name));
+  const f=n=>(+n||0).toLocaleString("de-DE"),gs=window.lzMyGroups?lzMyGroups():[];if(RK_TAB&&!gs.some(g=>g.code===RK_TAB))RK_TAB="";
+  const tabs=gs.length?`<div class="rk-tabs"><button type="button" class="${RK_TAB?"":"on"}" data-rk="">📱 Dieses Gerät</button>${gs.map(g=>`<button type="button" class="${RK_TAB===g.code?"on":""}" data-rk="${esc(g.code)}">👥 ${esc(g.name)}</button>`).join("")}</div>`:"";
+  let rows,myId,note="";
+  if(!RK_TAB){const L=people().filter(u=>u&&u.id);myId=NU.cur;
+    rows=L.map(u=>{const v=RKA.map(([k,b,r])=>{const o=J(u.id==="u1"?b:b+("@"+u.id).repeat(r),null);return o&&typeof o==="object"?Math.max(0,+o.xp||0):0;});const ar=J("lz-arena-pts@"+u.id,{})||{};return{id:u.id,e:u.icon,name:u.name,v,ar:Math.max(0,+ar.p||0)};});
+    if(L.length<2)note=" Leg weitere Personen an oder tritt einer Lerngruppe bei, um gegeneinander anzutreten.";}
+  else{const c=window.lzGroupCache&&lzGroupCache(RK_TAB);
+    if(!c||Date.now()-c.at>20000)window.lzPullGroup&&lzPullGroup(RK_TAB,true).then(()=>{const el=document.getElementById("rank");if(el&&RK_TAB)el.innerHTML=rankHTML();});
+    if(!c)return `<section class="rank" aria-label="Rangliste"><h2>🏆 Rangliste</h2>${tabs}<p>⏳ Lerngruppe wird geladen …</p></section>`;
+    myId=(NU.list.find(u=>u.id===NU.cur)||{}).gid;
+    rows=c.members.map(m=>({id:m.gid,e:m.e,name:m.name,v:RKA.map(a=>Math.max(0,+(m.xp||{})[a[0]]||0)),ar:Math.max(0,+m.ar||0)}));
+    if(rows.length<2)note=" Teile den Code der Lerngruppe, damit andere mitmachen.";}
+  rows.forEach(r=>r.t=r.v.reduce((a,b)=>a+b,0));
+  rows.sort((a,b)=>b.t-a.t||String(a.name).localeCompare(String(b.name)));
   const mx=RKA.map((_,i)=>Math.max(0,...rows.map(r=>r.v[i]))),mxA=Math.max(0,...rows.map(r=>r.ar));
   const med=["🥇","🥈","🥉"];let pl=0;
   const tr=rows.map((r,i)=>{if(i===0||r.t<rows[i-1].t)pl=i;const m=r.t>0?(med[pl]||(pl+1)+"."):"";
-    return `<tr class="${r.u.id===NU.cur?"me":""}"><td class="m">${m}</td><td class="n">${r.u.icon} ${esc(r.u.name)}</td>${r.v.map((x,j)=>`<td class="${x&&x===mx[j]&&rows.length>1?"best":""}">${f(x)}</td>`).join("")}<td class="t">${f(r.t)}</td><td class="${r.ar&&r.ar===mxA&&rows.length>1?"best":""}">${f(r.ar)}</td></tr>`;}).join("");
-  return `<section class="rank" aria-label="Rangliste"><h2>🏆 Rangliste</h2><table><thead><tr><th class="m"></th><th class="n">Name</th>${RKA.map(a=>`<th title="${esc(APPS.find(x=>x.k===a[0]).name)}">${a[3]}</th>`).join("")}<th>Gesamt</th><th title="Arena-Punkte">⚔️</th></tr></thead><tbody>${tr}</tbody></table><p>Punkte aus 📐 Winkel-Akademie, 🪄 Wasser-Zauberschule, 🐚 Küsten-Crew und 🕵️ Detektiv-Büro. Grün = Bestwert in der App. ⚔️ = Arena-Punkte aus Duellen (zählen nicht zur Gesamtsumme).${L.length<2?" Leg weitere Personen an oder tritt einer Lerngruppe bei, um gegeneinander anzutreten.":""}</p></section>`;
+    return `<tr class="${r.id===myId?"me":""}"><td class="m">${m}</td><td class="n">${esc(r.e)} ${esc(r.name)}</td>${r.v.map((x,j)=>`<td class="${x&&x===mx[j]&&rows.length>1?"best":""}">${f(x)}</td>`).join("")}<td class="t">${f(r.t)}</td><td class="${r.ar&&r.ar===mxA&&rows.length>1?"best":""}">${f(r.ar)}</td></tr>`;}).join("");
+  return `<section class="rank" aria-label="Rangliste"><h2>🏆 Rangliste</h2>${tabs}<table><thead><tr><th class="m"></th><th class="n">Name</th>${RKA.map(a=>`<th title="${esc(APPS.find(x=>x.k===a[0]).name)}">${a[3]}</th>`).join("")}<th>Gesamt</th><th title="Arena-Punkte">⚔️</th></tr></thead><tbody>${tr}</tbody></table><p>Punkte aus 📐 Winkel-Akademie, 🪄 Wasser-Zauberschule, 🐚 Küsten-Crew und 🕵️ Detektiv-Büro. Grün = Bestwert in der App. ⚔️ = Arena-Punkte aus Duellen (zählen nicht zur Gesamtsumme).${note}</p></section>`;
 }
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-rk]");if(!b)return;RK_TAB=b.dataset.rk;const el=document.getElementById("rank");if(el)el.innerHTML=rankHTML();});
 function render(){
   loadAll();document.body.classList.toggle("compact",!!UI().compact);const cb=document.getElementById("cmp");cb.textContent=UI().compact?"Alles zeigen":"Nur heute";cb.setAttribute("aria-pressed",!!UI().compact);
   renderWho();
@@ -738,6 +766,89 @@ addEventListener("hashchange",route);setTimeout(lzDiag,0);window.FR=FR;window.lz
 route();
 </script>
 <script>
+/* ===================== 👥 Lerngruppen ===================== */
+(function(){
+const RPC=(fn,b)=>window.__lzRpc(fn,b);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const LSj=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}};
+const LSs=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
+const APPK=[["W","winkelakademie-v1",3],["Z","wasserzauberschule-v1",3],["E","unit6-progress",3],["D","detektivbuero-v1",1]];
+const ALPH="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const newCode=()=>{let c="";const r=crypto.getRandomValues(new Uint32Array(12));for(let i=0;i<12;i++)c+=ALPH[r[i]%ALPH.length];return c.slice(0,4)+"-"+c.slice(4,8)+"-"+c.slice(8);};
+const normCode=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"").replace(/^(.{4})(.{4})(.{4})$/,"$1-$2-$3");
+const space=code=>"grp:"+normCode(code);
+function me(){const u=NU.list.find(x=>x.id===NU.cur)||NU.list[0];return u;}
+function ensureGid(){try{loadAll();}catch(e){}const u=me();if(!u.gid){u.gid="p"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);u.t=Date.now();try{save();}catch(e){}}return u;}
+function groupsOf(uid){const a=LSj("lz-groups@"+uid,[]);return Array.isArray(a)?a:[];}
+function setGroups(uid,a){LSs("lz-groups@"+uid,a);}
+window.lzGroupsOf=groupsOf;
+window.lzMyGroups=()=>{try{return groupsOf(me().id);}catch(e){return[];}};
+window.lzMe=()=>{const u=me();return{uid:u.id,gid:u.gid,name:u.name,e:u.e};};
+function online(){return !!window.__lzRpc&&/^https:/.test((window.__LZSB||{}).url||"");}
+function xpOf(uid){const o={};APPK.forEach(([k,b,r])=>{const v=J(uid==="u1"?b:b+("@"+uid).repeat(r),null);o[k]=v&&typeof v==="object"?Math.max(0,+v.xp||0):0;});return o;}
+function memberRec(u){const ar=J("lz-arena-pts@"+u.id,{})||{};return{gid:u.gid,name:u.name,e:u.e,xp:xpOf(u.id),ar:Math.max(0,+ar.p||0),ts:Date.now()};}
+/* Mitgliedsdaten hochladen (nur Name, Icon, Punkte) */
+const SENT={};
+async function pushMembers(){if(!online())return;for(const u of NU.list){if(!u.gid)continue;const gs=groupsOf(u.id);if(!gs.length)continue;
+  const r=memberRec(u),sig=JSON.stringify([r.name,r.e,r.xp,r.ar]);
+  for(const g of gs){const key=g.code+"|"+u.gid;if(SENT[key]===sig)continue;try{await RPC("lz_push",{p_fam:space(g.code),p_items:[{k:"m:"+u.gid,v:JSON.stringify(r),ts:Date.now()}]});SENT[key]=sig;}catch(e){}}}}
+window.lzPushMembers=pushMembers;
+/* Gruppendaten holen (Cache) */
+const CACHE={};
+async function pullGroup(code,force){const c=normCode(code),x=CACHE[c];if(x&&!force&&Date.now()-x.at<20000)return x;
+  try{const rows=(await RPC("lz_pull",{p_fam:space(c),p_since:0}))||[];const o={at:Date.now(),meta:null,members:[],ghosts:[]};
+    rows.forEach(r=>{if(r.v==null)return;let v=null;try{v=JSON.parse(r.v);}catch(e){}if(!v)return;
+      if(r.k==="meta")o.meta=v;else if(r.k.startsWith("m:"))o.members.push(v);else if(r.k.startsWith("g:"))o.ghosts.push(Object.assign(v,{grp:c}));});
+    CACHE[c]=o;return o;}catch(e){return x||null;}}
+window.lzPullGroup=pullGroup;
+window.lzGroupCache=c=>CACHE[normCode(c)];
+window.lzGroupPut=async(code,k,v)=>{await RPC("lz_push",{p_fam:space(code),p_items:[{k,v:v==null?null:JSON.stringify(v),ts:Date.now()}]});const x=CACHE[normCode(code)];if(x)x.at=0;};
+/* Anlegen / Beitreten / Austreten */
+async function create(){const u=ensureGid();const name=(prompt("Wie soll die neue Lerngruppe heißen?\nz. B. Klasse 6b, Familie, Nachhilfe Mathe")||"").trim().slice(0,30);if(!name)return;
+  if(!online()){alert("Lerngruppen brauchen eine Internetverbindung.");return;}
+  const code=newCode();
+  try{await RPC("lz_push",{p_fam:space(code),p_items:[{k:"meta",v:JSON.stringify({name,by:u.name,created:Date.now()}),ts:Date.now()}]});}catch(e){alert("Das hat nicht geklappt. Bitte später noch einmal versuchen.");return;}
+  setGroups(u.id,[...groupsOf(u.id),{code,name,joined:Date.now()}]);await pushMembers();show({share:code});}
+async function join(code){const u=ensureGid();code=normCode(code);if(!/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)){alert("Der Code hat 12 Zeichen, z. B. KX7P-2M9Q-HT4R.");return false;}
+  if(groupsOf(u.id).some(g=>g.code===code)){alert(u.name+" ist schon in dieser Lerngruppe.");return false;}
+  const g=await pullGroup(code,true);if(!g||!g.meta){alert("Diese Lerngruppe gibt es nicht. Bitte den Code prüfen.");return false;}
+  if(!confirm(`${u.e} ${u.name} tritt der Lerngruppe „${g.meta.name}“ bei?\n\nDie anderen sehen dann Name, Icon und Punkte und können ${u.name} zu Duellen herausfordern. Lernpläne und Noten bleiben privat.`))return false;
+  setGroups(u.id,[...groupsOf(u.id),{code,name:g.meta.name,joined:Date.now()}]);await pushMembers();show();return true;}
+async function leave(code){const u=me(),g=groupsOf(u.id).find(x=>x.code===code);if(!g)return;
+  if(!confirm(`${u.name} verlässt die Lerngruppe „${g.name}“?`))return;
+  setGroups(u.id,groupsOf(u.id).filter(x=>x.code!==code));try{await RPC("lz_push",{p_fam:space(code),p_items:[{k:"m:"+u.gid,v:null,ts:Date.now()}]});}catch(e){}delete SENT[code+"|"+u.gid];show();}
+function link(code){return location.origin+location.pathname+"#join="+code;}
+async function share(code,name){const url=link(code),text=`Tritt meiner Lerngruppe „${name}“ in der Lernzentrale bei: ${url}\nCode: ${code}`;
+  try{if(navigator.share){await navigator.share({title:"Lerngruppe "+name,text});return;}}catch(e){if(e&&e.name==="AbortError")return;}
+  try{await navigator.clipboard.writeText(text);alert("Link und Code sind kopiert. Du kannst sie jetzt z. B. per Nachricht verschicken.");}catch(e){prompt("Diesen Text kopieren und verschicken:",text);}}
+/* Oberfläche */
+const OV=document.createElement("div");OV.id="grpOv";document.body.appendChild(OV);
+function show(o){o=o||{};const u=me(),gs=groupsOf(u.id);OV.classList.add("on");
+  OV.innerHTML=`<div class="ar-box"><div class="ar-top"><b>👥 Lerngruppen</b><button type="button" class="ar-x" data-gx>✕</button></div>
+   <p class="ar-p0">${esc(u.e)} <b>${esc(u.name)}</b> – in einer Lerngruppe sehen alle Name, Icon und Punkte und können sich zu Duellen herausfordern. Lernpläne und Noten bleiben privat.</p>
+   ${o.share?(()=>{const g=gs.find(x=>x.code===o.share);return `<div class="gr-new"><div>✅ Lerngruppe <b>„${esc(g?g.name:"")}“</b> angelegt!</div><div class="gr-code">${esc(o.share)}</div><p class="ar-p0">Schick den Code oder Link an alle, die mitmachen sollen. Wer ihn eingibt, ist automatisch dabei.</p><button type="button" class="ar-btn" data-gshare="${esc(o.share)}">📤 Link teilen</button></div>`;})():""}
+   <div class="ar-h">Deine Lerngruppen</div>
+   ${gs.length?gs.map(g=>`<div class="ar-g"><b>👥 ${esc(g.name)}</b><small class="gr-c">${esc(g.code)}</small><span class="gr-btns"><button type="button" data-gshare="${esc(g.code)}">📤 Teilen</button><button type="button" class="sec" data-gleave="${esc(g.code)}">Austreten</button></span></div>`).join(""):`<p class="ar-p0">Noch keine. Leg eine an oder tritt mit einem Code bei.</p>`}
+   <div class="ar-h">Beitreten</div><div class="gr-join"><input id="grIn" placeholder="Code, z. B. KX7P-2M9Q-HT4R" autocapitalize="characters" autocomplete="off" spellcheck="false"><button type="button" data-gjoin>Beitreten</button></div>
+   <button type="button" class="ar-btn" data-gnew>➕ Neue Lerngruppe anlegen</button>
+   ${online()?"":`<p class="ar-p0">⚠️ Ohne Internetverbindung gehen Lerngruppen nicht.</p>`}</div>`;}
+window.lzGroupsOpen=()=>show();
+OV.addEventListener("click",async e=>{const t=e.target;
+  if(t.closest("[data-gx]")||t===OV){OV.classList.remove("on");try{render();}catch(_){}return;}
+  if(t.closest("[data-gnew]")){await create();return;}
+  const s=t.closest("[data-gshare]");if(s){const g=groupsOf(me().id).find(x=>x.code===s.dataset.gshare);share(s.dataset.gshare,g?g.name:"");return;}
+  const l=t.closest("[data-gleave]");if(l){await leave(l.dataset.gleave);return;}
+  if(t.closest("[data-gjoin]")){const v=document.getElementById("grIn").value;await join(v);return;}});
+OV.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="grIn"){e.preventDefault();join(e.target.value);}});
+/* Einladungs-Link …/#join=CODE */
+function checkHash(){const m=location.hash.match(/^#join=([A-Za-z0-9-]+)/);if(!m)return;try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
+  setTimeout(()=>{show();join(m[1]);},600);}
+checkHash();
+setInterval(pushMembers,30000);setTimeout(pushMembers,4000);
+})();
+
+</script>
+<script>
 /* ===================== ⚔️ Arena: Tauziehen, Power-ups, Geister-Duell, Fach-Glücksrad ===================== */
 (function(){
 const AK={W:["winkelakademie-v1",3],Z:["wasserzauberschule-v1",3],E:["unit6-progress",3],D:["detektivbuero-v1",1]};
@@ -750,7 +861,8 @@ const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",
 const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 let DEV=LSg("lz-dev");if(!DEV){DEV="d"+Math.random().toString(36).slice(2,10);try{localStorage.setItem("lz-dev",DEV);}catch(e){}}
-function meP(){try{const u=people().find(x=>x.id===NU.cur)||people()[0];return{uid:u.id,name:u.name,e:u.icon};}catch(e){return{uid:"u1",name:"Robin",e:"🧒"};}}
+function meP(){try{const u=NU.list.find(x=>x.id===NU.cur)||NU.list[0];return{uid:u.id,gid:u.gid||u.id,name:u.name,e:u.e};}catch(e){return{uid:"u1",gid:"u1",name:"Robin",e:"🧒"};}}
+const gidOf=u=>{const x=NU.list.find(v=>v.id===u);return x&&x.gid||u;};
 function curAppK(){try{return curApp||"";}catch(e){return "";}}
 function appState(k,uid){const [b,r]=AK[k];return LSj(uid==="u1"?b:b+("@"+uid).repeat(r),null);}
 
@@ -761,29 +873,35 @@ function ptsAdd(uid,res,stake){const P=ptsGet(uid);if(res==="w"){P.p+=10+stake;P
 window.lzArenaPts=ptsGet;
 
 /* ---------- Transport (Supabase Realtime, im Test: Mock) ---------- */
-let CH=null,ONLINE=[],HANDLERS=[],joined=false,lastSig="";
+let CHS={},PRES={},ONLINE=[],HANDLERS=[],joined=false,lastSig="",SB=null;
 function famCode(){return LSg("lz-fam")||"";}
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36);}
-function myPresence(){const m=meP();return{dev:DEV,uid:m.uid,name:m.name,e:m.e,app:curAppK(),ts:Date.now()};}
+function myPresence(){const m=meP();return{dev:DEV,uid:m.uid,gid:m.gid,name:m.name,e:m.e,app:curAppK(),ts:Date.now()};}
+function spaces(){const L=[];const f=famCode();if(f)L.push({id:"f:"+f,label:""});(window.lzMyGroups?lzMyGroups():[]).forEach(g=>L.push({id:"grp:"+g.code,label:g.name}));return L;}
+function mergePres(){const m={};Object.entries(PRES).forEach(([sp,list])=>list.forEach(p=>{if(!p||p.dev===DEV)return;const k=p.dev;if(!m[k]||m[k].ts<p.ts)m[k]=Object.assign({},p,{sp});}));setOnline(Object.values(m));}
 function setOnline(list){ONLINE=list.filter(p=>p&&p.dev!==DEV);drawCard();drawPick();}
-function send(msg){msg.from_dev=DEV;try{if(window.__arenaMock){window.__arenaOut(JSON.stringify(msg));return;}if(CH)CH.send({type:"broadcast",event:"m",payload:msg});}catch(e){}}
-function recv(msg){if(!msg||msg.from_dev===DEV)return;if(msg.to&&msg.to!==DEV)return;HANDLERS.forEach(h=>{try{h(msg);}catch(e){}});}
-window.__arenaIn=function(s){const m=typeof s==="string"?JSON.parse(s):s;if(m.type==="presence"){setOnline(m.list);return;}recv(m);};
+function send(msg){msg.from_dev=DEV;msg.mid=msg.mid||Math.random().toString(36).slice(2);try{if(window.__arenaMock){window.__arenaOut(JSON.stringify(msg));return;}Object.values(CHS).forEach(ch=>ch.send({type:"broadcast",event:"m",payload:msg}));}catch(e){}}
+const SEEN=new Set();
+function recv(msg){if(!msg||msg.from_dev===DEV)return;if(msg.to&&msg.to!==DEV)return;if(msg.mid){if(SEEN.has(msg.mid))return;SEEN.add(msg.mid);}HANDLERS.forEach(h=>{try{h(msg);}catch(e){}});}
+window.__arenaIn=function(s){const m=typeof s==="string"?JSON.parse(s):s;if(m.type==="presence"){PRES.mock=m.list;mergePres();return;}recv(m);};
 function loadSb(){return new Promise((res,rej)=>{if(window.supabase)return res();const sc=document.createElement("script");sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js";sc.onload=()=>res();sc.onerror=rej;document.head.appendChild(sc);});}
 async function join(){
-  if(window.__arenaMock){joined=true;window.__arenaOut(JSON.stringify({type:"presence-me",p:myPresence()}));return;}
-  const fam=famCode(),C=window.__LZSB;if(!fam||!C||joined)return;joined=true;
-  try{await loadSb();const sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:false}});
-    CH=sb.channel("arena-"+hash(fam),{config:{presence:{key:DEV},broadcast:{self:false}}});
-    CH.on("presence",{event:"sync"},()=>{const st=CH.presenceState();setOnline(Object.values(st).map(a=>a[a.length-1]));});
-    CH.on("broadcast",{event:"m"},({payload})=>recv(payload));
-    CH.subscribe(async s=>{if(s==="SUBSCRIBED"){lastSig="";await CH.track(myPresence());}});
+  if(window.__arenaMock){joined=true;lastSig="";presTick();return;}
+  const C=window.__LZSB;const want=spaces();if(!C||!want.length)return;joined=true;
+  try{await loadSb();if(!SB)SB=window.supabase.createClient(C.url,C.key,{auth:{persistSession:false}});
+    const ids=want.map(x=>x.id);
+    Object.keys(CHS).forEach(id=>{if(!ids.includes(id)){try{SB.removeChannel(CHS[id]);}catch(e){}delete CHS[id];delete PRES[id];}});
+    want.forEach(sp=>{if(CHS[sp.id])return;const ch=SB.channel("arena-"+hash(sp.id),{config:{presence:{key:DEV},broadcast:{self:false}}});CHS[sp.id]=ch;
+      ch.on("presence",{event:"sync"},()=>{const st=ch.presenceState();PRES[sp.id]=Object.values(st).map(a=>Object.assign({},a[a.length-1],{spl:sp.label}));mergePres();});
+      ch.on("broadcast",{event:"m"},({payload})=>recv(payload));
+      ch.subscribe(async s=>{if(s==="SUBSCRIBED"){try{await ch.track(myPresence());}catch(e){}}});});
+    mergePres();
   }catch(e){joined=false;}
 }
+let spSig="";
 function presTick(){const p=myPresence(),sig=p.uid+"|"+p.app+"|"+p.name+"|"+p.e;if(sig===lastSig)return;lastSig=sig;
-  try{if(window.__arenaMock)window.__arenaOut(JSON.stringify({type:"presence-me",p}));else if(CH)CH.track(p);}catch(e){}}
-setInterval(()=>{if(famCode()&&!joined)join();if(joined)presTick();},3000);
-setTimeout(()=>{if(famCode())join();},1500);
+  try{if(window.__arenaMock)window.__arenaOut(JSON.stringify({type:"presence-me",p}));else Object.values(CHS).forEach(ch=>ch.track(p));}catch(e){}}
+setInterval(()=>{const sg=spaces().map(x=>x.id).join(",");if(sg!==spSig){spSig=sg;joined=false;}if(!joined&&sg)join();if(joined)presTick();},3000);
 
 /* ---------- Fragen aus den Apps ---------- */
 const DATA={};
@@ -847,9 +965,14 @@ async function makeQs(mode,n){
   return out;}
 
 /* ---------- Geister-Duelle (über die Lerngruppe synchronisiert) ---------- */
-function ghostList(){const out=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("lz-arena-g-")){const v=LSj(k,null);if(v)out.push(v);}}return out.sort((a,b)=>b.ts-a.ts);}
-function ghostSave(g){LSs("lz-arena-g-"+g.id,g);}
-function ghostClean(){const L=ghostList(),old=Date.now()-14*864e5;L.forEach((g,i)=>{if(i>=30||g.ts<old){try{localStorage.removeItem("lz-arena-g-"+g.id);}catch(e){}}});}
+function ghostList(){const out=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("lz-arena-g-")){const v=LSj(k,null);if(v)out.push(v);}}
+  (window.lzMyGroups?lzMyGroups():[]).forEach(g=>{const c=window.lzGroupCache&&lzGroupCache(g.code);if(c)c.ghosts.forEach(x=>{if(!out.some(y=>y.id===x.id))out.push(x);});});
+  return out.sort((a,b)=>b.ts-a.ts);}
+function ghostSave(g){if(g.grp){window.lzGroupPut&&lzGroupPut(g.grp,"g:"+g.id,g);const c=lzGroupCache(g.grp);if(c){const i=c.ghosts.findIndex(x=>x.id===g.id);if(i>=0)c.ghosts[i]=g;else c.ghosts.push(g);}}else LSs("lz-arena-g-"+g.id,g);}
+function isMe(p,g){const m=meP();return !!p&&(p.gid===m.gid||(!(g&&g.grp)&&p.uid===m.uid));}
+function refreshGroups(){(window.lzMyGroups?lzMyGroups():[]).forEach(g=>{window.lzPullGroup&&lzPullGroup(g.code).then(()=>{drawCard();drawPick();});});}
+setInterval(refreshGroups,30000);setTimeout(refreshGroups,2500);
+function ghostClean(){const L=ghostList().filter(g=>!g.grp),old=Date.now()-14*864e5;L.forEach((g,i)=>{if(i>=30||g.ts<old){try{localStorage.removeItem("lz-arena-g-"+g.id);}catch(e){}}});}
 
 /* ---------- Oberfläche ---------- */
 const OV=document.createElement("div");OV.id="arenaOv";OV.setAttribute("role","dialog");OV.setAttribute("aria-label","Arena");document.body.appendChild(OV);
@@ -858,19 +981,23 @@ let VIEW=null,GAME=null,PENDING=null;
 function close(){if(GAME&&!GAME.over&&!confirm("Duell wirklich abbrechen?"))return;if(GAME){GAME.over=true;clearInterval(GAME.iv);if(GAME.live)send({t:"quit",id:GAME.id,to:GAME.opp.dev});}GAME=null;VIEW=null;PENDING=null;OV.classList.remove("on");drawCard();try{render();}catch(e){}}
 function openOv(){OV.classList.add("on");}
 let PICK={mode:"mix",stake:10};
-function drawPick(){if(VIEW!=="pick")return;const me=meP(),on=ONLINE.filter(p=>p.uid!==me.uid),onU=new Set(on.map(p=>p.uid));
-  const off=people().filter(u=>u.id!==me.uid&&!onU.has(u.id));const fam=famCode();
+function offList(){const me=meP(),onG=new Set(ONLINE.map(p=>p.gid||p.uid)),m={};
+  NU.list.forEach(u=>{const g=u.gid||u.id;if(g!==me.gid&&!onG.has(g))m[g]={gid:g,uid:u.id,name:u.name,e:u.e,grp:"",gl:"dieses Gerät"};});
+  (window.lzMyGroups?lzMyGroups():[]).forEach(G=>{const c=window.lzGroupCache&&lzGroupCache(G.code);if(c)c.members.forEach(x=>{if(x.gid!==me.gid&&!onG.has(x.gid)&&!m[x.gid])m[x.gid]={gid:x.gid,uid:"",name:x.name,e:x.e,grp:G.code,gl:G.name};});});
+  return Object.values(m);}
+function drawPick(){if(VIEW!=="pick")return;const me=meP(),on=ONLINE.filter(p=>!isMe(p));
+  const off=offList();const fam=spaces().length;
   OV.innerHTML=`<div class="ar-box"><div class="ar-top"><b>⚔️ Arena</b><button type="button" class="ar-x" data-ax>✕</button></div>
    <div class="ar-me">${esc(me.e)} <b>${esc(me.name)}</b> · ${ptsGet(me.uid).p} Arena-Punkte</div>
    <div class="ar-h">🎰 Welche Fächer?</div><div class="ar-seg">${[["mix","🎰 Glücksrad (alle)"],["W","📐 Mathe"],["Z","🪄 NWT"],["E","🐚 Englisch"],["D","🕵️ Deutsch"]].map(([k,l])=>`<button type="button" data-am="${k}" class="${PICK.mode===k?"on":""}">${l}</button>`).join("")}</div>
    <div class="ar-h">💰 Einsatz (Arena-Punkte)</div><div class="ar-seg">${[0,10,25,50].map(s=>`<button type="button" data-as="${s}" class="${PICK.stake===s?"on":""}">${s||"ohne"}</button>`).join("")}</div>
    <div class="ar-h">🟢 Gerade online</div>
-   ${fam?(on.length?`<div class="ar-list">${on.map(p=>`<button type="button" class="ar-p" data-live="${esc(p.dev)}"><span>${esc(p.e)}</span><b>${esc(p.name)}</b><small>${p.app&&AN[p.app]?"in "+AN[p.app][0]+" "+AN[p.app][1]:"auf der Startseite"}</small><em>🪢 live</em></button>`).join("")}</div>`:`<p class="ar-p0">Gerade ist niemand aus der Lerngruppe online.</p>`):`<p class="ar-p0">Für Live-Duelle auf verschiedenen Geräten erst oben der Lerngruppe beitreten.</p>`}
-   ${off.length?`<div class="ar-h">👻 Geister-Duell</div><p class="ar-p0">Du spielst jetzt, die andere Person später gegen deine Aufzeichnung.</p><div class="ar-list">${off.map(u=>`<button type="button" class="ar-p" data-ghost="${esc(u.id)}"><span>${esc(u.icon)}</span><b>${esc(u.name)}</b><em>👻</em></button>`).join("")}</div>`:""}
+   ${fam?(on.length?`<div class="ar-list">${on.map(p=>`<button type="button" class="ar-p" data-live="${esc(p.dev)}"><span>${esc(p.e)}</span><b>${esc(p.name)}</b><small>${p.spl?"👥 "+esc(p.spl)+" · ":""}${p.app&&AN[p.app]?"in "+AN[p.app][0]+" "+AN[p.app][1]:"auf der Startseite"}</small><em>🪢 live</em></button>`).join("")}</div>`:`<p class="ar-p0">Gerade ist niemand online.</p>`):`<p class="ar-p0">Für Live-Duelle mit anderen: einer Lerngruppe beitreten oder Geräte verbinden.</p>`}
+   ${off.length?`<div class="ar-h">👻 Geister-Duell</div><p class="ar-p0">Du spielst jetzt, die andere Person später gegen deine Aufzeichnung.</p><div class="ar-list">${off.map(u=>`<button type="button" class="ar-p" data-ghost="${esc(u.gid)}"><span>${esc(u.e)}</span><b>${esc(u.name)}</b><small>${u.grp?"👥 "+esc(u.gl):"📱 "+esc(u.gl)}</small><em>👻</em></button>`).join("")}</div>`:""}
    ${myGhostBoxes()}</div>`;}
-function myGhostBoxes(){const me=meP(),L=ghostList();
-  const inc=L.filter(g=>g.to.uid===me.uid&&!g.res),res=L.filter(g=>g.from.uid===me.uid&&g.res&&!g.res.fromSeen);
-  return (inc.length?`<div class="ar-h">📨 Herausforderungen an dich</div>${inc.map(g=>`<div class="ar-g">👻 <b>${esc(g.from.e)} ${esc(g.from.name)}</b> fordert dich heraus · ${g.mode==="mix"?"🎰 Glücksrad":AN[g.mode][0]+" "+AN[g.mode][1]} · Einsatz ${g.stake}<button type="button" data-gplay="${g.id}">▶ Annehmen</button></div>`).join("")}`:"")
+function myGhostBoxes(){const L=ghostList();
+  const inc=L.filter(g=>isMe(g.to,g)&&!g.res),res=L.filter(g=>isMe(g.from,g)&&g.res&&!g.res.fromSeen);
+  return (inc.length?`<div class="ar-h">📨 Herausforderungen an dich</div>${inc.map(g=>`<div class="ar-g">👻 <b>${esc(g.from.e)} ${esc(g.from.name)}</b> fordert dich heraus${g.grpName?" (👥 "+esc(g.grpName)+")":""} · ${g.mode==="mix"?"🎰 Glücksrad":AN[g.mode][0]+" "+AN[g.mode][1]} · Einsatz ${g.stake}<button type="button" data-gplay="${g.id}">▶ Annehmen</button></div>`).join("")}`:"")
    +(res.length?`<div class="ar-h">📬 Ergebnisse</div>${res.map(g=>`<div class="ar-g">👻 gegen <b>${esc(g.to.e)} ${esc(g.to.name)}</b>: ${g.res.win==="from"?"🏆 Du hast gewonnen!":g.res.win==="to"?"Leider verloren.":"Unentschieden."} <button type="button" data-gseen="${g.id}">OK</button></div>`).join("")}`:"");}
 window.lzArenaOpen=function(){if(GAME&&!GAME.over){openOv();return;}VIEW="pick";openOv();drawPick();};
 function toast(t){const d=document.createElement("div");d.className="ar-toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),3200);}
@@ -881,7 +1008,7 @@ async function challengeLive(dev){
   OV.innerHTML=`<div class="ar-box c"><div class="ar-big">🎰</div><p>Fragen werden gemischt …</p></div>`;
   const qs=await makeQs(PICK.mode,40);if(!qs.length){OV.innerHTML=`<div class="ar-box c"><p>Keine Fragen gefunden. Wähle in den Apps Pakete aus.</p><button type="button" class="ar-btn" data-ax>Schließen</button></div>`;return;}
   const id="L"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),me=meP();
-  PENDING={id,opp:p,qs,mode:PICK.mode,stake:PICK.stake};
+  PENDING={id,opp:Object.assign({},p,{grp:p.sp&&p.sp.startsWith("grp:")?p.sp.slice(4):""}),qs,mode:PICK.mode,stake:PICK.stake};
   send({t:"inv",id,to:dev,from:{dev:DEV,uid:me.uid,name:me.name,e:me.e},qs,mode:PICK.mode,stake:PICK.stake});
   OV.innerHTML=`<div class="ar-box c"><div class="ar-big">⏳</div><p>Warte auf <b>${esc(p.e)} ${esc(p.name)}</b> …</p><p class="ar-p0" id="arCd">noch 25 s</p><button type="button" class="ar-btn sec" data-ax>Abbrechen</button></div>`;
   let n=25;PENDING.iv=setInterval(()=>{n--;const el=document.getElementById("arCd");if(el)el.textContent="noch "+n+" s";if(n<=0){clearInterval(PENDING.iv);noAnswer("hat nicht geantwortet");}},1000);}
@@ -953,7 +1080,7 @@ function usePu(){if(!GAME||!GAME.pu)return;const p=GAME.pu;GAME.pu=null;
 function finish(a,b,remote,why){if(!GAME||GAME.over)return;GAME.over=true;clearInterval(GAME.iv);
   const d=a-b,res=d>0?"w":d<0?"l":"d",me=GAME.me,stake=GAME.stake||0;
   let txt="";
-  if(GAME.recording){const g={id:GAME.id,ts:Date.now(),from:{uid:me.uid,name:me.name,e:me.e},to:{uid:GAME.opp.uid,name:GAME.opp.name,e:GAME.opp.e},mode:GAME.mode,stake,qs:GAME.qs,rec:{tl:GAME.tl,fz:GAME.fz,fin:GAME.myTot,ok:GAME.ok},res:null};ghostSave(g);ghostClean();
+  if(GAME.recording){const grp=GAME.opp.grp||"",gn=grp&&(lzMyGroups().find(x=>x.code===grp)||{}).name;const g={id:GAME.id,ts:Date.now(),grp,grpName:gn||"",from:{uid:me.uid,gid:me.gid,name:me.name,e:me.e},to:{uid:GAME.opp.uid,gid:GAME.opp.gid,name:GAME.opp.name,e:GAME.opp.e},mode:GAME.mode,stake,qs:GAME.qs,rec:{tl:GAME.tl,fz:GAME.fz,fin:GAME.myTot,ok:GAME.ok},res:null};ghostSave(g);ghostClean();
     txt=`<div class="ar-big">👻</div><h3>Aufgezeichnet!</h3><p>Du hast <b>${GAME.ok}</b> Fragen richtig beantwortet. ${esc(GAME.opp.name)} bekommt deine Herausforderung und spielt später gegen deinen Geist.</p>`;}
   else{const P=ptsAdd(me.uid,res,stake);
     if(GAME.ghostRec){const g=GAME.ghostRec;g.res={win:res==="w"?"to":res==="l"?"from":"draw",a:g.rec.fin,b:a,okA:g.rec.ok||0,okB:GAME.ok,ts:Date.now(),fromSeen:false};ghostSave(g);}
@@ -963,14 +1090,14 @@ function finish(a,b,remote,why){if(!GAME||GAME.over)return;GAME.over=true;clearI
   GAME.done=true;try{render();}catch(e){}}
 function confettiA(){const c=document.createElement("div");c.className="ar-conf";for(let i=0;i<30;i++){const d=document.createElement("i");d.style.left=Math.random()*100+"%";d.style.background=`hsl(${Math.random()*360},80%,60%)`;d.style.animationDelay=Math.random()*.5+"s";c.appendChild(d);}document.body.appendChild(c);setTimeout(()=>c.remove(),2500);}
 
-async function ghostRecord(uid){const u=people().find(x=>x.id===uid);if(!u)return;
+async function ghostRecord(gid){const u=offList().find(x=>x.gid===gid)||(PENDING&&PENDING.opp.gid===gid?Object.assign({grp:PENDING.opp.grp||""},PENDING.opp):null);if(!u)return;
   OV.innerHTML=`<div class="ar-box c"><div class="ar-big">🎰</div><p>Fragen werden gemischt …</p></div>`;
-  const qs=PENDING&&PENDING.opp.uid===uid?PENDING.qs:await makeQs(PICK.mode,40);PENDING=null;
+  const qs=PENDING&&PENDING.opp.gid===gid?PENDING.qs:await makeQs(PICK.mode,40);PENDING=null;
   if(!qs.length){OV.innerHTML=`<div class="ar-box c"><p>Keine Fragen gefunden.</p><button type="button" class="ar-btn" data-ax>Schließen</button></div>`;return;}
-  startGame({id:"G"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),recording:true,opp:{uid:u.id,name:u.name,e:u.icon,dev:""},qs,mode:PICK.mode,stake:PICK.stake});}
-function ghostPlay(id){const g=LSj("lz-arena-g-"+id,null);if(!g||g.res)return;
+  startGame({id:"G"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),recording:true,opp:{uid:u.uid,gid:u.gid,name:u.name,e:u.e,dev:"",grp:u.grp||""},qs,mode:PICK.mode,stake:PICK.stake});}
+function ghostPlay(id){const g=ghostList().find(x=>x.id===id);if(!g||g.res)return;
   startGame({id:g.id,ghost:{tl:g.rec.tl,fz:g.rec.fz||[]},ghostRec:g,ghostFrozenUntil:0,opp:Object.assign({dev:""},g.from),qs:g.qs,mode:g.mode,stake:g.stake});}
-function ghostSeen(id){const g=LSj("lz-arena-g-"+id,null);if(!g||!g.res||g.res.fromSeen)return;
+function ghostSeen(id){const g=ghostList().find(x=>x.id===id);if(!g||!g.res||g.res.fromSeen)return;
   const res=g.res.win==="from"?"w":g.res.win==="to"?"l":"d";ptsAdd(g.from.uid,res,g.stake||0);g.res.fromSeen=true;ghostSave(g);
   toast(res==="w"?"🏆 +"+(10+(g.stake||0))+" Arena-Punkte":res==="l"?"−"+(g.stake||0)+" Arena-Punkte":"Unentschieden");drawPick();drawCard();}
 
@@ -980,7 +1107,7 @@ OV.addEventListener("click",e=>{const t=e.target;
   const s=t.closest("[data-as]");if(s){PICK.stake=+s.dataset.as;drawPick();return;}
   const l=t.closest("[data-live]");if(l){challengeLive(l.dataset.live);return;}
   const g=t.closest("[data-ghost]");if(g){ghostRecord(g.dataset.ghost);return;}
-  if(t.closest("[data-g2]")){ghostRecord(PENDING.opp.uid);return;}
+  if(t.closest("[data-g2]")){ghostRecord(PENDING.opp.gid||PENDING.opp.uid);return;}
   const gp=t.closest("[data-gplay]");if(gp){ghostPlay(gp.dataset.gplay);return;}
   const gs=t.closest("[data-gseen]");if(gs){ghostSeen(gs.dataset.gseen);return;}
   if(t.closest("[data-again]")){GAME=null;VIEW="pick";drawPick();return;}
@@ -988,9 +1115,9 @@ OV.addEventListener("click",e=>{const t=e.target;
   const o=t.closest("[data-o]");if(o&&GAME){answer(+o.dataset.o);return;}});
 
 /* ---------- Karte auf der Startseite ---------- */
-function drawCard(){const el=document.getElementById("arena");if(!el)return;const me=meP(),on=ONLINE.filter(p=>p.uid!==me.uid),L=ghostList();
-  const inc=L.filter(g=>g.to.uid===me.uid&&!g.res).length,res=L.filter(g=>g.from.uid===me.uid&&g.res&&!g.res.fromSeen).length;
-  el.innerHTML=`<section class="ar-card"><div><b>⚔️ Arena</b><small>${famCode()?(on.length?`🟢 online: ${on.map(p=>esc(p.e)+" "+esc(p.name)).join(", ")}`:"Gerade ist niemand sonst online."):"Tauziehen gegen andere – live oder als Geister-Duell."}${inc?` · 📨 ${inc} Herausforderung${inc>1?"en":""}`:""}${res?` · 📬 ${res} Ergebnis${res>1?"se":""}`:""}</small></div><button type="button" class="ar-go" onclick="lzArenaOpen()">Herausfordern</button></section>`;}
+function drawCard(){const el=document.getElementById("arena");if(!el)return;const on=ONLINE.filter(p=>!isMe(p)),L=ghostList();
+  const inc=L.filter(g=>isMe(g.to,g)&&!g.res).length,res=L.filter(g=>isMe(g.from,g)&&g.res&&!g.res.fromSeen).length;const gs=window.lzMyGroups?lzMyGroups():[];
+  el.innerHTML=`<section class="ar-card"><div><b>⚔️ Arena</b><small>${gs.length?`👥 ${gs.map(g=>esc(g.name)).join(", ")} · `:""}${spaces().length?(on.length?`🟢 online: ${on.map(p=>esc(p.e)+" "+esc(p.name)).join(", ")}`:"Gerade ist niemand sonst online."):"Tauziehen gegen andere – live oder als Geister-Duell."}${inc?` · 📨 ${inc} Herausforderung${inc>1?"en":""}`:""}${res?` · 📬 ${res} Ergebnis${res>1?"se":""}`:""}</small></div><span class="ar-cb"><button type="button" class="ar-go sec" onclick="lzGroupsOpen()">👥 Lerngruppen</button><button type="button" class="ar-go" onclick="lzArenaOpen()">⚔️ Herausfordern</button></span></section>`;}
 window.lzArenaCard=drawCard;
 if(window.__arenaMock)window.__arenaGame=()=>GAME;
 setInterval(drawCard,10000);setTimeout(drawCard,300);
