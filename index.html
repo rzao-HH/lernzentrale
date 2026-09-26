@@ -170,7 +170,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   <button class="cmp" id="cmp" aria-pressed="false">Nur heute</button>
   <div class="sum" id="sum"></div>
   <div class="grid" id="grid"></div>
-  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt. Von Hand eintragen muss man nur, wenn kein Test in der App gemacht wurde.<br><span id="lzcloud">📱 Fortschritt wird auf diesem Gerät gespeichert.</span><br><span class="ver">Version 5.4 · 26.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
+  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt. Von Hand eintragen muss man nur, wenn kein Test in der App gemacht wurde.<br><span id="lzcloud">📱 Fortschritt wird auf diesem Gerät gespeichert.</span><br><span class="ver">Version 5.5 · 26.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
 </div>
 <script>
 /* ===== Familien-Sync (Supabase) ===== */
@@ -254,12 +254,12 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
     const el=document.getElementById('lzcloud'),top=document.getElementById('lzsync');
     if(!/^https:\/\//.test(SB_URL)){if(el)el.textContent='📱 Fortschritt wird auf diesem Gerät gespeichert.';if(top)top.innerHTML='';return;}
     if(!on()){
-      if(el)el.innerHTML='📱 Nur auf diesem Gerät gespeichert · <a href="#" data-fam="1">☁️ Familien-Code eingeben</a>';
-      if(top&&!top.querySelector('.sync'))top.innerHTML='<div class="sync"><p><b>☁️ Geräte verbinden</b><br>Mit eurem Familien-Code (mind. 12 Zeichen) sind Personen, Punkte und Noten auf iPad und Handy gleich.</p><input id="lzfamin" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Familien-Code"><button type="button" data-famgo="1">Verbinden</button><div class="nuerr" id="lzfamerr"></div></div>';
+      if(el)el.innerHTML='📱 Nur auf diesem Gerät gespeichert · <a href="#" data-fam="1">☁️ Lerngruppe beitreten</a>';
+      if(top&&!top.querySelector('.sync'))top.innerHTML='<div class="sync"><p><b>☁️ Lerngruppe beitreten</b><br>Mit eurem Lerngruppen-Code (mind. 12 Zeichen) sind Personen, Punkte und Noten auf allen Geräten gleich.</p><input id="lzfamin" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Lerngruppen-Code"><button type="button" data-famgo="1">Beitreten</button><div class="nuerr" id="lzfamerr"></div></div>';
       return;}
-    const t=err?'⚠️ Gerade keine Verbindung – wird nachgeholt':'☁️ Mit der Familie synchronisiert'+(last?' ('+hh(new Date(last))+')':'');
-    if(el)el.innerHTML=t+' · <a href="#" data-fam="1">Familien-Code ändern</a>';
-    if(top)top.innerHTML='<button type="button" class="syncpill'+(err?' err':'')+'" data-fam="1" title="Familien-Code ändern">'+(err?'⚠️ Offline – wird nachgeholt':'☁️ Geräte verbunden'+(last?' · '+hh(new Date(last)):''))+'<span class="syncedit">✏️ Familien-Code ändern</span></button>';}
+    const t=err?'⚠️ Gerade keine Verbindung – wird nachgeholt':'☁️ Mit der Lerngruppe synchronisiert'+(last?' ('+hh(new Date(last))+')':'');
+    if(el)el.innerHTML=t+' · <a href="#" data-fam="1">Lerngruppe wechseln</a>';
+    if(top)top.innerHTML='<button type="button" class="syncpill'+(err?' err':'')+'" data-fam="1" title="Lerngruppe wechseln">'+(err?'⚠️ Offline – wird nachgeholt':'☁️ Lerngruppe verbunden'+(last?' · '+hh(new Date(last)):''))+'<span class="syncedit">✏️ Lerngruppe wechseln</span></button>';}
   function famSet(v){oSet.call(localStorage,'lz-fam',v);oRem.call(localStorage,'lz-synced');const top=document.getElementById('lzsync');if(top)top.innerHTML='';setStat();pull();}
   document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-famgo]');if(!b)return;e.preventDefault();
     const i=document.getElementById('lzfamin'),er=document.getElementById('lzfamerr'),v=(i&&i.value||'').trim();
@@ -267,7 +267,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='lzfamin'){e.preventDefault();const b=document.querySelector('[data-famgo]');if(b)b.click();}});
   window.lzCloudStat=setStat;
   document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('[data-fam]');if(!a)return;e.preventDefault();
-    const c=prompt('Familien-Code eingeben (mindestens 12 Zeichen).\nAuf allen Geräten derselbe Code:',fam());
+    const c=prompt('Lerngruppen-Code eingeben (mindestens 12 Zeichen).\nAuf allen Geräten derselbe Code:',fam());
     if(c===null)return;const v=c.trim();
     if(!v){oRem.call(localStorage,'lz-fam');oRem.call(localStorage,'lz-synced');const top=document.getElementById('lzsync');if(top)top.innerHTML='';setStat();return;}
     if(v.length<12){alert('Der Code muss mindestens 12 Zeichen lang sein.');return;}
