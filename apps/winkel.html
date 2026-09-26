@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=6.6.0"></script>
+<script src="../js/app-core.js?v=6.7.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=6.6.0"></script>
+<script src="../js/nutzer-init.js?v=6.7.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -370,7 +370,7 @@ function sfx(type){
 function renderHeader(){
   const i=rankIdx(S.xp),r=RANKS[i],nx=RANKS[i+1];
   const pct=nx?(S.xp-r.xp)/(nx.xp-r.xp)*100:100;
-  $('#rank').innerHTML=`<span class="ri">${r.i}</span><div class="rt"><b>${r.n}</b><div class="xpbar"><i style="width:${pct}%"></i></div><small>${S.xp} XP${nx?' · nächster Rang bei '+nx.xp:' · höchster Rang!'}</small></div>`;
+  $('#rank').innerHTML=`<span class="ri">${r.i}</span><div class="rt"><b>${r.n}</b><div class="xpbar"><i style="width:${pct}%"></i></div><small>${S.xp} Punkte${nx?' · nächster Rang bei '+nx.xp:' · höchster Rang!'}</small></div>`;
   $('#soundBtn').textContent=S.sound?'🔊':'🔇';
 }
 $('#soundBtn').onclick=()=>{S.sound=!S.sound;save();renderHeader();};
@@ -901,7 +901,7 @@ function startMode(m){
   G={mode:m,i:0,total:m==='test'?12:m==='time'?Infinity:10,score:0,log:[],locked:false,xp:0,finished:false};
   if(m==='test'){const a=selA(),t=selT();G.kinds=shuffle(a&&t?['degree','degree','visual','visual','measure','measure','measure','draw','task','task','task','task','task','task','task']:t?Array(12).fill('task'):['degree','degree','degree','degree','visual','visual','visual','visual','measure','measure','measure','draw']);G.total=G.kinds.length;}
   app.innerHTML=`<div class="game">
-    <div class="gbar"><button class="icon-btn" id="back" aria-label="Abbrechen">✕</button>
+    <div class="gbar"><button class="icon-btn" id="back" aria-label="Zurück zur Übersicht">←</button>
       <div class="gtitle">${MODES[m].icon} ${MODES[m].title}</div><div class="gprog" id="gprog"></div>
       ${m==='time'?'<div class="timebar" id="timebar"></div>':''}</div>
     <div class="gbody"><div class="stage" id="stage"><div class="zoomctl" id="zoomctl" hidden><button type="button" data-z="-1" aria-label="Verkleinern">−</button><span class="zl">1×</span><button type="button" data-z="1" aria-label="Vergrößern">+</button></div><svg id="svg" xmlns="${NS}"></svg><svg id="geo" xmlns="${NS}"></svg><div class="bignum" id="bignum" hidden></div></div>
@@ -1037,7 +1037,7 @@ function answer(val){
   if(q.kind==='task')redraw();else if(q.kind==='draw')revealDraw();else if(q.kind!=='degree')renderAngle(q,{reveal:true});
   $('#panel').classList.add('answered');
   const fb=$('#fb');
-  fb.innerHTML=`<div class="fbox ${r.correct?'ok':r.score>0?'half':'bad'}"><div>${r.msg}</div>${xp?`<div class="xpgain sm">+${xp} XP</div>`:''}<button class="big go" id="weiter">${G.i+1>=G.total?'Auswertung ▶':'Weiter ▶'}</button></div>`;
+  fb.innerHTML=`<div class="fbox ${r.correct?'ok':r.score>0?'half':'bad'}"><div>${r.msg}</div>${xp?`<div class="xpgain sm">+${xp} Punkte</div>`:''}<button class="big go" id="weiter">${G.i+1>=G.total?'Auswertung ▶':'Weiter ▶'}</button></div>`;
   $('#weiter').onclick=()=>{G.i++;next();};
   fb.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
@@ -1051,7 +1051,7 @@ function finish(){
     const old=S.high[k]||0,rec=G.score>old;
     if(rec){S.high[k]=G.score;save();}
     const xp=G.score*5;if(xp)addXP(xp);
-    body=`<div class="rbig">${G.score}</div><p>richtige Antworten in 60 Sekunden</p><p>${rec&&G.score>0?'🏆 Neuer Rekord!':'Rekord: '+old}</p>${xp?`<div class="xpgain">+${xp} XP</div>`:''}`;
+    body=`<div class="rbig">${G.score}</div><p>richtige Antworten in 60 Sekunden</p><p>${rec&&G.score>0?'🏆 Neuer Rekord!':'Rekord: '+old}</p>${xp?`<div class="xpgain">+${xp} Punkte</div>`:''}`;
     if(rec&&G.score>0)confetti();
   }else if(m==='test'){
     const max=G.log.length,pts=G.log.reduce((a,l)=>a+l.r.score,0),pct=pts/max*100,n=noteFor(pct);lzRec("W",S.sel,n);
@@ -1067,12 +1067,12 @@ function finish(){
       const c=r.score===1?'ok':r.score>0?'half':'bad';
       return`<li class="${c}"><span>${r.score===1?'✓':r.score>0?'½':'✗'}</span>${i+1}. ${t}</li>`;
     }).join('');
-    body=`<div class="note n${n}">Note ${n}</div><p>${NOTE_TXT[n]} · ${fmt(pts)} von ${max} Punkten (${Math.round(pct)} %)</p>${window.lzEval?lzEval(S.sel,n):''}<div class="xpgain">+${xp} XP</div><ul class="review">${rv}</ul>`;
+    body=`<div class="note n${n}">Note ${n}</div><p>${NOTE_TXT[n]} · ${fmt(pts)} von ${max} Punkten (${Math.round(pct)} %)</p>${window.lzEval?lzEval(S.sel,n):''}<div class="xpgain">+${xp} Punkte</div><ul class="review">${rv}</ul>`;
     if(n<=2)confetti();
   }else{
     const c=G.log.filter(l=>l.r.correct).length,pct=c/G.log.length;
     const st=pct>=.9?3:pct>=.7?2:pct>=.5?1:0;
-    body=`<div class="rstars">${'★'.repeat(st)}${'☆'.repeat(3-st)}</div><div class="rbig">${c} / ${G.log.length}</div><p>${m==='estimate'?'gut geschätzt (höchstens 10° daneben)':m==='draw'?'genau gezeichnet (höchstens 5° daneben)':'richtig'}</p>${G.xp?`<div class="xpgain">+${G.xp} XP</div>`:''}`;
+    body=`<div class="rstars">${'★'.repeat(st)}${'☆'.repeat(3-st)}</div><div class="rbig">${c} / ${G.log.length}</div><p>${m==='estimate'?'gut geschätzt (höchstens 10° daneben)':m==='draw'?'genau gezeichnet (höchstens 5° daneben)':'richtig'}</p>${G.xp?`<div class="xpgain">+${G.xp} Punkte</div>`:''}`;
     if(st===3)confetti();
   }
   app.innerHTML=`<div class="result"><div class="rcard"><div class="rtitle">${MODES[m].icon} ${MODES[m].title}</div>${body}<div class="rbtns"><button class="big go" id="again">Nochmal</button><button class="big sec" id="tohome">Zur Basis</button></div></div></div>`;
@@ -1218,7 +1218,7 @@ function home(){
       <div class="set"><div><b>Schwierigkeit</b><small>${S.diff==='leicht'?'Leicht: Beim Messen und Zeichnen liegt ein Schenkel waagerecht.':'Profi: Alle Winkel sind beliebig gedreht.'}</small></div>
         <div class="seg"><button data-d="leicht" class="${S.diff==='leicht'?'on':''}">Leicht</button><button data-d="profi" class="${S.diff==='profi'?'on':''}">Profi</button></div></div>
       <div class="set"><div><b>Rekorde mit dieser Paket-Auswahl</b><small>Zeitrunde: ${S.high[k]||0} Punkte · Beste Testnote: ${S.grades[k]?S.grades[k]+' ('+NOTE_TXT[S.grades[k]]+')':'noch kein Test'}</small></div></div>
-      <div class="set"><div><b>Fortschritt zurücksetzen</b><small>Löscht XP, Ränge, Lernziele und Rekorde auf diesem Gerät.</small></div><button class="btn-s" id="reset">Zurücksetzen</button></div>
+      <div class="set"><div><b>Fortschritt zurücksetzen</b><small>Löscht Punkte, Ränge, Lernziele und Rekorde auf diesem Gerät.</small></div><button class="btn-s" id="reset">Zurücksetzen</button></div>
     </div></div>`;
   app.querySelectorAll('.pack').forEach(b=>b.onclick=()=>{const id=b.dataset.p;S.sel=S.sel.includes(id)?S.sel.filter(x=>x!==id):[...S.sel,id];save();const y=app.scrollTop;home();app.scrollTop=y;});
   app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>startMode(b.dataset.m));
@@ -1238,7 +1238,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=6.6.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=6.7.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1248,22 +1248,22 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=6.6.0"></script>
+<script src="../js/lernplan.js?v=6.7.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=6.6.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=6.7.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=6.6.0"></script>
+<script src="../js/nutzer.js?v=6.7.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=6.6.0"></script>
+<script src="../js/home-btn.js?v=6.7.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=6.6.0"></script>
+<script src="../js/arena-btn.js?v=6.7.0"></script>
 </body>
 </html>

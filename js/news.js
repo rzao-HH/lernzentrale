@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["6.7.0","27.09.2026",["🧭 Einheitliche Bedienung: überall „Punkte“ und „Abschlusstest“, Zurück-Pfeil ← in allen Apps","🐚 Küsten-Crew: Ton an/aus mit Klängen bei richtig und falsch, Dunkelmodus, Noten-Sprüche im Küsten-Stil"]],
  ["6.6.0","27.09.2026",["📴 Offline-Modus: Nach einem Besuch mit Internet öffnet sich die Lernzentrale auch ohne Internet","🧹 Im Hintergrund aufgeräumt: aufgeteilt in Startseite, vier Apps und gemeinsame Bausteine – für Robin bleibt alles gleich","🖼️ Eigenes Symbol für den Home-Bildschirm"]],
  ["6.5.1","27.09.2026",["🔢 Versionsnummern sind jetzt dreistellig: große Umbauten · neue Funktionen · kleine Korrekturen"]],
  ["6.5","27.09.2026",["🆕 Diese Seite: Was ist neu? – ganz unten auf der Startseite über „🆕 Was ist neu?“","👥 Gleicher Name in einer Lerngruppe: Beim Beitreten kann man einen eigenen Namen für die Gruppe wählen","👥 Warnung, wenn man schon in einer Lerngruppe mit demselben Namen ist"]],
