@@ -167,7 +167,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
 <script>
 /* ===== Familien-Sync (Supabase) ===== */
 (function(){
-  const SB_URL='__SB_URL__',SB_KEY='__SB_KEY__';
+  const SB_URL='https://vhmxzlztbpjwfytnyhbv.supabase.co',SB_KEY='sb_publishable_x23BTTRX3UJBmXf0gGhyvQ_osygIIcE';
   const TRACK=/^(nutzer-alle|lernzentrale-v1|lz-ergebnisse|lernplan-|lzp-|winkelakademie|wasserzauberschule|unit6-progress|detektivbuero|lz-story@)/;
   const P=Storage.prototype,oSet=P.setItem,oRem=P.removeItem;
   window.__lsSet=(k,v)=>oSet.call(localStorage,k,v);
@@ -185,7 +185,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   P.setItem=function(k,v){oSet.call(this,k,v);if(this===localStorage)window.lzDirty(k);};
   P.removeItem=function(k){oRem.call(this,k);if(this===localStorage)window.lzDirty(k);};
   async function rpc(fn,body){
-    const r=await fetch(SB_URL.replace(/\/+$/,'')+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+SB_KEY},body:JSON.stringify(body)});
+    const r=await fetch(SB_URL.replace(/\/+$/,'')+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY},body:JSON.stringify(body)});
     if(!r.ok)throw new Error('HTTP '+r.status);const t=await r.text();return t?JSON.parse(t):null;}
   async function flush(){
     if(!on()||!synced())return;const ks=[...dirty];if(!ks.length)return;dirty.clear();
