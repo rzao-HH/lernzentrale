@@ -162,39 +162,102 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   <button class="cmp" id="cmp" aria-pressed="false">Nur heute</button>
   <div class="sum" id="sum"></div>
   <div class="grid" id="grid"></div>
-  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt. Von Hand eintragen muss man nur, wenn kein Test in der App gemacht wurde.<br><span id="lzcloud">📱 Fortschritt wird auf diesem Gerät gespeichert.</span><br><span class="ver">Version 5.0 · 26.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
+  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt. Von Hand eintragen muss man nur, wenn kein Test in der App gemacht wurde.<br><span id="lzcloud">📱 Fortschritt wird auf diesem Gerät gespeichert.</span><br><span class="ver">Version 5.1 · 26.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
 </div>
 <script>
-/* ===== Speicher im Claude-Konto (db) ===== */
+/* ===== Familien-Sync (Supabase) ===== */
 (function(){
+  const SB_URL='__SB_URL__',SB_KEY='__SB_KEY__';
   const TRACK=/^(nutzer-alle|lernzentrale-v1|lz-ergebnisse|lernplan-|lzp-|winkelakademie|wasserzauberschule|unit6-progress|detektivbuero|lz-story@)/;
-  const P=Storage.prototype,oSet=P.setItem,oRem=P.removeItem,LOAD=Date.now();
+  const P=Storage.prototype,oSet=P.setItem,oRem=P.removeItem;
   window.__lsSet=(k,v)=>oSet.call(localStorage,k,v);
-  let TS={};try{TS=JSON.parse(localStorage.getItem('lz-ts')||'{}')||{};}catch(e){}
+  const LS=k=>{try{return localStorage.getItem(k);}catch(e){return null;}};
+  let TS={};try{TS=JSON.parse(LS('lz-ts')||'{}')||{};}catch(e){}
   const saveTS=()=>{try{oSet.call(localStorage,'lz-ts',JSON.stringify(TS));}catch(e){}};
-  const dirty=new Set();let timer=null,DB=null,UID=null,ready=false;
-  window.lzDirty=k=>{if(!TRACK.test(k))return;TS[k]=Date.now();saveTS();dirty.add(k);if(ready){clearTimeout(timer);timer=setTimeout(flush,1500);}};
+  const dirty=new Set();let timer=null,busy=false,err=false,last=0;
+  const fam=()=>LS('lz-fam')||'';
+  const on=()=>/^https:\/\//.test(SB_URL)&&fam().length>=12;
+  const synced=()=>LS('lz-synced')===fam();
+  const appOpen=()=>{try{return !!curApp;}catch(e){return false;}};
+  /* Familien-Code per Link: …/#fam=CODE */
+  try{const m=location.hash.match(/^#fam=([^&]+)/);if(m){const c=decodeURIComponent(m[1]).trim();if(c.length>=12){oSet.call(localStorage,'lz-fam',c);oRem.call(localStorage,'lz-synced');}history.replaceState(null,'',location.pathname+location.search);}}catch(e){}
+  window.lzDirty=k=>{if(!TRACK.test(k))return;TS[k]=Date.now();saveTS();dirty.add(k);if(on()&&synced()){clearTimeout(timer);timer=setTimeout(flush,1500);}};
   P.setItem=function(k,v){oSet.call(this,k,v);if(this===localStorage)window.lzDirty(k);};
   P.removeItem=function(k){oRem.call(this,k);if(this===localStorage)window.lzDirty(k);};
-  async function flush(){if(!DB||!UID)return;const ks=[...dirty];dirty.clear();
-    for(const k of ks){try{const v=localStorage.getItem(k),ref=DB.collection('data/users/'+UID).doc(k);if(v===null)await ref.delete();else await ref.set({v,t:TS[k]||Date.now()});}catch(e){dirty.add(k);}}
+  async function rpc(fn,body){
+    const r=await fetch(SB_URL.replace(/\/+$/,'')+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+SB_KEY},body:JSON.stringify(body)});
+    if(!r.ok)throw new Error('HTTP '+r.status);const t=await r.text();return t?JSON.parse(t):null;}
+  async function flush(){
+    if(!on()||!synced())return;const ks=[...dirty];if(!ks.length)return;dirty.clear();
+    const items=ks.map(k=>({k,v:LS(k),ts:TS[k]||Date.now()}));
+    try{await rpc('lz_push',{p_fam:fam(),p_items:items});err=false;last=Date.now();}
+    catch(e){ks.forEach(k=>dirty.add(k));err=true;}
     setStat();}
   window.lzFlush=flush;
-  const setStat=()=>{const el=document.getElementById('lzcloud');if(el)el.textContent=DB&&UID?'☁️ Fortschritt wird zusätzlich in deinem Claude-Konto gespeichert.':'📱 Fortschritt wird auf diesem Gerät gespeichert.';};
+  function mergeNU(A,B){
+    A=A&&A.list?A:{list:[]};B=B&&B.list?B:{list:[]};
+    const del=[...new Set([...(A.del||[]),...(B.del||[])])];
+    const m=new Map();
+    B.list.forEach(u=>{if(u&&u.id)m.set(u.id,u);});
+    A.list.forEach(u=>{if(!u||!u.id)return;const x=m.get(u.id);if(!x||(u.t||0)>(x.t||0))m.set(u.id,u);});
+    const order=[...A.list.map(u=>u&&u.id),...B.list.map(u=>u&&u.id)].filter((id,i,a)=>id&&a.indexOf(id)===i);
+    const list=order.map(id=>m.get(id)).filter(u=>u&&!del.includes(u.id));
+    const n=Math.max(A.n||1,B.n||1);
+    let cur=A.cur&&list.some(u=>u.id===A.cur)?A.cur:(list[0]&&list[0].id)||'u1';
+    const out={list,cur,n};if(del.length)out.del=del;return out;}
+  function mergeErg(A,B){
+    const seen=new Set(),out=[];
+    [...(Array.isArray(B)?B:[]),...(Array.isArray(A)?A:[])].forEach(r=>{if(!r)return;const key=JSON.stringify([r.a,r.u,r.ts,r.g,r.k,r.units]);if(!seen.has(key)){seen.add(key);out.push(r);}});
+    out.sort((x,y)=>(x.ts||0)-(y.ts||0));return out;}
+  const P0=o=>{try{return JSON.parse(o);}catch(e){return null;}};
+  async function pull(){
+    if(!on()||busy||appOpen())return;busy=true;let changed=false;
+    try{
+      const rows=(await rpc('lz_pull',{p_fam:fam(),p_since:0}))||[];
+      const first=!synced(),R={};rows.forEach(x=>{if(x&&x.k)R[x.k]=x;});
+      rows.forEach(x=>{
+        const k=x.k;if(!k||!TRACK.test(k))return;
+        const local=LS(k),lt=TS[k]||0,rt=+x.ts||0;
+        if(k==='nutzer-alle'||k==='lz-ergebnisse'){
+          if(x.v===null)return;const B=P0(x.v);if(!B)return;const A=P0(local);
+          const M=k==='nutzer-alle'?mergeNU(A,B):mergeErg(A,B);const mv=JSON.stringify(M);
+          if(mv!==local){oSet.call(localStorage,k,mv);changed=true;}
+          const same=k==='nutzer-alle'?JSON.stringify(Object.assign({},M,{cur:0}))===JSON.stringify(Object.assign({},mergeNU(B,B),{cur:0})):mv===JSON.stringify(mergeErg(B,[]));
+          if(same){TS[k]=rt;dirty.delete(k);}else{TS[k]=Math.max(Date.now(),rt+1);dirty.add(k);}
+          return;}
+        if(first||rt>lt){
+          if(x.v===null){if(local!==null){oRem.call(localStorage,k);changed=true;}}
+          else if(local!==x.v){oSet.call(localStorage,k,x.v);changed=true;}
+          TS[k]=rt;dirty.delete(k);
+        }else if(lt>rt&&local!==x.v)dirty.add(k);
+      });
+      for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&TRACK.test(k)&&!R[k]){if(!TS[k])TS[k]=Date.now();dirty.add(k);}}
+      saveTS();if(first)oSet.call(localStorage,'lz-synced',fam());
+      err=false;last=Date.now();
+    }catch(e){err=true;}
+    busy=false;
+    if(!err&&dirty.size)await flush();
+    setStat();
+    if(changed&&window.lzAfterSync)window.lzAfterSync();
+  }
+  window.lzPull=pull;
+  const hh=d=>d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+  function setStat(){
+    const el=document.getElementById('lzcloud');if(!el)return;
+    if(!/^https:\/\//.test(SB_URL)){el.textContent='📱 Fortschritt wird auf diesem Gerät gespeichert.';return;}
+    if(!on()){el.innerHTML='📱 Nur auf diesem Gerät gespeichert · <a href="#" data-fam="1">☁️ Familien-Code eingeben</a>';return;}
+    el.innerHTML=(err?'⚠️ Gerade keine Verbindung – wird automatisch nachgeholt':'☁️ Mit der Familie synchronisiert'+(last?' ('+hh(new Date(last))+')':''))+' · <a href="#" data-fam="1">Code ändern</a>';}
   window.lzCloudStat=setStat;
-  document.addEventListener('visibilitychange',()=>{if(document.hidden&&dirty.size)flush();});
-  (async()=>{try{if(!window.LZ_CLOUD||!window.claude||!claude.use)return setStat();
-    const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
-    const uid=user?await user.id():null;if(!db||!uid){setStat();return;}
-    DB=db;UID=uid;const snap=await db.collection('data/users/'+uid).limit(1000).get();const R={};snap.docs.forEach(d=>{const x=d.data();if(x&&typeof x.v==='string')R[d.id]=x;});
-    let changed=false;
-    Object.entries(R).forEach(([k,x])=>{const lt=TS[k]||0,local=localStorage.getItem(k);
-      const keepLocal=local!==null&&lt>x.t&&lt<LOAD;
-      if(!keepLocal&&local!==x.v){oSet.call(localStorage,k,x.v);TS[k]=x.t;changed=true;}});
-    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&TRACK.test(k)){const x=R[k];if(!x||(TS[k]||0)>x.t||(!TS[k]&&!x)){if(!TS[k])TS[k]=Date.now();dirty.add(k);}}}
-    saveTS();ready=true;setStat();if(dirty.size)flush();
-    if(changed){if(window.lzAfterSync)window.lzAfterSync();}
-  }catch(e){setStat();}})();
+  document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('[data-fam]');if(!a)return;e.preventDefault();
+    const c=prompt('Familien-Code eingeben (mindestens 12 Zeichen).\nAuf allen Geräten derselbe Code:',fam());
+    if(c===null)return;const v=c.trim();
+    if(!v){oRem.call(localStorage,'lz-fam');oRem.call(localStorage,'lz-synced');setStat();return;}
+    if(v.length<12){alert('Der Code muss mindestens 12 Zeichen lang sein.');return;}
+    oSet.call(localStorage,'lz-fam',v);oRem.call(localStorage,'lz-synced');setStat();pull();});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){if(dirty.size)flush();}else pull();});
+  addEventListener('pagehide',()=>{if(dirty.size)flush();});
+  setInterval(()=>{if(!document.hidden){if(dirty.size&&synced())flush();pull();}},30000);
+  setTimeout(()=>{setStat();pull();},0);
 })();
 </script>
 <script>
@@ -521,8 +584,8 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-addp]")){const inp=document.getElementById("nuName"),n=(inp.value||"").trim(),er=document.getElementById("nuErr");
     if(!n){er.textContent="Bitte einen Namen eingeben.";inp.focus();return;}
     if(NU.list.some(x=>x.id!==editId&&x.name.toLowerCase()===n.toLowerCase())){er.textContent="Diesen Namen gibt es schon.";return;}
-    if(whoMode==="form"&&editId){const x=NU.list.find(y=>y.id===editId);if(x){x.name=n.slice(0,20);x.e=wDraft.e;}editId=null;whoMode="";save();render();return;}
-    NU.n=Math.max(NU.n||0,...NU.list.map(u=>+u.id.slice(1)||0),...(NU.del||[]).map(d=>+d.slice(1)||0))+1;const id="u"+NU.n;NU.list.push({id,name:n.slice(0,20),e:wDraft.e});NU.cur=id;whoOpen=false;whoMode="";save();render();return;}
+    if(whoMode==="form"&&editId){const x=NU.list.find(y=>y.id===editId);if(x){x.name=n.slice(0,20);x.e=wDraft.e;x.t=Date.now();}editId=null;whoMode="";save();render();return;}
+    NU.n=Math.max(NU.n||0,...NU.list.map(u=>+u.id.slice(1)||0),...(NU.del||[]).map(d=>+d.slice(1)||0))+1;let id="u"+(100000+Math.floor(Math.random()*899900000));while(NU.list.some(u=>u.id===id)||(NU.del||[]).includes(id))id="u"+(100000+Math.floor(Math.random()*899900000));NU.list.push({id,name:n.slice(0,20),e:wDraft.e,t:Date.now()});NU.cur=id;whoOpen=false;whoMode="";save();render();return;}
   const dp=e.target.closest("[data-delp]"); if(dp){const u=NU.list.find(x=>x.id===dp.dataset.delp);
     if(u&&confirm(u.name+" löschen? Fortschritt, Punkte und Noten dieser Person gehen in allen Apps verloren.")){NU.del=[...(NU.del||[]),u.id];NU.list=NU.list.filter(x=>x!==u);save();lzPurge(u.id);renderWho();}return;}
   const o=e.target.closest("[data-open]"); if(o){st(o.dataset.open).last=Date.now();save();lzPushed=true;setTimeout(()=>showApp(o.dataset.open),0);return;}
