@@ -152,17 +152,25 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
 .row2{display:flex;gap:10px;align-items:center;justify-content:space-between}.row2 .go{flex:1}
 .nuerr{color:var(--E);font-weight:800;font-size:.85rem;min-height:1em}
 .tile small{font-size:.8rem;opacity:.7}
+.sync{margin:12px 0 4px;padding:12px 14px;border:2px dashed var(--line);border-radius:16px;background:var(--card);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sync p{margin:0;flex:1 1 100%;font-size:.9rem;color:var(--muted)}.sync p b{color:var(--text);font-family:var(--display);font-size:1rem}
+.sync input{flex:1 1 160px;min-width:0;height:42px;border:1px solid var(--line);border-radius:10px;padding:0 10px;font:inherit;font-size:16px;background:var(--soft);color:var(--text)}
+.sync button{height:42px;padding:0 16px;border-radius:10px;border:0;background:var(--W);color:#fff;font-weight:800;font-size:.95rem;cursor:pointer}
+.sync .nuerr{flex:1 1 100%}.sync .nuerr:empty{display:none}
+.syncpill{display:inline-flex;align-items:center;gap:4px;margin:6px 0 0;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);font:inherit;font-size:.8rem;font-weight:700;color:var(--muted);cursor:pointer}
+.syncpill.err{color:var(--E);border-color:var(--E)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1 id="hi">Hallo Robin!</h1>
   <p class="date" id="date"></p>
+  <div id="lzsync"></div>
   <div class="who" id="who"></div>
   <button class="cmp" id="cmp" aria-pressed="false">Nur heute</button>
   <div class="sum" id="sum"></div>
   <div class="grid" id="grid"></div>
-  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt. Von Hand eintragen muss man nur, wenn kein Test in der App gemacht wurde.<br><span id="lzcloud">📱 Fortschritt wird auf diesem Gerät gespeichert.</span><br><span class="ver">Version 5.1 · 26.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
+  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt. Von Hand eintragen muss man nur, wenn kein Test in der App gemacht wurde.<br><span id="lzcloud">📱 Fortschritt wird auf diesem Gerät gespeichert.</span><br><span class="ver">Version 5.2 · 26.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
 </div>
 <script>
 /* ===== Familien-Sync (Supabase) ===== */
@@ -243,17 +251,27 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   window.lzPull=pull;
   const hh=d=>d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
   function setStat(){
-    const el=document.getElementById('lzcloud');if(!el)return;
-    if(!/^https:\/\//.test(SB_URL)){el.textContent='📱 Fortschritt wird auf diesem Gerät gespeichert.';return;}
-    if(!on()){el.innerHTML='📱 Nur auf diesem Gerät gespeichert · <a href="#" data-fam="1">☁️ Familien-Code eingeben</a>';return;}
-    el.innerHTML=(err?'⚠️ Gerade keine Verbindung – wird automatisch nachgeholt':'☁️ Mit der Familie synchronisiert'+(last?' ('+hh(new Date(last))+')':''))+' · <a href="#" data-fam="1">Code ändern</a>';}
+    const el=document.getElementById('lzcloud'),top=document.getElementById('lzsync');
+    if(!/^https:\/\//.test(SB_URL)){if(el)el.textContent='📱 Fortschritt wird auf diesem Gerät gespeichert.';if(top)top.innerHTML='';return;}
+    if(!on()){
+      if(el)el.innerHTML='📱 Nur auf diesem Gerät gespeichert · <a href="#" data-fam="1">☁️ Familien-Code eingeben</a>';
+      if(top&&!top.querySelector('.sync'))top.innerHTML='<div class="sync"><p><b>☁️ Geräte verbinden</b><br>Mit eurem Familien-Code (mind. 12 Zeichen) sind Personen, Punkte und Noten auf iPad und Handy gleich.</p><input id="lzfamin" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Familien-Code"><button type="button" data-famgo="1">Verbinden</button><div class="nuerr" id="lzfamerr"></div></div>';
+      return;}
+    const t=err?'⚠️ Gerade keine Verbindung – wird nachgeholt':'☁️ Mit der Familie synchronisiert'+(last?' ('+hh(new Date(last))+')':'');
+    if(el)el.innerHTML=t+' · <a href="#" data-fam="1">Code ändern</a>';
+    if(top)top.innerHTML='<button type="button" class="syncpill'+(err?' err':'')+'" data-fam="1" title="Familien-Code ändern">'+(err?'⚠️ Offline – wird nachgeholt':'☁️ Synchronisiert'+(last?' · '+hh(new Date(last)):''))+'</button>';}
+  function famSet(v){oSet.call(localStorage,'lz-fam',v);oRem.call(localStorage,'lz-synced');const top=document.getElementById('lzsync');if(top)top.innerHTML='';setStat();pull();}
+  document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-famgo]');if(!b)return;e.preventDefault();
+    const i=document.getElementById('lzfamin'),er=document.getElementById('lzfamerr'),v=(i&&i.value||'').trim();
+    if(v.length<12){if(er)er.textContent='Der Code muss mindestens 12 Zeichen lang sein.';return;}famSet(v);});
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='lzfamin'){e.preventDefault();const b=document.querySelector('[data-famgo]');if(b)b.click();}});
   window.lzCloudStat=setStat;
   document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('[data-fam]');if(!a)return;e.preventDefault();
     const c=prompt('Familien-Code eingeben (mindestens 12 Zeichen).\nAuf allen Geräten derselbe Code:',fam());
     if(c===null)return;const v=c.trim();
-    if(!v){oRem.call(localStorage,'lz-fam');oRem.call(localStorage,'lz-synced');setStat();return;}
+    if(!v){oRem.call(localStorage,'lz-fam');oRem.call(localStorage,'lz-synced');const top=document.getElementById('lzsync');if(top)top.innerHTML='';setStat();return;}
     if(v.length<12){alert('Der Code muss mindestens 12 Zeichen lang sein.');return;}
-    oSet.call(localStorage,'lz-fam',v);oRem.call(localStorage,'lz-synced');setStat();pull();});
+    famSet(v);});
   document.addEventListener('visibilitychange',()=>{if(document.hidden){if(dirty.size)flush();}else pull();});
   addEventListener('pagehide',()=>{if(dirty.size)flush();});
   setInterval(()=>{if(!document.hidden){if(dirty.size&&synced())flush();pull();}},30000);
