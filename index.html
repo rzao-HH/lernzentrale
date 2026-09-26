@@ -30,6 +30,19 @@ h1{font-family:var(--display);font-weight:700;font-size:2rem;line-height:1.1;mar
 .sum{margin:14px 0 18px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:1rem}
 .sum b{font-family:var(--display);font-weight:600}
 .grid{display:grid;gap:14px}
+.rank{margin:18px 0 6px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 14px 10px}
+.rank h2{margin:0 0 8px;font-family:var(--display);font-weight:600;font-size:1.25rem}
+.rank table{width:100%;max-width:620px;border-collapse:collapse;font-size:.95rem}
+.rank th{font-size:.8rem;color:var(--muted);font-weight:800;text-align:right;padding:4px 6px}
+.rank th.n,.rank td.n{text-align:left}
+.rank td{padding:8px 6px;border-top:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rank td.n{font-weight:800;max-width:9em;overflow:hidden;text-overflow:ellipsis}
+.rank td.m{width:1.6em;text-align:center;padding-left:0;padding-right:0}
+.rank td.t{font-weight:800;font-family:var(--display);font-size:1.05rem}
+.rank tr.me td{background:var(--soft)}
+.rank .best{font-weight:800;color:var(--ok)}
+.rank p{margin:8px 2px 0;font-size:.8rem;color:var(--muted)}
+
 .app{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
 .top{display:flex;align-items:center;gap:12px;padding:14px 14px 12px;border-bottom:1px solid var(--line)}
 .ico{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:28px;background:color-mix(in srgb,var(--c) 14%,var(--card))}
@@ -170,7 +183,8 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   <button class="cmp" id="cmp" aria-pressed="false">Nur heute</button>
   <div class="sum" id="sum"></div>
   <div class="grid" id="grid"></div>
-  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt.<br><span class="ver">Version 5.8 · 26.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
+  <div id="rank"></div>
+  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt.<br><span class="ver">Version 5.9 · 26.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
 </div>
 <script>
 /* ===== Familien-Sync (Supabase) ===== */
@@ -574,6 +588,17 @@ function renderWho(){
     h+=`</div>`;}
   document.getElementById("who").innerHTML=h;
 }
+const RKA=[["W","winkelakademie-v1",3,"📐"],["Z","wasserzauberschule-v1",3,"🪄"],["D","detektivbuero-v1",1,"🕵️"]];
+function rankHTML(){
+  const L=people().filter(u=>u&&u.id),f=n=>(+n||0).toLocaleString("de-DE");
+  const rows=L.map(u=>{const v=RKA.map(([k,b,r])=>{const o=J(u.id==="u1"?b:b+("@"+u.id).repeat(r),null);return o&&typeof o==="object"?Math.max(0,+o.xp||0):0;});return{u,v,t:v.reduce((a,b)=>a+b,0)};});
+  rows.sort((a,b)=>b.t-a.t||a.u.name.localeCompare(b.u.name));
+  const mx=RKA.map((_,i)=>Math.max(0,...rows.map(r=>r.v[i])));
+  const med=["🥇","🥈","🥉"];let pl=0;
+  const tr=rows.map((r,i)=>{if(i===0||r.t<rows[i-1].t)pl=i;const m=r.t>0?(med[pl]||(pl+1)+"."):"";
+    return `<tr class="${r.u.id===NU.cur?"me":""}"><td class="m">${m}</td><td class="n">${r.u.icon} ${esc(r.u.name)}</td>${r.v.map((x,j)=>`<td class="${x&&x===mx[j]&&rows.length>1?"best":""}">${f(x)}</td>`).join("")}<td class="t">${f(r.t)}</td></tr>`;}).join("");
+  return `<section class="rank" aria-label="Rangliste"><h2>🏆 Rangliste</h2><table><thead><tr><th class="m"></th><th class="n">Name</th>${RKA.map(a=>`<th title="${esc(APPS.find(x=>x.k===a[0]).name)}">${a[3]}</th>`).join("")}<th>Gesamt</th></tr></thead><tbody>${tr}</tbody></table><p>Punkte aus 📐 Winkel-Akademie, 🪄 Wasser-Zauberschule und 🕵️ Detektiv-Büro. Grün = Bestwert in der App.${L.length<2?" Leg weitere Personen an oder tritt einer Lerngruppe bei, um gegeneinander anzutreten.":""}</p></section>`;
+}
 function render(){
   loadAll();document.body.classList.toggle("compact",!!UI().compact);const cb=document.getElementById("cmp");cb.textContent=UI().compact?"Alles zeigen":"Nur heute";cb.setAttribute("aria-pressed",!!UI().compact);
   renderWho();
@@ -581,6 +606,7 @@ function render(){
   document.getElementById("date").textContent=d.toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long"});
   const g=document.getElementById("grid");
   if(WIDE.matches){g.className="";g.innerHTML=board();}else{g.className="grid";g.innerHTML=APPS.map(a=>card(a,false)).join("");}
+  try{document.getElementById("rank").innerHTML=rankHTML();}catch(e){}
   const act=APPS.filter(a=>{const s=st(a.k);return s.n&&s.count<s.n;});
   const open=act.filter(a=>st(a.k).doneDate!==today());
   const maxLeft=Math.max(0,...APPS.map(a=>{const s=st(a.k);return s.n?s.n-s.count:0;}));
