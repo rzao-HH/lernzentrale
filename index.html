@@ -101,6 +101,13 @@ h1{font-family:var(--display);font-weight:700;font-size:2rem;line-height:1.1;mar
 .ar-cb{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.ar-go.sec{background:var(--soft);color:var(--text);border:1px solid var(--line)}
 .rk-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}.rk-tabs button{border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:999px;padding:5px 12px;font-weight:800;font-size:.85rem;cursor:pointer}.rk-tabs button.on{background:var(--W);border-color:var(--W);color:#fff}
 @media (max-width:560px){.ar-card{flex-direction:column;align-items:stretch}.ar-cb{justify-content:stretch}.ar-cb .ar-go{flex:1}}
+#newsOv{position:fixed;inset:0;z-index:10050;display:none;align-items:flex-start;justify-content:center;background:rgba(10,14,30,.6);padding:max(16px,env(safe-area-inset-top)) 12px 16px;overflow:auto;font-family:var(--body)}
+#newsOv.on{display:flex}
+.nw-v{border-top:1px solid var(--line);padding:10px 2px}.nw-v:first-of-type{border-top:0}
+.nw-h{display:flex;justify-content:space-between;align-items:baseline}.nw-h small{color:var(--muted);font-weight:700}
+.nw-v ul{margin:6px 0 0;padding-left:20px}.nw-v li{margin:3px 0}
+.nw-link{border:0;background:none;color:var(--W);font:inherit;font-weight:800;cursor:pointer;padding:0;margin-left:6px;text-decoration:underline}
+.nw-dot{display:inline-block;background:var(--E);color:#fff;border-radius:999px;padding:0 7px;font-size:.75rem;text-decoration:none;margin-left:4px}
 
 .rank{margin:18px 0 6px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 14px 10px}
 .rank h2{margin:0 0 8px;font-family:var(--display);font-weight:600;font-size:1.25rem}
@@ -257,7 +264,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
   <div class="grid" id="grid"></div>
   <div id="arena"></div>
   <div id="rank"></div>
-  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt.<br><span class="ver">Version 6.4 · 27.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
+  <footer>Personen, Lernplan, erledigte Tage und Testnoten gelten hier und in allen Apps gemeinsam. Noten aus Tests in den Apps erscheinen automatisch beim passenden Lerntag (📲); die beste Note zählt.<br><span class="ver">Version 6.5 · 27.09.2026</span><br><span id="lzdiag" style="opacity:.75"></span></footer>
 </div>
 <script>
 /* ===== Familien-Sync (Supabase) ===== */
@@ -786,12 +793,11 @@ window.lzMyGroups=()=>{try{return groupsOf(me().id);}catch(e){return[];}};
 window.lzMe=()=>{const u=me();return{uid:u.id,gid:u.gid,name:u.name,e:u.e};};
 function online(){return !!window.__lzRpc&&/^https:/.test((window.__LZSB||{}).url||"");}
 function xpOf(uid){const o={};APPK.forEach(([k,b,r])=>{const v=J(uid==="u1"?b:b+("@"+uid).repeat(r),null);o[k]=v&&typeof v==="object"?Math.max(0,+v.xp||0):0;});return o;}
-function memberRec(u){const ar=J("lz-arena-pts@"+u.id,{})||{};return{gid:u.gid,name:u.name,e:u.e,xp:xpOf(u.id),ar:Math.max(0,+ar.p||0),ts:Date.now()};}
+function memberRec(u,alias){const ar=J("lz-arena-pts@"+u.id,{})||{};return{gid:u.gid,name:alias||u.name,e:u.e,xp:xpOf(u.id),ar:Math.max(0,+ar.p||0),ts:Date.now()};}
 /* Mitgliedsdaten hochladen (nur Name, Icon, Punkte) */
 const SENT={};
 async function pushMembers(){if(!online())return;for(const u of NU.list){if(!u.gid)continue;const gs=groupsOf(u.id);if(!gs.length)continue;
-  const r=memberRec(u),sig=JSON.stringify([r.name,r.e,r.xp,r.ar]);
-  for(const g of gs){const key=g.code+"|"+u.gid;if(SENT[key]===sig)continue;try{await RPC("lz_push",{p_fam:space(g.code),p_items:[{k:"m:"+u.gid,v:JSON.stringify(r),ts:Date.now()}]});SENT[key]=sig;}catch(e){}}}}
+  for(const g of gs){const r=memberRec(u,g.alias),sig=JSON.stringify([r.name,r.e,r.xp,r.ar]);const key=g.code+"|"+u.gid;if(SENT[key]===sig)continue;try{await RPC("lz_push",{p_fam:space(g.code),p_items:[{k:"m:"+u.gid,v:JSON.stringify(r),ts:Date.now()}]});SENT[key]=sig;}catch(e){}}}}
 window.lzPushMembers=pushMembers;
 /* Gruppendaten holen (Cache) */
 const CACHE={};
@@ -806,6 +812,7 @@ window.lzGroupPut=async(code,k,v)=>{await RPC("lz_push",{p_fam:space(code),p_ite
 /* Anlegen / Beitreten / Austreten */
 async function create(){const u=ensureGid();const name=(prompt("Wie soll die neue Lerngruppe heißen?\nz. B. Klasse 6b, Familie, Nachhilfe Mathe")||"").trim().slice(0,30);if(!name)return;
   if(!online()){alert("Lerngruppen brauchen eine Internetverbindung.");return;}
+  if(groupsOf(u.id).some(g=>g.name.toLowerCase()===name.toLowerCase())&&!confirm(`${u.name} ist schon in einer Lerngruppe „${name}“.\nTrotzdem eine weitere mit demselben Namen anlegen? (Zur Unterscheidung steht der Code daneben.)`))return;
   const code=newCode();
   try{await RPC("lz_push",{p_fam:space(code),p_items:[{k:"meta",v:JSON.stringify({name,by:u.name,created:Date.now()}),ts:Date.now()}]});}catch(e){alert("Das hat nicht geklappt. Bitte später noch einmal versuchen.");return;}
   setGroups(u.id,[...groupsOf(u.id),{code,name,joined:Date.now()}]);await pushMembers();show({share:code});}
@@ -813,7 +820,10 @@ async function join(code){const u=ensureGid();code=normCode(code);if(!/^[A-Z0-9]
   if(groupsOf(u.id).some(g=>g.code===code)){alert(u.name+" ist schon in dieser Lerngruppe.");return false;}
   const g=await pullGroup(code,true);if(!g||!g.meta){alert("Diese Lerngruppe gibt es nicht. Bitte den Code prüfen.");return false;}
   if(!confirm(`${u.e} ${u.name} tritt der Lerngruppe „${g.meta.name}“ bei?\n\nDie anderen sehen dann Name, Icon und Punkte und können ${u.name} zu Duellen herausfordern. Lernpläne und Noten bleiben privat.`))return false;
-  setGroups(u.id,[...groupsOf(u.id),{code,name:g.meta.name,joined:Date.now()}]);await pushMembers();show();return true;}
+  let alias="";const taken=n=>g.members.some(m=>m.gid!==u.gid&&String(m.name).toLowerCase()===String(n).toLowerCase());
+  if(taken(u.name)){for(;;){const a=prompt(`In „${g.meta.name}“ gibt es schon jemanden, der „${u.name}“ heißt.\nUnter welchem Namen möchtest du dort erscheinen? (z. B. mit Anfangsbuchstaben des Nachnamens)`,u.name+" "+u.name[0]+".");if(a===null)return false;const t=a.trim().slice(0,20);if(!t)continue;if(taken(t)){alert("Auch „"+t+"“ gibt es dort schon.");continue;}alias=t===u.name?"":t;break;}}
+  const same=groupsOf(u.id).some(x=>x.name.toLowerCase()===String(g.meta.name).toLowerCase());if(same)alert(`Hinweis: ${u.name} ist schon in einer anderen Lerngruppe namens „${g.meta.name}“. Zur Unterscheidung steht der Code daneben.`);
+  setGroups(u.id,[...groupsOf(u.id),{code,name:g.meta.name,joined:Date.now(),alias}]);await pushMembers();show();return true;}
 async function leave(code){const u=me(),g=groupsOf(u.id).find(x=>x.code===code);if(!g)return;
   if(!confirm(`${u.name} verlässt die Lerngruppe „${g.name}“?`))return;
   setGroups(u.id,groupsOf(u.id).filter(x=>x.code!==code));try{await RPC("lz_push",{p_fam:space(code),p_items:[{k:"m:"+u.gid,v:null,ts:Date.now()}]});}catch(e){}delete SENT[code+"|"+u.gid];show();}
@@ -828,7 +838,7 @@ function show(o){o=o||{};const u=me(),gs=groupsOf(u.id);OV.classList.add("on");
    <p class="ar-p0">${esc(u.e)} <b>${esc(u.name)}</b> – in einer Lerngruppe sehen alle Name, Icon und Punkte und können sich zu Duellen herausfordern. Lernpläne und Noten bleiben privat.</p>
    ${o.share?(()=>{const g=gs.find(x=>x.code===o.share);return `<div class="gr-new"><div>✅ Lerngruppe <b>„${esc(g?g.name:"")}“</b> angelegt!</div><div class="gr-code">${esc(o.share)}</div><p class="ar-p0">Schick den Code oder Link an alle, die mitmachen sollen. Wer ihn eingibt, ist automatisch dabei.</p><button type="button" class="ar-btn" data-gshare="${esc(o.share)}">📤 Link teilen</button></div>`;})():""}
    <div class="ar-h">Deine Lerngruppen</div>
-   ${gs.length?gs.map(g=>`<div class="ar-g"><b>👥 ${esc(g.name)}</b><small class="gr-c">${esc(g.code)}</small><span class="gr-btns"><button type="button" data-gshare="${esc(g.code)}">📤 Teilen</button><button type="button" class="sec" data-gleave="${esc(g.code)}">Austreten</button></span></div>`).join(""):`<p class="ar-p0">Noch keine. Leg eine an oder tritt mit einem Code bei.</p>`}
+   ${gs.length?gs.map(g=>`<div class="ar-g"><b>👥 ${esc(g.name)}</b><small class="gr-c">${esc(g.code)}${g.alias?" · dort als „"+esc(g.alias)+"“":""}</small><span class="gr-btns"><button type="button" data-gshare="${esc(g.code)}">📤 Teilen</button><button type="button" class="sec" data-gleave="${esc(g.code)}">Austreten</button></span></div>`).join(""):`<p class="ar-p0">Noch keine. Leg eine an oder tritt mit einem Code bei.</p>`}
    <div class="ar-h">Beitreten</div><div class="gr-join"><input id="grIn" placeholder="Code, z. B. KX7P-2M9Q-HT4R" autocapitalize="characters" autocomplete="off" spellcheck="false"><button type="button" data-gjoin>Beitreten</button></div>
    <button type="button" class="ar-btn" data-gnew>➕ Neue Lerngruppe anlegen</button>
    ${online()?"":`<p class="ar-p0">⚠️ Ohne Internetverbindung gehen Lerngruppen nicht.</p>`}</div>`;}
@@ -877,7 +887,7 @@ let CHS={},PRES={},ONLINE=[],HANDLERS=[],joined=false,lastSig="",SB=null;
 function famCode(){return LSg("lz-fam")||"";}
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36);}
 function myPresence(){const m=meP();return{dev:DEV,uid:m.uid,gid:m.gid,name:m.name,e:m.e,app:curAppK(),ts:Date.now()};}
-function spaces(){const L=[];const f=famCode();if(f)L.push({id:"f:"+f,label:""});(window.lzMyGroups?lzMyGroups():[]).forEach(g=>L.push({id:"grp:"+g.code,label:g.name}));return L;}
+function spaces(){const L=[];const f=famCode();if(f)L.push({id:"f:"+f,label:""});(window.lzMyGroups?lzMyGroups():[]).forEach(g=>L.push({id:"grp:"+g.code,label:g.name,alias:g.alias||""}));return L;}
 function mergePres(){const m={};Object.entries(PRES).forEach(([sp,list])=>list.forEach(p=>{if(!p||p.dev===DEV)return;const k=p.dev;if(!m[k]||m[k].ts<p.ts)m[k]=Object.assign({},p,{sp});}));setOnline(Object.values(m));}
 function setOnline(list){ONLINE=list.filter(p=>p&&p.dev!==DEV);drawCard();drawPick();}
 function send(msg){msg.from_dev=DEV;msg.mid=msg.mid||Math.random().toString(36).slice(2);try{if(window.__arenaMock){window.__arenaOut(JSON.stringify(msg));return;}Object.values(CHS).forEach(ch=>ch.send({type:"broadcast",event:"m",payload:msg}));}catch(e){}}
@@ -894,13 +904,13 @@ async function join(){
     want.forEach(sp=>{if(CHS[sp.id])return;const ch=SB.channel("arena-"+hash(sp.id),{config:{presence:{key:DEV},broadcast:{self:false}}});CHS[sp.id]=ch;
       ch.on("presence",{event:"sync"},()=>{const st=ch.presenceState();PRES[sp.id]=Object.values(st).map(a=>Object.assign({},a[a.length-1],{spl:sp.label}));mergePres();});
       ch.on("broadcast",{event:"m"},({payload})=>recv(payload));
-      ch.subscribe(async s=>{if(s==="SUBSCRIBED"){try{await ch.track(myPresence());}catch(e){}}});});
+      ch.alias=sp.alias;ch.subscribe(async s=>{if(s==="SUBSCRIBED"){try{const p=myPresence();await ch.track(sp.alias?Object.assign(p,{name:sp.alias}):p);}catch(e){}}});});
     mergePres();
   }catch(e){joined=false;}
 }
 let spSig="";
 function presTick(){const p=myPresence(),sig=p.uid+"|"+p.app+"|"+p.name+"|"+p.e;if(sig===lastSig)return;lastSig=sig;
-  try{if(window.__arenaMock)window.__arenaOut(JSON.stringify({type:"presence-me",p}));else Object.values(CHS).forEach(ch=>ch.track(p));}catch(e){}}
+  try{if(window.__arenaMock)window.__arenaOut(JSON.stringify({type:"presence-me",p}));else Object.values(CHS).forEach(ch=>ch.track(ch.alias?Object.assign({},p,{name:ch.alias}):p));}catch(e){}}
 setInterval(()=>{const sg=spaces().map(x=>x.id).join(",");if(sg!==spSig){spSig=sg;joined=false;}if(!joined&&sg)join();if(joined)presTick();},3000);
 
 /* ---------- Fragen aus den Apps ---------- */
@@ -1080,7 +1090,7 @@ function usePu(){if(!GAME||!GAME.pu)return;const p=GAME.pu;GAME.pu=null;
 function finish(a,b,remote,why){if(!GAME||GAME.over)return;GAME.over=true;clearInterval(GAME.iv);
   const d=a-b,res=d>0?"w":d<0?"l":"d",me=GAME.me,stake=GAME.stake||0;
   let txt="";
-  if(GAME.recording){const grp=GAME.opp.grp||"",gn=grp&&(lzMyGroups().find(x=>x.code===grp)||{}).name;const g={id:GAME.id,ts:Date.now(),grp,grpName:gn||"",from:{uid:me.uid,gid:me.gid,name:me.name,e:me.e},to:{uid:GAME.opp.uid,gid:GAME.opp.gid,name:GAME.opp.name,e:GAME.opp.e},mode:GAME.mode,stake,qs:GAME.qs,rec:{tl:GAME.tl,fz:GAME.fz,fin:GAME.myTot,ok:GAME.ok},res:null};ghostSave(g);ghostClean();
+  if(GAME.recording){const grp=GAME.opp.grp||"",gg=grp&&lzMyGroups().find(x=>x.code===grp)||{},gn=gg.name;if(gg.alias)me.name=gg.alias;const g={id:GAME.id,ts:Date.now(),grp,grpName:gn||"",from:{uid:me.uid,gid:me.gid,name:me.name,e:me.e},to:{uid:GAME.opp.uid,gid:GAME.opp.gid,name:GAME.opp.name,e:GAME.opp.e},mode:GAME.mode,stake,qs:GAME.qs,rec:{tl:GAME.tl,fz:GAME.fz,fin:GAME.myTot,ok:GAME.ok},res:null};ghostSave(g);ghostClean();
     txt=`<div class="ar-big">👻</div><h3>Aufgezeichnet!</h3><p>Du hast <b>${GAME.ok}</b> Fragen richtig beantwortet. ${esc(GAME.opp.name)} bekommt deine Herausforderung und spielt später gegen deinen Geist.</p>`;}
   else{const P=ptsAdd(me.uid,res,stake);
     if(GAME.ghostRec){const g=GAME.ghostRec;g.res={win:res==="w"?"to":res==="l"?"from":"draw",a:g.rec.fin,b:a,okA:g.rec.ok||0,okB:GAME.ok,ts:Date.now(),fromSeen:false};ghostSave(g);}
@@ -1121,6 +1131,39 @@ function drawCard(){const el=document.getElementById("arena");if(!el)return;cons
 window.lzArenaCard=drawCard;
 if(window.__arenaMock)window.__arenaGame=()=>GAME;
 setInterval(drawCard,10000);setTimeout(drawCard,300);
+})();
+
+</script>
+<script>
+/* ===================== 🆕 Was ist neu? ===================== */
+(function(){
+const NEWS=[
+ ["6.5","27.09.2026",["🆕 Diese Seite: Was ist neu? – ganz unten auf der Startseite über „🆕 Was ist neu?“","👥 Gleicher Name in einer Lerngruppe: Beim Beitreten kann man einen eigenen Namen für die Gruppe wählen","👥 Warnung, wenn man schon in einer Lerngruppe mit demselben Namen ist"]],
+ ["6.4","27.09.2026",["👥 Lerngruppen: beliebig viele anlegen, per Link oder Code teilen, beitreten und austreten","🏆 Rangliste mit Reitern: dieses Gerät und jede Lerngruppe","⚔️ Arena über alle Lerngruppen, auch zwischen verschiedenen Familien","📱 „Geräte verbinden“ heißt jetzt so (vorher „Lerngruppe“) und gleicht den ganzen Lernstand der eigenen Geräte ab"]],
+ ["6.3","27.09.2026",["⚔️ Arena: 🪢 Tauziehen live gegen andere","⚡ Power-ups: Einfrieren, Doppelzug, Schild","👻 Geister-Duell gegen Aufzeichnungen, wenn der andere offline ist","🎰 Fach-Glücksrad mit Fragen aus allen vier Apps","💰 Arena-Punkte mit Einsatz, eigene Spalte in der Rangliste","⚔️-Knopf oben in jeder App"]],
+ ["6.2","27.09.2026",["🕵️ Detektiv-Büro: ⚡ Blitz-Ermittlung – 60 Sekunden, mit Rekord pro Akten-Auswahl"]],
+ ["6.1","27.09.2026",["🐚 Küsten-Crew: ☕ Café in Brighton (bestellen, mit Pfund bezahlen, Wechselgeld)","🔎 Verhör im Hafen (Fragen im Simple Past, Täter finden)","🗺️ Küsten-Schatzkarte","🔊 Hör-Kapitän (britische Aussprache)","📝 Schreibtest mit Musterlösung und Note"]],
+ ["6.0","27.09.2026",["🐚 Küsten-Crew im Aufbau der anderen Apps: Pakete wählen, Mission starten","⚓ Punkte und Ränge vom Schiffsjungen bis zum Admiral","🏆 Englisch zählt jetzt in der Rangliste"]],
+ ["5.9","26.09.2026",["🏆 Rangliste auf der Startseite: Winkel, NWT, Deutsch und Gesamt"]],
+ ["5.8","26.09.2026",["🔧 Personen bekommen eindeutige Kennungen, damit auf mehreren Geräten nichts vermischt wird"]],
+ ["5.1–5.7","26.09.2026",["🌐 Umzug auf die eigene Adresse rzao-hh.github.io/lernzentrale – Updates löschen keine Punkte mehr","☁️ Abgleich zwischen Geräten über eine eigene Datenbank","🎨 Verbinden-Karte oben statt versteckt im Fußbereich, klarere Beschriftungen"]],
+ ["5.0","26.09.2026",["🪄 Wasser-Zauberschule: Noten aus Prüfung und Schreibtest direkt auf den Paket-Karten"]],
+ ["4.9","26.09.2026",["📐 Winkel-Akademie: Pakete 5–8 (Kompass, Winkel benennen, berechnen, Senkrechte & Parallelen) und Schul-Checkliste"]],
+ ["4.8","26.09.2026",["🧹 Eltern-Bereich und KI-Korrektur entfernt, Schreibtests mit Selbstkontrolle"]],
+ ["4.5–4.7","25.09.2026",["🧪 Werkstatt und Forscherlabor mit Start/Prüfen und ausgeblendeter Anzeige während der Aufgabe","🔎 Speicher-Info unten auf der Startseite"]],
+ ["4.4","25.09.2026",["🚫 Keine Anmelde-Aufforderung mehr beim Öffnen"]]
+];
+const cur=NEWS[0][0];
+const OV=document.createElement("div");OV.id="newsOv";document.body.appendChild(OV);
+function open(){OV.innerHTML=`<div class="ar-box"><div class="ar-top"><b>🆕 Was ist neu?</b><button type="button" class="ar-x" data-nx>✕</button></div>
+  ${NEWS.map(([v,d,L])=>`<div class="nw-v"><div class="nw-h"><b>Version ${v}</b><small>${d}</small></div><ul>${L.map(x=>`<li>${x}</li>`).join("")}</ul></div>`).join("")}</div>`;
+  OV.classList.add("on");try{localStorage.setItem("lz-news-seen",cur);}catch(e){}mark();}
+function mark(){const v=document.querySelector("footer .ver");if(!v)return;let seen="";try{seen=localStorage.getItem("lz-news-seen")||"";}catch(e){}
+  let b=document.getElementById("nwBtn");if(!b){b=document.createElement("button");b.type="button";b.id="nwBtn";b.className="nw-link";b.setAttribute("data-news","1");v.after(b);}
+  b.innerHTML=`🆕 Was ist neu?${seen!==cur?' <span class="nw-dot">neu</span>':""}`;}
+OV.addEventListener("click",e=>{if(e.target.closest("[data-nx]")||e.target===OV)OV.classList.remove("on");});
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-news]"))open();});
+window.lzNewsOpen=open;mark();
 })();
 
 </script>
