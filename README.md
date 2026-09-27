@@ -15,7 +15,7 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 | `js/start.js` | Startseite: Personen, Lernplan-Übersicht, Rangliste |
 | `js/router.js` | Öffnet die Apps (iframes aus `apps/`) |
 | `js/groups.js` | Lerngruppen: anlegen, teilen, beitreten |
-| `js/arena.js` | Arena: Tauziehen, Power-ups, Geister-Duell, Glücksrad |
+| `js/arena.js` | Arena: Tauziehen, Power-ups, Geister-Duell, Glücksrad (online-Anzeige und Live-Züge über die Datenbank der Lerngruppe, Abfrage alle 1–3 s) |
 | `js/news.js` | „Was ist neu?“ |
 | `apps/*.html` | Die vier Apps |
 | `js/app-core.js`, `js/nutzer-init.js`, `js/nutzer.js`, `js/lernplan.js`, `js/home-btn.js`, `js/arena-btn.js`, `css/nutzer.css`, `css/lernplan.css` | Gemeinsame Bausteine aller Apps |

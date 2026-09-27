@@ -19,6 +19,7 @@ async def main():
     await A.evaluate("RK_TAB=lzMyGroups()[0].code;lzPullGroup(RK_TAB,true).then(()=>document.getElementById('rank').innerHTML=rankHTML())"); await A.wait_for_timeout(1500)
     print('A rank group:',(await A.inner_text('#rank'))[:200].replace('\n',' '))
     await A.screenshot(path=OUTDIR+'gr-rank.png',full_page=True)
+    await A.goto('about:blank'); await C.wait_for_timeout(4000)  # Robin geht offline
     # C ghost-challenges Robin via group
     await C.evaluate("__arenaIn({type:'presence',list:[]})"); await C.evaluate("lzArenaOpen()"); await C.wait_for_timeout(2500)
     await C.evaluate("lzArenaOpen()"); await C.wait_for_timeout(300)
@@ -30,7 +31,7 @@ async def main():
         await play(C,4,True)
     print('C rec:',(await C.inner_text('#arenaOv'))[:120].replace('\n',' '))
     await C.click('[data-ax]')
-    await A.reload(); await A.wait_for_timeout(5000)
+    await A.goto('http://app.test/'); await A.wait_for_timeout(5000)
     print('A card:',(await A.inner_text('#arena'))[:160].replace('\n',' '))
     await A.evaluate("lzArenaOpen()"); await A.wait_for_timeout(300)
     await A.click('[data-gplay]'); await A.wait_for_timeout(4500)

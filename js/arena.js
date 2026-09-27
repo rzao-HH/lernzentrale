@@ -21,35 +21,39 @@ function ptsGet(uid){return Object.assign({p:0,w:0,l:0,d:0},LSj(ptsKey(uid),{}))
 function ptsAdd(uid,res,stake){const P=ptsGet(uid);if(res==="w"){P.p+=10+stake;P.w++;}else if(res==="l"){P.p=Math.max(0,P.p-stake);P.l++;}else P.d++;LSs(ptsKey(uid),P);return P;}
 window.lzArenaPts=ptsGet;
 
-/* ---------- Transport (Supabase Realtime, im Test: Mock) ---------- */
-let CHS={},PRES={},ONLINE=[],HANDLERS=[],joined=false,lastSig="",SB=null;
-function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36);}
+/* ---------- Transport: über die Datenbank der Lerngruppe (lz_push / lz_pull) ----------
+   Jedes Gerät schreibt in jede seiner Lerngruppen „on:<gerät>“ (online-Zeichen, alle 8 s)
+   und Nachrichten reihum in „tx:<gerät>:0…15“. Alle Geräte fragen alle 1–3 s nach Neuem. */
+let ONLINE=[],HANDLERS=[],SEQ=0,nextPoll=0;
+const SEEN_P={},SINCE={},PRIMED={};
+const RPCa=(fn,b)=>window.__lzRpc(fn,b);
 function myPresence(){const m=meP();return{dev:DEV,uid:m.uid,gid:m.gid,acc:m.acc,name:m.name,e:m.e,app:curAppK(),ts:Date.now()};}
 function spaces(){const L=[];(window.lzMyGroups?lzMyGroups():[]).forEach(g=>L.push({id:"grp:"+g.code,label:g.name,alias:g.alias||""}));return L;}
-function mergePres(){const m={};Object.entries(PRES).forEach(([sp,list])=>list.forEach(p=>{if(!p||p.dev===DEV)return;const k=p.dev;if(!m[k]||m[k].ts<p.ts)m[k]=Object.assign({},p,{sp});}));setOnline(Object.values(m));}
-function setOnline(list){ONLINE=list.filter(p=>p&&p.dev!==DEV);drawCard();drawPick();}
-function send(msg){msg.from_dev=DEV;msg.mid=msg.mid||Math.random().toString(36).slice(2);try{if(window.__arenaMock){window.__arenaOut(JSON.stringify(msg));return;}Object.values(CHS).forEach(ch=>ch.send({type:"broadcast",event:"m",payload:msg}));}catch(e){}}
+function netOK(){return !!window.__lzRpc&&/^https:/.test((window.__LZSB||{}).url||"");}
+function mergePres(){const m={},now=Date.now();Object.values(SEEN_P).forEach(x=>{const p=x.p;if(!p||p.dev===DEV||p.off||now-x.at>25000)return;if(!m[p.dev]||m[p.dev].ts<p.ts)m[p.dev]=Object.assign({},p,{spl:x.spl});});setOnline(Object.values(m));}
+function setOnline(list){const sig=JSON.stringify(list.map(p=>[p.dev,p.name,p.e,p.app]));ONLINE=list.filter(p=>p&&p.dev!==DEV);if(sig!==setOnline.sig){setOnline.sig=sig;drawCard();drawPick();}}
+async function push(items){for(const sp of spaces()){const it=items.map(x=>x.k.startsWith("on:")&&sp.alias?{k:x.k,v:JSON.stringify(Object.assign(JSON.parse(x.v),{name:sp.alias})),ts:x.ts}:x);try{await RPCa("lz_push",{p_fam:sp.id,p_items:it});}catch(e){}}}
+function send(msg){msg.from_dev=DEV;msg.mid=msg.mid||Math.random().toString(36).slice(2);if(!netOK())return;
+  push([{k:"tx:"+DEV+":"+(SEQ++%16),v:JSON.stringify(msg),ts:Date.now()}]);nextPoll=0;}
 const SEEN=new Set();
 function recv(msg){if(!msg||msg.from_dev===DEV)return;if(msg.to&&msg.to!==DEV)return;if(msg.mid){if(SEEN.has(msg.mid))return;SEEN.add(msg.mid);}HANDLERS.forEach(h=>{try{h(msg);}catch(e){}});}
-window.__arenaIn=function(s){const m=typeof s==="string"?JSON.parse(s):s;if(m.type==="presence"){PRES.mock=m.list;mergePres();return;}recv(m);};
-function loadSb(){return new Promise((res,rej)=>{if(window.supabase)return res();const sc=document.createElement("script");sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js";sc.onload=()=>res();sc.onerror=rej;document.head.appendChild(sc);});}
-async function join(){
-  if(window.__arenaMock){joined=true;lastSig="";presTick();return;}
-  const C=window.__LZSB;const want=spaces();if(!C||!want.length)return;joined=true;
-  try{await loadSb();if(!SB)SB=window.supabase.createClient(C.url,C.key,{auth:{persistSession:false}});
-    const ids=want.map(x=>x.id);
-    Object.keys(CHS).forEach(id=>{if(!ids.includes(id)){try{SB.removeChannel(CHS[id]);}catch(e){}delete CHS[id];delete PRES[id];}});
-    want.forEach(sp=>{if(CHS[sp.id])return;const ch=SB.channel("arena-"+hash(sp.id),{config:{presence:{key:DEV},broadcast:{self:false}}});CHS[sp.id]=ch;
-      ch.on("presence",{event:"sync"},()=>{const st=ch.presenceState();PRES[sp.id]=Object.values(st).map(a=>Object.assign({},a[a.length-1],{spl:sp.label}));mergePres();});
-      ch.on("broadcast",{event:"m"},({payload})=>recv(payload));
-      ch.alias=sp.alias;ch.subscribe(async s=>{if(s==="SUBSCRIBED"){try{const p=myPresence();await ch.track(sp.alias?Object.assign(p,{name:sp.alias}):p);}catch(e){}}});});
-    mergePres();
-  }catch(e){joined=false;}
-}
-let spSig="";
-function presTick(){const p=myPresence(),sig=p.uid+"|"+p.app+"|"+p.name+"|"+p.e;if(sig===lastSig)return;lastSig=sig;
-  try{if(window.__arenaMock)window.__arenaOut(JSON.stringify({type:"presence-me",p}));else Object.values(CHS).forEach(ch=>ch.track(ch.alias?Object.assign({},p,{name:ch.alias}):p));}catch(e){}}
-setInterval(()=>{let sg=spaces().map(x=>x.id).join(",");if(sg!==spSig){spSig=sg;joined=false;}if(window.__arenaMock&&!sg)sg="mock";if(!joined&&sg)join();if(joined)presTick();},3000);
+window.__arenaIn=function(s){const m=typeof s==="string"?JSON.parse(s):s;if(m.type!=="presence")recv(m);};
+let lastBeat=0,lastSig="";
+function beat(force){const p=myPresence(),sig=[p.uid,p.app,p.name,p.e].join("|");if(!force&&sig===lastSig&&Date.now()-lastBeat<8000)return;lastSig=sig;lastBeat=Date.now();push([{k:"on:"+DEV,v:JSON.stringify(p),ts:p.ts}]);}
+let polling=false;
+async function poll(){if(polling||!netOK())return;polling=true;const now=Date.now();
+  try{for(const sp of spaces()){const since=Math.min(SINCE[sp.id]||0,now)-60000;
+    const rows=(await RPCa("lz_pull",{p_fam:sp.id,p_since:Math.max(0,since)}))||[];const first=!PRIMED[sp.id];PRIMED[sp.id]=1;
+    rows.forEach(r=>{const ts=+r.ts||0;if(ts>(SINCE[sp.id]||0))SINCE[sp.id]=ts;let v=null;try{v=JSON.parse(r.v);}catch(e){}if(!v)return;
+      if(r.k.startsWith("on:")){const key=sp.id+"|"+r.k,o=SEEN_P[key];
+        if(!o){SEEN_P[key]={ts,p:v,spl:sp.label,at:Math.abs(Date.now()-ts)<20000?Date.now():0};}
+        else if(o.ts!==ts){o.ts=ts;o.p=v;o.at=Date.now();}}
+      else if(r.k.startsWith("tx:")){if(first){if(v.mid)SEEN.add(v.mid);}else recv(v);}});}
+  }catch(e){}polling=false;mergePres();}
+function busyNow(){return (GAME&&!GAME.over)||VIEW==="wait"||VIEW==="pick"||INV.classList.contains("on");}
+setInterval(()=>{if(document.hidden||!spaces().length)return;beat(false);const now=Date.now();if(now>=nextPoll){nextPoll=now+(busyNow()?900:3000);poll();}},300);
+addEventListener("pagehide",()=>{if(!netOK())return;const p=Object.assign(myPresence(),{off:true});push([{k:"on:"+DEV,v:JSON.stringify(p),ts:Date.now()}]);});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){beat(true);nextPoll=0;}});
 
 /* ---------- Fragen aus den Apps ---------- */
 const DATA={};
@@ -65,7 +69,7 @@ function loadApp(k){
       else if(k==="D")v=JSON.parse(JSON.stringify({I:w.__lzArena.I.filter(i=>i.t==="mc"&&i.o.length<=5||i.t==="comma"||i.t==="tap"),sel:w.__lzArena.sel()}));
     }catch(e){v=null;}fin(v);},250);
     setTimeout(()=>fin(null),8000);
-    f.src=APPURL[k]+"?v=7.1.0";document.body.appendChild(f);});
+    f.src=APPURL[k]+"?v=7.1.1";document.body.appendChild(f);});
 }
 const DEG=[{n:"Nullwinkel",f:a=>a===0},{n:"spitzer Winkel",f:a=>a>0&&a<90},{n:"rechter Winkel",f:a=>a===90},{n:"stumpfer Winkel",f:a=>a>90&&a<180},{n:"gestreckter Winkel",f:a=>a===180},{n:"überstumpfer Winkel",f:a=>a>180&&a<360},{n:"Vollwinkel",f:a=>a===360}];
 function qW(sel){
