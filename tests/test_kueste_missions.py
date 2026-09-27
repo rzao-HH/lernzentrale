@@ -5,12 +5,12 @@ async def main():
   async with async_playwright() as pw:
     br=await pw.chromium.launch()
     for w,h in [(1024,1366),(390,844)]:
-      c=await br.new_context(viewport={'width':w,'height':h}); await c.route('**/*',handle); p=await c.new_page()
+      c=await br.new_context(viewport={'width':w,'height':h}); await c.route('**/*',handle); await c.add_init_script(acct('Robin')); p=await c.new_page()
       errs=[];p.on('pageerror',lambda e:errs.append(str(e)))
       await p.goto('http://app.test/'); await p.wait_for_timeout(600)
       await p.evaluate("location.hash='#E'"); await p.wait_for_timeout(2500)
       f=[fr for fr in p.frames if fr!=p.main_frame][0]
-      await p.screenshot(path=f'e-home-{w}.png',full_page=False)
+      await p.screenshot(path=OUTDIR+f'e-home-{w}.png',full_page=False)
       if w==1024:
         await f.click('[data-kcall="g"]'); await f.click('[data-pk="v1"]'); await p.wait_for_timeout(300)
         print('sel',await f.evaluate("JSON.stringify(progress._sel)"))
