@@ -171,8 +171,7 @@ window.lzToday=function(){
 const lzUL=us=>us.map(u=>u.icon+" "+u.name).join(", ");
 function lzBtn(kind,us,label,mt){
   const ids=us.map(u=>u.id).join(",");
-  if(C.prefix==="E")return us.map(u=>`<button type="button" class="lzh-btn" data-lzgo="${kind==="test"?(u.id[0]==="g"?"gtest":"test"):(u.id[0]==="g"?"gram":"flash")}|${kind==="test"?ids:u.id}">${kind==="test"?(label||"Diese Pakete wählen"):"▶ "+u.name}</button>`).filter((x,i)=>kind!=="test"||i===0).join("");
-  return`<button type="button" class="lzh-btn" data-lzsel="${ids}" data-lzm="${mt||"test"}">${label||"Diese Pakete wählen"}</button>`;
+  return`<button type="button" class="lzh-btn" data-lzsel="${ids}" data-lzm="${mt||(kind==="learn"&&C.prefix==="E"?"learn":"test")}">${label||"Diese Pakete wählen"}</button>`;
 }
 window.lzRows=function(filter){
   const T=window.lzToday(); if(!T)return[];

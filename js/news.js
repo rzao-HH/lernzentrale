@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.1.3","27.09.2026",["🐚 Küsten-Crew: „Laut Lernplan heute“ steht jetzt wie in den anderen Apps über „Pakete wählen“, mit „Diese Pakete wählen“"]],
  ["7.1.2","27.09.2026",["⚔️ Arena: funktioniert jetzt auch, wenn die Uhr eines Geräts falsch geht","👻 Geister-Duell gegen alle aus den eigenen Lerngruppen – auch gegen die, die gerade online sind"]],
  ["7.1.1","27.09.2026",["⚔️ Arena: Wer online ist, wird jetzt zuverlässig angezeigt; Live-Duelle laufen über dieselbe Datenbank wie der Abgleich"]],
  ["7.1.0","27.09.2026",["👥 Alle Lerngruppen sind für alle sichtbar: unter „Weitere Lerngruppen“ mit einem Tipp beitreten – kein Code mehr nötig"]],
