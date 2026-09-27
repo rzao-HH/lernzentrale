@@ -2,11 +2,11 @@
 <html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Detektiv-Büro</title>
-<script src="../js/app-core.js?v=7.1.3"></script>
+<script src="../js/app-core.js?v=7.1.4"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="D";window.__DATAKEY="detektivbuero-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.1.3"></script>
+<script src="../js/nutzer-init.js?v=7.1.4"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -65,8 +65,8 @@ h2{font-family:var(--display);font-size:22px;margin:10px 0 0;display:flex;align-
 .words{display:flex;flex-wrap:wrap;gap:6px 4px;align-items:center;background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:12px;font-size:19px;line-height:1.3}
 .w{border:2px solid transparent;border-radius:10px;padding:4px 6px;background:transparent;font-size:19px}
 .words.tapm .w{border-color:var(--line);background:var(--panel2)}
-.w.sel{background:color-mix(in srgb,var(--accent) 25%,var(--panel));border-color:var(--accent)}
-.w.ok{background:var(--okbg);border-color:var(--ok)}.w.miss{background:var(--halfbg);border-color:var(--half);border-style:dashed}.w.bad{background:var(--badbg);border-color:var(--bad)}
+.w.sel,.words.tapm .w.sel{background:var(--accent);border-color:var(--accent);color:var(--on);font-weight:800;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.w.ok,.words.tapm .w.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok);font-weight:800}.w.ok::after{content:' ✓'}.w.miss,.words.tapm .w.miss{background:var(--halfbg);border-color:var(--half);border-style:dashed;font-weight:800}.w.bad,.words.tapm .w.bad{background:var(--badbg);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
 .gap{min-width:22px;height:34px;border-radius:8px;border:2px dashed var(--line);background:transparent;font-weight:900;font-size:20px;line-height:1;padding:0 2px;color:var(--accent)}
 .gap.on{border-style:solid;border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--panel))}
 .gap.ok{border-color:var(--ok);background:var(--okbg);color:var(--ok)}.gap.miss{border-color:var(--half);background:var(--halfbg);color:var(--half)}.gap.bad{border-color:var(--bad);background:var(--badbg);color:var(--bad)}
@@ -124,53 +124,53 @@ const PACKS=[
  {id:'p1',icon:'🔍',name:'Hauptsatz & Nebensatz',goal:'Ich finde das gebeugte Verb und erkenne, ob ein Teilsatz ein Haupt- oder Nebensatz ist.'},
  {id:'p2',icon:'🔗',name:'Satzreihe',goal:'Ich verbinde Hauptsätze mit und, oder, aber, sondern, denn, doch und weiß, wann ein Komma steht.'},
  {id:'p3',icon:'🧩',name:'Satzgefüge',goal:'Ich verbinde Haupt- und Nebensatz mit weil, wenn, obwohl, nachdem … und setze das Verb ans Ende.'},
- {id:'p4',icon:'🗝️',name:'Konjunktionen',goal:'Ich wähle die passende Konjunktion für Grund, Gegensatz, Zeit, Bedingung und Zweck.'},
+ {id:'p4',icon:'🗝️',name:'Konjunktionen',goal:'Ich wähle die passende Konjunktion: für einen Grund, einen Gegensatz, eine Zeitangabe und mehr.'},
  {id:'p5',icon:'✒️',name:'Komma-Profi',goal:'Ich setze Kommas bei Aufzählungen, in Satzreihen und Satzgefügen und unterscheide SR und SG.'},
  {id:'p6',icon:'⏳',name:'Zeitformen',goal:'Ich erkenne und bilde Präsens, Präteritum, Perfekt, Plusquamperfekt und Futur.'}
 ];
-const CARDS={
- p1:[['Hauptsatz','Kann allein stehen. Das gebeugte Verb steht an 2. Stelle: „Christoph kommt zu Besuch.“'],
-  ['Nebensatz','Kann nicht allein stehen. Beginnt meist mit einer Konjunktion, das gebeugte Verb steht am Ende: „…, weil sein Vater dort arbeitet.“'],
-  ['Gebeugtes (finites) Verb','Die Verbform, die sich nach der Person richtet: ich gehe, du gehst, er geht. Im Hauptsatz an 2. Stelle, im Nebensatz am Ende.'],
-  ['So findest du das gebeugte Verb','Setze den Satz in eine andere Person: Die Form, die sich dabei ändert, ist das gebeugte Verb (er lebt → ich lebe).'],
-  ['Zusammengesetzter Satz','Besteht aus mehreren Hauptsätzen (Satzreihe) oder aus Haupt- und Nebensatz (Satzgefüge).'],
-  ['Typische Nebensatz-Anfänge','als, weil, da, bevor, obwohl, wie, wo, seit, dass, sodass, wenn, nachdem, der, die, das (welcher, welche, welches)']],
- p2:[['Satzreihe','Zwei oder mehr Hauptsätze hintereinander: „Ich stehe auf und meine Mutter macht Frühstück.“'],
-  ['Kein Komma vor und / oder','Werden Hauptsätze mit und oder oder verbunden, muss kein Komma stehen.'],
-  ['Komma vor aber, sondern, denn, doch','„Laura geht gern ins Kino, aber sie hat kein Geld.“'],
-  ['Hauptsatz-Konjunktionen: wozu?','Aufzählen: und, oder · Gegensatz: aber, doch, sondern · Grund: denn'],
-  ['denn','Leitet einen Hauptsatz ein, das Verb bleibt vorne: „Armstrong ist bekannt, denn er landete auf dem Mond.“'],
-  ['Wörter streichen','Bei und/oder kann man Wiederholungen weglassen: „Der Mond dreht sich um die Erde und ist unser nächster Nachbar.“']],
- p3:[['Satzgefüge','Hauptsatz + mindestens ein Nebensatz: „Ich stehe auf, weil ich zur Schule gehen muss.“'],
-  ['Komma im Satzgefüge','Zwischen Hauptsatz und Nebensatz steht immer ein Komma.'],
-  ['Verb ans Ende','Im Nebensatz wandert das gebeugte Verb ans Ende: „Wir lernen dort Dinge.“ → „…, weil wir dort Dinge lernen.“'],
-  ['Nebensatz vorne','Steht der Nebensatz vorne, beginnt der Hauptsatz mit dem Verb: „Als die Deiche brachen, stieg das Wasser rasch.“'],
-  ['Unterordnende Konjunktionen','weil, da, wenn, als, obwohl, nachdem, damit, dass, sodass, bevor, während, seit, ob – sie leiten Nebensätze ein.'],
-  ['Relativsatz','Beginnt mit der, die, das (welcher …) und ist ein Nebensatz, oft mitten im Satz: „Die Wettkämpfer, die heimreisen, werden gefeiert.“']],
- p4:[['Grund','weil, da (Nebensatz) · denn (Hauptsatz)'],
-  ['Gegensatz','obwohl (Nebensatz) · aber, doch, sondern (Hauptsatz)'],
-  ['Zeit','als, nachdem, bevor, während, sobald, seit, bis'],
-  ['Bedingung','wenn: „Wir kommen, wenn es nicht regnet.“'],
-  ['Zweck und Folge','damit (Zweck): „…, damit der Verbrecher gefunden wird.“ · sodass (Folge): „Es fehlten Busse, sodass viele nicht fliehen konnten.“'],
-  ['denn oder weil?','Gleiche Bedeutung, andere Form: „…, denn die Erde steht davor.“ – „…, weil die Erde davor steht.“ Bei weil wandert das Verb ans Ende.'],
-  ['als oder wenn?','als: einmal in der Vergangenheit („Als es noch keine Computer gab, …“). wenn: immer wieder oder als Bedingung.'],
-  ['ob oder dass?','ob bei einer offenen Ja-Nein-Frage („Wer kann sagen, ob …?“), dass bei einer Aussage („Er hatte Angst, dass …“).']],
- p5:[['Komma bei Aufzählungen','Gleichartige Wörter oder Wortgruppen trennt man durch Komma: „Dackel, Collie, Dalmatiner …“'],
-  ['Aufzählung mit und / oder','Vor und bzw. oder steht in einer Aufzählung kein Komma: „… Pekinese und Schäferhund.“'],
-  ['Satzreihe oder Satzgefüge?','Nur Hauptsätze → Satzreihe (SR). Hauptsatz + Nebensatz mit Verb am Ende → Satzgefüge (SG).'],
-  ['Komma-Check in 3 Schritten','1. Gebeugte Verben suchen. 2. Wie viele Teilsätze gibt es? 3. An jede Grenze ein Komma, außer vor und/oder zwischen Hauptsätzen.'],
-  ['Punkt oder Komma?','Beginnt ein neuer Gedanke mit eigenem Verb, kann ein neuer Satz anfangen: Punkt und Großschreibung.']],
- p6:[['Präsens (Gegenwart)','Ich gehe ins Kino.'],
-  ['Präteritum (erste Vergangenheit)','Ich ging ins Kino. Typisch für Erzählungen und Berichte.'],
-  ['Perfekt (vollendete Gegenwart)','haben/sein im Präsens + Partizip II: Ich bin ins Kino gegangen. Ich habe die Aufgabe geschafft.'],
-  ['Plusquamperfekt (Vorvergangenheit)','haben/sein im Präteritum + Partizip II: Ich war ins Kino gegangen. Du hattest einen Kuchen gemacht.'],
-  ['Futur (Zukunft)','werden + Infinitiv: Ich werde ins Kino gehen.'],
-  ['haben oder sein?','Verben der Bewegung (gehen, laufen, rennen, schwimmen, klettern, fahren, fallen, kommen) bilden das Perfekt mit sein, die meisten anderen mit haben.'],
-  ['Wozu Plusquamperfekt?','Für etwas, das vor einem anderen vergangenen Ereignis passiert ist.'],
-  ['nachdem-Regel','nachdem + Plusquamperfekt, Hauptsatz im Präteritum: „Nachdem ich die Knoten geübt hatte, befestigte ich die Taue.“']]
+const CARDS={/* [Frage (Vorderseite), Antwort (Rückseite)] – Wortlaut wie auf den Lernzetteln Nr. 29–41 und im Heft */
+ p1:[['Woran erkennst du einen Hauptsatz?','Er könnte auch allein stehen (Nr. 29). Die gebeugte Verbform steht meist an 2. Stelle: „Christoph kommt zu Besuch.“'],
+  ['Woran erkennst du einen Nebensatz?','Er kann nicht allein stehen. Er beginnt oft mit einer Konjunktion, und die gebeugte (finite) Verbform steht am Ende: „…, weil sein Vater dort arbeitet.“'],
+  ['Was ist die gebeugte (finite) Verbform?','Die Verbform, die sich nach der Person richtet: ich gehe, du gehst, er geht. Auf Nr. 38 heißt sie auch Prädikat.'],
+  ['Wie findest du die gebeugte Verbform in einem Satz?','Setze den Satz in eine andere Person: Die Form, die sich dabei ändert, ist die gebeugte Verbform (er lebt → ich lebe).'],
+  ['Woraus werden zusammengesetzte Sätze gebildet?','Entweder aus mehreren Hauptsätzen (Satzreihe) oder aus Haupt- und Nebensätzen (Satzgefüge).'],
+  ['Mit welchen Konjunktionen beginnen Nebensätze oft?','als, weil, da, bevor, obwohl, wie, wo, seit, dass, sodass, wenn, nachdem, der (welcher), die (welche), das (welches) – Nr. 29']],
+ p2:[['Was ist eine Satzreihe?','Aneinandergereihte Hauptsätze: „Ich stehe auf und meine Mutter macht Frühstück.“ Man trennt sie mit Komma oder Punkt.'],
+  ['Muss vor und / oder zwischen zwei Hauptsätzen ein Komma stehen?','Nein, vor und und oder muss kein Komma stehen.'],
+  ['Vor welchen Hauptsatz-Konjunktionen muss ein Komma stehen?','Vor doch, aber, sondern und denn: „Laura geht gern ins Kino, aber sie hat kein Geld.“'],
+  ['Was kann man mit Hauptsatz-Konjunktionen ausdrücken?','etwas aufzählen (und, oder) · einen Gegensatz ausdrücken (aber, doch, sondern) · einen Grund nennen (denn) – Nr. 36'],
+  ['Was für ein Satz folgt nach denn?','Ein Hauptsatz – die Wortstellung ändert sich nicht: „Armstrong ist bekannt, denn er landete auf dem Mond.“'],
+  ['Was darfst du streichen, wenn du Hauptsätze mit und / oder verbindest?','Wörter, die du nicht wiederholen willst: „Der Mond dreht sich um die Erde und ist unser nächster Nachbar.“']],
+ p3:[['Woraus besteht ein Satzgefüge?','Aus einem Hauptsatz und mindestens einem Nebensatz: „Ich stehe auf, weil ich zur Schule gehen muss.“'],
+  ['Was steht zwischen Hauptsatz und Nebensatz?','Ein Komma – es muss immer stehen (Nr. 38).'],
+  ['Wo steht im Nebensatz die gebeugte Verbform?','An der letzten Stelle: „Wir lernen dort Dinge.“ → „…, weil wir dort Dinge lernen.“'],
+  ['Was ändert sich, wenn der Nebensatz vorne steht?','Der Hauptsatz beginnt dann mit dem Verb: „Als die Deiche brachen, stieg das Wasser rasch.“'],
+  ['Welche Nebensatz-Konjunktionen kennst du?','weil, da, während, wenn, als, obwohl, damit (Nr. 37/38) – außerdem dass, sodass, nachdem, bevor, seit (Nr. 29)'],
+  ['Welche Nebensätze beginnen mit der, die oder das?','Nebensätze, die etwas genauer beschreiben, oft mitten im Satz: „Die Wettkämpfer, die heimreisen, werden gefeiert.“ Davor und danach ein Komma.']],
+ p4:[['Mit welchen Konjunktionen nennst du einen Grund?','weil, da (Nebensatz) · denn (Hauptsatz)'],
+  ['Mit welchen Konjunktionen drückst du einen Gegensatz aus?','obwohl (Nebensatz) · aber, doch, sondern (Hauptsatz)'],
+  ['Welche Konjunktionen sagen etwas über die Zeit?','als, nachdem, bevor, während, sobald, seit, bis'],
+  ['Welche Konjunktion nennt eine Bedingung?','wenn: „Wir kommen, wenn es nicht regnet.“'],
+  ['Was ist der Unterschied zwischen damit und sodass?','damit nennt den Zweck: „…, damit der Verbrecher gefunden wird.“ · sodass nennt die Folge: „Es fehlten Busse, sodass viele nicht fliehen konnten.“'],
+  ['Was ist der Unterschied zwischen denn und weil?','Gleiche Bedeutung, andere Form: „…, denn die Erde steht davor.“ – „…, weil die Erde davor steht.“ Bei weil wandert das Verb ans Ende.'],
+  ['Wann nimmst du als, wann wenn?','als: einmal in der Vergangenheit („Als es noch keine Computer gab, …“). wenn: immer wieder oder als Bedingung.'],
+  ['Wann nimmst du ob, wann dass?','ob bei einer offenen Ja-Nein-Frage („Wer kann sagen, ob …?“), dass bei einer Aussage („Er hatte Angst, dass …“).']],
+ p5:[['Wie trennst du die Teile einer Aufzählung?','Mit Komma: „Dackel, Collie, Dalmatiner …“'],
+  ['Steht in einer Aufzählung vor und / oder ein Komma?','Nein: „… Pekinese und Schäferhund.“ (Nr. 39)'],
+  ['Wie unterscheidest du Satzreihe (SR) und Satzgefüge (SG)?','Nur Hauptsätze → Satzreihe. Hauptsatz + Nebensatz (gebeugte Verbform am Ende) → Satzgefüge.'],
+  ['Wie prüfst du in 3 Schritten, wo Kommas hingehören?','1. Gebeugte Verbformen suchen. 2. Wie viele Teilsätze gibt es? 3. An jede Grenze ein Komma – nur vor und / oder zwischen Hauptsätzen muss keins stehen.'],
+  ['Wann darfst du statt eines Kommas einen Punkt setzen?','Nur zwischen Hauptsätzen (Satzreihe). Einen Nebensatz trennst du immer mit Komma ab.']],
+ p6:[['Was ist das Präsens? Nenne ein Beispiel.','Die Gegenwart: Ich gehe ins Kino.'],
+  ['Was ist das Präteritum? Nenne ein Beispiel.','Die erste Vergangenheit: Ich ging ins Kino.'],
+  ['Wie bildest du das Perfekt (vollendete Gegenwart)?','haben/sein im Präsens + Partizip II: Ich bin ins Kino gegangen. Ich habe die Aufgabe geschafft.'],
+  ['Wie bildest du das Plusquamperfekt (Vorvergangenheit)?','haben/sein im Präteritum + Partizip II: Ich war ins Kino gegangen. Du hattest einen Kuchen gemacht.'],
+  ['Wie bildest du das Futur (Zukunft)?','werden + Grundform (Infinitiv): Ich werde ins Kino gehen.'],
+  ['Wann bildest du das Perfekt mit sein?','Bei Verben der Bewegung: rennen, laufen, schwimmen, klettern, gehen (auch: kommen, fallen). Die meisten anderen Verben mit haben.'],
+  ['Wofür brauchst du das Plusquamperfekt?','Für etwas, das vor einem anderen vergangenen Ereignis passiert ist.'],
+  ['Welche Zeitformen stehen in einem Satz mit nachdem?','nachdem + Plusquamperfekt, der Hauptsatz im Präteritum: „Nachdem ich die Knoten geübt hatte, befestigte ich die Taue.“']]
 };
 /* t: tap (Wörter antippen, *Ziel*), comma (richtige Kommas im Satz, (,) = freiwillig), mc, order, type */
-const V='Tippe alle gebeugten Verben an.',K='Tippe die Konjunktion an, die die Teilsätze verbindet.';
+const V='Tippe alle gebeugten (finiten) Verbformen an.',K='Tippe die Konjunktion an, die die Teilsätze verbindet.';
 const ITEMS=[
  {t:'tap',p:'p1',q:V,s:'Christoph *kommt* nach langer Zeit wieder zu Besuch.',ex:'Nur ein gebeugtes Verb: ein einfacher Satz.'},
  {t:'tap',p:'p1',q:V,s:'Normalerweise *lebt* er in den USA, weil sein Vater dort *arbeitet*.',ex:'lebt (Hauptsatz, 2. Stelle) und arbeitet (Nebensatz, am Ende).'},
@@ -178,9 +178,9 @@ const ITEMS=[
  {t:'tap',p:'p1',q:V,s:'Das *war* aber nicht so und jetzt *gefällt* es ihm sehr gut dort.',ex:'Zwei Hauptsätze, zwei gebeugte Verben.'},
  {t:'tap',p:'p1',q:V,s:'Julia *fällt* vor Schreck fast in Ohnmacht, als er plötzlich vor ihrer Tür *steht*.',ex:'fällt und steht.'},
  {t:'tap',p:'p1',q:V,s:'Ich *stehe* auf, obwohl ich noch müde *bin*.',ex:'stehe (Hauptsatz) und bin (Nebensatz, am Ende).'},
- {t:'tap',p:'p2',q:V,s:'Richtige Sportfans *versäumen* nie die Sommerspiele, aber genauso wenig *wollen* sie auf die Winterspiele verzichten.',ex:'verzichten ist ein Infinitiv, gebeugt ist wollen.'},
+ {t:'tap',p:'p2',q:V,s:'Richtige Sportfans *versäumen* nie die Sommerspiele, aber genauso wenig *wollen* sie auf die Winterspiele verzichten.',ex:'verzichten ist nicht gebeugt (Grundform), gebeugt ist wollen.'},
  {t:'tap',p:'p3',q:V,s:'Nachdem die Preise gestiegen *sind*, *können* sich nur wenige Menschen Karten leisten.',ex:'gestiegen und leisten sind nicht gebeugt.'},
- {t:'tap',p:'p3',q:V,s:'Die Wettkämpfer, die in ihr Heimatland *reisen*, *werden* dort begeistert empfangen.',ex:'reisen im Relativsatz, werden im Hauptsatz.'},
+ {t:'tap',p:'p3',q:V,s:'Die Wettkämpfer, die in ihr Heimatland *reisen*, *werden* dort begeistert empfangen.',ex:'reisen im Nebensatz mit „die“, werden im Hauptsatz.'},
  {t:'tap',p:'p3',q:V,s:'Wir *wissen* heute viel, weil Forscher das Mondgestein *untersuchten*.',ex:'wissen und untersuchten.'},
  {t:'tap',p:'p3',q:V,s:'Die Olympischen Spiele *fanden* in Olympia statt, weil es dort das Zeusheiligtum *gab*.',ex:'fanden (… statt) und gab.'},
  {t:'tap',p:'p2',q:K,s:'Das war aber nicht so *und* jetzt gefällt es ihm sehr gut dort.',ex:'und verbindet die beiden Hauptsätze. aber heißt hier „jedoch“ und verbindet nichts.'},
@@ -198,12 +198,12 @@ const ITEMS=[
  {t:'comma',p:'p2',s:'Ich habe nicht gelogen, ich habe nur nicht die ganze Wahrheit gesagt.',ex:'Zwei Hauptsätze ohne Konjunktion: Komma.'},
  {t:'comma',p:'p2',s:'Zuerst beschwerten sie sich, dann verließen sie das Lokal.',ex:'dann beginnt einen neuen Hauptsatz.'},
  {t:'comma',p:'p2',s:'Tarek isst Kirschen, Anna beißt in einen Apfel, aber Julia trinkt ihre Limonade.',ex:'Drei Hauptsätze, Komma vor aber.'},
- {t:'comma',p:'p2',s:'Hänsel und Gretel verliefen sich und wurden von einer alten Hexe eingefangen.',ex:'Kein Komma: „und wurden …“ hat kein eigenes Subjekt, und vor und steht ohnehin keins.'},
+ {t:'comma',p:'p2',s:'Hänsel und Gretel verliefen sich und wurden von einer alten Hexe eingefangen.',ex:'Kein Komma: „wurden … eingefangen“ ist kein eigener Hauptsatz. Vor und muss ohnehin kein Komma stehen.'},
  {t:'comma',p:'p2',s:'Der Mond ist schon gut erforscht, aber viele Fragen sind noch nicht beantwortet.',ex:'Komma vor aber.'},
  {t:'comma',p:'p3',s:'Nachdem die Preise gestiegen sind, können sich nur wenige Menschen die Karten leisten.',ex:'Nebensatz vorne, Komma danach.'},
  {t:'comma',p:'p3',s:'Die Fernsehsender müssen enorme Summen bezahlen, damit sie die Übertragungsrechte erhalten.',ex:'Komma vor damit.'},
- {t:'comma',p:'p3',s:'Die erfolgreichen Wettkämpfer, die nach den Spielen in ihr Heimatland reisen, werden dort begeistert empfangen.',ex:'Eingeschobener Relativsatz: Komma davor und danach.'},
- {t:'comma',p:'p3',s:'Es gibt auch eine Winterolympiade, bei der alpine Sportarten im Mittelpunkt stehen.',ex:'Relativsatz mit „bei der“.'},
+ {t:'comma',p:'p3',s:'Die erfolgreichen Wettkämpfer, die nach den Spielen in ihr Heimatland reisen, werden dort begeistert empfangen.',ex:'Eingeschobener Nebensatz mit „die“: Komma davor und danach.'},
+ {t:'comma',p:'p3',s:'Es gibt auch eine Winterolympiade, bei der alpine Sportarten im Mittelpunkt stehen.',ex:'Nebensatz mit „bei der“ – davor ein Komma.'},
  {t:'comma',p:'p3',s:'Einmal wollte Paul mich besuchen, weil wir miteinander Hausaufgaben machen wollten.',ex:'Komma vor weil.'},
  {t:'comma',p:'p3',s:'Er rief mich dann noch ein zweites Mal an, nachdem er etwas gewartet hatte.',ex:'Komma vor nachdem.'},
  {t:'comma',p:'p3',s:'Man kommt einfach nicht zusammen, wenn man so etwas macht.',ex:'Komma vor wenn.'},
@@ -228,7 +228,7 @@ const SRSG=[['Die Olympischen Spiele der Antike fanden in Olympia statt, weil es
  ['Der Mond verdunkelt sich, denn die Erde steht zwischen Mond und Sonne.','SR'],['Der Mond verdunkelt sich, weil die Erde zwischen Mond und Sonne steht.','SG'],
  ['Christoph kommt nach langer Zeit wieder zu Besuch.','ES'],['Die Katastrophe war vorhergesagt worden.','ES']];
 SRSG.forEach(([s,a])=>ITEMS.push({t:'mc',p:a==='ES'?'p1':'p5',tag:'srsg',q:'Satzreihe, Satzgefüge oder einfacher Satz?',s,o:['Satzreihe (SR)','Satzgefüge (SG)','einfacher Satz'],a:{SR:'Satzreihe (SR)',SG:'Satzgefüge (SG)',ES:'einfacher Satz'}[a],
-  ex:a==='SR'?'Nur Hauptsätze, das Verb steht jeweils an 2. Stelle.':a==='SG'?'Ein Teil ist ein Nebensatz: Er beginnt mit einer Konjunktion oder einem Relativwort, das Verb steht am Ende.':'Nur ein gebeugtes Verb, also nur ein Satz.'}));
+  ex:a==='SR'?'Nur Hauptsätze, das Verb steht jeweils an 2. Stelle.':a==='SG'?'Ein Teil ist ein Nebensatz: Er beginnt mit einer Konjunktion (auch der, die, das), die gebeugte Verbform steht am Ende.':'Nur ein gebeugtes Verb, also nur ein Satz.'}));
 const ORD=[
  ['p3','Ich mag dicke Bücher. Sie müssen aber spannend sein.','Ich mag dicke Bücher, wenn','sie spannend sind','.'],
  ['p3','Wir gehen gern zur Schule. Wir lernen dort interessante Dinge.','Wir gehen gern zur Schule, weil','wir dort interessante Dinge lernen','.'],
@@ -238,7 +238,7 @@ const ORD=[
  ['p3','Wir müssen die Umwelt schonen. Wir brauchen die Natur.','Wir müssen die Umwelt schonen, weil','wir die Natur brauchen','.'],
  ['p3','Die Deiche brachen. Das Wasser stieg rasch.','Als','die Deiche brachen',', stieg das Wasser rasch.'],
  ['p3','Nicht alle konnten die Stadt verlassen. Sie hatten keine Autos.','Weil','sie keine Autos hatten',', konnten nicht alle die Stadt verlassen.'],
- ['p3','Die Menschen flüchteten auf Hausdächer. Dort konnte das Wasser sie nicht erreichen.','Die Menschen flüchteten auf Hausdächer, wo','das Wasser sie nicht erreichen konnte','.'],
+ ['p3','Die Menschen flüchteten auf Hausdächer. Dort konnte das Wasser sie nicht erreichen.','Die Menschen flüchteten auf Hausdächer, wo','das Wasser sie nicht erreichen konnte','.',['sie das Wasser nicht erreichen konnte']],
  ['p3','Es kam zu Gewalttaten. Helfer wollten sie von dort wegbringen.','Es kam zu Gewalttaten, als','Helfer sie von dort wegbringen wollten','.'],
  ['p4','Fußabdrücke auf dem Mond können nicht verwehen. Es gibt dort weder Wind noch Wetter.','Fußabdrücke auf dem Mond können nicht verwehen, weil','es dort weder Wind noch Wetter gibt','.',['es weder Wind noch Wetter dort gibt']],
  ['p4','Wir geben viel Geld für die Weltraumforschung aus. Wir brauchen das Geld für andere Dinge.','Wir geben viel Geld für die Weltraumforschung aus, obwohl','wir das Geld für andere Dinge brauchen','.'],
@@ -251,7 +251,7 @@ const ORD=[
  ['p6','Ich übte die Knoten. Ich befestigte die Taue.','Nachdem','ich die Knoten geübt hatte',', befestigte ich die Taue.']
 ];
 ORD.forEach(([p,src,head,w,tail,alt])=>ITEMS.push({t:'order',p,q:'Baue den zweiten Satz richtig ein.',src,head,w,tail,alt:alt||[],
-  ex:/denn$/.test(head)?'Nach denn bleibt die Wortstellung des Hauptsatzes: Das Verb steht an 2. Stelle.':'Im Nebensatz steht das gebeugte Verb am Ende.'}));
+  ex:/denn$/.test(head)?'Nach denn folgt ein Hauptsatz: Die Wortstellung ändert sich nicht.':'Im Nebensatz steht das gebeugte Verb am Ende.'}));
 const MC=[
  ['p4','Ein Phantombild wird erstellt, ___ der Verbrecher ausfindig gemacht werden kann.',['damit','wenn'],'damit','damit nennt den Zweck.'],
  ['p4','Es kann angefertigt werden, ___ sich Zeugen an Details erinnern.',['sobald','als'],'sobald','sobald: gleich wenn. als passt nur zu einmaligen Ereignissen in der Vergangenheit.'],
@@ -283,7 +283,7 @@ const MC=[
  ['p6','Ich ging ins Kino.',['Präteritum','Perfekt','Plusquamperfekt','Präsens','Futur'],'Präteritum',''],
  ['p6','Ich bin ins Kino gegangen.',['Perfekt','Präteritum','Plusquamperfekt','Präsens','Futur'],'Perfekt','sein im Präsens + Partizip II.'],
  ['p6','Ich war ins Kino gegangen.',['Plusquamperfekt','Perfekt','Präteritum','Präsens','Futur'],'Plusquamperfekt','sein im Präteritum + Partizip II.'],
- ['p6','Ich werde ins Kino gehen.',['Futur','Präsens','Perfekt','Präteritum','Plusquamperfekt'],'Futur','werden + Infinitiv.'],
+ ['p6','Ich werde ins Kino gehen.',['Futur','Präsens','Perfekt','Präteritum','Plusquamperfekt'],'Futur','werden + Grundform (Infinitiv).'],
  ['p6','Die Forscher bauten ein Tauchboot.',['Präteritum','Präsens','Perfekt','Futur','Plusquamperfekt'],'Präteritum',''],
  ['p6','Die Forscher werden die Tiefsee erkunden.',['Futur','Präsens','Perfekt','Präteritum','Plusquamperfekt'],'Futur',''],
  ['p6','Hast du das im letzten Sommer schon mal ausprobiert?',['Perfekt','Präteritum','Präsens','Plusquamperfekt','Futur'],'Perfekt','hast + ausprobiert.'],
@@ -295,7 +295,7 @@ const MC=[
  ['p6','Wir ___ über den Zaun geklettert.',['sind','haben'],'sind','Bewegung: sein.'],
  ['p6','Sie ___ ans Ufer geschwommen.',['ist','hat'],'ist','Bewegung: sein.'],
  ['p6','Du ___ einen Kuchen gemacht.',['hast','bist'],'hast','machen: haben.'],
- ['p6','Das Floß ___ gekentert.',['ist','hat'],'ist','kentern: Zustandsänderung, mit sein.'],
+ ['p6','Die Kinder ___ zum Floß gelaufen.',['sind','haben'],'sind','laufen ist ein Verb der Bewegung: Perfekt mit sein.'],
  ['p6','Wie bildet man das Plusquamperfekt?',['haben/sein im Präteritum + Partizip II','haben/sein im Präsens + Partizip II','werden + Infinitiv','Verbstamm + -te'],'haben/sein im Präteritum + Partizip II',''],
  ['p6','Wie bildet man das Perfekt?',['haben/sein im Präsens + Partizip II','haben/sein im Präteritum + Partizip II','werden + Infinitiv','Verbstamm + -te'],'haben/sein im Präsens + Partizip II',''],
  ['p6','Welche Zeitform heißt auch „Vorvergangenheit“?',['Plusquamperfekt','Perfekt','Präteritum','Futur'],'Plusquamperfekt',''],
@@ -311,7 +311,7 @@ const TYP=[
  ['Setze ins Plusquamperfekt: Emir verliert seine Käppi.',['Emir hatte seine Käppi verloren.']],
  ['Setze ins Perfekt: Ich schaffe die Aufgabe.',['Ich habe die Aufgabe geschafft.']],
  ['Setze ins Futur: Ich gehe ins Kino.',['Ich werde ins Kino gehen.']],
- ['Ergänze im Plusquamperfekt: Nachdem Antonio die Schwimmwesten ___ (prüfen), durften die Jugendlichen auf die Flöße.',['geprüft hatte']],
+ ['Ergänze im Plusquamperfekt: Nachdem Antonio und Karina das Anlegen der Schwimmwesten ___ (prüfen), durften die Jugendlichen auf die Flöße.',['geprüft hatten']],
  ['Ergänze im Plusquamperfekt: Das Floß schaukelte heftig, weil alle gleichzeitig auf die Plattform ___ (springen).',['gesprungen waren']],
  ['Ergänze im Plusquamperfekt: Da die anderen Gruppen das ___ (sehen), kletterten sie vorsichtiger.',['gesehen hatten']],
  ['Ergänze im Plusquamperfekt: Nachdem du die Knoten ___ (üben), befestigtest du die Taue.',['geübt hattest']],
@@ -365,7 +365,7 @@ function confetti(){const c=document.createElement('div');c.style.cssText='posit
 function recordStat(p,ok){const a=S.stats[p]=S.stats[p]||[];a.push(ok?1:0);if(a.length>20)a.shift();save();}
 const MODES={
  book:{i:'📒',t:'Akte lesen',d:'Lernkarten: umdrehen, dann „Weiß ich!“ oder „Nochmal“.',g:'Lernen'},
- verb:{i:'🔎',t:'Verb-Jäger',d:'Tippe die gebeugten Verben oder die Konjunktion an.',g:'Üben',f:i=>i.t==='tap'},
+ verb:{i:'🔎',t:'Verb-Jäger',d:'Tippe die gebeugten (finiten) Verbformen oder die Konjunktion an.',g:'Üben',f:i=>i.t==='tap'},
  comma:{i:'✒️',t:'Komma-Setzer',d:'Tippe zwischen die Wörter, wo ein Komma hingehört.',g:'Üben',f:i=>i.t==='comma'},
  sort:{i:'🗂️',t:'Satzreihe oder Satzgefüge?',d:'Entscheide, welcher Satzbau vorliegt.',g:'Üben',f:i=>i.tag==='srsg'},
  build:{i:'🧱',t:'Satz-Baumeister',d:'Verbinde zwei Sätze. Wohin wandert das Verb?',g:'Üben',f:i=>i.t==='order'},
@@ -578,7 +578,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:var(--on);--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-deutsch", "prefix": "D", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Akten gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Akten auswählen.", "units": [{"id": "p1", "icon": "🔍", "name": "Hauptsatz & Nebensatz", "learn": "Erst „Akte lesen“, dann Verb-Jäger.", "rep": "Verb-Jäger oder Satzreihe oder Satzgefüge?"}, {"id": "p2", "icon": "🔗", "name": "Satzreihe", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Konjunktion wählen.", "rep": "Komma-Setzer oder Satz-Baumeister."}, {"id": "p3", "icon": "🧩", "name": "Satzgefüge", "learn": "Erst „Akte lesen“, dann Satz-Baumeister und Komma-Setzer.", "rep": "Satz-Baumeister oder Verb-Jäger."}, {"id": "p4", "icon": "🗝️", "name": "Konjunktionen", "learn": "Erst „Akte lesen“, dann Konjunktion wählen.", "rep": "Konjunktion wählen oder Satz-Baumeister."}, {"id": "p5", "icon": "✒️", "name": "Komma-Profi", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Satzreihe oder Satzgefüge?", "rep": "Komma-Setzer."}, {"id": "p6", "icon": "⏳", "name": "Zeitformen", "learn": "Erst „Akte lesen“, dann Zeitmaschine.", "rep": "Zeitmaschine."}], "testName": "Abschlusstest", "write": true, "est": {"learn": 15, "rep": 5, "test": 10, "final": 20, "write": 15}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.1.3">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.1.4">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -588,16 +588,16 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.1.3"></script>
+<script src="../js/lernplan.js?v=7.1.4"></script>
 <!-- ===== /Lernplan ===== -->
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.1.3">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.1.4">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.1.3"></script>
+<script src="../js/nutzer.js?v=7.1.4"></script>
 <!-- ===== /Nutzer ===== -->
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}</style>
-<script src="../js/home-btn.js?v=7.1.3"></script>
+<script src="../js/home-btn.js?v=7.1.4"></script>
 <!-- ===== /Start ===== -->
-<script src="../js/arena-btn.js?v=7.1.3"></script>
+<script src="../js/arena-btn.js?v=7.1.4"></script>
 </body></html>
