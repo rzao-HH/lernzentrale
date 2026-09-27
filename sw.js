@@ -1,7 +1,7 @@
 /* Service Worker: Lernzentrale offline verfügbar machen.
    Eigene Dateien: erst Netz (damit Updates sofort ankommen), ohne Netz aus dem Speicher.
    Schriften und Bibliotheken von anderen Servern: aus dem Speicher, im Hintergrund aktualisieren. */
-const VER="7.1.4",CACHE="lz-"+VER,EXT="lz-ext";
+const VER="7.1.5",CACHE="lz-"+VER,EXT="lz-ext";
 const FILES=['./','apps/detektiv.html','apps/kueste.html','apps/wasser.html','apps/winkel.html','css/lernplan.css','css/nutzer.css','css/start.css','index.html','js/app-core.js','js/arena-btn.js','js/arena.js','js/groups.js','js/home-btn.js','js/konto.js','js/lernplan.js','js/news.js','js/nutzer-init.js','js/nutzer.js','js/router.js','js/start.js','js/sync.js','icon-180.png'];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:"reload"})))).then(()=>self.skipWaiting()));});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("lz-")&&k!==CACHE&&k!==EXT).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
