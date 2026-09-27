@@ -15,11 +15,14 @@ async def main():
     C.on('dialog',lambda d: asyncio.ensure_future(d.accept()))
     await C.goto('http://app.test/#join='+code); await C.wait_for_timeout(3500)
     print('C groups',await C.evaluate("localStorage.getItem('lz-groups@u1')"))
+    await C.click('[data-gx]'); await C.reload(); await C.wait_for_timeout(2500)
+    tabs=await C.evaluate("[...document.querySelectorAll('.rk-tabs button')].map(b=>b.innerText)"); print('tabs',tabs); assert any('Klasse 6b' in x for x in tabs),'Lerngruppen-Reiter fehlt nach Neuladen'
+    await C.evaluate('lzGroupsOpen()'); await C.wait_for_timeout(500)
     await C.click('[data-gx]'); await C.wait_for_timeout(500)
     await A.evaluate("RK_TAB=lzMyGroups()[0].code;lzPullGroup(RK_TAB,true).then(()=>document.getElementById('rank').innerHTML=rankHTML())"); await A.wait_for_timeout(1500)
     print('A rank group:',(await A.inner_text('#rank'))[:200].replace('\n',' '))
     await A.screenshot(path=OUTDIR+'gr-rank.png',full_page=True)
-    await A.goto('about:blank'); await C.wait_for_timeout(4000)  # Robin geht offline
+    await A.goto('http://app.test/leer.html'); await C.wait_for_timeout(4000)  # Robin geht offline (leere Seite, gleicher Ursprung)
     # C ghost-challenges Robin via group
     await C.evaluate("__arenaIn({type:'presence',list:[]})"); await C.evaluate("lzArenaOpen()"); await C.wait_for_timeout(2500)
     await C.evaluate("lzArenaOpen()"); await C.wait_for_timeout(300)

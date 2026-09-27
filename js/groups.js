@@ -81,5 +81,7 @@ OV.addEventListener("click",async e=>{const t=e.target;
 function checkHash(){const m=location.hash.match(/^#join=([A-Za-z0-9-]+)/);if(!m)return;try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
   setTimeout(()=>{show();join(m[1]);},600);}
 checkHash();
+/* Die Startseite wurde schon vor diesem Modul gezeichnet – Rangliste mit Lerngruppen-Reitern nachziehen */
+try{if(typeof render==='function')render();}catch(e){}
 setInterval(pushMembers,30000);setTimeout(pushMembers,4000);
 })();

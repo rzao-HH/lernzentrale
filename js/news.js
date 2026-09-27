@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.1.8","27.09.2026",["🏆 Rangliste: Die Lerngruppen-Reiter fehlten manchmal direkt nach dem Laden – behoben"]],
  ["7.1.7","27.09.2026",["⚔️ Arena: Online-Erkennung fragt den Server jetzt genauso ab wie Abgleich und Lerngruppen","🩺 Im Herausfordern-Fenster steht, ob die Verbindung zum Arena-Server klappt; Fehler erscheinen auf der Arena-Karte"]],
  ["7.1.6","27.09.2026",["🔧 Apps erscheinen beim Öffnen sofort (vorher blieb die Seite manchmal leer bis zum Neuladen)","🔬 Wasser-Zauberschule: Experimentier-Werkstatt und Forscherlabor sind jetzt ein Forscherlabor mit sechs Stationen","🦉 Wasser-Zauberschule: Der erste Test unter „Prüfen“ heißt wieder Zauberprüfung"]],
  ["7.1.5","27.09.2026",["📄 Detektiv-Büro: Jede Lernkarte nennt auf der Rückseite ihren Lernzettel (Nr. 29–41 oder Heft Zeitformen); was nicht auf den Zetteln steht, ist als Zusatz markiert"]],
