@@ -11,7 +11,7 @@ async def main():
     B.on('dialog',lambda d: asyncio.ensure_future(d.accept()))
     await A.goto('http://app.test/'); await A.wait_for_timeout(2500)
     await A.evaluate("lzGroupsOpen()"); await A.click('[data-gnew]'); await A.wait_for_timeout(800)
-    code=await A.inner_text('.gr-code'); await A.click('[data-gx]')
+    code=await A.evaluate("lzMyGroups()[0].code"); await A.click('[data-gx]')
     await B.goto('http://app.test/#join='+code); await B.wait_for_timeout(3500); await B.click('[data-gx]')
     await B.goto('http://app.test/#W'); await A.wait_for_timeout(5000)
     print('A card:',(await A.inner_text('#arena'))[:120].replace('\n',' '))

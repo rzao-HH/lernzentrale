@@ -8,7 +8,7 @@ async def main():
     A.on('dialog',lambda d: asyncio.ensure_future(d.accept('Klasse 6b')))
     await A.goto('http://app.test/'); await A.wait_for_timeout(3000)
     await A.evaluate("lzGroupsOpen()"); await A.click('[data-gnew]'); await A.wait_for_timeout(800)
-    code=await A.inner_text('.gr-code'); print('code',code)
+    code=await A.evaluate("lzMyGroups()[0].code"); print('code',code)
     await A.screenshot(path=OUTDIR+'gr-created.png')
     await A.click('[data-gx]')
     C,ec=await mk(br,'C',acct('Mia','🐱')+"localStorage.setItem('winkelakademie-v1',JSON.stringify({xp:333}));")

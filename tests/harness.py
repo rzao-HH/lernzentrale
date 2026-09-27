@@ -43,9 +43,12 @@ async def relay(name,msg):
     if m.get('type')=='presence-me':
         PRES[name]=m['p']
         for o in other:
-            await PAGES[o].evaluate("s=>__arenaIn(s)",json.dumps({'type':'presence','list':[PRES[n] for n in PRES if n!=o]}))
+            try: await PAGES[o].evaluate("s=>window.__arenaIn&&__arenaIn(s)",json.dumps({'type':'presence','list':[PRES[n] for n in PRES if n!=o]}))
+            except Exception: pass  # Seite lädt gerade neu
         return
-    for o in other: await PAGES[o].evaluate("s=>__arenaIn(s)",msg)
+    for o in other:
+        try: await PAGES[o].evaluate("s=>window.__arenaIn&&__arenaIn(s)",msg)
+        except Exception: pass
 async def mk(br,name,seed):
     c=await br.new_context(viewport={'width':1024,'height':900}); await c.route('**/*',handle)
     await c.add_init_script("window.__arenaMock=true;"+seed)
