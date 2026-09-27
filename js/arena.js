@@ -27,6 +27,8 @@ window.lzArenaPts=ptsGet;
 let ONLINE=[],HANDLERS=[],SEQ=0,nextPoll=0;
 const SEEN_P={},SINCE={},PRIMED={};
 const RPCa=(fn,b)=>window.__lzRpc(fn,b);
+/* Zeitstempel unabhängig von falsch gehenden Geräteuhren: nie kleiner als alles, was wir schon gesehen haben */
+let CLK=0;const clk=()=>{const m=Math.max(0,...Object.values(SINCE));CLK=Math.max(Date.now(),m+1,CLK+1);return CLK;};
 function myPresence(){const m=meP();return{dev:DEV,uid:m.uid,gid:m.gid,acc:m.acc,name:m.name,e:m.e,app:curAppK(),ts:Date.now()};}
 function spaces(){const L=[];(window.lzMyGroups?lzMyGroups():[]).forEach(g=>L.push({id:"grp:"+g.code,label:g.name,alias:g.alias||""}));return L;}
 function netOK(){return !!window.__lzRpc&&/^https:/.test((window.__LZSB||{}).url||"");}
@@ -34,15 +36,15 @@ function mergePres(){const m={},now=Date.now();Object.values(SEEN_P).forEach(x=>
 function setOnline(list){const sig=JSON.stringify(list.map(p=>[p.dev,p.name,p.e,p.app]));ONLINE=list.filter(p=>p&&p.dev!==DEV);if(sig!==setOnline.sig){setOnline.sig=sig;drawCard();drawPick();}}
 async function push(items){for(const sp of spaces()){const it=items.map(x=>x.k.startsWith("on:")&&sp.alias?{k:x.k,v:JSON.stringify(Object.assign(JSON.parse(x.v),{name:sp.alias})),ts:x.ts}:x);try{await RPCa("lz_push",{p_fam:sp.id,p_items:it});}catch(e){}}}
 function send(msg){msg.from_dev=DEV;msg.mid=msg.mid||Math.random().toString(36).slice(2);if(!netOK())return;
-  push([{k:"tx:"+DEV+":"+(SEQ++%16),v:JSON.stringify(msg),ts:Date.now()}]);nextPoll=0;}
+  push([{k:"tx:"+DEV+":"+(SEQ++%16),v:JSON.stringify(msg),ts:clk()}]);nextPoll=0;}
 const SEEN=new Set();
 function recv(msg){if(!msg||msg.from_dev===DEV)return;if(msg.to&&msg.to!==DEV)return;if(msg.mid){if(SEEN.has(msg.mid))return;SEEN.add(msg.mid);}HANDLERS.forEach(h=>{try{h(msg);}catch(e){}});}
 window.__arenaIn=function(s){const m=typeof s==="string"?JSON.parse(s):s;if(m.type!=="presence")recv(m);};
 let lastBeat=0,lastSig="";
-function beat(force){const p=myPresence(),sig=[p.uid,p.app,p.name,p.e].join("|");if(!force&&sig===lastSig&&Date.now()-lastBeat<8000)return;lastSig=sig;lastBeat=Date.now();push([{k:"on:"+DEV,v:JSON.stringify(p),ts:p.ts}]);}
+function beat(force){const p=Object.assign(myPresence(),{ts:clk()}),sig=[p.uid,p.app,p.name,p.e].join("|");if(!force&&sig===lastSig&&Date.now()-lastBeat<8000)return;lastSig=sig;lastBeat=Date.now();push([{k:"on:"+DEV,v:JSON.stringify(p),ts:p.ts}]);}
 let polling=false;
 async function poll(){if(polling||!netOK())return;polling=true;const now=Date.now();
-  try{for(const sp of spaces()){const since=Math.min(SINCE[sp.id]||0,now)-60000;
+  try{for(const sp of spaces()){const since=(SINCE[sp.id]||0)-60000;
     const rows=(await RPCa("lz_pull",{p_fam:sp.id,p_since:Math.max(0,since)}))||[];const first=!PRIMED[sp.id];PRIMED[sp.id]=1;
     rows.forEach(r=>{const ts=+r.ts||0;if(ts>(SINCE[sp.id]||0))SINCE[sp.id]=ts;let v=null;try{v=JSON.parse(r.v);}catch(e){}if(!v)return;
       if(r.k.startsWith("on:")){const key=sp.id+"|"+r.k,o=SEEN_P[key];
@@ -52,7 +54,7 @@ async function poll(){if(polling||!netOK())return;polling=true;const now=Date.no
   }catch(e){}polling=false;mergePres();}
 function busyNow(){return (GAME&&!GAME.over)||VIEW==="wait"||VIEW==="pick"||INV.classList.contains("on");}
 setInterval(()=>{if(document.hidden||!spaces().length)return;beat(false);const now=Date.now();if(now>=nextPoll){nextPoll=now+(busyNow()?900:3000);poll();}},300);
-addEventListener("pagehide",()=>{if(!netOK())return;const p=Object.assign(myPresence(),{off:true});push([{k:"on:"+DEV,v:JSON.stringify(p),ts:Date.now()}]);});
+addEventListener("pagehide",()=>{if(!netOK())return;const p=Object.assign(myPresence(),{off:true,ts:clk()});push([{k:"on:"+DEV,v:JSON.stringify(p),ts:p.ts}]);});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){beat(true);nextPoll=0;}});
 
 /* ---------- Fragen aus den Apps ---------- */
@@ -69,7 +71,7 @@ function loadApp(k){
       else if(k==="D")v=JSON.parse(JSON.stringify({I:w.__lzArena.I.filter(i=>i.t==="mc"&&i.o.length<=5||i.t==="comma"||i.t==="tap"),sel:w.__lzArena.sel()}));
     }catch(e){v=null;}fin(v);},250);
     setTimeout(()=>fin(null),8000);
-    f.src=APPURL[k]+"?v=7.1.1";document.body.appendChild(f);});
+    f.src=APPURL[k]+"?v=7.1.2";document.body.appendChild(f);});
 }
 const DEG=[{n:"Nullwinkel",f:a=>a===0},{n:"spitzer Winkel",f:a=>a>0&&a<90},{n:"rechter Winkel",f:a=>a===90},{n:"stumpfer Winkel",f:a=>a>90&&a<180},{n:"gestreckter Winkel",f:a=>a===180},{n:"überstumpfer Winkel",f:a=>a>180&&a<360},{n:"Vollwinkel",f:a=>a===360}];
 function qW(sel){
@@ -133,7 +135,7 @@ let VIEW=null,GAME=null,PENDING=null;
 function close(){if(GAME&&!GAME.over&&!confirm("Duell wirklich abbrechen?"))return;if(GAME){GAME.over=true;clearInterval(GAME.iv);if(GAME.live)send({t:"quit",id:GAME.id,to:GAME.opp.dev});}GAME=null;VIEW=null;PENDING=null;OV.classList.remove("on");drawCard();try{render();}catch(e){}}
 function openOv(){OV.classList.add("on");}
 let PICK={mode:"mix",stake:10};
-function offList(){const me=meP(),onG=new Set(ONLINE.map(p=>p.gid||p.uid)),m={};
+function offList(){const me=meP(),onG=new Set(),m={};
   NU.list.forEach(u=>{const g=u.gid||u.id;if(g!==me.gid&&!onG.has(g))m[g]={gid:g,uid:u.id,acc:!!u.acc,name:u.name,e:u.e,grp:"",gl:"dieses Gerät"};});
   (window.lzMyGroups?lzMyGroups():[]).forEach(G=>{const c=window.lzGroupCache&&lzGroupCache(G.code);if(c)c.members.forEach(x=>{if(x.gid!==me.gid&&!onG.has(x.gid)&&!m[x.gid])m[x.gid]={gid:x.gid,uid:"",acc:true,name:x.name,e:x.e,grp:G.code,gl:G.name};});});
   return Object.values(m);}
@@ -143,9 +145,9 @@ function drawPick(){if(VIEW!=="pick")return;const me=meP(),on=ONLINE.filter(p=>!
    <div class="ar-me">${esc(me.e)} <b>${esc(me.name)}</b> · ${ptsGet(me.uid).p} Arena-Punkte</div>
    <div class="ar-h">🎰 Welche Fächer?</div><div class="ar-seg">${[["mix","🎰 Glücksrad (alle)"],["W","📐 Mathe"],["Z","🪄 NWT"],["E","🐚 Englisch"],["D","🕵️ Deutsch"]].map(([k,l])=>`<button type="button" data-am="${k}" class="${PICK.mode===k?"on":""}">${l}</button>`).join("")}</div>
    <div class="ar-h">💰 Einsatz (Arena-Punkte)</div><div class="ar-seg">${[0,10,25,50].map(s=>`<button type="button" data-as="${s}" class="${PICK.stake===s?"on":""}">${s||"ohne"}</button>`).join("")}</div>
-   <div class="ar-h">🟢 Gerade online</div>
+   <div class="ar-h">🟢 Live-Duell – gerade online, ihr spielt gleichzeitig</div>
    ${fam?(on.length?`<div class="ar-list">${on.map(p=>`<button type="button" class="ar-p" data-live="${esc(p.dev)}"><span>${esc(p.e)}</span><b>${esc(p.name)}</b><small>${p.spl?"👥 "+esc(p.spl)+" · ":""}${p.app&&AN[p.app]?"in "+AN[p.app][0]+" "+AN[p.app][1]:"auf der Startseite"}</small><em>🪢 live</em></button>`).join("")}</div>`:`<p class="ar-p0">Gerade ist niemand online.</p>`):`<p class="ar-p0">Für Live-Duelle: gemeinsam einer Lerngruppe beitreten, z. B. „Familie“.</p>`}
-   ${off.length?`<div class="ar-h">👻 Geister-Duell</div><p class="ar-p0">Du spielst jetzt, die andere Person später gegen deine Aufzeichnung.</p><div class="ar-list">${off.map(u=>`<button type="button" class="ar-p" data-ghost="${esc(u.gid)}"><span>${esc(u.e)}</span><b>${esc(u.name)}</b><small>${u.grp?"👥 "+esc(u.gl):"📱 "+esc(u.gl)}</small><em>👻</em></button>`).join("")}</div>`:""}
+   ${off.length?`<div class="ar-h">👻 Geister-Duell – alle aus deinen Lerngruppen</div><p class="ar-p0">Du spielst jetzt, die andere Person später gegen deine Aufzeichnung.</p><div class="ar-list">${off.map(u=>`<button type="button" class="ar-p" data-ghost="${esc(u.gid)}"><span>${esc(u.e)}</span><b>${esc(u.name)}</b><small>${u.grp?"👥 "+esc(u.gl):"📱 "+esc(u.gl)}</small><em>👻</em></button>`).join("")}</div>`:""}
    ${myGhostBoxes()}</div>`;}
 function myGhostBoxes(){const L=ghostList();
   const inc=L.filter(g=>isMe(g.to,g)&&!g.res),res=L.filter(g=>isMe(g.from,g)&&g.res&&!g.res.fromSeen);
