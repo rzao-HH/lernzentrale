@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.1.6","27.09.2026",["🔧 Apps erscheinen beim Öffnen sofort (vorher blieb die Seite manchmal leer bis zum Neuladen)","🔬 Wasser-Zauberschule: Experimentier-Werkstatt und Forscherlabor sind jetzt ein Forscherlabor mit sechs Stationen","🦉 Wasser-Zauberschule: Der erste Test unter „Prüfen“ heißt wieder Zauberprüfung"]],
  ["7.1.5","27.09.2026",["📄 Detektiv-Büro: Jede Lernkarte nennt auf der Rückseite ihren Lernzettel (Nr. 29–41 oder Heft Zeitformen); was nicht auf den Zetteln steht, ist als Zusatz markiert"]],
  ["7.1.4","27.09.2026",["🕵️ Detektiv-Büro: Lernkarten zeigen vorne eine klare Frage, Antworten im Wortlaut der Lernzettel","🔎 Verb-Jäger: angetippte Wörter sind deutlich markiert, nach dem Prüfen ✓ und durchgestrichen","📝 Begriffe wie auf den Lernzetteln: „gebeugte (finite) Verbform“, „Nebensatz-Konjunktionen“, kein „Relativsatz“ mehr"]],
  ["7.1.3","27.09.2026",["🐚 Küsten-Crew: „Laut Lernplan heute“ steht jetzt wie in den anderen Apps über „Pakete wählen“, mit „Diese Pakete wählen“"]],

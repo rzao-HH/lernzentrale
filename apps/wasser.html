@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.1.5"></script>
+<script src="../js/app-core.js?v=7.1.6"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="Z";window.__DATAKEY="wasserzauberschule-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.1.5"></script>
+<script src="../js/nutzer-init.js?v=7.1.6"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -432,13 +432,13 @@ const MODES={
   trans:{i:'🔄',t:'Verwandlungskreis',d:'Welcher Übergang ist das? Pfeile und Alltagsrätsel.',p:['p2'],g:'play'},
   lake:{i:'🏞️',t:'See-Rätsel',d:'Ordne die Temperaturen den Schichten im See zu.',p:['p4'],g:'play'},
   table:{i:'🧩',t:'Teilchen-Tabelle',d:'Kreuze an, wie sich die Teilchen verhalten.',p:['p1'],g:'play'},
-  werk:{i:'🔬',t:'Experimentier-Werkstatt',d:'Heizen, Gefrieren, Frost auf Straße und Acker, Flasche im Gefrierfach: Probier selbst aus!',p:ALL,g:'play'},
-  mix:{i:'🧫',t:'Forscherlabor',d:'Selbst experimentieren: Mischen, Heizen, Gefrieren, Straße, Acker und Flasche.',p:['p1','p2','p3','p4'],g:'play'},
+  werk:{i:'🔬',t:'Forscherlabor',d:'Selbst experimentieren: Heizen, Gefrieren, Farbwasser mischen, Frost auf Straße und Acker, Flasche im Gefrierfach – und eine Versuchsreihe mit Vorhersagen.',p:ALL,g:'play'},
+  mix:{i:'🔬',t:'Forscherlabor',d:'',p:ALL,g:'hidden'},/* früher eigenes Labor, jetzt Teil von werk */
   therm:{i:'🌡️',t:'Stoff-Thermometer',d:'Lies im Diagramm ab: Welcher Stoff ist bei welcher Temperatur fest, flüssig oder gasförmig?',p:['p1'],g:'play'},
   gaps:{i:'✒️',t:'Lückentext',d:'Setze die richtigen Wörter in die Lücken.',p:['p1','p2','p3','p4'],g:'play'},
   ana:{i:'🔤',t:'Zauberworte',d:'Setze aus den Buchstaben das gesuchte Wort zusammen.',p:ALL,g:'play'},
   proto:{i:'📜',t:'Protokoll-Puzzle',d:'Bring die Teile eines Versuchsprotokolls in die richtige Reihenfolge.',p:['p5'],g:'play'},
-  quiz:{i:'🦉',t:'Abschlusstest',d:'Multiple Choice mit Erklärung nach jeder Frage.',p:ALL,g:'quiz'},
+  quiz:{i:'🦉',t:'Zauberprüfung',d:'Multiple Choice mit Erklärung nach jeder Frage.',p:ALL,g:'quiz'},
   tf:{i:'✅',t:'Wahr oder falsch?',d:'Entscheide bei jeder Aussage, ob sie stimmt.',p:ALL,g:'quiz'},
   duel:{i:'⚡',t:'Blitz-Duell',d:'60 Sekunden: So viele Aussagen richtig einschätzen wie möglich.',p:ALL,g:'quiz'},
   test:{i:'🏆',t:'Abschlusstest',d:'12 gemischte Aufgaben ohne Hilfen. Am Ende gibt es eine Note.',p:ALL,g:'quiz'},
@@ -746,7 +746,7 @@ function startMode(m){
   if(m==='lake')return lake();
   if(m==='table')return table();
   if(m==='therm')return thermo();
-  if(m==='mix')return mixLab();
+  if(m==='mix')return werk();
   if(m==='werk')return werk();
   if(m==='gaps')return gaps();
   if(m==='proto')return proto();
@@ -1208,19 +1208,6 @@ const MX_TASKS=[
   ex:'4 °C ist die Temperatur mit der größten Dichte. Deshalb sinkt 4 °C kaltes Wasser sogar in noch kälterem Wasser nach unten. So sammelt sich am Grund eines Sees im Winter 4 °C kaltes Wasser.'}
 ];
 const MX_MISS=[['boil','Bring das Wasser zum Kochen, bis ein Teil verdampft ist.'],['freeze','Stell das Glas ins Gefrierfach: Wo entsteht das Eis zuerst?'],['bulge','Friere das ganze Glas ein, bis das Eis herausragt.'],['up','Lass gefärbtes Wasser vom Boden nach oben steigen.'],['down','Lass gefärbtes Wasser von oben nach unten sinken.'],['icesink','Ein Eiswürfel schwimmt, aber sein Schmelzwasser sinkt nach unten.'],['icetop','Schaffe es, dass das Schmelzwasser eines Eiswürfels oben bleibt.'],['coldup','Lass kälteres Wasser nach oben steigen. Tipp: Denk an die 4 °C.']];
-function mixLab(){G={mode:'mix',finished:false,phase:'menu',raf:0};shell('mix');mxMenu();}
-function mxMenu(){stopAll();G.finished=false;G.tk=null;const c=$('#card');c.classList.remove('wide');S.mixm=S.mixm||{};$('#pprog').textContent='';
-  const cnt=list=>`${list.filter(m=>S.mixm[m[0]]).length}/${list.length} Aufträge`;
-  const B=(id,ic,t,d,n)=>`<button class="mxbig" id="${id}"><span>${ic}</span><b>${t}</b><small>${d}${n?' · '+n:''}</small></button>`;
-  c.innerHTML=`<div class="q">Forscherlabor: Probier es selbst aus!</div><p class="mxp">Wähle eine Station. Überall zeigt dir die Lupe, was die Teilchen machen.</p>
-  <div class="mxgrid">${B('mxT','🔮','Versuchsreihe: Vorhersagen','10 Versuche zum Steigen und Sinken. Erst vorhersagen, dann zuschauen.','')}
-  ${B('mxF','🧪','Mischen: Eiswürfel und Farbwasser','Temperaturen einstellen und schauen, was steigt und sinkt.',cnt(MX_MISS))}
-  ${B('mxH','🔥','Becherglas: Heizen und Gefrieren','Bis zum Kochen erhitzen oder bis zum Eisblock abkühlen.',cnt(LB_MISS.heat))}
-  ${B('mxR','🛣️','Straße im Jahreslauf','Regen, Frost und Tauwetter: Wie entsteht ein Schlagloch?',cnt(LB_MISS.road))}
-  ${B('mxA','🌱','Acker im Winter','Wie Frost den Boden für den Frühling lockert.',cnt(LB_MISS.field))}
-  ${B('mxB','🍾','Flasche im Gefrierfach','Voll oder nicht ganz voll, Deckel zu oder offen?',cnt(LB_MISS.bottle))}</div>`;
-  $('#mxT').onclick=()=>{G.tasks=MX_TASKS.slice();G.ti=0;G.score=0;mxTask();};$('#mxF').onclick=mxFree;
-  $('#mxH').onclick=lbHeat;$('#mxR').onclick=lbRoad;$('#mxA').onclick=lbField;$('#mxB').onclick=lbBottle;app.scrollTop=0;}
 /* ---------- Simulation ---------- */
 function mxSim(cv,set){
   const ctx=cv.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1);
@@ -1323,7 +1310,7 @@ function mxTaskEnd(T){const c=$('#card'),ok1=G.pick===T.a,ok2=G.why===T.wa;G.sco
   $('#mxnx').onclick=()=>{G.sim.stop();G.ti++;if(G.ti>=G.tasks.length)return mxEnd();mxTask();app.scrollTop=0;};
   $('#mxr').scrollIntoView({behavior:'smooth',block:'nearest'});}
 function mxEnd(){const n=G.tasks.length*2,p=G.score/n;if(p>=.9)confetti();
-  showResult('mix',`${stars(p)}<p><b>${G.score} von ${n}</b> Punkten (Vorhersage und Begründung)</p><p>${p>=.9?'Du bist ein echter Wasser-Forscher!':p>=.6?'Gut beobachtet! Schau dir die Lupe bei den Fehlern noch einmal an.':'Probier es im freien Experimentieren noch einmal aus und schau auf die Lupe.'}</p>`);}
+  showResult('werk',`${stars(p)}<p><b>${G.score} von ${n}</b> Punkten (Vorhersage und Begründung)</p><p>${p>=.9?'Du bist ein echter Wasser-Forscher!':p>=.6?'Gut beobachtet! Schau dir die Lupe bei den Fehlern noch einmal an.':'Probier es im freien Experimentieren noch einmal aus und schau auf die Lupe.'}</p>`);}
 /* ---------- Freies Experimentieren ---------- */
 function mxFree(){const c=$('#card');c.classList.add('wide');S.mixm=S.mixm||{};G.fs={bath:20,ins:'water',dye:60,pos:'bottom',col:'rot'};$('#pprog').textContent='';
   c.innerHTML=`<div class="wkgrid"><div class="wkL"><div class="wkstage"><canvas class="mxcv wkcv" id="mxcv"></canvas>${TK_COVER}</div><div id="mxlive" class="mxlive tkveil"></div></div>
@@ -1336,7 +1323,7 @@ function mxFree(){const c=$('#card');c.classList.add('wide');S.mixm=S.mixm||{};G
    <div class="mxbtns"><button class="big go" id="mxstart">▶ Einfüllen</button><button class="big sec" id="mxreset">⟲ Neu</button></div>
   </div>
   <div class="tkmis" id="tkmis"></div><button class="big sec" id="stback">◀ Zurück</button></div></div>`;
-  $('#stback').onclick=()=>{G.sim&&G.sim.stop();G.tk=null;(G.mode==='werk'?wkMenu:mxMenu)();};
+  $('#stback').onclick=()=>{G.sim&&G.sim.stop();G.tk=null;wkMenu();};
   const sim=mxSim($('#mxcv'),Object.assign({},G.fs));G.sim=sim;G.fdone=false;
   tkNew('mix',MX_MISS,k=>!!S.mixm[k],k=>{S.mixm[k]=1;save();},()=>mxStateText(sim));tkDraw();tkBind(c.querySelector('.mxctl'));
   const upd=()=>{const f=G.fs;$('#lb').textContent=f.bath<0?f.bath+' °C (Gefrierfach)':f.bath>=100?'100 °C (kocht)':f.bath>=90?f.bath+' °C (fast kochend)':f.bath+' °C';$('#ld').textContent=f.dye+' °C';$('#ldye').style.display=f.ins==='ice'?'none':'';$('#cpos').style.display=f.ins==='ice'?'none':'';
@@ -1366,184 +1353,7 @@ function mxCheck(s,final){const st=s.stats(),f=s.set;if(!G.tk)return;G.tk.cur=ne
   if(f.ins==='water'&&f.pos==='bottom'&&f.dye<f.bath&&st.top>.4)hit('coldup');
 }
 window.__MX=()=>G;
-/* ===== Forscherlabor: Heizen/Gefrieren, Straße, Acker, Flasche ===== */
-const LB_MISS={
- heat:[['h_boil','Bring das Wasser zum Sieden (100 °C).'],['h_evap','Lass die Hälfte des Wassers verdampfen.'],['h_freeze','Lass Eis entstehen. Wo bildet es sich zuerst?'],['h_solid','Friere das Wasser ganz ein und schau, wie hoch das Eis steht.'],['h_melt','Schmelze einen ganz gefrorenen Block wieder.']],
- road:[['r_fill','Lass Regenwasser in den Riss laufen.'],['r_freeze','Lass das Wasser im Riss gefrieren und beobachte den Asphalt.'],['r_thaw','Lass es im Frühling tauen. Was bleibt unter dem Asphalt?'],['r_cycle','Schaffe drei Frost-Tau-Runden.'],['r_hole','Lass ein Auto ein Schlagloch machen.']],
- field:[['f_wet','Lass es regnen, damit Wasser in die Erdklumpen zieht.'],['f_freeze','Lass das Wasser im Boden gefrieren.'],['f_loose','Mach den Boden richtig locker (mindestens 80 %).'],['f_sow','Säe im Frühling auf lockerem Boden.']],
- bottle:[['b_burst','Bring eine geschlossene Flasche zum Platzen.'],['b_safe','Friere eine Flasche ein, ohne dass sie platzt.'],['b_open','Friere eine offene, randvolle Flasche ein. Was passiert oben?']]
-};
-const LB_ALL=Object.values(LB_MISS).flat().concat(MX_MISS);
-function lbHit(k){tkSat(k);}
-function lbMissHTML(st){S.mixm=S.mixm||{};return`<div class="mxmis"><div class="q" style="font-size:17px">Forscher-Aufträge</div>${LB_MISS[st].map(([k,t])=>`<div class="mxm ${S.mixm[k]?'ok':''}" data-k="${k}" data-t="${esc(t)}">${S.mixm[k]?'✅':'⬜'} ${esc(t)}</div>`).join('')}</div>`;}
-function lbLupe(which){const sv=s=>`<div class="stlu">${modelSVG(s,7)}<small>${s}</small></div>`;return`<div class="mxlupe"><div class="mxlt">🔍 Lupe: So liegen die Teilchen</div><div class="mxlr stlr">${which.map(sv).join('')}</div></div>`;}
-function lbShell(st,title,ctl,info){const c=$('#card');$('#pprog').textContent='';
-  c.classList.add('wide');
-  c.innerHTML=`<div class="q">${title}</div><div class="wkgrid"><div class="wkL"><div class="wkstage"><canvas class="mxcv wkcv" id="stcv"></canvas>${TK_COVER}</div><div id="stinfo" class="stinfo tkveil"></div></div>
-   <div class="wkR"><div class="lbtask" id="tktask" style="display:none"></div><div class="mxctl">${ctl}</div><div id="stlupe" class="tkveil"></div><div class="tkmis" id="tkmis"></div><button class="big sec" id="stback">◀ Zurück zur Stationen-Auswahl</button></div></div>`;
-  $('#stback').onclick=()=>{G.tk=null;mxMenu();};
-  tkNew(st,LB_MISS[st],k=>!!S.mixm[k],k=>{S.mixm[k]=1;save();},()=>($('#stinfo')||{}).innerText||'');tkDraw();tkBind(c.querySelector('.mxctl'));const cv=$('#stcv'),ctx=cv.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1);
-  const fit=()=>{const w=cv.clientWidth,h=cv.clientHeight;cv.width=w*dpr;cv.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);return{w,h};};let D=fit();
-  return{c,cv,ctx,D:()=>D,refit:()=>{D=fit();}};}
-function lbLoop(step,draw){stopAll();G.finished=false;let last=performance.now();const loop=now=>{if(G.finished||!document.getElementById('stcv'))return;const dt=Math.min(.05,(now-last)/1000);last=now;if(G.tk)G.tk.cur=new Set();step(dt);draw();G.raf=requestAnimationFrame(loop);};G.raf=requestAnimationFrame(loop);}
-const lbTxt=()=>getComputedStyle(document.body).color;
-function lbTempCtl(id,label,min,max,val){return`<label>${label}: <b id="${id}l">${val} °C</b><input type="range" id="${id}" min="${min}" max="${max}" value="${val}"></label>`;}
-/* ---------- A: Becherglas mit Heizen und Gefrieren ---------- */
-function lbHeat(){const W={T:20,tgt:20,level:1,ice:0,bub:[],steam:[],solidSeen:false,evap0:1};
-  const sh=lbShell('heat','🔥 Becherglas: Heizen und Gefrieren',lbTempCtl('ht','Heizplatte / Kühlung einstellen',-15,120,20)+`<div class="mxbtns"><button class="big sec" id="hfill">💧 Glas neu füllen (20 °C)</button><button class="big sec" id="hroom">🌡️ Auf 20 °C stellen</button></div>`);
-  $('#ht').oninput=e=>{W.tgt=+e.target.value;$('#htl').textContent=W.tgt+' °C';};
-  $('#hfill').onclick=()=>{Object.assign(W,{T:20,level:1,ice:0,bub:[],steam:[],solidSeen:false});};
-  $('#hroom').onclick=()=>{W.tgt=20;$('#ht').value=20;$('#htl').textContent='20 °C';};
-  let lastInfo='';
-  const step=dt=>{const r=dt*1.6;
-    if(W.tgt>W.T||(W.ice>0&&W.tgt>0)){ // heizen
-      if(W.ice>0){W.ice=Math.max(0,W.ice-0.06*r*(1+W.tgt/40));W.T=0;if(W.ice===0&&W.solidSeen)lbHit('h_melt');}
-      else if(W.T<100){W.T=Math.min(W.tgt,100,W.T+(W.T<0?12:6)*r*(0.5+Math.max(0,W.tgt-W.T)/60));}
-      if(W.T>=100&&W.tgt>=100&&W.level>0){W.level=Math.max(0,W.level-0.025*r*(1+(W.tgt-100)/20));lbHit('h_boil');if(W.level<=0.5)lbHit('h_evap');}
-    }else if(W.tgt<W.T){ // kühlen
-      if(W.T>0)W.T=Math.max(Math.max(W.tgt,0),W.T-6*r*(0.5+(W.T-W.tgt)/60));
-      else if(W.ice<1&&W.tgt<0){W.T=0;W.ice=Math.min(1,W.ice+0.05*r*(1+(-W.tgt)/15));if(W.ice>0.15)lbHit('h_freeze');if(W.ice>=1){W.solidSeen=true;lbHit('h_solid');}}
-      else if(W.ice>=1)W.T=Math.max(W.tgt,W.T-5*r);
-    }
-    if(W.T>=90&&W.ice===0&&W.level>0&&Math.random()<(W.T-88)/12*.9)W.bub.push({x:Math.random(),y:1,v:.25+Math.random()*.35,r:2+Math.random()*3*(W.T>=100?1.6:1)});
-    W.bub.forEach(b=>b.y-=b.v*dt*(W.T>=100?2:1));W.bub=W.bub.filter(b=>b.y>0);
-    if(W.T>=100&&W.tgt>=100&&W.level>0&&Math.random()<.5)W.steam.push({x:.3+Math.random()*.4,y:0,a:1});
-    W.steam.forEach(s=>{s.y+=dt*.5;s.x+=(Math.random()-.5)*dt*.2;s.a-=dt*.35;});W.steam=W.steam.filter(s=>s.a>0);
-    const st=W.ice>=1?'fest':W.ice>0?'fest + flüssig':W.T>=100?'flüssig, siedet (wird gasförmig)':'flüssig';
-    const info=`<b>${Math.round(W.T)} °C</b> · ${st}${W.ice>0&&W.ice<1?' · Das Eis wächst von oben nach unten. Unten bleibt es länger flüssig (bis 4 °C).':''}${W.ice>=1?' · Das Eis steht höher als vorher das Wasser: Es braucht mehr Platz.':''}${W.T>=100&&W.tgt>=100&&W.level>0?' · Wasser verdampft, der Wasserstand sinkt.':''}${W.level<=0?' · Alles Wasser ist verdampft.':''}`;
-    if(info!==lastInfo){lastInfo=info;$('#stinfo').innerHTML=info;$('#stlupe').innerHTML=lbLupe(W.ice>=1?['fest']:W.ice>0?['fest','flüssig']:W.T>=100?['flüssig','gasförmig']:['flüssig']);}
-  };
-  const draw=()=>{const {w,h}=sh.D(),ctx=sh.ctx;ctx.clearRect(0,0,w,h);const x0=w*.28,x1=w*.72,yb=h*.78,yt=h*.12,H=yb-yt;
-    // Heizplatte
-    const heat=W.tgt>W.T||(W.T>=100&&W.tgt>=100),cool=W.tgt<W.T||W.tgt<0;ctx.fillStyle=heat?'#e8553e':cool?'#6fb6ff':'#999';ctx.fillRect(x0-20,yb+8,x1-x0+40,12);ctx.fillStyle='#666';ctx.fillRect(x0-30,yb+20,x1-x0+60,14);
-    ctx.fillStyle=lbTxt();ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText(heat?'Heizplatte an':cool?'Kühlung an':'aus',w/2,yb+48);
-    // Wasser/Eis
-    const lvl=W.level*0.72*H,iceH=W.ice*lvl*1.09,liqH=(1-W.ice)*lvl,top=yb-liqH-iceH;
-    const warm=Math.max(0,Math.min(1,W.T/100));ctx.fillStyle=`rgba(${Math.round(90+150*warm)},${Math.round(160-40*warm)},${Math.round(255-170*warm)},.45)`;ctx.fillRect(x0,yb-liqH,x1-x0,liqH);
-    if(iceH>0){ctx.fillStyle='rgba(225,242,255,.95)';ctx.fillRect(x0,top,x1-x0,iceH);ctx.strokeStyle='rgba(140,190,235,.9)';ctx.lineWidth=1;for(let yy=top+8;yy<top+iceH;yy+=10)for(let xx=x0+8;xx<x1;xx+=10){ctx.beginPath();ctx.arc(xx,yy,1.6,0,6.3);ctx.stroke();}}
-    ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(120,120,120,.6)';ctx.beginPath();const lv0=yb-W.level*.72*H;ctx.moveTo(x0-10,lv0);ctx.lineTo(x0,lv0);ctx.stroke();ctx.setLineDash([]);
-    if(W.ice>0&&W.ice<1&&liqH>30){ctx.fillStyle=lbTxt();ctx.font='bold 11px system-ui';ctx.textAlign='left';ctx.fillText('0 °C',x1+8,top+iceH+10);ctx.fillText('4 °C',x1+8,yb-6);}
-    W.bub.forEach(b=>{if(liqH<4)return;ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x0+8+b.x*(x1-x0-16),yb-b.y*liqH,b.r,0,6.3);ctx.stroke();});
-    W.steam.forEach(s=>{ctx.fillStyle=`rgba(200,200,210,${s.a*.6})`;ctx.beginPath();ctx.arc(x0+s.x*(x1-x0),top-s.y*H*.8,8+ (1-s.a)*10,0,6.3);ctx.fill();});
-    ctx.strokeStyle='rgba(120,160,200,.9)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x0-3,yt);ctx.lineTo(x0-3,yb+3);ctx.lineTo(x1+3,yb+3);ctx.lineTo(x1+3,yt);ctx.stroke();
-    // Thermometer
-    const tx=w*.12,ty0=yt+10,ty1=yb-10,tr=(Math.max(-20,Math.min(110,W.T))+20)/130;ctx.fillStyle='rgba(200,200,200,.4)';ctx.fillRect(tx-5,ty0,10,ty1-ty0);ctx.fillStyle=W.T<=0?'#4a90e2':'#e0412f';ctx.fillRect(tx-5,ty1-(ty1-ty0)*tr,10,(ty1-ty0)*tr);ctx.beginPath();ctx.arc(tx,ty1+6,9,0,6.3);ctx.fill();
-    ctx.fillStyle=lbTxt();ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillText(Math.round(W.T)+' °C',tx,yt);
-  };
-  lbLoop(step,draw);
-}
-/* ---------- B: Straße im Jahreslauf ---------- */
-function lbRoad(){const R={T:10,water:0,frozen:0,hollow:.25,lift:0,crack:.4,cycles:0,wasFrozen:false,hole:false,car:null,drain:0,drops:[]};
-  const sh=lbShell('road','🛣️ Straße im Jahreslauf: Frostsprengung',lbTempCtl('rt','Temperatur draußen (Winter ↔ Frühling)',-15,20,10)+`<div class="mxbtns"><button class="big sec" id="rrain">🌧️ Regen</button><button class="big sec" id="rcar">🚗 Auto fährt drüber</button></div><button class="big sec" id="rnew">⟲ Neue Straße</button>`);
-  $('#rt').oninput=e=>{R.T=+e.target.value;$('#rtl').textContent=R.T+' °C';};
-  $('#rrain').onclick=()=>{if(R.hole)return;if(R.T<=0){R.msg='Bei Frost fällt Schnee statt Regen. Stell die Temperatur über 0 °C.';return;}for(let i=0;i<40;i++)R.drops.push({x:Math.random(),y:-Math.random()*.4});};
-  $('#rcar').onclick=()=>{if(!R.car)R.car={x:-.15};};
-  $('#rnew').onclick=()=>{Object.assign(R,{water:0,frozen:0,hollow:.25,lift:0,crack:.4,cycles:0,wasFrozen:false,hole:false,car:null,drops:[],msg:''});};
-  let lastInfo='';
-  const step=dt=>{const r=dt*1.4;
-    R.drops.forEach(d=>d.y+=dt*1.2);const landed=R.drops.filter(d=>d.y>=1).length;R.drops=R.drops.filter(d=>d.y<1);
-    if(landed){R.water=Math.min(1,R.water+landed*0.03*(1-R.frozen));if(R.water>.3)lbHit('r_fill');}
-    if(R.T<0&&R.water>0.05){R.frozen=Math.min(1,R.frozen+0.12*r*(1+(-R.T)/10));
-      const need=R.water*1.09*R.hollow;if(R.frozen>0.5&&need>R.hollow*R.water){R.lift=Math.min(1,R.lift+0.08*r*R.water);R.hollow=Math.min(1,R.hollow+0.018*r*R.water);R.crack=Math.min(1,R.crack+0.02*r*R.water);}
-      if(R.frozen>=1&&!R.wasFrozen){R.wasFrozen=true;lbHit('r_freeze');}}
-    else if(R.T>0&&R.frozen>0){R.frozen=Math.max(0,R.frozen-0.15*r*(1+R.T/10));if(R.frozen===0&&R.wasFrozen){R.wasFrozen=false;R.cycles++;lbHit('r_thaw');if(R.cycles>=3)lbHit('r_cycle');}}
-    if(R.T>0&&R.frozen===0){R.lift=Math.max(R.lift*.9995,0);R.water=Math.max(0,R.water-0.01*r);}
-    if(R.car){R.car.x+=dt*.35;if(!R.hole&&R.car.x>.42&&R.car.x<.5){if(R.hollow>.55&&R.frozen<.3){R.hole=true;lbHit('r_hole');R.msg='💥 Der Asphalt über dem Hohlraum ist eingebrochen: ein Schlagloch!';}
-      else if(R.frozen>=.3)R.msg='Das Eis stützt den Asphalt noch. Erst wenn es taut, wird es gefährlich.';else R.msg='Die Straße hält noch. Der Hohlraum ist noch zu klein.';}
-      if(R.car.x>1.15)R.car=null;}
-    const state=R.hole?'Schlagloch':R.frozen>0.5?'Wasser im Riss ist gefroren: Eis braucht etwa 9 % mehr Platz, drückt den Asphalt hoch und macht den Riss breiter.':R.water>0.1?'Wasser steht im Riss und im Hohlraum darunter.':R.cycles>0?'Getaut: Das Eis ist geschmolzen und braucht weniger Platz. Unter dem Asphalt bleibt ein größerer Hohlraum.':'Eine Straße mit einem kleinen Riss.';
-    const info=`<b>${R.T} °C</b> · ${state}<br><small>Hohlraum: ${Math.round(R.hollow*100)} % · Frost-Tau-Runden: ${R.cycles}</small>${R.msg?'<br>'+R.msg:''}`;
-    if(info!==lastInfo){lastInfo=info;$('#stinfo').innerHTML=info;$('#stlupe').innerHTML=lbLupe(['flüssig','fest'])+'<div class="stnote">Wasser braucht als Eis etwa 9 % mehr Platz. Im engen Riss drückt es deshalb alles auseinander.</div>';}
-  };
-  const draw=()=>{const {w,h}=sh.D(),ctx=sh.ctx;ctx.clearRect(0,0,w,h);const sy=h*.38,ay=h*.58,gy=h*.95,cx=w*.5;
-    ctx.fillStyle=R.T<0?'#dfefff':'#cfe8ff';ctx.fillRect(0,0,w,sy);
-    if(R.T<0){ctx.fillStyle='#fff';for(let i=0;i<14;i++){ctx.beginPath();ctx.arc((i*73)%w,(i*37)%sy,2,0,6.3);ctx.fill();}}
-    ctx.fillStyle='#b98c5a';ctx.fillRect(0,ay,w,gy-ay);ctx.fillStyle='#9a6e40';for(let i=0;i<80;i++){ctx.beginPath();ctx.arc((i*97)%w,ay+10+((i*53)%(gy-ay-12)),3,0,6.3);ctx.fill();}
-    // Hohlraum unter dem Asphalt
-    const hw=w*(.08+.16*R.hollow),hh=(gy-ay)*(.15+.35*R.hollow);
-    if(!R.hole){ctx.fillStyle='#3a2c20';ctx.beginPath();ctx.ellipse(cx,ay+hh*.5,hw,hh*.55,0,0,6.3);ctx.fill();
-      const wf=R.water;if(wf>0){ctx.save();ctx.beginPath();ctx.ellipse(cx,ay+hh*.5,hw,hh*.55,0,0,6.3);ctx.clip();const fillTop=ay+hh*.5+hh*.55-(hh*1.1)*Math.min(1,wf*(R.frozen>.5?1.09:1));ctx.fillStyle=R.frozen>.5?'rgba(230,245,255,.95)':'rgba(60,140,230,.85)';ctx.fillRect(cx-hw,fillTop,hw*2,ay+hh);ctx.restore();}}
-    // Asphalt mit Wölbung und Riss
-    const lift=R.lift*h*.06,cw=w*(.012+.03*R.crack);
-    ctx.fillStyle='#444';ctx.beginPath();ctx.moveTo(0,sy);
-    if(R.hole){ctx.lineTo(cx-w*.14,sy);ctx.lineTo(cx-w*.1,ay+hh*.6);ctx.lineTo(cx+w*.1,ay+hh*.6);ctx.lineTo(cx+w*.14,sy);}
-    else{ctx.lineTo(cx-w*.2,sy);ctx.quadraticCurveTo(cx-w*.1,sy-lift,cx-cw,sy-lift);ctx.lineTo(cx,ay);ctx.lineTo(cx+cw,sy-lift);ctx.quadraticCurveTo(cx+w*.1,sy-lift,cx+w*.2,sy);}
-    ctx.lineTo(w,sy);ctx.lineTo(w,ay);ctx.lineTo(0,ay);ctx.closePath();ctx.fill();
-    if(R.hole){ctx.fillStyle='#2a2018';ctx.beginPath();ctx.moveTo(cx-w*.14,sy);ctx.lineTo(cx-w*.1,ay+hh*.6);ctx.lineTo(cx+w*.1,ay+hh*.6);ctx.lineTo(cx+w*.14,sy);ctx.fill();
-      ctx.fillStyle='#555';for(let i=0;i<7;i++){ctx.fillRect(cx-w*.08+i*w*.024,ay+hh*.4-(i%3)*6,w*.018,8);}}
-    else if(R.water>0){ctx.fillStyle=R.frozen>.5?'rgba(230,245,255,.95)':'rgba(60,140,230,.85)';ctx.beginPath();ctx.moveTo(cx-cw*.7,sy-lift+ (1-Math.min(1,R.water))*(ay-sy));ctx.lineTo(cx,ay);ctx.lineTo(cx+cw*.7,sy-lift+(1-Math.min(1,R.water))*(ay-sy));ctx.fill();}
-    ctx.strokeStyle='#ddd';ctx.setLineDash([16,12]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,sy+(ay-sy)*.15);ctx.lineTo(cx-w*.22,sy+(ay-sy)*.15);ctx.moveTo(cx+w*.22,sy+(ay-sy)*.15);ctx.lineTo(w,sy+(ay-sy)*.15);ctx.stroke();ctx.setLineDash([]);
-    R.drops.forEach(d=>{ctx.strokeStyle='rgba(60,140,230,.9)';ctx.lineWidth=2;const x=cx+(d.x-.5)*w*.12,y=d.y*(sy-5);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+8);ctx.stroke();});
-    if(R.car){ctx.font=`${Math.round(h*.16)}px system-ui`;ctx.textAlign='center';ctx.save();ctx.translate(R.car.x*w,sy-4);ctx.scale(-1,1);ctx.fillText('🚗',0,0);ctx.restore();}
-    ctx.fillStyle='#222';ctx.font='bold 12px system-ui';ctx.textAlign='left';ctx.fillText('Asphalt',6,sy+16);ctx.fillStyle='#fff';ctx.fillText('Untergrund',6,gy-8);
-  };
-  lbLoop(step,draw);
-}
-/* ---------- C: Acker im Winter ---------- */
-function lbField(){const F={T:8,wet:0,frozen:0,clumps:[],seeds:[],cycles:0,wasFrozen:false};
-  const mk=()=>{F.clumps=[];let x=.04;while(x<.96){const s=.09+Math.random()*.05;F.clumps.push({x:x+s/2,s,y:.55+Math.random()*.25});x+=s+.01;}F.seeds=[];F.wet=0;F.frozen=0;F.cycles=0;F.wasFrozen=false;F.msg='';};mk();
-  const loose=()=>{const avg=F.clumps.reduce((a,c)=>a+c.s,0)/F.clumps.length;return Math.max(0,Math.min(1,(0.11-avg)/(0.11-0.025)));};
-  const sh=lbShell('field','🌱 Acker im Winter',lbTempCtl('ft','Temperatur (Winter ↔ Frühling)',-15,20,8)+`<div class="mxbtns"><button class="big sec" id="frain">🌧️ Regen</button><button class="big sec" id="fsow">🌾 Im Frühling säen</button></div><button class="big sec" id="fnew">⟲ Neuer Acker</button>`);
-  $('#ft').oninput=e=>{F.T=+e.target.value;$('#ftl').textContent=F.T+' °C';};
-  $('#frain').onclick=()=>{if(F.T<=0){F.msg='Bei Frost regnet es nicht. Stell die Temperatur über 0 °C.';return;}F.wet=Math.min(1,F.wet+.5);if(F.wet>.4)lbHit('f_wet');};
-  $('#fsow').onclick=()=>{if(F.T<5){F.msg='Zu kalt zum Säen. Warte auf den Frühling (über 5 °C).';return;}const l=loose(),n=Math.round(3+l*14);F.seeds=[];for(let i=0;i<n;i++)F.seeds.push({x:.05+Math.random()*.9,g:0});F.msg=l>=.8?'Die Samen finden im lockeren Boden guten Halt und keimen gut.':'Auf den harten Klumpen keimen nur wenige Samen.';if(l>=.8)lbHit('f_sow');};
-  $('#fnew').onclick=mk;let lastInfo='';
-  const step=dt=>{const r=dt*1.4;
-    if(F.T<0&&F.wet>.1){F.frozen=Math.min(1,F.frozen+0.15*r);if(F.frozen>=1&&!F.wasFrozen){F.wasFrozen=true;lbHit('f_freeze');
-        const nc=[];F.clumps.forEach(c=>{if(c.s>.03&&Math.random()<.9*F.wet){const k=2+(Math.random()<.4?1:0),ns=c.s/k*0.98;for(let i=0;i<k;i++)nc.push({x:c.x-c.s/2+ns*(i+.5)+(Math.random()-.5)*.006,s:ns,y:Math.min(.85,c.y+.02+Math.random()*.04)});}else nc.push(c);});F.clumps=nc;F.wet=Math.max(0,F.wet-.2);}}
-    else if(F.T>0&&F.frozen>0){F.frozen=Math.max(0,F.frozen-0.2*r);if(F.frozen===0&&F.wasFrozen){F.wasFrozen=false;F.cycles++;}}
-    F.seeds.forEach(s=>s.g=Math.min(1,s.g+dt*.4));if(loose()>=.8)lbHit('f_loose');
-    const l=Math.round(loose()*100);const info=`<b>${F.T} °C</b> · ${F.frozen>.5?'Das Wasser in den Erdklumpen ist gefroren. Das Eis dehnt sich aus und sprengt die Klumpen auf.':F.wet>.1?'Wasser ist in die Poren der Erdklumpen gezogen.':'Trockene, feste Erdklumpen.'}<br><small>Lockerheit des Bodens: ${l} % · Frostnächte: ${F.cycles}</small>${F.msg?'<br>'+F.msg:''}`;
-    if(info!==lastInfo){lastInfo=info;$('#stinfo').innerHTML=info;$('#stlupe').innerHTML=lbLupe(['flüssig','fest'])+'<div class="stnote">Gefrierendes Wasser dehnt sich aus und drückt die Erde von innen auseinander. Nach mehreren Frostnächten ist der Boden fein und locker.</div>';}
-  };
-  const draw=()=>{const {w,h}=sh.D(),ctx=sh.ctx;ctx.clearRect(0,0,w,h);const gy=h*.45;
-    ctx.fillStyle=F.T<0?'#e3eef9':F.T>=5?'#dff3ff':'#e8eef3';ctx.fillRect(0,0,w,gy);
-    ctx.fillStyle='#6b4a2b';ctx.fillRect(0,gy,w,h-gy);
-    F.clumps.forEach(c=>{const cw=c.s*w,ch=cw*.6,x=c.x*w,y=gy+(c.y-.45)*h*.5;ctx.fillStyle='#8a5f36';ctx.beginPath();ctx.ellipse(x,y,cw/2,ch/2,0,0,6.3);ctx.fill();
-      if(F.wet>.1||F.frozen>0){ctx.fillStyle=F.frozen>.5?'rgba(235,248,255,.95)':'rgba(70,150,235,.9)';const n=Math.max(1,Math.round(cw/12));for(let i=0;i<n;i++){ctx.beginPath();ctx.arc(x-cw/2+cw*(i+.5)/n,y+Math.sin(i*2.1)*ch*.2,Math.max(1.5,cw*.05),0,6.3);ctx.fill();}}
-      if(F.frozen>.5&&c.s>.03){ctx.strokeStyle='#3b2715';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,y-ch/2);ctx.lineTo(x+cw*.1,y+ch/2);ctx.stroke();}});
-    if(F.T<0){ctx.fillStyle='rgba(255,255,255,.8)';ctx.fillRect(0,gy-4,w,6);}
-    F.seeds.forEach(s=>{ctx.font=`${Math.round(12+s.g*16)}px system-ui`;ctx.textAlign='center';ctx.fillText(s.g>.5?'🌱':'•',s.x*w,gy+2);});
-    ctx.fillStyle=lbTxt();ctx.font='bold 12px system-ui';ctx.textAlign='left';ctx.fillText(F.T<0?'❄️ Frost':F.T>=5?'🌤️ Frühling':'☁️ kühl',8,18);
-  };
-  lbLoop(step,draw);
-}
-/* ---------- D: Flasche im Gefrierfach ---------- */
-function lbBottle(){const B={fill:100,cap:true,inFreezer:false,ice:0,T:20,burst:false,out:0};
-  const sh=lbShell('bottle','🍾 Flasche im Gefrierfach',`<label>Füllhöhe: <b id="bfl">100 %</b><input type="range" id="bf" min="50" max="100" value="100"></label><div class="mxchips"><button id="bcap" class="on">🔒 Deckel zu</button></div><div class="mxbtns"><button class="big go" id="bin">❄️ Ins Gefrierfach (−18 °C)</button><button class="big sec" id="bout">⟲ Neue Flasche</button></div>`);
-  const reset=()=>{Object.assign(B,{inFreezer:false,ice:0,T:20,burst:false,out:0,msg:''});$('#bin').textContent='❄️ Ins Gefrierfach (−18 °C)';};
-  $('#bf').oninput=e=>{if(B.inFreezer)return;B.fill=+e.target.value;$('#bfl').textContent=B.fill+' %';};
-  $('#bcap').onclick=()=>{if(B.inFreezer)return;B.cap=!B.cap;$('#bcap').classList.toggle('on',B.cap);$('#bcap').textContent=B.cap?'🔒 Deckel zu':'🔓 Deckel offen';};
-  $('#bin').onclick=()=>{if(B.inFreezer)return;B.inFreezer=true;$('#bin').textContent='⏳ friert ein …';};
-  $('#bout').onclick=reset;let lastInfo='';
-  const step=dt=>{if(!B.inFreezer)return;const r=dt*1.4;
-    if(B.T>0)B.T=Math.max(0,B.T-8*r);else if(B.ice<1){B.ice=Math.min(1,B.ice+0.1*r);}else B.T=Math.max(-18,B.T-6*r);
-    const vol=B.fill/100*(1+0.09*B.ice);
-    if(vol>1){if(B.cap){if(vol>1.03&&!B.burst){B.burst=true;lbHit('b_burst');}}else{B.out=vol-1;if(B.fill>=98&&B.ice>=1)lbHit('b_open');}}
-    if(B.ice>=1&&!B.burst&&B.cap&&vol<=1.03)lbHit('b_safe');
-    if(B.ice>=1&&!B.cap&&vol<=1)lbHit('b_safe');
-    if(B.ice>=1)$('#bin').textContent='✅ durchgefroren';
-    const vol2=Math.round(B.fill*(1+0.09*B.ice));
-    const info=`<b>${Math.round(B.T)} °C</b> · ${!B.inFreezer?'Flasche mit Wasser, bereit fürs Gefrierfach.':B.ice<=0?'Das Wasser kühlt ab …':B.ice<1?'Das Wasser gefriert zu Eis …':'Ganz durchgefroren.'}<br><small>Platzbedarf: ${B.inFreezer?vol2:B.fill} % der Flasche${B.inFreezer&&B.ice>0?' (Eis braucht etwa 9 % mehr Platz als Wasser)':''}</small>${B.burst?'<br>💥 Die Flasche ist geplatzt! Das Eis hatte keinen Platz mehr.':''}${!B.cap&&B.out>0?'<br>Das Eis wächst oben aus der Flasche heraus.':''}${B.ice>=1&&!B.burst&&B.cap?'<br>Genug Luft gelassen: Die Flasche hält.':''}`;
-    if(info!==lastInfo){lastInfo=info;$('#stinfo').innerHTML=info;$('#stlupe').innerHTML=lbLupe(['flüssig','fest'])+'<div class="stnote">Tipp aus dem Alltag: Flaschen nie randvoll einfrieren. Etwa ein Zehntel Luft lassen.</div>';}
-  };
-  const draw=()=>{const {w,h}=sh.D(),ctx=sh.ctx;ctx.clearRect(0,0,w,h);
-    if(B.inFreezer){ctx.fillStyle='rgba(180,215,255,.35)';ctx.fillRect(w*.2,h*.04,w*.6,h*.92);ctx.strokeStyle='rgba(120,160,210,.8)';ctx.lineWidth=3;ctx.strokeRect(w*.2,h*.04,w*.6,h*.92);ctx.fillStyle=lbTxt();ctx.font='bold 12px system-ui';ctx.textAlign='left';ctx.fillText('Gefrierfach',w*.22,h*.04+16);}
-    const bx=w*.5,bw=Math.min(90,w*.22),by0=h*.2,by1=h*.9,nk=bw*.36,neckTop=by0-h*.08,bulge=B.burst?bw*.12:Math.min(bw*.1,Math.max(0,(B.fill/100*(1+0.09*B.ice)-1))*bw*3)*(B.cap?1:0);
-    const body=(pad)=>{ctx.beginPath();ctx.moveTo(bx-nk/2,neckTop);ctx.lineTo(bx-nk/2,by0);ctx.quadraticCurveTo(bx-bw/2-pad,by0+10,bx-bw/2-pad,by0+30);ctx.lineTo(bx-bw/2-pad,by1);ctx.lineTo(bx+bw/2+pad,by1);ctx.lineTo(bx+bw/2+pad,by0+30);ctx.quadraticCurveTo(bx+bw/2+pad,by0+10,bx+nk/2,by0);ctx.lineTo(bx+nk/2,neckTop);};
-    ctx.save();body(bulge);ctx.clip();const inner=by1-neckTop,fillH=inner*Math.min(1,B.fill/100*(1+0.09*B.ice));
-    const lt=by1-fillH*(1-B.ice),it=by1-fillH;ctx.fillStyle='rgba(70,150,235,.55)';ctx.fillRect(bx-bw,it,bw*2,by1-it);
-    if(B.ice>0){ctx.fillStyle='rgba(230,245,255,.95)';const iceTop=it,iceH=fillH*B.ice;ctx.fillRect(bx-bw,iceTop,bw*2,iceH);ctx.strokeStyle='rgba(150,195,235,.9)';for(let yy=iceTop+6;yy<iceTop+iceH;yy+=9)for(let xx=bx-bw/2;xx<bx+bw/2;xx+=9){ctx.beginPath();ctx.arc(xx,yy,1.4,0,6.3);ctx.stroke();}}
-    ctx.restore();
-    if(!B.cap&&B.out>0){const oh=B.out*inner*1.2;ctx.fillStyle='rgba(230,245,255,.95)';ctx.beginPath();ctx.moveTo(bx-nk/2,neckTop);ctx.quadraticCurveTo(bx,neckTop-oh*2.2,bx+nk/2,neckTop);ctx.fill();}
-    ctx.strokeStyle=B.burst?'#c0392b':'rgba(90,140,190,.95)';ctx.lineWidth=3;body(bulge);ctx.stroke();
-    if(B.cap){ctx.fillStyle='#d9534f';ctx.fillRect(bx-nk/2-3,neckTop-12,nk+6,12);}
-    if(B.burst){ctx.strokeStyle='#c0392b';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(bx-bw/2-bulge,by0+60);ctx.lineTo(bx-bw/2-bulge+14,by0+75);ctx.lineTo(bx-bw/2-bulge+4,by0+90);ctx.lineTo(bx-bw/2-bulge+18,by0+108);ctx.stroke();ctx.font='26px system-ui';ctx.fillText('💥',bx-bw/2-bulge-30,by0+90);}
-  };
-  lbLoop(step,draw);
-}
-
-/* ===== Experimentier-Werkstatt ===== */
+/* ===== Forscherlabor (früher Experimentier-Werkstatt + Forscherlabor) ===== */
 const WK_ST={
  glas:{i:'🔥',t:'Becherglas: Heizen und Gefrieren',d:'Heize bis zum Sieden oder kühle unter 0 °C.',m:[['boil','Bring das Wasser zum Sieden.'],['plateau','Heize kräftig weiter: Beobachte, dass die Temperatur beim Sieden bei 100 °C bleibt.'],['cond','Setz die kalte Platte auf und lass den Dampf kondensieren.'],['empty','Lass das ganze Wasser verdampfen.'],['icetop','Kühle das Wasser unter 0 °C: Wo bildet sich zuerst Eis?'],['full','Friere das Glas ganz durch: Was passiert mit der Oberfläche?']]},
  strasse:{i:'🛣️',t:'Straße: Frostsprengung',d:'Regen, Frost und Tauwetter auf einer Straße mit Riss.',m:[['rain','Lass Regenwasser in den Riss laufen.'],['lift','Lass das Wasser gefrieren: Was passiert mit dem Asphalt?'],['winter','Lass bei Frost ein Auto fahren: Hält die Straße?'],['pot','Lass nach dem Tauen ein Auto fahren.'],['cyc','Mach drei Runden Regen, Frost und Tauwetter.']]},
@@ -1552,10 +1362,13 @@ const WK_ST={
 };
 function werk(){G={mode:'werk',finished:false,raf:0};shell('werk');wkMenu();}
 function wkMenu(){stopAll();G.finished=false;G.tk=null;S.werk=S.werk||{};const c=$('#card');c.classList.remove('wide');const done=(k,m)=>S.werk[k+':'+m];
-  c.innerHTML=`<div class="q">Experimentier-Werkstatt</div><p class="mxp">Probier aus, was mit Wasser passiert, wenn es heiß oder kalt wird. Jede Station hat Forscher-Aufträge.</p>
+  const nMix=MX_MISS.filter(m=>(S.mixm||{})[m[0]]).length;
+  c.innerHTML=`<div class="q">Forscherlabor: Probier es selbst aus!</div><p class="mxp">Wähle eine Station. Jede Station hat Forscher-Aufträge, die Lupe zeigt dir, was die Teilchen machen.</p>
   ${Object.entries(WK_ST).map(([k,s])=>`<button class="mxbig" data-st="${k}"><span>${s.i}</span><b>${s.t}</b><small>${s.d} ${s.m.filter(m=>done(k,m[0])).length} von ${s.m.length} Aufträgen geschafft.</small></button>`).join('')}
-  <button class="mxbig" id="wkmix"><span>🎨</span><b>Farbwasser mischen</b><small>Eiswürfel und gefärbtes Wasser in anders warmes Wasser geben (aus dem Mischlabor).</small></button>`;
-  c.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>wkRun(b.dataset.st));$('#wkmix').onclick=()=>{G.mode='werk';mxFree();};}
+  <button class="mxbig" id="wkmix"><span>🧪</span><b>Mischen: Eiswürfel und Farbwasser</b><small>Temperaturen einstellen und schauen, was steigt und sinkt. ${nMix} von ${MX_MISS.length} Aufträgen geschafft.</small></button>
+  <button class="mxbig" id="wkpred"><span>🔮</span><b>Versuchsreihe: Vorhersagen</b><small>10 Versuche zum Steigen und Sinken. Erst vorhersagen, dann zuschauen.</small></button>`;
+  $('#wkpred').onclick=()=>{G.tasks=MX_TASKS.slice();G.ti=0;G.score=0;mxTask();};
+  c.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>wkRun(b.dataset.st));$('#wkmix').onclick=()=>{G.mode='werk';S.mixm=S.mixm||{};mxFree();};}
 function wkLupe(){return`<div class="mxlupe"><div class="mxlt">🔍 Lupe: 12 Teilchen als Wasser und als Eis</div><div class="mxlr">
   <div class="mxl"><svg viewBox="0 0 60 60" width="60" height="60"><rect x="1" y="1" width="58" height="58" rx="8" fill="none" stroke="currentColor" stroke-opacity=".4"/><g fill="currentColor" fill-opacity=".75">${[[10,12],[22,9],[34,13],[47,10],[12,25],[26,23],[39,27],[50,24],[9,39],[23,37],[36,41],[49,38]].map(([x,y])=>`<circle cx="${x}" cy="${y+6}" r="5"/>`).join('')}</g></svg><small>Wasser<br>ungeordnet, dicht</small></div>
   <div class="mxl"><svg viewBox="0 0 66 66" width="66" height="66"><rect x="1" y="1" width="64" height="64" rx="8" fill="none" stroke="currentColor" stroke-opacity=".4"/><g stroke="currentColor" stroke-opacity=".35">${[0,1,2].map(i=>`<line x1="11" y1="${14+i*19}" x2="58" y2="${14+i*19}"/>`).join('')}${[0,1,2,3].map(j=>`<line x1="${11+j*15.5}" y1="14" x2="${11+j*15.5}" y2="52"/>`).join('')}</g><g fill="currentColor" fill-opacity=".75">${[0,1,2].map(i=>[0,1,2,3].map(j=>`<circle cx="${11+j*15.5}" cy="${14+i*19}" r="5"/>`).join('')).join('')}</g></svg><small>Eis<br>Kristallgitter, mehr Platz</small></div></div>
@@ -2305,7 +2118,7 @@ applyHouse();renderHeader();home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--teal);--lp-on:#fff;--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-wasser", "prefix": "Z", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🧊", "name": "Die drei Zustände", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p2", "icon": "🔄", "name": "Verwandlungen", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p3", "icon": "🧪", "name": "Eis schwimmt", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p4", "icon": "🏞️", "name": "Das Geheimnis des Sees", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p5", "icon": "🔬", "name": "Forschen wie Profis", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20, "write": 15}, "write": true};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.1.5">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.1.6">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -2315,20 +2128,20 @@ applyHouse();renderHeader();home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.1.5"></script>
+<script src="../js/lernplan.js?v=7.1.6"></script>
 <!-- ===== /Lernplan ===== -->
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.1.5">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.1.6">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.1.5"></script>
+<script src="../js/nutzer.js?v=7.1.6"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank .rt,#rank>div{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.1.5"></script>
+<script src="../js/home-btn.js?v=7.1.6"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.1.5"></script>
+<script src="../js/arena-btn.js?v=7.1.6"></script>
 </body>
 </html>
