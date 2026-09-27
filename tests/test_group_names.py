@@ -4,12 +4,12 @@ from harness import *
 async def main():
   async with async_playwright() as pw:
     br=await pw.chromium.launch()
-    A,ea=await mk(br,'A',"localStorage.setItem('lz-fam','familie-test-1234');")
+    A,ea=await mk(br,'A',acct('Robin'))
     A.on('dialog',lambda d: asyncio.ensure_future(d.accept('Familie')))
     await A.goto('http://app.test/'); await A.wait_for_timeout(3000)
     await A.evaluate("lzGroupsOpen()"); await A.click('[data-gnew]'); await A.wait_for_timeout(800)
     code=await A.inner_text('.gr-code'); await A.click('[data-gx]')
-    C,ec=await mk(br,'C',"")
+    C,ec=await mk(br,'C',acct('Robin K'))
     C.on('dialog',lambda d: asyncio.ensure_future(d.accept('Robin K.') if d.type=='prompt' else d.accept()))
     await C.goto('http://app.test/#join='+code); await C.wait_for_timeout(3500)
     print('C groups',await C.evaluate("localStorage.getItem('lz-groups@u1')"))

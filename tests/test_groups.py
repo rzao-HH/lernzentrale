@@ -4,14 +4,14 @@ from harness import *
 async def main():
   async with async_playwright() as pw:
     br=await pw.chromium.launch()
-    A,ea=await mk(br,'A',"localStorage.setItem('lz-fam','familie-test-1234');")
+    A,ea=await mk(br,'A',acct('Robin'))
     A.on('dialog',lambda d: asyncio.ensure_future(d.accept('Klasse 6b')))
     await A.goto('http://app.test/'); await A.wait_for_timeout(3000)
     await A.evaluate("lzGroupsOpen()"); await A.click('[data-gnew]'); await A.wait_for_timeout(800)
     code=await A.inner_text('.gr-code'); print('code',code)
     await A.screenshot(path=OUTDIR+'gr-created.png')
     await A.click('[data-gx]')
-    C,ec=await mk(br,'C',"if(!localStorage.getItem('nutzer-alle'))localStorage.setItem('nutzer-alle',JSON.stringify({list:[{id:'u1',name:'Mia',e:'🐱'}],cur:'u1',n:1}));localStorage.setItem('winkelakademie-v1',JSON.stringify({xp:333}));")
+    C,ec=await mk(br,'C',acct('Mia','🐱')+"localStorage.setItem('winkelakademie-v1',JSON.stringify({xp:333}));")
     C.on('dialog',lambda d: asyncio.ensure_future(d.accept()))
     await C.goto('http://app.test/#join='+code); await C.wait_for_timeout(3500)
     print('C groups',await C.evaluate("localStorage.getItem('lz-groups@u1')"))

@@ -1,16 +1,18 @@
 /* Lernplan-Modul, gemeinsam für alle Apps (Konfiguration: window.LP_CONF in der App) */
 (function(){
 const C=window.LP_CONF, U=C.units;
+/* Lernplan gilt pro Person: Schlüssel <plan>@<person>; alter gemeinsamer Plan wird einmalig übernommen */
+const PK=C.key+"@"+((window.__NUTZER&&window.__NUTZER.cur)||"u1");try{if(localStorage.getItem(PK)===null){const o=localStorage.getItem(C.key);if(o!==null)localStorage.setItem(PK,o);}}catch(e){}
 const $=s=>document.querySelector(s);
 let S={n:0,done:[],today:1,ok:[]};
-try{const r=localStorage.getItem(C.key);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
-const save=()=>{try{localStorage.setItem(C.key,JSON.stringify(S));}catch(e){}};
+try{const r=localStorage.getItem(PK);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
+const save=()=>{try{localStorage.setItem(PK,JSON.stringify(S));}catch(e){}};
 let draft=null, tab=null;
 const LZU=(window.__NUTZER&&window.__NUTZER.cur)||"u1",LZK="lzp-"+C.prefix+"@";
 function lzGet(u){try{return JSON.parse(localStorage.getItem(LZK+u)||"null")||{count:0,doneDate:"",log:{}};}catch(e){return{count:0,doneDate:"",log:{}};}}
 function lzSet(u,o){try{localStorage.setItem(LZK+u,JSON.stringify(o));}catch(e){}}
 function lzDay(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
-function lzSync(){try{const r=localStorage.getItem(C.key);if(r){const o=JSON.parse(r);S.n=o.n||0;S.done=o.done||[];}}catch(e){}
+function lzSync(){try{const r=localStorage.getItem(PK);if(r){const o=JSON.parse(r);S.n=o.n||0;S.done=o.done||[];}}catch(e){}
   const p=lzGet(LZU);S.ok=[];for(let i=1;i<=Math.min(p.count,S.n);i++)S.ok.push(i);S.today=Math.max(1,Math.min(p.count+1,S.n||1));}
 lzSync();
 
@@ -84,7 +86,7 @@ function rSet(){
 function apply(n,done){
   const changed=n!==S.n||mask(done)!==mask(S.done);
   S.n=n;S.done=U.filter(u=>done.includes(u.id)).map(u=>u.id);
-  if(changed){S.ok=[];S.today=1;let L=[];try{L=(JSON.parse(localStorage.getItem("nutzer-alle")||"null")||{list:[{id:"u1"}]}).list;}catch(e){}L.forEach(u=>lzSet(u.id,{count:0,doneDate:"",log:{}}));}
+  if(changed){S.ok=[];S.today=1;let L=[];try{L=(JSON.parse(localStorage.getItem("nutzer-alle")||"null")||{list:[{id:"u1"}]}).list;}catch(e){}lzSet((window.__NUTZER&&window.__NUTZER.cur)||"u1",{count:0,doneDate:"",log:{}});}
   S.today=Math.min(S.today,n);draft=null;save();renderBtn();show("plan");
 }
 function item(i,u,txt,hint){return `<li><span class="i">${i}</span><span><b>${txt}</b> ${nm(u)}${hint?`<small>${esc(hint)}</small>`:""}</span></li>`;}

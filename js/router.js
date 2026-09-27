@@ -1,13 +1,13 @@
 const APPURL={W:"apps/winkel.html",Z:"apps/wasser.html",E:"apps/kueste.html",D:"apps/detektiv.html"};
 const FR={};let lzPushed=false,curApp="";
-function sig(k){return localStorage.getItem("nutzer-alle")+"|"+(NU&&NU.cur)+"|"+localStorage.getItem(LPK[k])+"|"+localStorage.getItem("lzp-"+k+"@"+(NU&&NU.cur));}
+function sig(k){return localStorage.getItem("nutzer-alle")+"|"+(NU&&NU.cur)+"|"+localStorage.getItem(lpKey(k))+"|"+localStorage.getItem("lzp-"+k+"@"+(NU&&NU.cur));}
 function openPlan(f){const go=()=>{try{const d=f.contentDocument;d.getElementById("lpBtn").click();const t=d.querySelector('.lp-tab[data-t="set"]');if(t)t.click();}catch(e){}};if(f.dataset.ready)setTimeout(go,50);else f.addEventListener("load",()=>setTimeout(go,150),{once:true});}
 function showApp(k,plan){
   if(!APPURL[k])return;
   loadAll();["W","Z","E","D"].forEach(x=>{try{sessionStorage.setItem("nutzer-ok-"+x,"1");}catch(e){}});
   let f=FR[k];
   if(!f){f=FR[k]=document.createElement("iframe");f.title=APPS.find(a=>a.k===k).name;document.getElementById("appv").appendChild(f);}
-  if(f.dataset.sig!==sig(k)){f.dataset.ready="";f.addEventListener("load",()=>{f.dataset.ready="1";},{once:true});if(!f.getAttribute("src"))f.src=APPURL[k]+"?v=6.7.0";else{try{f.contentWindow.location.reload();}catch(e){f.src=APPURL[k]+"?v=6.7.0&r="+Date.now();}}}
+  if(f.dataset.sig!==sig(k)){f.dataset.ready="";f.addEventListener("load",()=>{f.dataset.ready="1";},{once:true});if(!f.getAttribute("src"))f.src=APPURL[k]+"?v=7.0.0";else{try{f.contentWindow.location.reload();}catch(e){f.src=APPURL[k]+"?v=7.0.0&r="+Date.now();}}}
   if(plan)openPlan(f);
   Object.values(FR).forEach(x=>x.classList.toggle("on",x===f));
   document.getElementById("appv").classList.add("on");document.documentElement.style.overflow="hidden";curApp=k;

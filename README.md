@@ -10,7 +10,8 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 |---|---|
 | `index.html` | Startseite (nur Gerüst) |
 | `css/start.css` | Aussehen der Startseite |
-| `js/sync.js` | Geräte-Abgleich über Supabase (`lz_pull` / `lz_push`) |
+| `js/sync.js` | Abgleich pro Benutzername über Supabase (`lz_pull` / `lz_push`) |
+| `js/konto.js` | Anmelden mit Benutzername |
 | `js/start.js` | Startseite: Personen, Lernplan-Übersicht, Rangliste |
 | `js/router.js` | Öffnet die Apps (iframes aus `apps/`) |
 | `js/groups.js` | Lerngruppen: anlegen, teilen, beitreten |
@@ -23,8 +24,14 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 | `archiv/` | Stände vor Version 5.0.0 |
 
 ## Speicher
-Alles liegt im Browser (localStorage) derselben Adresse. Schlüssel u. a. `nutzer-alle`, `lz-ergebnisse`, `lernplan-*`, `lzp-*`, App-Stände (`winkelakademie-v1`, `wasserzauberschule-v1`, `unit6-progress`, `detektivbuero-v1`), `lz-groups@…`, `lz-arena-…`.
-Geräte-Code (`lz-fam`) und Lerngruppen-Codes stehen nie im Code.
+Auf dem Gerät liegt alles im localStorage derselben Adresse. Schlüssel u. a. `nutzer-alle`, `lz-ergebnisse`, `lernplan-*@<person>` (Lernplan pro Person), `lzp-*`, App-Stände (`winkelakademie-v1`, `wasserzauberschule-v1`, `unit6-progress`, `detektivbuero-v1`), `lz-groups@…`, `lz-arena-…`.
+
+## Konten
+Jede Person meldet sich mit einem Benutzernamen an (überall eindeutig, Groß-/Kleinschreibung egal, noch ohne Passwort). In `nutzer-alle` steht er als `acc`.
+Auf dem Server liegen ihre Daten unter `acc:<benutzername>` mit geräteunabhängigen Schlüsseln: `profile`, `app:W|Z|E|D`, `lzp:…`, `plan:…`, `arena`, `groups`, `story`, `erg`, `g:<geister-duell>`.
+Beim ersten Anmelden auf einem Gerät gewinnt der Server, bei App-Ständen der höhere Punktestand; danach gilt der neuere Stand.
+Später: E-Mail + Passwort (Supabase Auth) wird einmal einem Benutzernamen zugeordnet – die Schlüssel bleiben gleich.
+Lerngruppen-Codes stehen nie im Code.
 
 ## Versionen
 `Umbau.Funktion.Korrektur` – erste Stelle nur bei großen, für Benutzer spürbaren Umbauten; zweite bei neuen Funktionen oder Umbauten im Hintergrund; dritte bei kleinen Korrekturen. Bei jedem Update: Versionsnummer in `index.html`, `js/news.js` und `sw.js` (`VER`) sowie `?v=` in den Verweisen anheben.

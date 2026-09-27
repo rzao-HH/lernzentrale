@@ -10,7 +10,7 @@ const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",
 const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 let DEV=LSg("lz-dev");if(!DEV){DEV="d"+Math.random().toString(36).slice(2,10);try{localStorage.setItem("lz-dev",DEV);}catch(e){}}
-function meP(){try{const u=NU.list.find(x=>x.id===NU.cur)||NU.list[0];return{uid:u.id,gid:u.gid||u.id,name:u.name,e:u.e};}catch(e){return{uid:"u1",gid:"u1",name:"Robin",e:"🧒"};}}
+function meP(){try{const u=NU.list.find(x=>x.id===NU.cur)||NU.list[0];return{uid:u.id,gid:u.gid||u.id,acc:!!u.acc,name:u.name,e:u.e};}catch(e){return{uid:"u1",gid:"u1",acc:false,name:"Ich",e:"🙂"};}}
 const gidOf=u=>{const x=NU.list.find(v=>v.id===u);return x&&x.gid||u;};
 function curAppK(){try{return curApp||"";}catch(e){return "";}}
 function appState(k,uid){const [b,r]=AK[k];return LSj(uid==="u1"?b:b+("@"+uid).repeat(r),null);}
@@ -23,10 +23,9 @@ window.lzArenaPts=ptsGet;
 
 /* ---------- Transport (Supabase Realtime, im Test: Mock) ---------- */
 let CHS={},PRES={},ONLINE=[],HANDLERS=[],joined=false,lastSig="",SB=null;
-function famCode(){return LSg("lz-fam")||"";}
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36);}
-function myPresence(){const m=meP();return{dev:DEV,uid:m.uid,gid:m.gid,name:m.name,e:m.e,app:curAppK(),ts:Date.now()};}
-function spaces(){const L=[];const f=famCode();if(f)L.push({id:"f:"+f,label:""});(window.lzMyGroups?lzMyGroups():[]).forEach(g=>L.push({id:"grp:"+g.code,label:g.name,alias:g.alias||""}));return L;}
+function myPresence(){const m=meP();return{dev:DEV,uid:m.uid,gid:m.gid,acc:m.acc,name:m.name,e:m.e,app:curAppK(),ts:Date.now()};}
+function spaces(){const L=[];(window.lzMyGroups?lzMyGroups():[]).forEach(g=>L.push({id:"grp:"+g.code,label:g.name,alias:g.alias||""}));return L;}
 function mergePres(){const m={};Object.entries(PRES).forEach(([sp,list])=>list.forEach(p=>{if(!p||p.dev===DEV)return;const k=p.dev;if(!m[k]||m[k].ts<p.ts)m[k]=Object.assign({},p,{sp});}));setOnline(Object.values(m));}
 function setOnline(list){ONLINE=list.filter(p=>p&&p.dev!==DEV);drawCard();drawPick();}
 function send(msg){msg.from_dev=DEV;msg.mid=msg.mid||Math.random().toString(36).slice(2);try{if(window.__arenaMock){window.__arenaOut(JSON.stringify(msg));return;}Object.values(CHS).forEach(ch=>ch.send({type:"broadcast",event:"m",payload:msg}));}catch(e){}}
@@ -50,7 +49,7 @@ async function join(){
 let spSig="";
 function presTick(){const p=myPresence(),sig=p.uid+"|"+p.app+"|"+p.name+"|"+p.e;if(sig===lastSig)return;lastSig=sig;
   try{if(window.__arenaMock)window.__arenaOut(JSON.stringify({type:"presence-me",p}));else Object.values(CHS).forEach(ch=>ch.track(ch.alias?Object.assign({},p,{name:ch.alias}):p));}catch(e){}}
-setInterval(()=>{const sg=spaces().map(x=>x.id).join(",");if(sg!==spSig){spSig=sg;joined=false;}if(!joined&&sg)join();if(joined)presTick();},3000);
+setInterval(()=>{let sg=spaces().map(x=>x.id).join(",");if(sg!==spSig){spSig=sg;joined=false;}if(window.__arenaMock&&!sg)sg="mock";if(!joined&&sg)join();if(joined)presTick();},3000);
 
 /* ---------- Fragen aus den Apps ---------- */
 const DATA={};
@@ -66,7 +65,7 @@ function loadApp(k){
       else if(k==="D")v=JSON.parse(JSON.stringify({I:w.__lzArena.I.filter(i=>i.t==="mc"&&i.o.length<=5||i.t==="comma"||i.t==="tap"),sel:w.__lzArena.sel()}));
     }catch(e){v=null;}fin(v);},250);
     setTimeout(()=>fin(null),8000);
-    f.src=APPURL[k]+"?v=6.7.0";document.body.appendChild(f);});
+    f.src=APPURL[k]+"?v=7.0.0";document.body.appendChild(f);});
 }
 const DEG=[{n:"Nullwinkel",f:a=>a===0},{n:"spitzer Winkel",f:a=>a>0&&a<90},{n:"rechter Winkel",f:a=>a===90},{n:"stumpfer Winkel",f:a=>a>90&&a<180},{n:"gestreckter Winkel",f:a=>a===180},{n:"überstumpfer Winkel",f:a=>a>180&&a<360},{n:"Vollwinkel",f:a=>a===360}];
 function qW(sel){
@@ -131,8 +130,8 @@ function close(){if(GAME&&!GAME.over&&!confirm("Duell wirklich abbrechen?"))retu
 function openOv(){OV.classList.add("on");}
 let PICK={mode:"mix",stake:10};
 function offList(){const me=meP(),onG=new Set(ONLINE.map(p=>p.gid||p.uid)),m={};
-  NU.list.forEach(u=>{const g=u.gid||u.id;if(g!==me.gid&&!onG.has(g))m[g]={gid:g,uid:u.id,name:u.name,e:u.e,grp:"",gl:"dieses Gerät"};});
-  (window.lzMyGroups?lzMyGroups():[]).forEach(G=>{const c=window.lzGroupCache&&lzGroupCache(G.code);if(c)c.members.forEach(x=>{if(x.gid!==me.gid&&!onG.has(x.gid)&&!m[x.gid])m[x.gid]={gid:x.gid,uid:"",name:x.name,e:x.e,grp:G.code,gl:G.name};});});
+  NU.list.forEach(u=>{const g=u.gid||u.id;if(g!==me.gid&&!onG.has(g))m[g]={gid:g,uid:u.id,acc:!!u.acc,name:u.name,e:u.e,grp:"",gl:"dieses Gerät"};});
+  (window.lzMyGroups?lzMyGroups():[]).forEach(G=>{const c=window.lzGroupCache&&lzGroupCache(G.code);if(c)c.members.forEach(x=>{if(x.gid!==me.gid&&!onG.has(x.gid)&&!m[x.gid])m[x.gid]={gid:x.gid,uid:"",acc:true,name:x.name,e:x.e,grp:G.code,gl:G.name};});});
   return Object.values(m);}
 function drawPick(){if(VIEW!=="pick")return;const me=meP(),on=ONLINE.filter(p=>!isMe(p));
   const off=offList();const fam=spaces().length;
@@ -141,7 +140,7 @@ function drawPick(){if(VIEW!=="pick")return;const me=meP(),on=ONLINE.filter(p=>!
    <div class="ar-h">🎰 Welche Fächer?</div><div class="ar-seg">${[["mix","🎰 Glücksrad (alle)"],["W","📐 Mathe"],["Z","🪄 NWT"],["E","🐚 Englisch"],["D","🕵️ Deutsch"]].map(([k,l])=>`<button type="button" data-am="${k}" class="${PICK.mode===k?"on":""}">${l}</button>`).join("")}</div>
    <div class="ar-h">💰 Einsatz (Arena-Punkte)</div><div class="ar-seg">${[0,10,25,50].map(s=>`<button type="button" data-as="${s}" class="${PICK.stake===s?"on":""}">${s||"ohne"}</button>`).join("")}</div>
    <div class="ar-h">🟢 Gerade online</div>
-   ${fam?(on.length?`<div class="ar-list">${on.map(p=>`<button type="button" class="ar-p" data-live="${esc(p.dev)}"><span>${esc(p.e)}</span><b>${esc(p.name)}</b><small>${p.spl?"👥 "+esc(p.spl)+" · ":""}${p.app&&AN[p.app]?"in "+AN[p.app][0]+" "+AN[p.app][1]:"auf der Startseite"}</small><em>🪢 live</em></button>`).join("")}</div>`:`<p class="ar-p0">Gerade ist niemand online.</p>`):`<p class="ar-p0">Für Live-Duelle mit anderen: einer Lerngruppe beitreten oder Geräte verbinden.</p>`}
+   ${fam?(on.length?`<div class="ar-list">${on.map(p=>`<button type="button" class="ar-p" data-live="${esc(p.dev)}"><span>${esc(p.e)}</span><b>${esc(p.name)}</b><small>${p.spl?"👥 "+esc(p.spl)+" · ":""}${p.app&&AN[p.app]?"in "+AN[p.app][0]+" "+AN[p.app][1]:"auf der Startseite"}</small><em>🪢 live</em></button>`).join("")}</div>`:`<p class="ar-p0">Gerade ist niemand online.</p>`):`<p class="ar-p0">Für Live-Duelle: gemeinsam einer Lerngruppe beitreten, z. B. „Familie“.</p>`}
    ${off.length?`<div class="ar-h">👻 Geister-Duell</div><p class="ar-p0">Du spielst jetzt, die andere Person später gegen deine Aufzeichnung.</p><div class="ar-list">${off.map(u=>`<button type="button" class="ar-p" data-ghost="${esc(u.gid)}"><span>${esc(u.e)}</span><b>${esc(u.name)}</b><small>${u.grp?"👥 "+esc(u.gl):"📱 "+esc(u.gl)}</small><em>👻</em></button>`).join("")}</div>`:""}
    ${myGhostBoxes()}</div>`;}
 function myGhostBoxes(){const L=ghostList();
@@ -229,7 +228,7 @@ function usePu(){if(!GAME||!GAME.pu)return;const p=GAME.pu;GAME.pu=null;
 function finish(a,b,remote,why){if(!GAME||GAME.over)return;GAME.over=true;clearInterval(GAME.iv);
   const d=a-b,res=d>0?"w":d<0?"l":"d",me=GAME.me,stake=GAME.stake||0;
   let txt="";
-  if(GAME.recording){const grp=GAME.opp.grp||"",gg=grp&&lzMyGroups().find(x=>x.code===grp)||{},gn=gg.name;if(gg.alias)me.name=gg.alias;const g={id:GAME.id,ts:Date.now(),grp,grpName:gn||"",from:{uid:me.uid,gid:me.gid,name:me.name,e:me.e},to:{uid:GAME.opp.uid,gid:GAME.opp.gid,name:GAME.opp.name,e:GAME.opp.e},mode:GAME.mode,stake,qs:GAME.qs,rec:{tl:GAME.tl,fz:GAME.fz,fin:GAME.myTot,ok:GAME.ok},res:null};ghostSave(g);ghostClean();
+  if(GAME.recording){const grp=GAME.opp.grp||"",gg=grp&&lzMyGroups().find(x=>x.code===grp)||{},gn=gg.name;if(gg.alias)me.name=gg.alias;const g={id:GAME.id,ts:Date.now(),grp,grpName:gn||"",from:{uid:me.uid,gid:me.gid,acc:!!me.acc,name:me.name,e:me.e},to:{uid:GAME.opp.uid,gid:GAME.opp.gid,acc:!!GAME.opp.acc,name:GAME.opp.name,e:GAME.opp.e},mode:GAME.mode,stake,qs:GAME.qs,rec:{tl:GAME.tl,fz:GAME.fz,fin:GAME.myTot,ok:GAME.ok},res:null};ghostSave(g);ghostClean();
     txt=`<div class="ar-big">👻</div><h3>Aufgezeichnet!</h3><p>Du hast <b>${GAME.ok}</b> Fragen richtig beantwortet. ${esc(GAME.opp.name)} bekommt deine Herausforderung und spielt später gegen deinen Geist.</p>`;}
   else{const P=ptsAdd(me.uid,res,stake);
     if(GAME.ghostRec){const g=GAME.ghostRec;g.res={win:res==="w"?"to":res==="l"?"from":"draw",a:g.rec.fin,b:a,okA:g.rec.ok||0,okB:GAME.ok,ts:Date.now(),fromSeen:false};ghostSave(g);}
@@ -243,7 +242,7 @@ async function ghostRecord(gid){const u=offList().find(x=>x.gid===gid)||(PENDING
   OV.innerHTML=`<div class="ar-box c"><div class="ar-big">🎰</div><p>Fragen werden gemischt …</p></div>`;
   const qs=PENDING&&PENDING.opp.gid===gid?PENDING.qs:await makeQs(PICK.mode,40);PENDING=null;
   if(!qs.length){OV.innerHTML=`<div class="ar-box c"><p>Keine Fragen gefunden.</p><button type="button" class="ar-btn" data-ax>Schließen</button></div>`;return;}
-  startGame({id:"G"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),recording:true,opp:{uid:u.uid,gid:u.gid,name:u.name,e:u.e,dev:"",grp:u.grp||""},qs,mode:PICK.mode,stake:PICK.stake});}
+  startGame({id:"G"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),recording:true,opp:{uid:u.uid,gid:u.gid,acc:!!u.acc,name:u.name,e:u.e,dev:"",grp:u.grp||""},qs,mode:PICK.mode,stake:PICK.stake});}
 function ghostPlay(id){const g=ghostList().find(x=>x.id===id);if(!g||g.res)return;
   startGame({id:g.id,ghost:{tl:g.rec.tl,fz:g.rec.fz||[]},ghostRec:g,ghostFrozenUntil:0,opp:Object.assign({dev:""},g.from),qs:g.qs,mode:g.mode,stake:g.stake});}
 function ghostSeen(id){const g=ghostList().find(x=>x.id===id);if(!g||!g.res||g.res.fromSeen)return;

@@ -10,7 +10,7 @@ const newCode=()=>{let c="";const r=crypto.getRandomValues(new Uint32Array(12));
 const normCode=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"").replace(/^(.{4})(.{4})(.{4})$/,"$1-$2-$3");
 const space=code=>"grp:"+normCode(code);
 function me(){const u=NU.list.find(x=>x.id===NU.cur)||NU.list[0];return u;}
-function ensureGid(){try{loadAll();}catch(e){}const u=me();if(!u.gid){u.gid="p"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);u.t=Date.now();try{save();}catch(e){}}return u;}
+function ensureGid(){try{loadAll();}catch(e){}const u=me();if(!u.acc){alert("Bitte zuerst oben einen Benutzernamen festlegen.");window.lzAccOpen&&lzAccOpen("link",u.id);return null;}return u;}
 function groupsOf(uid){const a=LSj("lz-groups@"+uid,[]);return Array.isArray(a)?a:[];}
 function setGroups(uid,a){LSs("lz-groups@"+uid,a);}
 window.lzGroupsOf=groupsOf;
@@ -18,11 +18,11 @@ window.lzMyGroups=()=>{try{return groupsOf(me().id);}catch(e){return[];}};
 window.lzMe=()=>{const u=me();return{uid:u.id,gid:u.gid,name:u.name,e:u.e};};
 function online(){return !!window.__lzRpc&&/^https:/.test((window.__LZSB||{}).url||"");}
 function xpOf(uid){const o={};APPK.forEach(([k,b,r])=>{const v=J(uid==="u1"?b:b+("@"+uid).repeat(r),null);o[k]=v&&typeof v==="object"?Math.max(0,+v.xp||0):0;});return o;}
-function memberRec(u,alias){const ar=J("lz-arena-pts@"+u.id,{})||{};return{gid:u.gid,name:alias||u.name,e:u.e,xp:xpOf(u.id),ar:Math.max(0,+ar.p||0),ts:Date.now()};}
+function memberRec(u,alias){const ar=J("lz-arena-pts@"+u.id,{})||{};return{gid:u.acc,acc:u.acc,name:alias||u.name,e:u.e,xp:xpOf(u.id),ar:Math.max(0,+ar.p||0),ts:Date.now()};}
 /* Mitgliedsdaten hochladen (nur Name, Icon, Punkte) */
 const SENT={};
-async function pushMembers(){if(!online())return;for(const u of NU.list){if(!u.gid)continue;const gs=groupsOf(u.id);if(!gs.length)continue;
-  for(const g of gs){const r=memberRec(u,g.alias),sig=JSON.stringify([r.name,r.e,r.xp,r.ar]);const key=g.code+"|"+u.gid;if(SENT[key]===sig)continue;try{await RPC("lz_push",{p_fam:space(g.code),p_items:[{k:"m:"+u.gid,v:JSON.stringify(r),ts:Date.now()}]});SENT[key]=sig;}catch(e){}}}}
+async function pushMembers(){if(!online())return;for(const u of NU.list){if(!u.acc)continue;const gs=groupsOf(u.id);if(!gs.length)continue;
+  for(const g of gs){const r=memberRec(u,g.alias),sig=JSON.stringify([r.name,r.e,r.xp,r.ar]);const key=g.code+"|"+u.gid;if(SENT[key]===sig)continue;try{await RPC("lz_push",{p_fam:space(g.code),p_items:[{k:"m:"+u.acc,v:JSON.stringify(r),ts:Date.now()}]});SENT[key]=sig;}catch(e){}}}}
 window.lzPushMembers=pushMembers;
 /* Gruppendaten holen (Cache) */
 const CACHE={};
@@ -35,13 +35,13 @@ window.lzPullGroup=pullGroup;
 window.lzGroupCache=c=>CACHE[normCode(c)];
 window.lzGroupPut=async(code,k,v)=>{await RPC("lz_push",{p_fam:space(code),p_items:[{k,v:v==null?null:JSON.stringify(v),ts:Date.now()}]});const x=CACHE[normCode(code)];if(x)x.at=0;};
 /* Anlegen / Beitreten / Austreten */
-async function create(){const u=ensureGid();const name=(prompt("Wie soll die neue Lerngruppe heißen?\nz. B. Klasse 6b, Familie, Nachhilfe Mathe")||"").trim().slice(0,30);if(!name)return;
+async function create(){const u=ensureGid();if(!u)return;const name=(prompt("Wie soll die neue Lerngruppe heißen?\nz. B. Klasse 6b, Familie, Nachhilfe Mathe")||"").trim().slice(0,30);if(!name)return;
   if(!online()){alert("Lerngruppen brauchen eine Internetverbindung.");return;}
   if(groupsOf(u.id).some(g=>g.name.toLowerCase()===name.toLowerCase())&&!confirm(`${u.name} ist schon in einer Lerngruppe „${name}“.\nTrotzdem eine weitere mit demselben Namen anlegen? (Zur Unterscheidung steht der Code daneben.)`))return;
   const code=newCode();
   try{await RPC("lz_push",{p_fam:space(code),p_items:[{k:"meta",v:JSON.stringify({name,by:u.name,created:Date.now()}),ts:Date.now()}]});}catch(e){alert("Das hat nicht geklappt. Bitte später noch einmal versuchen.");return;}
   setGroups(u.id,[...groupsOf(u.id),{code,name,joined:Date.now()}]);await pushMembers();show({share:code});}
-async function join(code){const u=ensureGid();code=normCode(code);if(!/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)){alert("Der Code hat 12 Zeichen, z. B. KX7P-2M9Q-HT4R.");return false;}
+async function join(code){const u=ensureGid();if(!u)return false;code=normCode(code);if(!/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)){alert("Der Code hat 12 Zeichen, z. B. KX7P-2M9Q-HT4R.");return false;}
   if(groupsOf(u.id).some(g=>g.code===code)){alert(u.name+" ist schon in dieser Lerngruppe.");return false;}
   const g=await pullGroup(code,true);if(!g||!g.meta){alert("Diese Lerngruppe gibt es nicht. Bitte den Code prüfen.");return false;}
   if(!confirm(`${u.e} ${u.name} tritt der Lerngruppe „${g.meta.name}“ bei?\n\nDie anderen sehen dann Name, Icon und Punkte und können ${u.name} zu Duellen herausfordern. Lernpläne und Noten bleiben privat.`))return false;
@@ -51,7 +51,7 @@ async function join(code){const u=ensureGid();code=normCode(code);if(!/^[A-Z0-9]
   setGroups(u.id,[...groupsOf(u.id),{code,name:g.meta.name,joined:Date.now(),alias}]);await pushMembers();show();return true;}
 async function leave(code){const u=me(),g=groupsOf(u.id).find(x=>x.code===code);if(!g)return;
   if(!confirm(`${u.name} verlässt die Lerngruppe „${g.name}“?`))return;
-  setGroups(u.id,groupsOf(u.id).filter(x=>x.code!==code));try{await RPC("lz_push",{p_fam:space(code),p_items:[{k:"m:"+u.gid,v:null,ts:Date.now()}]});}catch(e){}delete SENT[code+"|"+u.gid];show();}
+  setGroups(u.id,groupsOf(u.id).filter(x=>x.code!==code));try{await RPC("lz_push",{p_fam:space(code),p_items:[{k:"m:"+u.acc,v:null,ts:Date.now()}]});}catch(e){}delete SENT[code+"|"+u.acc];show();}
 function link(code){return location.origin+location.pathname+"#join="+code;}
 async function share(code,name){const url=link(code),text=`Tritt meiner Lerngruppe „${name}“ in der Lernzentrale bei: ${url}\nCode: ${code}`;
   try{if(navigator.share){await navigator.share({title:"Lerngruppe "+name,text});return;}}catch(e){if(e&&e.name==="AbortError")return;}

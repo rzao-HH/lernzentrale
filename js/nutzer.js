@@ -29,7 +29,7 @@ function draw(){
     $("#nuSave").onclick=()=>{const n=$("#nuName").value.trim();
       if(!n){$("#nuErr").textContent="Bitte einen Namen eingeben.";return;}
       if(P.list.some(u=>u.id!==editId&&u.name.toLowerCase()===n.toLowerCase())){$("#nuErr").textContent="Diesen Namen gibt es schon.";return;}
-      if(editId){const u=P.list.find(x=>x.id===editId);u.name=n;u.e=draft.e;u.t=Date.now();editId=null;save();btn();mode="pick";draw();return;}
+      if(editId){const u=P.list.find(x=>x.id===editId);if(!u.acc)u.name=n;u.e=draft.e;u.t=Date.now();editId=null;save();btn();mode="pick";draw();return;}
       let id="u"+(100000+Math.floor(Math.random()*899900000));while(P.list.some(u=>u.id===id)||(P.del||[]).includes(id))id="u"+(100000+Math.floor(Math.random()*899900000));P.list.push({id,name:n,e:draft.e,t:Date.now()});save();sw(id);};
     setTimeout(()=>{const i=$("#nuName");if(i)i.focus();},50);
     return;

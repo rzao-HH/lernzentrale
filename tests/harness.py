@@ -58,3 +58,8 @@ async def play(p,n,correct=True):
         if g['lock'] or g['fz'] or not await p.query_selector('#arQ [data-o]:not([disabled])'): await p.wait_for_timeout(150); continue
         idx=g['o'].index(g['a']) if correct else (g['o'].index(g['a'])+1)%len(g['o'])
         await p.click(f'#arQ [data-o="{idx}"]'); await p.wait_for_timeout(600)
+def acct(name,e='🧒',uid='u1',more=''):
+    """Seed für ein Gerät, auf dem `name` schon mit Benutzernamen angemeldet ist (optional weitere Personen als JS-Objekte in `more`)."""
+    a=name.strip().lower()
+    return ("if(!localStorage.getItem('nutzer-alle')){localStorage.setItem('nutzer-alle',JSON.stringify({list:[{id:'%s',name:'%s',e:'%s',acc:'%s',gid:'%s',t:1}%s],cur:'%s',n:1}));localStorage.setItem('lz-linked@%s','%s');}"
+            %(uid,name,e,a,a,(','+more) if more else '',uid,uid,a))

@@ -13,7 +13,7 @@ const LPK={W:"lernplan-winkel",Z:"lernplan-wasser",E:"lernplan-englisch",D:"lern
 const J=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}};
 const JW=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
 let NU=null,LPC={},PC={};
-function nuMerge(N){const F=J("nutzer-alle",null);if(F&&F.list){const del=[...new Set([...(N.del||[]),...(F.del||[])])];F.list.forEach(u=>{if(!N.list.some(x=>x.id===u.id))N.list.push(u);});N.del=del;N.list=N.list.filter(u=>!del.includes(u.id));N.n=Math.max(N.n||1,F.n||1);if(N.cur===window.__nuLoadCur&&F.cur&&N.list.some(u=>u.id===F.cur))N.cur=F.cur;}if(!N.list.length)N.list=[{id:"u1",name:"Robin",e:"🧒"}];if(!N.list.some(u=>u.id===N.cur))N.cur=N.list[0].id;window.__nuLoadCur=N.cur;return N;}
+function nuMerge(N){const F=J("nutzer-alle",null);if(F&&F.list){const del=[...new Set([...(N.del||[]),...(F.del||[])])];F.list.forEach(u=>{if(!N.list.some(x=>x.id===u.id))N.list.push(u);});N.del=del;N.list=N.list.filter(u=>!del.includes(u.id));N.n=Math.max(N.n||1,F.n||1);if(N.cur===window.__nuLoadCur&&F.cur&&N.list.some(u=>u.id===F.cur))N.cur=F.cur;}if(!N.list.length)N.list=[{id:"u1",name:"Ich",e:"🙂"}];if(!N.list.some(u=>u.id===N.cur))N.cur=N.list[0].id;window.__nuLoadCur=N.cur;return N;}
 function nuRecover(N){const ids=new Set();try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||"";if(/^(lzp-|winkelakademie|wasserzauberschule|unit6-progress|detektivbuero)/.test(k)){const m=k.match(/@(u\d+)/);if(m)ids.add(m[1]);}}J("lz-ergebnisse",[]).forEach(r=>{if(r&&r.u)ids.add(r.u);});}catch(e){}
   let ch=false,mx=N.n||1;ids.forEach(id=>{mx=Math.max(mx,+id.slice(1)||0);if(id!=="u1"&&!N.list.some(u=>u.id===id)&&!(N.del||[]).includes(id)){N.list.push({id,name:"Person "+id.slice(1),e:"❓"});ch=true;}});
   N.list.forEach(u=>{mx=Math.max(mx,+u.id.slice(1)||0);});(N.del||[]).forEach(d=>{mx=Math.max(mx,+d.slice(1)||0);});if(mx!==N.n){N.n=mx;ch=true;}return ch;}
@@ -29,12 +29,13 @@ function lzDiag(){try{const v=(document.querySelector(".ver")||{}).textContent||
   const el=document.getElementById("lzdiag");if(el)el.textContent="🔎 Speicher-Info: angelegt am "+new Date(B.d).toLocaleString("de-DE",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})+" mit "+B.v+" · seitdem "+L.length+" Version(en) · Adresse: "+location.hostname;}catch(e){}}
 function loadAll(){lzAdopt();
   NU=J("nutzer-alle",null);
-  if(!NU||!NU.list||!NU.list.length){NU={list:[{id:"u1",name:"Robin",e:"🧒"}],cur:"u1",n:1};
+  if(!NU||!NU.list||!NU.list.length){NU={list:[{id:"u1",name:"Ich",e:"🙂"}],cur:"u1",n:1};
     if(S.people){NU={list:S.people.map(u=>({id:u.id,name:u.name,e:u.icon})),cur:S.cur||"u1",n:S.people.length+1};}
     JW("nutzer-alle",NU);}
   if(!NU.list.some(u=>u.id===NU.cur))NU.cur=NU.list[0].id;
   if(nuRecover(NU))JW("nutzer-alle",NU);window.__nuLoadCur=NU.cur;
-  if(NU.list.some(u=>!u.gid)&&!(localStorage.getItem("lz-fam")&&localStorage.getItem("lz-synced")!==localStorage.getItem("lz-fam"))){NU.list.forEach(u=>{if(!u.gid){u.gid="p"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);u.t=Date.now();}});JW("nutzer-alle",NU);}
+  Object.keys(LPK).forEach(k=>{const old=localStorage.getItem(LPK[k]);if(old===null)return;NU.list.forEach(u=>{if(localStorage.getItem(LPK[k]+"@"+u.id)===null&&!localStorage.getItem("lz-linked@"+u.id))localStorage.setItem(LPK[k]+"@"+u.id,old);});});
+  if(NU.list.some(u=>!u.gid)){NU.list.forEach(u=>{if(!u.gid){u.gid="p"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);u.t=Date.now();}});JW("nutzer-alle",NU);}
   LPC={};PC={};
   if(!S.mig2){["W","Z","E"].forEach(k=>{const o=S[k]||{};
       if(o.code&&!J(LPK[k],null)){const r=parse(k,o.code);if(!r.err)JW(LPK[k],{n:r.n,done:r.done,today:1,ok:[]});}
@@ -43,10 +44,11 @@ function loadAll(){lzAdopt();
       S[k]={goal:o.goal||"",last:o.last||0};});
     delete S.people;delete S.cur;delete S.p;S.mig2=1;JW(KEY,S);}
 }
-const save=()=>{JW(KEY,S);JW("nutzer-alle",nuMerge(NU));Object.keys(LPC).forEach(k=>JW(LPK[k],LPC[k]));Object.keys(PC).forEach(x=>JW(x,PC[x]));};
+const lpKey=k=>LPK[k]+"@"+(NU&&NU.cur||"u1");window.lpKey=lpKey;
+const save=()=>{JW(KEY,S);JW("nutzer-alle",nuMerge(NU));Object.keys(LPC).forEach(K=>JW(K,LPC[K]));Object.keys(PC).forEach(x=>JW(x,PC[x]));};
 function people(){if(!NU)loadAll();return NU.list.map(u=>({id:u.id,name:u.name,icon:u.e}));}
 const me=()=>people().find(u=>u.id===NU.cur);
-const lp=k=>LPC[k]=LPC[k]||J(LPK[k],{n:0,done:[],today:1,ok:[]});
+const lp=k=>{const K=lpKey(k);return LPC[K]=LPC[K]||J(K,{n:0,done:[],today:1,ok:[]});};/* Cache pro Person */
 const pst=(k,uid)=>{people();const x="lzp-"+k+"@"+(uid||NU.cur);if(PC[x])return PC[x];const o=J(x,{count:0,doneDate:"",log:{}});o.log=o.log||{};let ch=false;
   for(let t=1;t<=(o.count||0);t++){const l=o.log[t]=o.log[t]||{c:{},g:{}};if(!l.end){l.end=1;ch=true;}}
   Object.keys(o.log).forEach(t=>{if(+t>(o.count||0)&&o.log[t].end){delete o.log[t].end;ch=true;}});
@@ -281,7 +283,7 @@ function board(){
 let whoOpen=false,whoMode="",newEmo="👩",wDraft={name:"",e:"👩"},editId=null;
 function renderWho(){
   const u=me(),P=people();
-  document.getElementById("hi").textContent="Hallo "+u.name+"!";
+  document.getElementById("hi").textContent=u.acc||u.name!=="Ich"?"Hallo "+u.name+"!":"Hallo!";
   let h=`<button class="whob" data-who aria-expanded="${whoOpen}"><span>${u.icon}</span> ${esc(u.name)} <span aria-hidden="true">▾</span></button>`;
   if(whoOpen){
     h+=`<div class="whop">`;
@@ -319,6 +321,7 @@ function rankHTML(){
 }
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-rk]");if(!b)return;RK_TAB=b.dataset.rk;const el=document.getElementById("rank");if(el)el.innerHTML=rankHTML();});
 function render(){
+  try{setTimeout(()=>{window.lzCloudStat&&lzCloudStat();window.lzAccAuto&&lzAccAuto();},0);}catch(e){}
   loadAll();document.body.classList.toggle("compact",!!UI().compact);const cb=document.getElementById("cmp");cb.textContent=UI().compact?"Alles zeigen":"Nur heute";cb.setAttribute("aria-pressed",!!UI().compact);
   renderWho();
   const d=new Date();
@@ -342,16 +345,16 @@ document.addEventListener("click",e=>{
   if(e.target.closest("#cmp")){UI().compact=!UI().compact;save();render();return;}
   const wb=e.target.closest("[data-who]"); if(wb){whoOpen=!whoOpen;whoMode="";renderWho();return;}
   const pu=e.target.closest("[data-pick]"); if(pu){NU.cur=pu.dataset.pick;whoOpen=false;save();render();return;}
-  const wm=e.target.closest("[data-wmode]"); if(wm){whoMode=wm.dataset.wmode;editId=null;if(whoMode==="add")wDraft={name:"",e:EMO[NU.list.length%EMO.length]};renderWho();return;}
+  const wm=e.target.closest("[data-wmode]"); if(wm){if(wm.dataset.wmode==="add"){whoOpen=false;whoMode="";renderWho();window.lzAccOpen&&lzAccOpen("new");return;}whoMode=wm.dataset.wmode;editId=null;if(whoMode==="add")wDraft={name:"",e:EMO[NU.list.length%EMO.length]};renderWho();return;}
   const ep=e.target.closest("[data-editp]"); if(ep){const x=NU.list.find(y=>y.id===ep.dataset.editp);if(x){editId=x.id;wDraft={name:x.name,e:x.e};whoMode="form";renderWho();}return;}
   const em=e.target.closest("[data-emo]"); if(em){const i0=document.getElementById("nuName"),g0=document.querySelector(".emog"),y=g0?g0.scrollTop:0;wDraft.name=i0?i0.value:wDraft.name;wDraft.e=em.dataset.emo;renderWho();const g1=document.querySelector(".emog");if(g1)g1.scrollTop=y;return;}
   if(e.target.closest("[data-addp]")){const inp=document.getElementById("nuName"),n=(inp.value||"").trim(),er=document.getElementById("nuErr");
     if(!n){er.textContent="Bitte einen Namen eingeben.";inp.focus();return;}
     if(NU.list.some(x=>x.id!==editId&&x.name.toLowerCase()===n.toLowerCase())){er.textContent="Diesen Namen gibt es schon.";return;}
-    if(whoMode==="form"&&editId){const x=NU.list.find(y=>y.id===editId);if(x){x.name=n.slice(0,20);x.e=wDraft.e;x.t=Date.now();}editId=null;whoMode="";save();render();return;}
+    if(whoMode==="form"&&editId){const x=NU.list.find(y=>y.id===editId);if(x){if(!x.acc)x.name=n.slice(0,20);x.e=wDraft.e;x.t=Date.now();}editId=null;whoMode="";save();render();return;}
     NU.n=Math.max(NU.n||0,...NU.list.map(u=>+u.id.slice(1)||0),...(NU.del||[]).map(d=>+d.slice(1)||0))+1;let id="u"+(100000+Math.floor(Math.random()*899900000));while(NU.list.some(u=>u.id===id)||(NU.del||[]).includes(id))id="u"+(100000+Math.floor(Math.random()*899900000));NU.list.push({id,name:n.slice(0,20),e:wDraft.e,t:Date.now()});NU.cur=id;whoOpen=false;whoMode="";save();render();return;}
   const dp=e.target.closest("[data-delp]"); if(dp){const u=NU.list.find(x=>x.id===dp.dataset.delp);
-    if(u&&confirm(u.name+" löschen? Fortschritt, Punkte und Noten dieser Person gehen in allen Apps verloren.")){NU.del=[...(NU.del||[]),u.id];NU.list=NU.list.filter(x=>x!==u);save();lzPurge(u.id);renderWho();}return;}
+    if(u&&confirm(u.acc?u.name+" auf diesem Gerät abmelden? Die Punkte bleiben unter dem Benutzernamen gespeichert.":u.name+" löschen? Fortschritt, Punkte und Noten dieser Person gehen in allen Apps verloren.")){try{localStorage.removeItem("lz-linked@"+u.id);}catch(_){}NU.del=[...(NU.del||[]),u.id];NU.list=NU.list.filter(x=>x!==u);save();lzPurge(u.id);renderWho();}return;}
   const o=e.target.closest("[data-open]"); if(o){st(o.dataset.open).last=Date.now();save();lzPushed=true;setTimeout(()=>showApp(o.dataset.open),0);return;}
   const pl=e.target.closest("[data-plan]"); if(pl){const k=pl.dataset.plan;st(k).last=Date.now();save();showApp(k,true);return;}
   const dn=e.target.closest("[data-done]"); if(dn){const s=st(dn.dataset.done);

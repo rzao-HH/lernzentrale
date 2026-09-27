@@ -4,10 +4,16 @@ from harness import *
 async def main():
   async with async_playwright() as pw:
     br=await pw.chromium.launch()
-    A,ea=await mk(br,'A',"localStorage.setItem('lz-fam','familie-test-1234');")
-    B,eb=await mk(br,'B',"if(!localStorage.getItem('nutzer-alle'))localStorage.setItem('nutzer-alle',JSON.stringify({list:[{id:'u1',name:'Robin',e:'🧒'},{id:'u777777',name:'Roya',e:'🦉',t:1}],cur:'u777777',n:777777}));localStorage.setItem('lz-fam','familie-test-1234');")
-    await A.goto('http://app.test/'); await B.goto('http://app.test/#W')
-    await A.wait_for_timeout(5000)
+    A,ea=await mk(br,'A',acct('Robin'))
+    B,eb=await mk(br,'B',acct('Roya','🦉','u777777'))
+    # Live-Duelle gibt es innerhalb einer Lerngruppe: A legt „Familie“ an, B tritt per Link bei
+    A.on('dialog',lambda d: asyncio.ensure_future(d.accept('Familie')))
+    B.on('dialog',lambda d: asyncio.ensure_future(d.accept()))
+    await A.goto('http://app.test/'); await A.wait_for_timeout(2500)
+    await A.evaluate("lzGroupsOpen()"); await A.click('[data-gnew]'); await A.wait_for_timeout(800)
+    code=await A.inner_text('.gr-code'); await A.click('[data-gx]')
+    await B.goto('http://app.test/#join='+code); await B.wait_for_timeout(3500); await B.click('[data-gx]')
+    await B.goto('http://app.test/#W'); await A.wait_for_timeout(5000)
     print('A card:',(await A.inner_text('#arena'))[:120].replace('\n',' '))
     await A.evaluate("lzArenaOpen()"); await A.wait_for_timeout(300)
     await A.screenshot(path=OUTDIR+'ar-pick.png')

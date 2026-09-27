@@ -4,9 +4,9 @@ from harness import *
 async def main():
   async with async_playwright() as pw:
     br=await pw.chromium.launch()
-    A,ea=await mk(br,'A',"localStorage.setItem('lz-fam','familie-test-1234');")
+    A,ea=await mk(br,'A',acct('Robin'))
     await A.goto('http://app.test/'); await A.wait_for_timeout(2500)
-    await A.evaluate("""()=>{const N=JSON.parse(localStorage.getItem('nutzer-alle'));N.list.push({id:'u777777',name:'Roya',e:'🦉',t:Date.now()});localStorage.setItem('nutzer-alle',JSON.stringify(N));}""")
+    await A.evaluate("""()=>{const N=JSON.parse(localStorage.getItem('nutzer-alle'));N.list.push({id:'u777777',name:'Roya',e:'🦉',acc:'roya',gid:'roya',t:Date.now()});localStorage.setItem('nutzer-alle',JSON.stringify(N));}""")
     await A.reload(); await A.wait_for_timeout(2500)
     await A.evaluate("lzArenaOpen()"); await A.wait_for_timeout(300)
     await A.click('[data-am="E"]'); await A.click('[data-ghost]')
@@ -19,11 +19,9 @@ async def main():
         await play(A,5,True)
     print('A rec end:',(await A.inner_text('#arenaOv'))[:160].replace('\n',' '))
     await A.wait_for_timeout(2500)
-    # device B: same group, current person Roya
-    B,eb=await mk(br,'B',"localStorage.setItem('lz-fam','familie-test-1234');")
+    # device B: Roya mit ihrem Benutzernamen angemeldet
+    B,eb=await mk(br,'B',acct('Roya','🦉','u777777'))
     await B.goto('http://app.test/'); await B.wait_for_timeout(4000)
-    await B.evaluate("""()=>{const N=JSON.parse(localStorage.getItem('nutzer-alle'));N.cur='u777777';localStorage.setItem('nutzer-alle',JSON.stringify(N));}""")
-    await B.reload(); await B.wait_for_timeout(3000)
     print('B card:',(await B.inner_text('#arena'))[:160].replace('\n',' '))
     await B.evaluate("lzArenaOpen()"); await B.wait_for_timeout(300)
     await B.screenshot(path=OUTDIR+'gh-pick.png')
