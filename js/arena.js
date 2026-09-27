@@ -77,7 +77,7 @@ function loadApp(k){
       else if(k==="D")v=JSON.parse(JSON.stringify({I:w.__lzArena.I.filter(i=>i.t==="mc"&&i.o.length<=5||i.t==="comma"||i.t==="tap"),sel:w.__lzArena.sel()}));
     }catch(e){v=null;}fin(v);},250);
     setTimeout(()=>fin(null),8000);
-    f.src=APPURL[k]+"?v=7.1.9";document.body.appendChild(f);});
+    f.src=APPURL[k]+"?v=7.1.10";document.body.appendChild(f);});
 }
 const DEG=[{n:"Nullwinkel",f:a=>a===0},{n:"spitzer Winkel",f:a=>a>0&&a<90},{n:"rechter Winkel",f:a=>a===90},{n:"stumpfer Winkel",f:a=>a>90&&a<180},{n:"gestreckter Winkel",f:a=>a===180},{n:"überstumpfer Winkel",f:a=>a>180&&a<360},{n:"Vollwinkel",f:a=>a===360}];
 function qW(sel){
@@ -129,7 +129,10 @@ function ghostList(){const out=[];for(let i=0;i<localStorage.length;i++){const k
   (window.lzMyGroups?lzMyGroups():[]).forEach(g=>{const c=window.lzGroupCache&&lzGroupCache(g.code);if(c)c.ghosts.forEach(x=>{if(!out.some(y=>y.id===x.id))out.push(x);});});
   return out.sort((a,b)=>b.ts-a.ts);}
 function ghostSave(g){if(g.grp){window.lzGroupPut&&lzGroupPut(g.grp,"g:"+g.id,g);const c=lzGroupCache(g.grp);if(c){const i=c.ghosts.findIndex(x=>x.id===g.id);if(i>=0)c.ghosts[i]=g;else c.ghosts.push(g);}}else LSs("lz-arena-g-"+g.id,g);}
-function isMe(p,g){const m=meP();return !!p&&(p.gid===m.gid||(!(g&&g.grp)&&p.uid===m.uid));}
+/* p.dev ist nur bei Online-Präsenz gesetzt (aus myPresence) – dort ist uid nur die geräteinterne Personen-Nummer
+   (Standard "u1" auf jedem Gerät) und darf NIE zum Vergleich zwischen Geräten benutzt werden, sonst hält ein Gerät
+   das jeweils andere für "sich selbst". Nur bei geräte-lokalen Geister-Duellen (kein dev, kein g.grp) ist uid gültig. */
+function isMe(p,g){const m=meP();return !!p&&(p.gid===m.gid||(!p.dev&&!(g&&g.grp)&&p.uid===m.uid));}
 function refreshGroups(){(window.lzMyGroups?lzMyGroups():[]).forEach(g=>{window.lzPullGroup&&lzPullGroup(g.code).then(()=>{drawCard();drawPick();});});}
 setInterval(refreshGroups,30000);setTimeout(refreshGroups,2500);
 function ghostClean(){const L=ghostList().filter(g=>!g.grp),old=Date.now()-14*864e5;L.forEach((g,i)=>{if(i>=30||g.ts<old){try{localStorage.removeItem("lz-arena-g-"+g.id);}catch(e){}}});}

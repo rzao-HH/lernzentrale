@@ -5,7 +5,7 @@ async def main():
   async with async_playwright() as pw:
     br=await pw.chromium.launch()
     A,ea=await mk(br,'A',acct('Robin'))
-    B,eb=await mk(br,'B',"(()=>{const n=Date.now;Date.now=()=>n()-300000;})();"+acct('Roya','🦉','u777777'))  # Uhr von B geht 5 Minuten nach
+    B,eb=await mk(br,'B',"(()=>{const n=Date.now;Date.now=()=>n()-300000;})();"+acct('Roya','🦉'))  # Uhr von B geht 5 Minuten nach; uid absichtlich u1 wie auf A – deckt die "hält anderes Gerät für sich selbst"-Falle auf
     # Live-Duelle gibt es innerhalb einer Lerngruppe: A legt „Familie“ an, B tritt per Link bei
     A.on('dialog',lambda d: asyncio.ensure_future(d.accept('Familie')))
     B.on('dialog',lambda d: asyncio.ensure_future(d.accept()))
@@ -30,7 +30,7 @@ async def main():
     await A.screenshot(path=OUTDIR+'ar-endA.png'); await B.screenshot(path=OUTDIR+'ar-endB.png')
     print('A end:',(await A.inner_text('#arenaOv'))[:150].replace('\n',' '))
     print('B end:',(await B.inner_text('#arenaOv'))[:150].replace('\n',' '))
-    print('pts A',await A.evaluate("localStorage.getItem('lz-arena-pts@u1')"),'B',await B.evaluate("localStorage.getItem('lz-arena-pts@u777777')"))
+    print('pts A',await A.evaluate("localStorage.getItem('lz-arena-pts@u1')"),'B',await B.evaluate("localStorage.getItem('lz-arena-pts@u1')"))
     print('errors',ea,eb)
     await br.close()
 asyncio.run(main())

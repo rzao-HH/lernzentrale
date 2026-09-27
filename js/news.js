@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.1.10","28.09.2026",["⚔️ Arena: Live-Duell erkennt jetzt zuverlässig, wenn jemand online ist – vorher hielt die App das andere Gerät fälschlich für „sich selbst“, wenn auf beiden Geräten die erste angelegte Person dieselbe interne Nummer hatte"]],
  ["7.1.9","27.09.2026",["🏆 Rangliste zeigt automatisch die Lerngruppe statt „Dieses Gerät“, wenn man einer beigetreten ist"]],
  ["7.1.8","27.09.2026",["🏆 Rangliste: Die Lerngruppen-Reiter fehlten manchmal direkt nach dem Laden – behoben"]],
  ["7.1.7","27.09.2026",["⚔️ Arena: Online-Erkennung fragt den Server jetzt genauso ab wie Abgleich und Lerngruppen","🩺 Im Herausfordern-Fenster steht, ob die Verbindung zum Arena-Server klappt; Fehler erscheinen auf der Arena-Karte"]],
