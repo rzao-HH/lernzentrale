@@ -1,6 +1,6 @@
 /* ===== Konten-Abgleich (Supabase) =====
    Jede Person ist mit ihrem Benutzernamen angemeldet (Feld `acc` in nutzer-alle).
-   Ihre Daten liegen auf dem Server unter „acc:<benutzername>“ mit geräteunabhängigen Schlüsseln:
+   Ihre Daten liegen auf dem Server unter „lernzentrale:<benutzername>“ mit geräteunabhängigen Schlüsseln:
      app:W|Z|E|D  lzp:W|Z|E|D  plan:W|Z|E|D  arena  groups  story  erg  profile  g:<geister-duell-id>
    Auf dem Gerät bleiben die bisherigen Speicherschlüssel (mit lokaler Personen-Nummer) erhalten.
    Später (E-Mail + Passwort): Konto einmal dem Benutzernamen zuordnen, Schlüssel bleiben gleich. */
@@ -19,7 +19,7 @@
   const APPK={W:["winkelakademie-v1",3],Z:["wasserzauberschule-v1",3],E:["unit6-progress",3],D:["detektivbuero-v1",1]};
   const PLK={W:"lernplan-winkel",Z:"lernplan-wasser",E:"lernplan-englisch",D:"lernplan-deutsch"};
   const norm=n=>String(n||'').trim().replace(/\s+/g,' ').toLowerCase();
-  const space=acc=>'acc:'+acc;
+  const space=acc=>'lernzentrale:'+acc;/* Server verlangt mind. 12 Zeichen */
   function persons(){const o=PJ(LS('nutzer-alle'));return o&&Array.isArray(o.list)?o.list:[];}
   function accOf(uid){const u=persons().find(x=>x.id===uid);return u&&u.acc||'';}
   function toCanon(k){

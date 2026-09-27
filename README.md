@@ -28,7 +28,7 @@ Auf dem Gerät liegt alles im localStorage derselben Adresse. Schlüssel u. a. `
 
 ## Konten
 Jede Person meldet sich mit einem Benutzernamen an (überall eindeutig, Groß-/Kleinschreibung egal, noch ohne Passwort). In `nutzer-alle` steht er als `acc`.
-Auf dem Server liegen ihre Daten unter `acc:<benutzername>` mit geräteunabhängigen Schlüsseln: `profile`, `app:W|Z|E|D`, `lzp:…`, `plan:…`, `arena`, `groups`, `story`, `erg`, `g:<geister-duell>`.
+Auf dem Server liegen ihre Daten unter `lernzentrale:<benutzername>` mit geräteunabhängigen Schlüsseln: `profile`, `app:W|Z|E|D`, `lzp:…`, `plan:…`, `arena`, `groups`, `story`, `erg`, `g:<geister-duell>`.
 Beim ersten Anmelden auf einem Gerät gewinnt der Server, bei App-Ständen der höhere Punktestand; danach gilt der neuere Stand.
 Später: E-Mail + Passwort (Supabase Auth) wird einmal einem Benutzernamen zugeordnet – die Schlüssel bleiben gleich.
 Lerngruppen-Codes stehen nie im Code.

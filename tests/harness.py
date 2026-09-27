@@ -14,6 +14,7 @@ async def handle(route,req):
     url=req.url
     if url.startswith('https://sb.test/'):
         b=json.loads(req.post_data or '{}')
+        if len(b.get('p_fam',''))<12: return await route.fulfill(status=400,body='{"message":"p_fam zu kurz"}')  # wie die echte Datenbank
         if url.endswith('lz_pull'):
             rows=[{'k':k,'v':v,'ts':ts} for (f,k),(v,ts) in DB.items() if f==b['p_fam'] and ts>b['p_since']]
             return await route.fulfill(status=200,content_type='application/json',body=json.dumps(rows))

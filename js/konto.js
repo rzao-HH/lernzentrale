@@ -24,7 +24,7 @@ function draw(){if(!ST)return;
   const i=document.getElementById("accIn");if(i)setTimeout(()=>i.focus(),50);}
 async function go(){const i=document.getElementById("accIn");ST.name=(i?i.value:ST.name).trim().replace(/\s+/g," ");
   const acc=lzAccount.norm(ST.name);
-  if(acc.length<2){ST.err="Bitte mindestens 2 Zeichen eingeben.";draw();return;}
+  if(!acc){ST.err="Bitte einen Namen eingeben.";draw();return;}
   if(!/^[\p{L}\p{N} ._-]+$/u.test(ST.name)){ST.err="Bitte nur Buchstaben, Zahlen, Leerzeichen, Punkt, Minus oder Unterstrich.";draw();return;}
   if(NU.list.some(u=>u.acc===acc&&u.id!==ST.uid)){ST.err="„"+ST.name+"“ ist auf diesem Gerät schon angemeldet – oben einfach zu dieser Person wechseln.";draw();return;}
   if(!navigator.onLine){ST.err="Für die Anmeldung braucht es einmal Internet.";draw();return;}

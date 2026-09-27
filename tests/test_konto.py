@@ -10,11 +10,11 @@ async def main():
     await pa.fill('#accIn','Robin'); await pa.click('[data-acce="🦊"]'); await pa.click('[data-accgo]'); await pa.wait_for_timeout(1500)
     N=json.loads(await pa.evaluate("localStorage.getItem('nutzer-alle')")); u=N['list'][0]
     assert u['acc']=='robin' and u['name']=='Robin' and u['e']=='🦊',u
-    assert ('acc:robin','profile') in DB
+    assert ('lernzentrale:robin','profile') in DB
     await pa.evaluate("localStorage.setItem('winkelakademie-v1',JSON.stringify({xp:812}));localStorage.setItem(lpKey('W'),JSON.stringify({plan:'A'}))")
     await pa.wait_for_timeout(2500)
-    assert json.loads(DB[('acc:robin','app:W')][0])['xp']==812, DB.keys()
-    assert ('acc:robin','plan:W') in DB
+    assert json.loads(DB[('lernzentrale:robin','app:W')][0])['xp']==812, DB.keys()
+    assert ('lernzentrale:robin','plan:W') in DB
     print('A:',await pa.inner_text('#lzsync'))
     # Gerät B: gleicher Name, andere Schreibweise
     B,pb,eb=await dev(br); await pb.emulate_media(color_scheme='dark'); await pb.goto('http://app.test/'); await pb.wait_for_timeout(1500)
