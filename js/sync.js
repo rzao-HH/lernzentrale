@@ -43,7 +43,7 @@
   P.removeItem=function(k){oRem.call(this,k);if(this===localStorage)window.lzDirty(k);};
   async function rpc(fn,body){
     const r=await fetch(SB_URL.replace(/\/+$/,'')+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY},body:JSON.stringify(body)});
-    if(!r.ok)throw new Error('HTTP '+r.status);const t=await r.text();return t?JSON.parse(t):null;}
+    if(!r.ok){let m='';try{m=(JSON.parse(await r.text())||{}).message||'';}catch(e){}throw new Error('HTTP '+r.status+(m?' – '+m.slice(0,80):''));}const t=await r.text();return t?JSON.parse(t):null;}
   window.__lzRpc=rpc;
   /* ---------- Hochladen ---------- */
   function ergOf(uid){return (PJ(LS('lz-ergebnisse'))||[]).filter(r=>r&&(r.u||'u1')===uid);}

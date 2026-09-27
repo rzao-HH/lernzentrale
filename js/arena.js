@@ -23,8 +23,10 @@ window.lzArenaPts=ptsGet;
 
 /* ---------- Transport: über die Datenbank der Lerngruppe (lz_push / lz_pull) ----------
    Jedes Gerät schreibt in jede seiner Lerngruppen „on:<gerät>“ (online-Zeichen, alle 8 s)
-   und Nachrichten reihum in „tx:<gerät>:0…15“. Alle Geräte fragen alle 1–3 s nach Neuem. */
+   und Nachrichten reihum in „tx:<gerät>:0…15“. Alle Geräte fragen alle 1–3 s nach Neuem.
+   lz_pull immer mit p_since 0 (wie Abgleich und Lerngruppen); Doppeltes wird hier aussortiert. */
 let ONLINE=[],HANDLERS=[],SEQ=0,nextPoll=0;
+const DIAG={err:"",at:0,rows:0,seen:0,fails:0};window.__arenaDiag=DIAG;
 const SEEN_P={},SINCE={},PRIMED={};
 const RPCa=(fn,b)=>window.__lzRpc(fn,b);
 /* Zeitstempel unabhängig von falsch gehenden Geräteuhren: nie kleiner als alles, was wir schon gesehen haben */
@@ -34,7 +36,7 @@ function spaces(){const L=[];(window.lzMyGroups?lzMyGroups():[]).forEach(g=>L.pu
 function netOK(){return !!window.__lzRpc&&/^https:/.test((window.__LZSB||{}).url||"");}
 function mergePres(){const m={},now=Date.now();Object.values(SEEN_P).forEach(x=>{const p=x.p;if(!p||p.dev===DEV||p.off||now-x.at>25000)return;if(!m[p.dev]||m[p.dev].ts<p.ts)m[p.dev]=Object.assign({},p,{spl:x.spl});});setOnline(Object.values(m));}
 function setOnline(list){const sig=JSON.stringify(list.map(p=>[p.dev,p.name,p.e,p.app]));ONLINE=list.filter(p=>p&&p.dev!==DEV);if(sig!==setOnline.sig){setOnline.sig=sig;drawCard();drawPick();}}
-async function push(items){for(const sp of spaces()){const it=items.map(x=>x.k.startsWith("on:")&&sp.alias?{k:x.k,v:JSON.stringify(Object.assign(JSON.parse(x.v),{name:sp.alias})),ts:x.ts}:x);try{await RPCa("lz_push",{p_fam:sp.id,p_items:it});}catch(e){}}}
+async function push(items){for(const sp of spaces()){const it=items.map(x=>x.k.startsWith("on:")&&sp.alias?{k:x.k,v:JSON.stringify(Object.assign(JSON.parse(x.v),{name:sp.alias})),ts:x.ts}:x);try{await RPCa("lz_push",{p_fam:sp.id,p_items:it});DIAG.err="";}catch(e){DIAG.err="Senden: "+(e&&e.message||e);DIAG.fails++;drawCard();}}}
 function send(msg){msg.from_dev=DEV;msg.mid=msg.mid||Math.random().toString(36).slice(2);if(!netOK())return;
   push([{k:"tx:"+DEV+":"+(SEQ++%16),v:JSON.stringify(msg),ts:clk()}]);nextPoll=0;}
 const SEEN=new Set();
@@ -44,14 +46,18 @@ let lastBeat=0,lastSig="";
 function beat(force){const p=Object.assign(myPresence(),{ts:clk()}),sig=[p.uid,p.app,p.name,p.e].join("|");if(!force&&sig===lastSig&&Date.now()-lastBeat<8000)return;lastSig=sig;lastBeat=Date.now();push([{k:"on:"+DEV,v:JSON.stringify(p),ts:p.ts}]);}
 let polling=false;
 async function poll(){if(polling||!netOK())return;polling=true;const now=Date.now();
-  try{for(const sp of spaces()){const since=(SINCE[sp.id]||0)-60000;
-    const rows=(await RPCa("lz_pull",{p_fam:sp.id,p_since:Math.max(0,since)}))||[];const first=!PRIMED[sp.id];PRIMED[sp.id]=1;
+  try{let nrows=0;for(const sp of spaces()){
+    const rows=(await RPCa("lz_pull",{p_fam:sp.id,p_since:0}))||[];const first=!PRIMED[sp.id];PRIMED[sp.id]=1;nrows+=rows.length;
     rows.forEach(r=>{const ts=+r.ts||0;if(ts>(SINCE[sp.id]||0))SINCE[sp.id]=ts;let v=null;try{v=JSON.parse(r.v);}catch(e){}if(!v)return;
       if(r.k.startsWith("on:")){const key=sp.id+"|"+r.k,o=SEEN_P[key];
         if(!o){SEEN_P[key]={ts,p:v,spl:sp.label,at:Math.abs(Date.now()-ts)<20000?Date.now():0};}
         else if(o.ts!==ts){o.ts=ts;o.p=v;o.at=Date.now();}}
       else if(r.k.startsWith("tx:")){if(first){if(v.mid)SEEN.add(v.mid);}else recv(v);}});}
-  }catch(e){}polling=false;mergePres();}
+    DIAG.err="";DIAG.at=Date.now();DIAG.rows=nrows;DIAG.seen=Object.values(SEEN_P).filter(x=>x.p&&x.p.dev!==DEV&&!x.p.off).length;
+  }catch(e){DIAG.err="Abfrage: "+(e&&e.message||e);DIAG.fails++;DIAG.at=Date.now();}polling=false;mergePres();if(VIEW==="pick")drawDiag();}
+function diagText(){if(!spaces().length)return"";const ago=DIAG.at?Math.round((Date.now()-DIAG.at)/1000)+" s":"–";
+  return DIAG.err?`⚠️ Arena-Server: ${esc(DIAG.err)} (${DIAG.fails}×)`:`Verbindung ok · zuletzt geprüft vor ${ago} · ${DIAG.seen} andere${DIAG.seen===1?"s":""} Gerät${DIAG.seen===1?"":"e"} gesehen`;}
+function drawDiag(){const d=OV.querySelector(".ar-diag");if(d)d.textContent=diagText().replace(/&amp;/g,"&");}
 function busyNow(){return (GAME&&!GAME.over)||VIEW==="wait"||VIEW==="pick"||INV.classList.contains("on");}
 setInterval(()=>{if(document.hidden||!spaces().length)return;beat(false);const now=Date.now();if(now>=nextPoll){nextPoll=now+(busyNow()?900:3000);poll();}},300);
 addEventListener("pagehide",()=>{if(!netOK())return;const p=Object.assign(myPresence(),{off:true,ts:clk()});push([{k:"on:"+DEV,v:JSON.stringify(p),ts:p.ts}]);});
@@ -71,7 +77,7 @@ function loadApp(k){
       else if(k==="D")v=JSON.parse(JSON.stringify({I:w.__lzArena.I.filter(i=>i.t==="mc"&&i.o.length<=5||i.t==="comma"||i.t==="tap"),sel:w.__lzArena.sel()}));
     }catch(e){v=null;}fin(v);},250);
     setTimeout(()=>fin(null),8000);
-    f.src=APPURL[k]+"?v=7.1.6";document.body.appendChild(f);});
+    f.src=APPURL[k]+"?v=7.1.7";document.body.appendChild(f);});
 }
 const DEG=[{n:"Nullwinkel",f:a=>a===0},{n:"spitzer Winkel",f:a=>a>0&&a<90},{n:"rechter Winkel",f:a=>a===90},{n:"stumpfer Winkel",f:a=>a>90&&a<180},{n:"gestreckter Winkel",f:a=>a===180},{n:"überstumpfer Winkel",f:a=>a>180&&a<360},{n:"Vollwinkel",f:a=>a===360}];
 function qW(sel){
@@ -147,6 +153,7 @@ function drawPick(){if(VIEW!=="pick")return;const me=meP(),on=ONLINE.filter(p=>!
    <div class="ar-h">💰 Einsatz (Arena-Punkte)</div><div class="ar-seg">${[0,10,25,50].map(s=>`<button type="button" data-as="${s}" class="${PICK.stake===s?"on":""}">${s||"ohne"}</button>`).join("")}</div>
    <div class="ar-h">🟢 Live-Duell – gerade online, ihr spielt gleichzeitig</div>
    ${fam?(on.length?`<div class="ar-list">${on.map(p=>`<button type="button" class="ar-p" data-live="${esc(p.dev)}"><span>${esc(p.e)}</span><b>${esc(p.name)}</b><small>${p.spl?"👥 "+esc(p.spl)+" · ":""}${p.app&&AN[p.app]?"in "+AN[p.app][0]+" "+AN[p.app][1]:"auf der Startseite"}</small><em>🪢 live</em></button>`).join("")}</div>`:`<p class="ar-p0">Gerade ist niemand online.</p>`):`<p class="ar-p0">Für Live-Duelle: gemeinsam einer Lerngruppe beitreten, z. B. „Familie“.</p>`}
+   ${fam?`<p class="ar-p0 ar-diag">${diagText()}</p>`:""}
    ${off.length?`<div class="ar-h">👻 Geister-Duell – alle aus deinen Lerngruppen</div><p class="ar-p0">Du spielst jetzt, die andere Person später gegen deine Aufzeichnung.</p><div class="ar-list">${off.map(u=>`<button type="button" class="ar-p" data-ghost="${esc(u.gid)}"><span>${esc(u.e)}</span><b>${esc(u.name)}</b><small>${u.grp?"👥 "+esc(u.gl):"📱 "+esc(u.gl)}</small><em>👻</em></button>`).join("")}</div>`:""}
    ${myGhostBoxes()}</div>`;}
 function myGhostBoxes(){const L=ghostList();
@@ -271,7 +278,7 @@ OV.addEventListener("click",e=>{const t=e.target;
 /* ---------- Karte auf der Startseite ---------- */
 function drawCard(){const el=document.getElementById("arena");if(!el)return;const on=ONLINE.filter(p=>!isMe(p)),L=ghostList();
   const inc=L.filter(g=>isMe(g.to,g)&&!g.res).length,res=L.filter(g=>isMe(g.from,g)&&g.res&&!g.res.fromSeen).length;const gs=window.lzMyGroups?lzMyGroups():[];
-  el.innerHTML=`<section class="ar-card"><div><b>⚔️ Arena</b><small>${gs.length?`👥 ${gs.map(g=>esc(g.name)).join(", ")} · `:""}${spaces().length?(on.length?`🟢 online: ${on.map(p=>esc(p.e)+" "+esc(p.name)).join(", ")}`:"Gerade ist niemand sonst online."):"Tauziehen gegen andere – live oder als Geister-Duell."}${inc?` · 📨 ${inc} Herausforderung${inc>1?"en":""}`:""}${res?` · 📬 ${res} Ergebnis${res>1?"se":""}`:""}</small></div><span class="ar-cb"><button type="button" class="ar-go sec" onclick="lzGroupsOpen()">👥 Lerngruppen</button><button type="button" class="ar-go" onclick="lzArenaOpen()">⚔️ Herausfordern</button></span></section>`;}
+  el.innerHTML=`<section class="ar-card"><div><b>⚔️ Arena</b><small>${gs.length?`👥 ${gs.map(g=>esc(g.name)).join(", ")} · `:""}${spaces().length?(on.length?`🟢 online: ${on.map(p=>esc(p.e)+" "+esc(p.name)).join(", ")}`:"Gerade ist niemand sonst online."):"Tauziehen gegen andere – live oder als Geister-Duell."}${inc?` · 📨 ${inc} Herausforderung${inc>1?"en":""}`:""}${res?` · 📬 ${res} Ergebnis${res>1?"se":""}`:""}${DIAG.err?` · ⚠️ Arena-Server: ${esc(DIAG.err)}`:""}</small></div><span class="ar-cb"><button type="button" class="ar-go sec" onclick="lzGroupsOpen()">👥 Lerngruppen</button><button type="button" class="ar-go" onclick="lzArenaOpen()">⚔️ Herausfordern</button></span></section>`;}
 window.lzArenaCard=drawCard;
 if(window.__arenaMock)window.__arenaGame=()=>GAME;
 setInterval(drawCard,10000);setTimeout(drawCard,300);

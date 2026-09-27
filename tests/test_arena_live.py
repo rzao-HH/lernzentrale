@@ -19,6 +19,7 @@ async def main():
     ac=await A.inner_text('#arena'); print('A card2:',ac[:120].replace('\n',' ')); assert 'Roya' in ac,'A sieht Roya nicht'
     await A.evaluate("lzArenaOpen()"); await A.wait_for_timeout(300)
     await A.screenshot(path=OUTDIR+'ar-pick.png')
+    dg=await A.inner_text('.ar-diag'); print('diag:',dg); assert dg.startswith('Verbindung ok') and '1 anderes' in dg,dg
     await A.click('[data-live]'); 
     await B.wait_for_timeout(9000)
     await B.screenshot(path=OUTDIR+'ar-inv.png')
