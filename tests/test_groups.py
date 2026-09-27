@@ -17,6 +17,8 @@ async def main():
     print('C groups',await C.evaluate("localStorage.getItem('lz-groups@u1')"))
     await C.click('[data-gx]'); await C.reload(); await C.wait_for_timeout(2500)
     tabs=await C.evaluate("[...document.querySelectorAll('.rk-tabs button')].map(b=>b.innerText)"); print('tabs',tabs); assert any('Klasse 6b' in x for x in tabs),'Lerngruppen-Reiter fehlt nach Neuladen'
+    ontab=await C.evaluate("document.querySelector('.rk-tabs button.on')?.innerText||''"); print('default tab',ontab)
+    assert 'Klasse 6b' in ontab,'Lerngruppe sollte standardmäßig aktiv sein, nicht \"Dieses Gerät\": '+ontab
     await C.evaluate('lzGroupsOpen()'); await C.wait_for_timeout(500)
     await C.click('[data-gx]'); await C.wait_for_timeout(500)
     await A.evaluate("RK_TAB=lzMyGroups()[0].code;lzPullGroup(RK_TAB,true).then(()=>document.getElementById('rank').innerHTML=rankHTML())"); await A.wait_for_timeout(1500)

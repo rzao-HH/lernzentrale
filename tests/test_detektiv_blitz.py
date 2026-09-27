@@ -19,7 +19,7 @@ async def main():
         elif 'gebeugtes' in q: kinds.add('tap')
         else: kinds.add('mc')
         if shots<3 and kinds and ('Komma?' in q or 'gebeugtes' in q or 'Zeitform' in q):
-            await p.screenshot(path=f'db{shots}.png'); shots+=1
+            await p.screenshot(path=OUTDIR+f'db{shots}.png'); shots+=1
         btns=await f.query_selector_all('#card button:not([disabled])')
         if btns: await random.choice(btns).click()
     await p.wait_for_timeout(62000) if not await f.query_selector('.result') else None

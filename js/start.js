@@ -297,9 +297,10 @@ function renderWho(){
   document.getElementById("who").innerHTML=h;
 }
 const RKA=[["W","winkelakademie-v1",3,"📐"],["Z","wasserzauberschule-v1",3,"🪄"],["E","unit6-progress",3,"🐚"],["D","detektivbuero-v1",1,"🕵️"]];
-window.RK_TAB=window.RK_TAB||"";
+window.RK_TAB=window.RK_TAB||"";window.RK_USER_SET=window.RK_USER_SET||false;
 function rankHTML(){
   const f=n=>(+n||0).toLocaleString("de-DE"),gs=window.lzMyGroups?lzMyGroups():[];if(RK_TAB&&!gs.some(g=>g.code===RK_TAB))RK_TAB="";
+  if(!RK_TAB&&!RK_USER_SET&&gs.length)RK_TAB=gs[0].code;
   const tabs=gs.length?`<div class="rk-tabs"><button type="button" class="${RK_TAB?"":"on"}" data-rk="">📱 Dieses Gerät</button>${gs.map(g=>`<button type="button" class="${RK_TAB===g.code?"on":""}" data-rk="${esc(g.code)}">👥 ${esc(g.name)}</button>`).join("")}</div>`:"";
   let rows,myId,note="";
   if(!RK_TAB){const L=people().filter(u=>u&&u.id);myId=NU.cur;
@@ -319,7 +320,7 @@ function rankHTML(){
     return `<tr class="${r.id===myId?"me":""}"><td class="m">${m}</td><td class="n">${esc(r.e)} ${esc(r.name)}</td>${r.v.map((x,j)=>`<td class="${x&&x===mx[j]&&rows.length>1?"best":""}">${f(x)}</td>`).join("")}<td class="t">${f(r.t)}</td><td class="${r.ar&&r.ar===mxA&&rows.length>1?"best":""}">${f(r.ar)}</td></tr>`;}).join("");
   return `<section class="rank" aria-label="Rangliste"><h2>🏆 Rangliste</h2>${tabs}<table><thead><tr><th class="m"></th><th class="n">Name</th>${RKA.map(a=>`<th title="${esc(APPS.find(x=>x.k===a[0]).name)}">${a[3]}</th>`).join("")}<th>Gesamt</th><th title="Arena-Punkte">⚔️</th></tr></thead><tbody>${tr}</tbody></table><p>Punkte aus 📐 Winkel-Akademie, 🪄 Wasser-Zauberschule, 🐚 Küsten-Crew und 🕵️ Detektiv-Büro. Grün = Bestwert in der App. ⚔️ = Arena-Punkte aus Duellen (zählen nicht zur Gesamtsumme).${note}</p></section>`;
 }
-document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-rk]");if(!b)return;RK_TAB=b.dataset.rk;const el=document.getElementById("rank");if(el)el.innerHTML=rankHTML();});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-rk]");if(!b)return;RK_TAB=b.dataset.rk;RK_USER_SET=true;const el=document.getElementById("rank");if(el)el.innerHTML=rankHTML();});
 function render(){
   try{setTimeout(()=>{window.lzCloudStat&&lzCloudStat();window.lzAccAuto&&lzAccAuto();},0);}catch(e){}
   loadAll();document.body.classList.toggle("compact",!!UI().compact);const cb=document.getElementById("cmp");cb.textContent=UI().compact?"Alles zeigen":"Nur heute";cb.setAttribute("aria-pressed",!!UI().compact);
@@ -344,7 +345,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-rest]")){UI().rest=!UI().rest;save();render();return;}
   if(e.target.closest("#cmp")){UI().compact=!UI().compact;save();render();return;}
   const wb=e.target.closest("[data-who]"); if(wb){whoOpen=!whoOpen;whoMode="";renderWho();return;}
-  const pu=e.target.closest("[data-pick]"); if(pu){NU.cur=pu.dataset.pick;whoOpen=false;save();render();return;}
+  const pu=e.target.closest("[data-pick]"); if(pu){NU.cur=pu.dataset.pick;RK_TAB="";RK_USER_SET=false;whoOpen=false;save();render();return;}
   const wm=e.target.closest("[data-wmode]"); if(wm){if(wm.dataset.wmode==="add"){whoOpen=false;whoMode="";renderWho();window.lzAccOpen&&lzAccOpen("new");return;}whoMode=wm.dataset.wmode;editId=null;if(whoMode==="add")wDraft={name:"",e:EMO[NU.list.length%EMO.length]};renderWho();return;}
   const ep=e.target.closest("[data-editp]"); if(ep){const x=NU.list.find(y=>y.id===ep.dataset.editp);if(x){editId=x.id;wDraft={name:x.name,e:x.e};whoMode="form";renderWho();}return;}
   const em=e.target.closest("[data-emo]"); if(em){const i0=document.getElementById("nuName"),g0=document.querySelector(".emog"),y=g0?g0.scrollTop:0;wDraft.name=i0?i0.value:wDraft.name;wDraft.e=em.dataset.emo;renderWho();const g1=document.querySelector(".emog");if(g1)g1.scrollTop=y;return;}
