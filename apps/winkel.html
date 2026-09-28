@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.4.0"></script>
+<script src="../js/app-core.js?v=7.5.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.4.0"></script>
+<script src="../js/nutzer-init.js?v=7.5.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -224,6 +224,9 @@ h2{font-family:var(--display);font-size:24px;margin:30px 0 12px;display:flex;ali
 .tcard b{font-family:var(--display);font-size:18px;display:block}
 .tcard span{color:var(--muted);font-weight:700;font-size:14px}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 20px;font-size:17px;line-height:1.5;max-width:75ch}
+.kwrap{display:flex;justify-content:center;margin:10px 0}.kcol{flex-direction:column;align-items:center}.kcap{font-size:14px;color:var(--accent);font-weight:700}.kfig{width:100%;max-width:320px;height:auto;color:var(--text)}
+.kpies{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;margin:12px 0}.kpie{margin:0;text-align:center;color:var(--text)}.kpie svg{width:64px;height:64px}.kpie figcaption{font-size:14px;line-height:1.3}
+.box ol{margin:8px 0 4px;padding-left:22px}
 .box ol{margin:6px 0;padding-left:22px}
 
 /* Pakete 5–8 */
@@ -650,14 +653,14 @@ function t5kurs(){
 function t5bruch(){
   const k=rnd(1,7);
   if(Math.random()<.5)return{short:'Bruchteil in Grad',num:true,ans:k*45,tol:0,ask:`Wie viel Grad sind <b>${FRC[k]} Drehung</b>?`,
-    expl:`Eine volle Drehung hat 360°. ⅛ Drehung = 360° : 8 = 45°. ${FRC[k]} Drehung = ${k} · 45° = ${k*45}°.`,draw:(svg,W,H)=>pie(svg,W,H,k,true)};
+    expl:`Eine volle Drehung hat 360°. ⅛ Drehung = 360° : 8 = 45°. ${FRC[k]} Drehung = ${k} · 45° = ${k*45}°.`,draw:(svg,W,H,rev)=>pie(svg,W,H,k,rev)};
   const m=mcOpts(FRC[k]+' Drehung',[1,2,3,4,5,6,7].map(i=>FRC[i]+' Drehung'));
   return Object.assign(m,{short:'Grad in Bruchteil',ask:`Welcher Bruchteil einer vollen Drehung sind <b>${k*45}°</b>?`,
-    expl:`${k*45}° : 45° = ${k}. Also ${k} Achtel${k%2===0?' = '+FRC[k]:''} einer vollen Drehung.`,draw:(svg,W,H,rev)=>pie(svg,W,H,k,rev)});
+    expl:`${k*45}° : 45° = ${k}. Also ${k} Achtel${k%2===0?' = '+FRC[k]:''} einer vollen Drehung.`,draw:(svg,W,H,rev)=>pie(svg,W,H,k,rev,!rev)});
 }
-function pie(svg,W,H,k,show){const g=el('g',{},svg),R=Math.min(W,H)*.32,cx=W/2,cy=H/2;el('circle',{cx,cy,r:R,class:'cmp'},g);
+function pie(svg,W,H,k,show,noFill){const g=el('g',{},svg),R=Math.min(W,H)*.32,cx=W/2,cy=H/2;el('circle',{cx,cy,r:R,class:'cmp'},g);
   for(let i=0;i<8;i++){const[x,y]=P(cx,cy,R,mA(i*45));ln(g,cx,cy,x,y,'cmpx');}
-  sector(g,cx,cy,R,90-k*45,k*45,'arcf');if(show)tx(g,cx,cy+R+26,k*45+'°','tlab hot');}
+  if(!noFill)sector(g,cx,cy,R,90-k*45,k*45,'arcf');if(show)tx(g,cx,cy+R+26,k*45+'°','tlab hot');}
 function t5koord(){
   let ax,ay,k,n,bx,by;
   for(let t=0;t<200;t++){ax=rnd(0,7);ay=rnd(0,5);k=rnd(0,7)*45;n=rnd(1,3);const v=dirV(k);bx=ax+v[0]*n;by=ay+v[1]*n;if(bx>=0&&bx<=7&&by>=0&&by<=5)break;}
@@ -676,20 +679,20 @@ function t5koord(){
 }
 
 /* --- Paket 6: Winkel benennen --- */
-function angleFig(svg,W,H,deg,hl){const g=el('g',{},svg),{vx,vy,L}=layout(W,H,deg,0,56,Math.min(W,H)*.62),ar=Math.min(60,L*.28);
+function angleFig(svg,W,H,deg,hl,labels){const g=el('g',{},svg),{vx,vy,L}=layout(W,H,deg,0,56,Math.min(W,H)*.62),ar=Math.min(60,L*.28);
   if(hl==='bogen')el('path',{d:`M ${P(vx,vy,ar,0).join(' ')} A ${ar} ${ar} 0 0 0 ${P(vx,vy,ar,deg).join(' ')}`,class:'hl'},g);
   if(hl==='a')ln(g,vx,vy,...P(vx,vy,L,0),'hl');
   if(hl==='b')ln(g,vx,vy,...P(vx,vy,L,deg),'hl');
   if(hl==='s')el('circle',{cx:vx,cy:vy,r:16,class:'hl'},g);
   sector(g,vx,vy,ar,0,deg);ln(g,vx,vy,...P(vx,vy,L,0),'ray r1 thin');ln(g,vx,vy,...P(vx,vy,L,deg),'ray r2 thin');
   el('circle',{cx:vx,cy:vy,r:5,class:'vertex'},g);
-  tx(g,vx-20,vy+20,'S','tlab');const[ax,ay]=P(vx,vy,L*.92,-6),[bx,by]=P(vx,vy,L*.92,deg+7);tx(g,ax,ay,'a','tlab');tx(g,bx,by,'b','tlab');arcLabel(g,vx,vy,ar*.62,0,deg,'α','tlab');}
+  if(!labels)return;tx(g,vx-20,vy+20,'S','tlab');const[ax,ay]=P(vx,vy,L*.92,-6),[bx,by]=P(vx,vy,L*.92,deg+7);tx(g,ax,ay,'a','tlab');tx(g,bx,by,'b','tlab');arcLabel(g,vx,vy,ar*.62,0,deg,'α','tlab');}
 function t6teil(){
-  const p=pick([['s','der Scheitel (S)'],['a','der Schenkel a'],['b','der Schenkel b'],['bogen','der Winkelbogen']]),deg=rnd(40,75);
-  const m=mcOpts(p[1],['der Scheitel (S)','der Schenkel a','der Schenkel b','der Winkelbogen','der Nullpunkt']);
+  const p=pick([['s','der Scheitel'],['a','ein Schenkel'],['b','ein Schenkel'],['bogen','der Winkelbogen']]),deg=rnd(40,75);
+  const m=mcOpts(p[1],['der Scheitel','ein Schenkel','der Winkelbogen','der Nullpunkt','die Winkelskala']);
   return Object.assign(m,{short:'Teile des Winkels',ask:'Wie heißt das <b>markierte</b> Teil des Winkels?',
     expl:'Ein Winkel besteht aus dem Scheitel S und den beiden Schenkeln a und b. Der Winkelbogen zeigt, welcher Winkel gemeint ist, und bekommt einen griechischen Buchstaben.',
-    draw:(svg,W,H)=>angleFig(svg,W,H,deg,p[0])});
+    draw:(svg,W,H,rev)=>angleFig(svg,W,H,deg,p[0],rev)});
 }
 function t6griech(){
   const i=rnd(0,4),[l,n]=GREEK[i];
@@ -731,7 +734,7 @@ const W6=[
   ['An welcher Skala liest du beim Messen ab?','an der Skala, die auf der Seite von Schenkel a mit 10° beginnt',['immer an der äußeren Skala','immer an der inneren Skala','an der Zentimeter-Skala']],
   ['Wie lang soll der erste Schenkel beim Zeichnen mindestens sein?','6 cm',['1 cm','2 cm','20 cm']]
 ];
-function t6wissen(){const[q,c,d]=pick(W6),m=mcOpts(c,d);return Object.assign(m,{short:'Wissen: Winkel & Geodreieck',ask:q,expl:`Richtig ist: ${c}.`,draw:(svg,W,H)=>angleFig(svg,W,H,55,'')});}
+function t6wissen(){const[q,c,d]=pick(W6),m=mcOpts(c,d);return Object.assign(m,{short:'Wissen: Winkel & Geodreieck',ask:q,expl:`Richtig ist: ${c}.`,draw:(svg,W,H,rev)=>angleFig(svg,W,H,55,'',rev)});}
 
 /* --- Paket 7: Winkel berechnen --- */
 function t7neben(){
@@ -1181,7 +1184,20 @@ const LEARN2=`
   <h2>🏷️ Teile des Winkels</h2>
   <div class="box">Der Punkt, an dem sich die Schenkel treffen, heißt <b>Scheitel S</b>. Die beiden Strahlen heißen <b>Schenkel a</b> und <b>b</b>. Der <b>Winkelbogen</b> zeigt, welcher Winkel gemeint ist.<br>Winkel werden mit griechischen Buchstaben beschriftet: <b>α</b> Alpha, <b>β</b> Beta, <b>γ</b> Gamma, <b>δ</b> Delta, <b>ε</b> Epsilon.<br><br><b>Das Geodreieck:</b> Nullpunkt, Mittellinie, Längenmaß (Lineal an der langen Kante), innere und äußere Winkelskala, parallele Hilfslinien, eine 90°-Ecke und zwei 45°-Ecken.</div>
   <h2>🧭 Kompass und Kurs</h2>
-  <div class="box">Norden 0° · Nordosten 45° · Osten 90° · Südosten 135° · Süden 180° · Südwesten 225° · Westen 270° · Nordwesten 315°.<br>Drehungen als Bruchteil: ⅛ Drehung = 45°, ¼ = 90°, ⅜ = 135°, ½ = 180°, ¾ = 270°, ganze Drehung = 360°. Rechts herum heißt im Uhrzeigersinn.<br>Der <b>Kurs</b> ist immer eine Rechtsdrehung, beginnend bei Norden = 0°. Beispiel: Von A(2|1) nach B(4|3) geht es schräg nach rechts oben, also Nordosten: Kurs 45°.<br>Koordinaten: Erst den x-Wert nach rechts, dann den y-Wert nach oben, B(4|3).</div>
+  <div class="box"><b>Die acht Himmelsrichtungen</b> liegen jeweils 45° auseinander. Gezählt wird immer ab <b>Norden = 0°</b> und <b>rechts herum</b> (im Uhrzeigersinn).
+    <div class="kwrap kcol"><svg class="kfig" viewBox="0 0 300 300" role="img" aria-label="Kompassrose mit Himmelsrichtungen und Gradzahlen"><circle cx="150" cy="150" r="92" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="150.0" y1="58.0" x2="150" y2="150" stroke="currentColor" stroke-opacity=".25" stroke-dasharray=""/><text x="150.0" y="28.0" text-anchor="middle" font-weight="800" font-size="16" fill="currentColor">N</text><text x="150.0" y="45.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="800">0°</text><line x1="215.1" y1="84.9" x2="150" y2="150" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="4 4"/><text x="232.0" y="62.0" text-anchor="middle" font-weight="800" font-size="16" fill="currentColor">NO</text><text x="232.0" y="79.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="800">45°</text><line x1="242.0" y1="150.0" x2="150" y2="150" stroke="currentColor" stroke-opacity=".25" stroke-dasharray=""/><text x="266.0" y="144.0" text-anchor="middle" font-weight="800" font-size="16" fill="currentColor">O</text><text x="266.0" y="161.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="800">90°</text><line x1="215.1" y1="215.1" x2="150" y2="150" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="4 4"/><text x="232.0" y="226.0" text-anchor="middle" font-weight="800" font-size="16" fill="currentColor">SO</text><text x="232.0" y="243.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="800">135°</text><line x1="150.0" y1="242.0" x2="150" y2="150" stroke="currentColor" stroke-opacity=".25" stroke-dasharray=""/><text x="150.0" y="260.0" text-anchor="middle" font-weight="800" font-size="16" fill="currentColor">S</text><text x="150.0" y="277.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="800">180°</text><line x1="84.9" y1="215.1" x2="150" y2="150" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="4 4"/><text x="68.0" y="226.0" text-anchor="middle" font-weight="800" font-size="16" fill="currentColor">SW</text><text x="68.0" y="243.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="800">225°</text><line x1="58.0" y1="150.0" x2="150" y2="150" stroke="currentColor" stroke-opacity=".25" stroke-dasharray=""/><text x="34.0" y="144.0" text-anchor="middle" font-weight="800" font-size="16" fill="currentColor">W</text><text x="34.0" y="161.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="800">270°</text><line x1="84.9" y1="84.9" x2="150" y2="150" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="4 4"/><text x="68.0" y="62.0" text-anchor="middle" font-weight="800" font-size="16" fill="currentColor">NW</text><text x="68.0" y="79.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="800">315°</text><path d="M 150.0 104.0 A 46.0 46.0 0 0 1 195.6 143.6" fill="none" stroke="var(--accent)" stroke-width="3"/><polygon points="196.0,150.0 186.0,143.0 186.0,157.0" fill="var(--accent)"/><circle cx="150" cy="150" r="4" fill="currentColor"/></svg><small class="kcap">Der blaue Pfeil zeigt: rechts herum = im Uhrzeigersinn</small></div>
+    <b>Merke:</b> Osten ist 90°, Westen 270° – nicht 90°! Nach einer ganzen Drehung (360°) schaust du wieder nach Norden.</div>
+  <h2>🔄 Drehungen als Bruchteil</h2>
+  <div class="box">Eine ganze Drehung hat 360°. Ein Achtel davon sind 360° : 8 = <b>45°</b>. So rechnest du jeden Bruchteil aus: Achtel zählen und mal 45°.
+    <div class="kpies"><figure class="kpie"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M 40 40 L 40 10 A 30 30 0 0 1 61.2 18.8 Z" fill="var(--accent)" fill-opacity=".35" stroke="var(--accent)" stroke-width="2"/></svg><figcaption><b>⅛</b> Drehung<br>45°</figcaption></figure><figure class="kpie"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M 40 40 L 40 10 A 30 30 0 0 1 70.0 40.0 Z" fill="var(--accent)" fill-opacity=".35" stroke="var(--accent)" stroke-width="2"/></svg><figcaption><b>¼</b> Drehung<br>90°</figcaption></figure><figure class="kpie"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M 40 40 L 40 10 A 30 30 0 0 1 61.2 61.2 Z" fill="var(--accent)" fill-opacity=".35" stroke="var(--accent)" stroke-width="2"/></svg><figcaption><b>⅜</b> Drehung<br>135°</figcaption></figure><figure class="kpie"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M 40 40 L 40 10 A 30 30 0 0 1 40.0 70.0 Z" fill="var(--accent)" fill-opacity=".35" stroke="var(--accent)" stroke-width="2"/></svg><figcaption><b>½</b> Drehung<br>180°</figcaption></figure><figure class="kpie"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M 40 40 L 40 10 A 30 30 0 1 1 10.0 40.0 Z" fill="var(--accent)" fill-opacity=".35" stroke="var(--accent)" stroke-width="2"/></svg><figcaption><b>¾</b> Drehung<br>270°</figcaption></figure><figure class="kpie"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="40" cy="40" r="30" fill="var(--accent)" fill-opacity=".35"/></svg><figcaption><b>ganze</b> Drehung<br>360°</figcaption></figure></div>
+    <b>Beispiel:</b> ¾ Drehung = 6 Achtel = 6 · 45° = <b>270°</b>.<br>
+    <b>Rechts herum oder links herum?</b> Rechts herum = im Uhrzeigersinn, links herum = gegen den Uhrzeigersinn. Du schaust nach Norden und drehst dich ¼ nach links: Jetzt schaust du nach Westen. Das ist dieselbe Richtung wie ¾ nach rechts.</div>
+  <h2>🧭 Den Kurs bestimmen</h2>
+  <div class="box">Der <b>Kurs</b> sagt, in welche Richtung man fährt. Er ist immer eine <b>Rechtsdrehung ab Norden</b>, also eine Zahl zwischen 0° und 359°.
+    <ol><li>Zeichne am Startpunkt eine Linie nach Norden (auf der Karte nach oben).</li><li>Schau, wohin es zum Ziel geht.</li><li>Miss rechts herum von Norden bis zu dieser Richtung.</li></ol>
+    <div class="kwrap"><svg class="kfig" viewBox="0 0 340 290" role="img" aria-label="Koordinatensystem: Weg von A(2|1) nach B(4|3), Kurs 45°"><line x1="40" y1="240" x2="40" y2="40" stroke="currentColor" stroke-opacity=".18"/><text x="40" y="258" text-anchor="middle" font-size="12" fill="currentColor">0</text><line x1="80" y1="240" x2="80" y2="40" stroke="currentColor" stroke-opacity=".18"/><text x="80" y="258" text-anchor="middle" font-size="12" fill="currentColor">1</text><line x1="120" y1="240" x2="120" y2="40" stroke="currentColor" stroke-opacity=".18"/><text x="120" y="258" text-anchor="middle" font-size="12" fill="currentColor">2</text><line x1="160" y1="240" x2="160" y2="40" stroke="currentColor" stroke-opacity=".18"/><text x="160" y="258" text-anchor="middle" font-size="12" fill="currentColor">3</text><line x1="200" y1="240" x2="200" y2="40" stroke="currentColor" stroke-opacity=".18"/><text x="200" y="258" text-anchor="middle" font-size="12" fill="currentColor">4</text><line x1="240" y1="240" x2="240" y2="40" stroke="currentColor" stroke-opacity=".18"/><text x="240" y="258" text-anchor="middle" font-size="12" fill="currentColor">5</text><line x1="280" y1="240" x2="280" y2="40" stroke="currentColor" stroke-opacity=".18"/><text x="280" y="258" text-anchor="middle" font-size="12" fill="currentColor">6</text><line x1="40" y1="240" x2="280" y2="240" stroke="currentColor" stroke-opacity=".18"/><text x="28" y="244" text-anchor="middle" font-size="12" fill="currentColor">0</text><line x1="40" y1="200" x2="280" y2="200" stroke="currentColor" stroke-opacity=".18"/><text x="28" y="204" text-anchor="middle" font-size="12" fill="currentColor">1</text><line x1="40" y1="160" x2="280" y2="160" stroke="currentColor" stroke-opacity=".18"/><text x="28" y="164" text-anchor="middle" font-size="12" fill="currentColor">2</text><line x1="40" y1="120" x2="280" y2="120" stroke="currentColor" stroke-opacity=".18"/><text x="28" y="124" text-anchor="middle" font-size="12" fill="currentColor">3</text><line x1="40" y1="80" x2="280" y2="80" stroke="currentColor" stroke-opacity=".18"/><text x="28" y="84" text-anchor="middle" font-size="12" fill="currentColor">4</text><line x1="40" y1="40" x2="280" y2="40" stroke="currentColor" stroke-opacity=".18"/><text x="28" y="44" text-anchor="middle" font-size="12" fill="currentColor">5</text><line x1="40" y1="240" x2="292.0" y2="240" stroke="currentColor" stroke-width="2"/><line x1="40" y1="240" x2="40" y2="28.0" stroke="currentColor" stroke-width="2"/><text x="300.0" y="244" font-size="13" fill="currentColor">x</text><text x="40" y="20.0" text-anchor="middle" font-size="13" fill="currentColor">y</text><line x1="120" y1="200" x2="120" y2="104.0" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4"/><text x="120" y="98.0" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">N</text><path d="M 120 166 A 34 34 0 0 1 144.0 176.0" fill="none" stroke="var(--accent)" stroke-width="3"/><text x="138" y="158" font-size="13" font-weight="800" fill="var(--accent)">45°</text><line x1="120" y1="200" x2="191" y2="129" stroke="var(--accent)" stroke-width="3.5"/><polygon points="200,120 185,124 196,135" fill="var(--accent)"/><circle cx="120" cy="200" r="5" fill="currentColor"/><text x="130" y="218" font-size="13" font-weight="800" fill="currentColor">A(2|1)</text><circle cx="200" cy="120" r="5" fill="currentColor"/><text x="210" y="138" font-size="13" font-weight="800" fill="currentColor">B(4|3)</text></svg></div>
+    <b>Beispiel:</b> Von A(2|1) nach B(4|3) geht es 2 nach rechts und 2 nach oben, also schräg nach rechts oben. Das ist <b>Nordosten</b>, der Kurs ist <b>45°</b>.<br>
+    <b>Koordinaten:</b> Erst den x-Wert nach rechts, dann den y-Wert nach oben. B(4|3) heißt: 4 nach rechts, 3 nach oben.</div>
   <h2>🧮 Winkel berechnen</h2>
   <div class="box"><b>Nebenwinkel</b> ergänzen sich zu 180°: α + 50° = 180°, also α = 130°.<br><b>Alle Winkel um einen Punkt</b> ergeben 360°.<br>Schneiden sich zwei Geraden, sind <b>gegenüberliegende Winkel gleich groß</b> (Scheitelwinkel). Zwei benachbarte Winkel ergeben 180°.<br>In jedem <b>Dreieck</b> ist die Summe der Winkel 180°.</div>
   <h2>📏 Senkrechte und Parallelen</h2>
@@ -1243,7 +1259,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.4.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.5.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1253,22 +1269,22 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.4.0"></script>
+<script src="../js/lernplan.js?v=7.5.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.4.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.5.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.4.0"></script>
+<script src="../js/nutzer.js?v=7.5.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.4.0"></script>
+<script src="../js/home-btn.js?v=7.5.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.4.0"></script>
+<script src="../js/arena-btn.js?v=7.5.0"></script>
 </body>
 </html>
