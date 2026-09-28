@@ -22,6 +22,9 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 | `sw.js` | Service Worker (Offline) |
 | `tests/` | Automatische Browser-Tests (`python tests/run_all.py`) |
 | `archiv/` | Stände vor Version 5.0.0 |
+| `lernzettel/` | Fotos der Arbeitsblätter je Fach als HTML-Dateien, Übersicht in `lernzettel/README.md` (nicht Teil der App, nicht im Offline-Speicher) |
+
+> **Lernzettel:** Die aktuellen Lernzettel-Dateien liegen in `lernzettel/`, mit Übersicht in `lernzettel/README.md`. Änderungen immer dort ablegen, nicht als separate Datei in einem Chat.
 
 ## Speicher
 Auf dem Gerät liegt alles im localStorage derselben Adresse. Schlüssel u. a. `nutzer-alle`, `lz-ergebnisse`, `lernplan-*@<person>` (Lernplan pro Person), `lzp-*`, App-Stände (`winkelakademie-v1`, `wasserzauberschule-v1`, `unit6-progress`, `detektivbuero-v1`), `lz-groups@…`, `lz-arena-…`.
