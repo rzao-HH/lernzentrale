@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.3.0"></script>
+<script src="../js/app-core.js?v=7.3.1"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.3.0"></script>
+<script src="../js/nutzer-init.js?v=7.3.1"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -103,6 +103,7 @@ h2{font-family:var(--display);font-size:24px;margin:30px 0 12px;display:flex;ali
 .check{margin-left:auto;width:28px;height:28px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font-weight:900;flex:none}
 .pack.on .check{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 .pgoal{font-size:14px;line-height:1.4;color:var(--muted)}
+.pack .psrc{font-size:12px;font-weight:700;color:var(--muted)}
 .pgoal b{color:var(--text)}
 .pbar{height:8px;border-radius:4px;background:var(--panel2);overflow:hidden}
 .pbar i{display:block;height:100%;background:var(--ok)}
@@ -311,18 +312,18 @@ const TYPE_ORDER=['null','spitz','recht','stumpf','gestreckt','ueber','voll'];
 function typeOf(d){if(d===0)return'null';if(d<90)return'spitz';if(d===90)return'recht';if(d<180)return'stumpf';if(d===180)return'gestreckt';if(d<360)return'ueber';return'voll';}
 
 const PACKS=[
-  {id:'p1',nr:1,icon:'🛰️',name:'Spitz & Recht',goal:'Ich erkenne spitze Winkel (zwischen 0° und 90°) und rechte Winkel (90°) und kann sie mit dem Geodreieck messen.',
+  {id:'p1',src:"AH S. 13–14 · AB Winkel messen – spitze Winkel",nr:1,icon:'🛰️',name:'Spitz & Recht',goal:'Ich erkenne spitze Winkel (zwischen 0° und 90°) und rechte Winkel (90°) und kann sie mit dem Geodreieck messen.',
    gen:()=>Math.random()<.3?90:rnd(5,85)},
-  {id:'p2',nr:2,icon:'🚀',name:'Stumpf & Gestreckt',goal:'Ich erkenne stumpfe Winkel (zwischen 90° und 180°) und gestreckte Winkel (180°) und kann sie messen.',
+  {id:'p2',src:"AH S. 13–14 · AB Winkel messen – stumpfe Winkel",nr:2,icon:'🚀',name:'Stumpf & Gestreckt',goal:'Ich erkenne stumpfe Winkel (zwischen 90° und 180°) und gestreckte Winkel (180°) und kann sie messen.',
    gen:()=>Math.random()<.3?180:rnd(95,175)},
-  {id:'p3',nr:3,icon:'🪐',name:'Überstumpf',goal:'Ich erkenne überstumpfe Winkel (zwischen 180° und 360°) und messe sie mit dem Trick „360° minus Innenwinkel“.',
+  {id:'p3',src:"AH S. 13–14 · ABs Winkel zeichnen",nr:3,icon:'🪐',name:'Überstumpf',goal:'Ich erkenne überstumpfe Winkel (zwischen 180° und 360°) und messe sie mit dem Trick „360° minus Innenwinkel“.',
    gen:()=>rnd(185,355)},
-  {id:'p4',nr:4,icon:'🌌',name:'Null, Voll & Grenzfälle',goal:'Ich kenne Nullwinkel (0°) und Vollwinkel (360°) und ordne knifflige Grenzfälle wie 89°, 91° oder 179° sicher ein.',
+  {id:'p4',src:"AH S. 13–14 · ml S. 39 · AB Die Winkelarten",nr:4,icon:'🌌',name:'Null, Voll & Grenzfälle',goal:'Ich kenne Nullwinkel (0°) und Vollwinkel (360°) und ordne knifflige Grenzfälle wie 89°, 91° oder 179° sicher ein.',
    gen:()=>Math.random()<.45?pick([0,360]):pick([1,2,3,4,88,89,91,92,178,179,181,182,356,357,358,359])},
-  {id:'p5',nr:5,icon:'🧭',name:'Kompass & Kurs',task:true,goal:'Ich lese Drehungen am Kompass ab (rechts/links, als Bruchteil wie ¼ oder ⅜), kenne die Himmelsrichtungen in Grad und bestimme den Kurs von A nach B.'},
-  {id:'p6',nr:6,icon:'🏷️',name:'Winkel benennen',task:true,goal:'Ich benenne Scheitel, Schenkel und Winkelbogen, kenne α, β, γ, δ, ε und die Teile des Geodreiecks.'},
-  {id:'p7',nr:7,icon:'🧮',name:'Winkel berechnen',task:true,goal:'Ich berechne Winkel ohne zu messen: Nebenwinkel (180°), Vollkreis (360°), Scheitelwinkel, Dreieck (180°) und überstumpfe Winkel.'},
-  {id:'p8',nr:8,icon:'📏',name:'Senkrechte & Parallelen',task:true,goal:'Ich erkenne senkrechte (⊥) und parallele (∥) Geraden, finde rechte Winkel in Figuren und zeichne Senkrechte und Parallelen durch einen Punkt.'}
+  {id:'p5',src:"ml S. 36–37 · AH S. 12 und 17",nr:5,icon:'🧭',name:'Kompass & Kurs',task:true,goal:'Ich lese Drehungen am Kompass ab (rechts/links, als Bruchteil wie ¼ oder ⅜), kenne die Himmelsrichtungen in Grad und bestimme den Kurs von A nach B.'},
+  {id:'p6',src:"Infoblätter Der Winkel, Griechische Buchstaben · AB Das Geodreieck",nr:6,icon:'🏷️',name:'Winkel benennen',task:true,goal:'Ich benenne Scheitel, Schenkel und Winkelbogen, kenne α, β, γ, δ, ε und die Teile des Geodreiecks.'},
+  {id:'p7',src:"ml S. 41–42 · AH S. 16",nr:7,icon:'🧮',name:'Winkel berechnen',task:true,goal:'Ich berechne Winkel ohne zu messen: Nebenwinkel (180°), Vollkreis (360°), Scheitelwinkel, Dreieck (180°) und überstumpfe Winkel.'},
+  {id:'p8',src:"Übungsheft Geodreieck",nr:8,icon:'📏',name:'Senkrechte & Parallelen',task:true,goal:'Ich erkenne senkrechte (⊥) und parallele (∥) Geraden, finde rechte Winkel in Figuren und zeichne Senkrechte und Parallelen durch einen Punkt.'}
 ];
 const packById=id=>PACKS.find(p=>p.id===id);
 
@@ -1194,7 +1195,7 @@ function home(){
     const on=S.sel.includes(p.id),s=S.stats[p.id],sum=packSum(p.id),done=s&&s.done;
     return`<button class="pack ${on?'on':''}" data-p="${p.id}" aria-pressed="${on}">
       <div class="ptop"><span class="picon">${p.icon}</span><span class="pname"><small>Paket ${p.nr}</small>${p.name}</span><span class="check">${on?'✓':''}</span></div>
-      <div class="pgoal"><b>Lernziel:</b> ${p.goal}</div>
+      <div class="pgoal"><b>Lernziel:</b> ${p.goal}</div>${p.src?`<small class="psrc">📄 ${p.src}</small>`:''}
       <div class="pbar"><i style="width:${done?100:Math.min(100,sum/16*100)}%"></i></div>
       <small class="pst">${done?'🏅 Lernziel erreicht':`Fortschritt: ${sum} von 16 Treffern (aus den letzten 20 Aufgaben)`}</small></button>`;
   };
@@ -1242,7 +1243,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.3.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.3.1">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1252,22 +1253,22 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.3.0"></script>
+<script src="../js/lernplan.js?v=7.3.1"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.3.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.3.1">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.3.0"></script>
+<script src="../js/nutzer.js?v=7.3.1"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.3.0"></script>
+<script src="../js/home-btn.js?v=7.3.1"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.3.0"></script>
+<script src="../js/arena-btn.js?v=7.3.1"></script>
 </body>
 </html>
