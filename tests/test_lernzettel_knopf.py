@@ -1,4 +1,4 @@
-"""📄-Knopf: Wasser, Detektiv und Küste verlinken ihre Lernzettel-Dateien (Englisch mit Auswahl), Winkel hat keinen Knopf;
+"""📄-Knopf: Wasser, Detektiv und Küste verlinken ihre Lernzettel-Dateien (Englisch mit Auswahl), Winkel verlinkt mathe-winkel.html;
 die Kopfleiste passt auch auf ein schmales Handy (390/360 px)."""
 import asyncio, os
 from harness import *
@@ -9,7 +9,7 @@ async def main():
     for vw in (1024,390,360):
       c=await br.new_context(viewport={'width':vw,'height':900}); await c.route('**/*',handle); await c.add_init_script(acct('Robin'))
       p=await c.new_page(); errs=[]; p.on('pageerror',lambda e:errs.append(str(e)))
-      for k,fn,files in [('Z','wasser.html',['nwt-wasser.html']),('D','detektiv.html',['deutsch-satzbau-zeitformen.html']),('E','kueste.html',['englisch-unit5-6.html','englisch-simple-past.html']),('W','winkel.html',[])]:
+      for k,fn,files in [('Z','wasser.html',['nwt-wasser.html']),('D','detektiv.html',['deutsch-satzbau-zeitformen.html']),('E','kueste.html',['englisch-unit5-6.html','englisch-simple-past.html']),('W','winkel.html',['mathe-winkel.html'])]:
         await p.goto('http://app.test/#'+k); await p.wait_for_timeout(2500)
         f=[x for x in p.frames if x!=p.main_frame and x.url.split('?')[0].endswith(fn)][0]
         b=await f.query_selector('.zettel-btn')

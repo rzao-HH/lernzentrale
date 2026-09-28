@@ -9,12 +9,13 @@ Fotos der Arbeitsblätter aus dem Unterricht, je Fach als eigenständige HTML-Da
 | `englisch-unit5-6.html` | 🐚 Englisch | Vokabeln Unit 6 (Buch S. 257–261), Buch S. 130/132, Grammatik simple past G14–G16 (S. 194–199), Arbeitsblätter Station 1 und 5 | 17 | Küsten-Crew: Vokabeln, Verben, Grammatik |
 | `englisch-simple-past.html` | 🐚 Englisch | Merkblatt Simple Past, Creative Writing „My Superhero's Craziest Day“ | 2 | Küsten-Crew: Detektiv, Schreibwerkstatt |
 | `nwt-wasser.html` | 🪄 NWT | Wasser: Aggregatzustände, Übergänge, Eis schwimmt, Anomalie/See im Winter, Versuchsprotokoll. Hinweis auf den Sublimieren-Fehler (Rätsel-Lösung) | 14 | Wasser-Zauberschule: „📄 Lernzettel S. …“ auf den Karten |
+| `mathe-winkel.html` | 📐 Mathe | Karte und Kompass – Winkel: Kompass/Kurs, Winkelarten, Geodreieck und Messen, Zeichnen, Berechnen, Übungsheft Geodreieck (Senkrechte/Parallelen), AH S. 16–18, Lösungen zu ml S. 37–42 | 45 | Winkel-Akademie: Paket-Angaben „AH/ml S. …“ |
 | `deutsch-satzbau-zeitformen.html` | 🕵️ Deutsch | Satzbau und Kommas (Nr. 29–41), Heft Zeitformen, Lösungen gesammelt am Ende. Hinweis auf den Fehler auf Blatt Nr. 33 („nebenordnend“) | 23 | Detektiv-Büro: Quelle auf jeder Lernkarte |
 
-- **Mathe (Winkel):** Es gibt noch keine Lernzettel-Datei. Die Winkel-Akademie verweist direkt auf Buch- und Arbeitsheftseiten.
+- **Mathe (Winkel):** Die Buchseiten ml S. 36–42 und AH S. 12–15 selbst fehlen; von ml S. 37–42 gibt es nur die Lösungen im Heft.
 - **Zwei Englisch-Dateien:** Sie wurden nie zusammengeführt. Beide sind aktuell.
 - **Öffentlich:** Das Repository ist öffentlich, die Dateien sind unter `https://rzao-hh.github.io/lernzentrale/lernzettel/<datei>` erreichbar. Das ist bewusst so entschieden.
-- **In der App:** über den 📄-Knopf oben in Wasser-Zauberschule, Küsten-Crew und Detektiv-Büro (seit 7.4.0, `js/lernzettel-btn.js`, Liste je App in `window.__LZ_ZETTEL`). Neue Datei → dort eintragen.
-- **Nicht im Offline-Speicher** (`sw.js`): Die Dateien sind zusammen etwa 14 MB groß und würden sonst bei jedem Update mitgeladen. Zum Öffnen braucht man Internet.
+- **In der App:** über den 📄-Knopf oben in allen vier Apps (seit 7.4.0, Mathe seit 7.6.0, `js/lernzettel-btn.js`, Liste je App in `window.__LZ_ZETTEL`). Neue Datei → dort eintragen.
+- **Nicht im Offline-Speicher** (`sw.js`): Die Dateien sind zusammen etwa 22 MB groß und würden sonst bei jedem Update mitgeladen. Zum Öffnen braucht man Internet.
 - **Weitergabe:** per Link oder als Datei (Signal). Auf dem Handy im Browser öffnen, nicht in der Vorschau einer App.
 - Stand: 28.09.2026
