@@ -169,16 +169,21 @@ window.lzToday=function(){
   return{t,n:S.n,learn:d.learn,rep:d.rep,fresh:d.fresh,final:!!d.final,tests};
 };
 const lzUL=us=>us.map(u=>u.icon+" "+u.name).join(", ");
+/* data-lzm trägt jetzt einen fachlichen Schritt ("learn"/"rep"/"test"/"write"), keine App-Modus-ID mehr –
+   jede App übersetzt das selbst in ihre eigenen Modi (für die Umrandung, nicht mehr zum Hinscrollen). */
 function lzBtn(kind,us,label,mt){
   const ids=us.map(u=>u.id).join(",");
-  return`<button type="button" class="lzh-btn" data-lzsel="${ids}" data-lzm="${mt||(kind==="learn"&&C.prefix==="E"?"learn":"test")}">${label||"Diese Pakete wählen"}</button>`;
+  const mode=mt||kind;
+  const on=!label&&window.lzSelActive&&window.lzSelActive(ids,mode);
+  const txt=on?"✓ Ausgewählt":(label||"📦 Pakete auswählen");
+  return`<button type="button" class="lzh-btn${on?" done":""}" data-lzsel="${ids}" data-lzm="${mode}">${txt}</button>`;
 }
 window.lzRows=function(filter){
   const T=window.lzToday(); if(!T)return[];
   const rows=[];
   const fl=us=>us.filter(u=>!filter||filter(u));
   const grp=(arr,tag,txt)=>{const us=fl(arr);if(!us.length)return;const tip=us.map(u=>u[txt]).filter(Boolean)[0]||"";
-    rows.push(`<div class="lzh-row"><div><b>${tag}: ${lzUL(us)}</b>${tip?`<small>${tip}</small>`:""}</div>${lzBtn("learn",us)}</div>`);};
+    rows.push(`<div class="lzh-row"><div><b>${tag}: ${lzUL(us)}</b>${tip?`<small>${tip}</small>`:""}</div>${lzBtn(txt,us)}</div>`);};
   grp(T.learn,"📘 Lernen","learn");grp(T.rep,"🔁 Wiederholen","rep");grp(T.fresh,"✨ Auffrischen","rep");
   T.tests.forEach(x=>{if(filter&&!x.units.every(filter))return;
     const lab=x.final?"🎓 Generalprobe ("+x.name+"): alle Pakete":x.kind==="Schreibtest"?"✍️ Schreibtest: "+lzUL(x.units):"🏆 "+(x.kind==="Neu"?"Test neue Pakete":x.kind==="Zwischenprobe"?"Zwischenprobe":"Test Wiederholung")+" ("+x.name+"): "+lzUL(x.units);

@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.2.0","28.09.2026",["🗓️ Lernplan in allen Fächern: Der Knopf heißt jetzt „📦 Pakete auswählen“ und wählt nur die Pakete aus – die Seite springt nicht mehr weg","🟧 Die Übung oder Prüfung, die laut Lernplan dran ist, hat unten einen dicken Rahmen","✅ Der angetippte Knopf zeigt „✓ Ausgewählt“, bis du die Pakete von Hand änderst"]],
  ["7.1.10","28.09.2026",["⚔️ Arena: Live-Duell erkennt jetzt zuverlässig, wenn jemand online ist – vorher hielt die App das andere Gerät fälschlich für „sich selbst“, wenn auf beiden Geräten die erste angelegte Person dieselbe interne Nummer hatte"]],
  ["7.1.9","27.09.2026",["🏆 Rangliste zeigt automatisch die Lerngruppe statt „Dieses Gerät“, wenn man einer beigetreten ist"]],
  ["7.1.8","27.09.2026",["🏆 Rangliste: Die Lerngruppen-Reiter fehlten manchmal direkt nach dem Laden – behoben"]],

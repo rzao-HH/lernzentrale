@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.1.10"></script>
+<script src="../js/app-core.js?v=7.2.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="Z";window.__DATAKEY="wasserzauberschule-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.1.10"></script>
+<script src="../js/nutzer-init.js?v=7.2.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -670,7 +670,10 @@ function recordStat(pid,ok){
   save();
 }
 function avail(m){return m==='book'||MODES[m].p.some(p=>S.sel.includes(p));}
-let G=null;
+let G=null,LZ_HL=null,LZ_IDS=[];
+const lzSame=(a,b)=>a.slice().sort().join(',')===b.slice().sort().join(',');
+/* Zeigt an, welcher Modus laut Lernplan gerade dran ist (dicker Rahmen) – nicht mehr per Hinscrollen */
+function isHl(m){if(!LZ_HL||!lzSame(S.sel,LZ_IDS))return false;const g=MODES[m].g;if(LZ_HL==='learn')return g==='learn';if(LZ_HL==='rep')return g==='play'&&avail(m);return LZ_HL===m;}
 function stopAll(){
   if(!G)return;
   clearInterval(G.timer);clearTimeout(G.to);cancelAnimationFrame(G.raf);
@@ -1969,7 +1972,7 @@ function home(){
     <small class="pst">${done?'🏅 Lernziel erreicht':`Fortschritt: ${sum} von 16 Treffern (aus den letzten 20 Aufgaben)`}</small>
     ${(()=>{const g=pkGrades(p.id);return`<div class="pkgs">${pkBadge('🏆','Abschlusstest',g.t)}${pkBadge('✍️','Schreibtest',g.w)}</div>`;})()}</button>`;
   }).join('');
-  const tile=m=>{const M=MODES[m],a=avail(m);return`<button class="mode ${m==='test'||m==='write'?'feature':''}" data-m="${m}" ${a?'':'disabled'}><span class="mi">${M.i}</span><b>${M.t}</b><span>${M.d}</span><span class="tags">${m==='book'?'<i>alle Pakete</i>':M.p.length===5?'<i>alle Pakete</i>':M.p.map(p=>`<i>Paket ${packById(p).nr}</i>`).join('')}</span></button>`;};
+  const tile=m=>{const M=MODES[m],a=avail(m);return`<button class="mode ${m==='test'||m==='write'?'feature':''}${isHl(m)?' hl':''}" data-m="${m}" ${a?'':'disabled'}><span class="mi">${M.i}</span><b>${M.t}</b><span>${M.d}</span><span class="tags">${m==='book'?'<i>alle Pakete</i>':M.p.length===5?'<i>alle Pakete</i>':M.p.map(p=>`<i>Paket ${packById(p).nr}</i>`).join('')}</span></button>`;};
   const grp=(g,title)=>`<div class="mgroup">${title}</div><div class="modes">${Object.keys(MODES).filter(m=>MODES[m].g===g).map(tile).join('')}</div>`;
   app.innerHTML=`<div class="home">
   <section class="hero"><div><h1>Wasser-Zauberschule</h1><p>Eis, Wasser und Dampf verwandeln sich ineinander – wie durch Zauberei. Lerne die Regeln dahinter und sammle Punkte für dein Haus.</p></div>
@@ -1999,7 +2002,9 @@ window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{
   else if(G.ana&&G.cur&&G.cur.t==='ana'&&$('#slots')&&!G.locked)drawAna();
 },150);});
 window.lzRehome=()=>{if(document.querySelector('.packs')&&!document.querySelector('.lzh')){const y=app.scrollTop;home();app.scrollTop=y;}};
-window.lzSelect=(ids,mt)=>{S.sel=ids.split(',');save();home();const t=app.querySelector('[data-m="'+(mt||'test')+'"]');if(t)t.scrollIntoView({behavior:'smooth',block:'center'});};
+/* „Diese Pakete wählen“ aus dem Lernplan: wählt nur die Pakete aus und markiert unten den passenden Modus – springt nicht mehr hin */
+window.lzSelect=(ids,mt)=>{S.sel=ids.split(',');LZ_IDS=S.sel.slice();LZ_HL=mt||'test';save();const y=app.scrollTop;home();app.scrollTop=y;};
+window.lzSelActive=(ids,mt)=>LZ_HL===mt&&lzSame(LZ_IDS,ids.split(','))&&lzSame(S.sel,LZ_IDS);
 /* ===== Ergänzungen aus dem Buch S. 116–118 ===== */
 CARDS.p1.push(
  ['Schmelztemperatur','Die Temperatur, bei der ein Stoff zwischen fest und flüssig wechselt. Bei Wasser: 0 °C.'],
@@ -2118,7 +2123,7 @@ applyHouse();renderHeader();home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--teal);--lp-on:#fff;--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-wasser", "prefix": "Z", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🧊", "name": "Die drei Zustände", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p2", "icon": "🔄", "name": "Verwandlungen", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p3", "icon": "🧪", "name": "Eis schwimmt", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p4", "icon": "🏞️", "name": "Das Geheimnis des Sees", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p5", "icon": "🔬", "name": "Forschen wie Profis", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20, "write": 15}, "write": true};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.1.10">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.2.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -2128,20 +2133,20 @@ applyHouse();renderHeader();home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.1.10"></script>
+<script src="../js/lernplan.js?v=7.2.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.1.10">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.2.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.1.10"></script>
+<script src="../js/nutzer.js?v=7.2.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank .rt,#rank>div{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.1.10"></script>
+<script src="../js/home-btn.js?v=7.2.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.1.10"></script>
+<script src="../js/arena-btn.js?v=7.2.0"></script>
 </body>
 </html>

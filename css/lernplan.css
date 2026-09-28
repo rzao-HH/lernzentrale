@@ -44,6 +44,9 @@
 .lzh-row small{display:block;opacity:.75;font-size:.85em}
 .lzh-ok{color:#1b7f3b;font-weight:800;display:block}.lzh-no{color:#c0392b;font-weight:800;display:block}
 .lzh-btn{flex:none;min-height:40px;padding:0 12px;border-radius:10px;border:0;background:var(--lp-accent,#333);color:var(--lp-on,#fff);font-weight:800;cursor:pointer;max-width:100%;white-space:normal;text-align:left}
+.lzh-btn.done{background:#1b7f3b;color:#fff}
+/* Zeigt in den Apps (📐🪄🐚🕵️), welche Übung/Prüfung gerade laut Lernplan dran ist */
+.mode.hl,.kc-ms.hl{border-width:3px!important;border-color:var(--lp-accent,#e8792f)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--lp-accent,#e8792f) 22%,transparent)}
 .lzh-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .lzh-home{background:transparent;color:inherit;border:1px solid var(--lp-line,#aaa)}
 .lzh-ev{margin:12px 0}
