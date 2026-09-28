@@ -47,6 +47,11 @@ function parse(t){
 }
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const nm=u=>esc(u.icon+" "+u.name);
+/* Pakete eines Schritts nach Tipp gruppieren: gleicher Tipp (ohne Klammer-Zusätze wie „(Kompass und Kurs)“) = eine Zeile.
+   Weichen die Tipps nur in der Klammer ab, wird der allgemeine Tipp ohne Klammer gezeigt. */
+const tipKey=t=>String(t||"").replace(/\s*\([^)]*\)/g,"").trim();
+function byTip(us,txt){const G=[],M={};us.forEach(u=>{const k=(u.group||"")+"|"+tipKey(u[txt]);if(!M[k]){M[k]={us:[],tips:new Set()};G.push(M[k]);}M[k].us.push(u);M[k].tips.add(u[txt]||"");});
+  return G.map(g=>{const t=[...g.tips];return{us:g.us,tip:t.length===1?t[0]:(tipKey(t[0])||"").replace("„Wissen“ lesen","„Wissen“ zu den Paketen lesen")};});}
 
 function renderBtn(){
   const b=document.getElementById("lpBtn"); if(!b)return;
@@ -121,8 +126,8 @@ function rPlan(){
     <select id="lpDay">${days.map(d=>`<option value="${d.d}" ${d.d===S.today?"selected":""}>Tag ${d.d}</option>`).join("")}</select>
     <span class="lp-muted">Plan-Code ${code()}</span></div>
   ${days.map(d=>{
-    const grp=(arr,ic,txt)=>{const gs=[...new Set(arr.map(u=>u.group||""))];return gs.map(g=>{const us=arr.filter(u=>(u.group||"")===g);
-      return `<li><span class="i">${ic}</span><span><b>${txt}</b> ${us.map(nm).join(", ")}<small>${esc(us[0].rep)}${us.length>1?" "+C.multi:""}</small></span></li>`;}).join("");};
+    const grp=(arr,ic,txt)=>byTip(arr,"rep").map(({us,tip})=>
+      `<li><span class="i">${ic}</span><span><b>${txt}</b> ${us.map(nm).join(", ")}<small>${esc(tip)}${us.length>1?" "+C.multi:""}</small></span></li>`).join("");
     const li=[...d.learn.map(u=>item("📘",u,"Lernen:",u.learn))];
     if(d.rep.length)li.push(grp(U.filter(u=>d.rep.includes(u)),"🔁","Wiederholen:"));
     if(d.fresh.length)li.push(grp(U.filter(u=>d.fresh.includes(u)),"✨","Auffrischen:"));
@@ -182,8 +187,8 @@ window.lzRows=function(filter){
   const T=window.lzToday(); if(!T)return[];
   const rows=[];
   const fl=us=>us.filter(u=>!filter||filter(u));
-  const grp=(arr,tag,txt)=>{const us=fl(arr);if(!us.length)return;const tip=us.map(u=>u[txt]).filter(Boolean)[0]||"";
-    rows.push(`<div class="lzh-row"><div><b>${tag}: ${lzUL(us)}</b>${tip?`<small>${tip}</small>`:""}</div>${lzBtn(txt,us)}</div>`);};
+  const grp=(arr,tag,txt)=>{const all=fl(arr);if(!all.length)return;byTip(all,txt).forEach(({us,tip})=>
+    rows.push(`<div class="lzh-row"><div><b>${tag}: ${lzUL(us)}</b>${tip?`<small>${esc(tip)}</small>`:""}</div>${lzBtn(txt,us)}</div>`));};
   grp(T.learn,"📘 Lernen","learn");grp(T.rep,"🔁 Wiederholen","rep");grp(T.fresh,"✨ Auffrischen","rep");
   T.tests.forEach(x=>{if(filter&&!x.units.every(filter))return;
     const lab=x.final?"🎓 Generalprobe ("+x.name+"): alle Pakete":x.kind==="Schreibtest"?"✍️ Schreibtest: "+lzUL(x.units):"🏆 "+(x.kind==="Neu"?"Test neue Pakete":x.kind==="Zwischenprobe"?"Zwischenprobe":"Test Wiederholung")+" ("+x.name+"): "+lzUL(x.units);

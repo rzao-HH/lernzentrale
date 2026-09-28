@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.3.2","28.09.2026",["🗓️ Lernplan: Pakete mit unterschiedlichem Tipp stehen jetzt in eigenen Zeilen mit eigenem Knopf – z. B. in der Winkel-Akademie „Messen und Winkelart erkennen“ für Paket 4, „Aufgaben-Mission“ für Pakete 5 und 6"]],
  ["7.3.1","28.09.2026",["📄 Lernzettel-Angabe jetzt auch bei allen Mathe-Paketen, den Englisch-Vokabeln (Seiten der Vokabelliste) und den unregelmäßigen Verben"]],
  ["7.3.0","28.09.2026",["🧱 Detektiv-Büro, Satz-Baumeister: Bei „und“, „oder“ und „weder … noch“ ist die Reihenfolge der beiden Teile egal – geprüft wird nur, wohin das Verb wandert","📄 Pakete zeigen, auf welchen Lernzettel sie sich beziehen (Deutsch, NWT, Englisch-Grammatik)","💡 Detektiv-Büro: Lernkarten haben unter der Antwort klein gedruckt eine Zusatz-Erklärung mit Beispiel vom Lernzettel"]],
  ["7.2.0","28.09.2026",["🗓️ Lernplan in allen Fächern: Der Knopf heißt jetzt „📦 Pakete auswählen“ und wählt nur die Pakete aus – die Seite springt nicht mehr weg","🟧 Die Übung oder Prüfung, die laut Lernplan dran ist, hat unten einen dicken Rahmen","✅ Der angetippte Knopf zeigt „✓ Ausgewählt“, bis du die Pakete von Hand änderst"]],
