@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.2.0"></script>
+<script src="../js/app-core.js?v=7.3.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="Z";window.__DATAKEY="wasserzauberschule-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.2.0"></script>
+<script src="../js/nutzer-init.js?v=7.3.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -87,6 +87,7 @@ h2{font-size:28px;margin:30px 0 10px}
 .pack.on .check{background:var(--house);border-color:var(--house);color:var(--on-house)}
 .pgoal{font-size:14px;line-height:1.45;color:var(--muted)}
 .pgoal b{color:var(--text)}
+.pack .psrc{font-size:12px;font-weight:700;color:var(--muted)}
 .pbar{height:8px;border-radius:4px;background:var(--panel2);overflow:hidden}
 .pbar i{display:block;height:100%;background:var(--ok)}
 .pst{font-size:12px;font-weight:800;color:var(--muted)}
@@ -418,11 +419,11 @@ const HOUSES={
   nebel:{n:'Nebeleulen',i:'🌫️',c:'#8254e0',d:'Leise und weise wie Nebel'}
 };
 const PACKS=[
-  {id:'p1',nr:1,icon:'🧊',name:'Die drei Zustände',goal:'Ich kenne fest, flüssig und gasförmig, weiß, bei welchen Temperaturen sie vorkommen, und beschreibe die Teilchen im Teilchenmodell.'},
-  {id:'p2',nr:2,icon:'🔄',name:'Verwandlungen',goal:'Ich benenne Schmelzen, Erstarren, Verdampfen, Verdunsten, Kondensieren, Sublimieren und Resublimieren und erkenne sie im Alltag.'},
-  {id:'p3',nr:3,icon:'🧪',name:'Eis schwimmt',goal:'Ich erkläre, warum Eis leichter ist als Wasser, warum sich Wasser beim Gefrieren ausdehnt und warum warmes Wasser nach oben steigt.'},
-  {id:'p4',nr:4,icon:'🏞️',name:'Das Geheimnis des Sees',goal:'Ich erkläre die Anomalie: Bei 4 °C ist Wasser am schwersten. Darum friert ein See von oben zu und die Fische überleben.'},
-  {id:'p5',nr:5,icon:'🔬',name:'Forschen wie Profis',goal:'Ich kenne den Aufbau eines Versuchsprotokolls und kann die Versuche zum Gewicht des Wassers erklären.'}
+  {id:'p1',src:"Buch S. 116–117, AB Teilchen",nr:1,icon:'🧊',name:'Die drei Zustände',goal:'Ich kenne fest, flüssig und gasförmig, weiß, bei welchen Temperaturen sie vorkommen, und beschreibe die Teilchen im Teilchenmodell.'},
+  {id:'p2',src:"Buch S. 117–118",nr:2,icon:'🔄',name:'Verwandlungen',goal:'Ich benenne Schmelzen, Erstarren, Verdampfen, Verdunsten, Kondensieren, Sublimieren und Resublimieren und erkenne sie im Alltag.'},
+  {id:'p3',src:"Info S. 43 und S. 47",nr:3,icon:'🧪',name:'Eis schwimmt',goal:'Ich erkläre, warum Eis leichter ist als Wasser, warum sich Wasser beim Gefrieren ausdehnt und warum warmes Wasser nach oben steigt.'},
+  {id:'p4',src:"AB Besonderheit des Wassers",nr:4,icon:'🏞️',name:'Das Geheimnis des Sees',goal:'Ich erkläre die Anomalie: Bei 4 °C ist Wasser am schwersten. Darum friert ein See von oben zu und die Fische überleben.'},
+  {id:'p5',src:"AB Das Gewicht des Wassers",nr:5,icon:'🔬',name:'Forschen wie Profis',goal:'Ich kenne den Aufbau eines Versuchsprotokolls und kann die Versuche zum Gewicht des Wassers erklären.'}
 ];
 const ALL=['p1','p2','p3','p4','p5'];
 const packById=id=>PACKS.find(p=>p.id===id);
@@ -1968,7 +1969,7 @@ function home(){
   const packs=PACKS.map(p=>{
     const on=S.sel.includes(p.id),s=S.stats[p.id],sum=packSum(p.id),done=s&&s.done;
     return`<button class="pack ${on?'on':''}" data-p="${p.id}" aria-pressed="${on}"><div class="ptop"><span class="picon">${p.icon}</span><span class="pname"><small>Paket ${p.nr}</small>${p.name}</span><span class="check">${on?'✓':''}</span></div>
-    <div class="pgoal"><b>Lernziel:</b> ${p.goal}</div><div class="pbar"><i style="width:${done?100:Math.min(100,sum/16*100)}%"></i></div>
+    <div class="pgoal"><b>Lernziel:</b> ${p.goal}</div>${p.src?`<small class="psrc">📄 ${p.src}</small>`:''}<div class="pbar"><i style="width:${done?100:Math.min(100,sum/16*100)}%"></i></div>
     <small class="pst">${done?'🏅 Lernziel erreicht':`Fortschritt: ${sum} von 16 Treffern (aus den letzten 20 Aufgaben)`}</small>
     ${(()=>{const g=pkGrades(p.id);return`<div class="pkgs">${pkBadge('🏆','Abschlusstest',g.t)}${pkBadge('✍️','Schreibtest',g.w)}</div>`;})()}</button>`;
   }).join('');
@@ -2123,7 +2124,7 @@ applyHouse();renderHeader();home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--teal);--lp-on:#fff;--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-wasser", "prefix": "Z", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🧊", "name": "Die drei Zustände", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p2", "icon": "🔄", "name": "Verwandlungen", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p3", "icon": "🧪", "name": "Eis schwimmt", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p4", "icon": "🏞️", "name": "Das Geheimnis des Sees", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p5", "icon": "🔬", "name": "Forschen wie Profis", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20, "write": 15}, "write": true};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.2.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.3.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -2133,20 +2134,20 @@ applyHouse();renderHeader();home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.2.0"></script>
+<script src="../js/lernplan.js?v=7.3.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.2.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.3.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.2.0"></script>
+<script src="../js/nutzer.js?v=7.3.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank .rt,#rank>div{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.2.0"></script>
+<script src="../js/home-btn.js?v=7.3.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.2.0"></script>
+<script src="../js/arena-btn.js?v=7.3.0"></script>
 </body>
 </html>
