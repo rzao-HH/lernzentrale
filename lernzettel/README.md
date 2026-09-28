@@ -14,6 +14,7 @@ Fotos der Arbeitsblätter aus dem Unterricht, je Fach als eigenständige HTML-Da
 - **Mathe (Winkel):** Es gibt noch keine Lernzettel-Datei. Die Winkel-Akademie verweist direkt auf Buch- und Arbeitsheftseiten.
 - **Zwei Englisch-Dateien:** Sie wurden nie zusammengeführt. Beide sind aktuell.
 - **Öffentlich:** Das Repository ist öffentlich, die Dateien sind unter `https://rzao-hh.github.io/lernzentrale/lernzettel/<datei>` erreichbar. Das ist bewusst so entschieden.
-- **Nicht in der App verlinkt und nicht im Offline-Speicher** (`sw.js`): Die Dateien sind zusammen etwa 14 MB groß und würden sonst bei jedem Update mitgeladen.
+- **In der App:** über den 📄-Knopf oben in Wasser-Zauberschule, Küsten-Crew und Detektiv-Büro (seit 7.4.0, `js/lernzettel-btn.js`, Liste je App in `window.__LZ_ZETTEL`). Neue Datei → dort eintragen.
+- **Nicht im Offline-Speicher** (`sw.js`): Die Dateien sind zusammen etwa 14 MB groß und würden sonst bei jedem Update mitgeladen. Zum Öffnen braucht man Internet.
 - **Weitergabe:** per Link oder als Datei (Signal). Auf dem Handy im Browser öffnen, nicht in der Vorschau einer App.
 - Stand: 28.09.2026

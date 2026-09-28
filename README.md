@@ -17,12 +17,13 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 | `js/groups.js` | Lerngruppen: anlegen, teilen, beitreten |
 | `js/arena.js` | Arena: Tauziehen, Power-ups, Geister-Duell, Glücksrad (online-Anzeige und Live-Züge über die Datenbank der Lerngruppe, Abfrage alle 1–3 s) |
 | `js/news.js` | „Was ist neu?“ |
+| `js/lernzettel-btn.js` | 📄-Knopf in der Kopfleiste: öffnet die Lernzettel der App (Liste je App in `window.__LZ_ZETTEL`) |
 | `apps/*.html` | Die vier Apps |
 | `js/app-core.js`, `js/nutzer-init.js`, `js/nutzer.js`, `js/lernplan.js`, `js/home-btn.js`, `js/arena-btn.js`, `css/nutzer.css`, `css/lernplan.css` | Gemeinsame Bausteine aller Apps |
 | `sw.js` | Service Worker (Offline) |
 | `tests/` | Automatische Browser-Tests (`python tests/run_all.py`) |
 | `archiv/` | Stände vor Version 5.0.0 |
-| `lernzettel/` | Fotos der Arbeitsblätter je Fach als HTML-Dateien, Übersicht in `lernzettel/README.md` (nicht Teil der App, nicht im Offline-Speicher) |
+| `lernzettel/` | Fotos der Arbeitsblätter je Fach als HTML-Dateien, Übersicht in `lernzettel/README.md` (über den 📄-Knopf in den Apps erreichbar, nicht im Offline-Speicher) |
 
 > **Lernzettel:** Die aktuellen Lernzettel-Dateien liegen in `lernzettel/`, mit Übersicht in `lernzettel/README.md`. Änderungen immer dort ablegen, nicht als separate Datei in einem Chat.
 
