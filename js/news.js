@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.7.0","29.09.2026",["📐 Winkel-Akademie, Aufgaben-Mission – neu nach Abgleich mit den Lernzetteln:","🧭 Punkte einzeichnen, Wege mit Kurs und Kästchen gehen (Schatzsuche), links oder rechts herum in dieselbe Richtung","🧮 Winkel an geschnittenen Parallelen (AH S. 16 Nr. 5) und Winkel im Dreieck messen (AH S. 18)","📏 Parallele im Abstand zeichnen und Rechtecke ergänzen (Übungsheft Geodreieck)"]],
  ["7.6.1","29.09.2026",["📐 Winkel-Akademie: Bei „Wie viele rechte Winkel hat jedes Rechteck?“ ist jetzt ein Rechteck zu sehen; nach der Antwort sind die vier rechten Winkel markiert"]],
  ["7.6.0","29.09.2026",["📄 Winkel-Akademie: Der 📄-Knopf oben öffnet jetzt auch die Mathe-Lernzettel – 45 Blätter zu Kompass, Winkelarten, Messen, Zeichnen, Berechnen und Geodreieck, mit Lösungen"]],
  ["7.5.0","28.09.2026",["🧭 Winkel-Akademie, „Wissen“: Kompass und Kurs ausführlich – Kompassrose mit Gradzahlen, Drehungen als Bruchteil mit Bildern, Kurs Schritt für Schritt im Koordinatensystem","🙈 Aufgaben-Mission verrät die Lösung nicht mehr: keine Gradzahl bei „Wie viel Grad sind ¾ Drehung?“, kein eingefärbter Bruchteil bei „Welcher Bruchteil sind 270°?“, keine Beschriftung S, a, b, α bei den Fragen zu den Teilen des Winkels"]],

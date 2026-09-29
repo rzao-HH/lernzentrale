@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.6.1"></script>
+<script src="../js/app-core.js?v=7.7.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.6.1"></script>
+<script src="../js/nutzer-init.js?v=7.7.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -860,18 +860,127 @@ function t8wissen(){const[q,c,d,fig]=pick(W8),m=mcOpts(c,d);return Object.assign
     if(fig==='rect'){const w=L*1.5,h=L*.9,x0=cx-w/2,y0=cy-h/2;el('rect',{x:x0,y:y0,width:w,height:h,class:'shape'},g);
       if(rev)[[x0,y0,1,1],[x0+w,y0,-1,1],[x0+w,y0+h,-1,-1],[x0,y0+h,1,-1]].forEach(([x,y,sx,sy])=>{const r=18;el('path',{d:`M ${x+sx*r} ${y} L ${x+sx*r} ${y+sy*r} L ${x} ${y+sy*r}`,class:'rsq'},g);});return;}lineThrough(g,cx,cy-L*.3,0,L,'ray r1 thin');lineThrough(g,cx,cy+L*.3,0,L,'ray r1 thin');lineThrough(g,cx,cy,90,L*.8,'ray r2 thin');}});}
 
-const TASKS={p5:[t5dreh,t5wohin,t5kurs,t5bruch,t5koord],p6:[t6teil,t6griech,t6geo,t6wissen],p7:[t7neben,t7voll,t7scheitel,t7dreieck,t7trick,t7summe],p8:[t8lage,t8recht,t8zeichnen,t8wissen]};
+/* ===== Ergänzungen nach Abgleich mit den Lernzetteln (AH S. 16–18, ml S. 37/41/42, Übungsheft Geodreieck) ===== */
+/* Raster zum Antippen: Punkt wird auf den nächsten Gitterpunkt gezogen, G.drawVal=[x,y] */
+function gridFig(svg,W,H,nx,ny,labels){const g=el('g',{},svg),c=fitScale(W,H,nx+1,ny+1,30),ox=(W-nx*c)/2,oy=(H+ny*c)/2,X=x=>ox+x*c,Y=y=>oy-y*c;
+  for(let x=0;x<=nx;x++){ln(g,X(x),Y(0),X(x),Y(ny),'gl');if(labels!==false)tx(g,X(x),Y(0)+16,String(x),'tsm');}
+  for(let y=0;y<=ny;y++){ln(g,X(0),Y(y),X(nx),Y(y),'gl');if(labels!==false)tx(g,X(0)-14,Y(y),String(y),'tsm');}
+  if(labels!==false){ln(g,X(0),Y(0),X(nx+.3),Y(0),'axis');ln(g,X(0),Y(0),X(0),Y(ny+.3),'axis');tx(g,X(nx+.5),Y(0),'x','tsm');tx(g,X(0),Y(ny+.55),'y','tsm');}
+  return{g,X,Y,c,ox,oy};}
+function gridTap(svg,F,nx,ny,rev,mode){if(rev||G.locked)return;
+  const at=e=>{const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal,sx=(e.clientX-r.left)*vb.width/r.width,sy=(e.clientY-r.top)*vb.height/r.height;
+    const x=Math.max(0,Math.min(nx,Math.round((sx-F.ox)/F.c))),y=Math.max(0,Math.min(ny,Math.round((F.oy-sy)/F.c)));
+    G.drawVal=mode==='x'?x:mode==='y'?y:[x,y];redraw();const d=$('#done');if(d)d.disabled=false;};
+  svg.onpointerdown=e=>{try{svg.setPointerCapture(e.pointerId);}catch(_){}G.dragging=true;at(e);};
+  svg.onpointermove=e=>{if(G.dragging)at(e);};svg.onpointerup=svg.onpointercancel=()=>{G.dragging=false;};}
+const okPt=(g,x,y)=>el('circle',{cx:x,cy:y,r:9,style:'fill:none;stroke:var(--ok);stroke-width:4'},g);
+const tapPt=(g,x,y)=>el('circle',{cx:x,cy:y,r:7,style:'fill:var(--accent);stroke:var(--bg);stroke-width:2'},g);
+const ptTxt=v=>v?`(${v[0]}|${v[1]})`:'–';
+function ptGrade(q,v){const ok=v&&v[0]===q.want[0]&&v[1]===q.want[1];return{correct:ok,score:ok?1:0,msg:ok?`${pick(PRAISE)} ${q.expl}`:`Leider nein. Richtig ist <b>${ptTxt(q.want)}</b>. ${q.expl}`};}
+
+/* Paket 5: Punkt einzeichnen (AH S. 18 Nr. 4) */
+function t5punkt(){const nx=7,ny=5,x=rnd(0,nx),y=rnd(1,ny),n=pick(['A','B','C','P']);
+  return{short:'Punkt einzeichnen',inter:true,want:[x,y],grade:ptGrade,fmt:ptTxt,rightText:ptTxt([x,y]),
+    ask:`Zeichne den Punkt <b>${n}(${x}|${y})</b> ein. Tippe auf die richtige Stelle im Koordinatensystem.`,
+    expl:`Erst ${x} nach rechts (x-Wert), dann ${y} nach oben (y-Wert): ${n}(${x}|${y}).`,
+    draw(svg,W,H,rev){const F=gridFig(svg,W,H,nx,ny);tx(F.g,W-26,24,'N ↑','tlab');
+      if(G.drawVal)tapPt(F.g,F.X(G.drawVal[0]),F.Y(G.drawVal[1]));if(rev)okPt(F.g,F.X(x),F.Y(y));
+      if(G.drawVal==null&&!rev)tx(svg,W/2,22,'Tippe auf einen Gitterpunkt','help');gridTap(svg,F,nx,ny,rev);}};}
+/* Paket 5: Weg mit Kurs und Kästchenlängen (AH S. 17 Schatzsuche) */
+function t5weg(){const nx=8,ny=6,V={0:[0,1],90:[1,0],180:[0,-1],270:[-1,0]};let a,legs,e;
+  for(let t=0;t<200;t++){a=[rnd(0,nx),rnd(0,ny)];legs=[];let p=a.slice(),ok=true;const nl=Math.random()<.5?1:2;
+    for(let i=0;i<nl;i++){const k=pick([0,90,180,270]),n=rnd(1,4);p=[p[0]+V[k][0]*n,p[1]+V[k][1]*n];if(p[0]<0||p[0]>nx||p[1]<0||p[1]>ny){ok=false;break;}legs.push([k,n]);}
+    if(ok&&legs.length===nl&&(p[0]!==a[0]||p[1]!==a[1])){e=p;break;}}
+  const txt=legs.map(([k,n],i)=>`${i?'dann ':''}<b>${n} Kästchen mit Kurs ${k}°</b>`).join(', ');
+  return{short:'Weg mit Kurs',inter:true,want:e,grade:ptGrade,fmt:ptTxt,rightText:ptTxt(e),
+    ask:`Start bei <b>A(${a[0]}|${a[1]})</b>. Gehe ${txt}. Tippe den Zielpunkt an.`,
+    expl:`Kurs 0° = nach oben (Norden), 90° = nach rechts (Osten), 180° = nach unten (Süden), 270° = nach links (Westen). Du landest bei ${ptTxt(e)}.`,
+    draw(svg,W,H,rev){const F=gridFig(svg,W,H,nx,ny);tx(F.g,W-26,24,'N ↑','tlab');
+      el('circle',{cx:F.X(a[0]),cy:F.Y(a[1]),r:6,class:'pt'},F.g);tx(F.g,F.X(a[0])+13,F.Y(a[1])-13,'A','tlab');
+      if(rev){let p=a.slice();legs.forEach(([k,n])=>{const q=[p[0]+V[k][0]*n,p[1]+V[k][1]*n];arrowLine(F.g,F.X(p[0]),F.Y(p[1]),F.X(q[0]),F.Y(q[1]),'ray r2 thin');p=q;});okPt(F.g,F.X(e[0]),F.Y(e[1]));}
+      if(G.drawVal)tapPt(F.g,F.X(G.drawVal[0]),F.Y(G.drawVal[1]));
+      gridTap(svg,F,nx,ny,rev);}};}
+/* Paket 5: gleiche Richtung links/rechts herum (ml S. 37 Nr. 5) */
+function t5gleich(){const k=rnd(1,7),left=Math.random()<.5,m=mcOpts(FRC[8-k]+' Drehung',[1,2,3,4,5,6,7].map(i=>FRC[i]+' Drehung'));
+  return Object.assign(m,{short:'Links oder rechts herum',ask:`Du drehst dich <b>${FRC[k]} nach ${left?'links':'rechts'}</b>. Mit welcher Drehung nach <b>${left?'rechts':'links'}</b> schaust du in dieselbe Richtung?`,
+    expl:`Eine ganze Drehung sind 8 Achtel (360°). ${FRC[k]} sind ${k} Achtel, es fehlen noch ${8-k} Achtel: ${FRC[8-k]} Drehung (${(8-k)*45}°). ${k*45}° + ${(8-k)*45}° = 360°.`,
+    draw(svg,W,H,rev){const g=el('g',{},svg),R=Math.min(W,H)*.34,cx=W/2,cy=H/2+6;compass(g,cx,cy,R);const[x0,y0]=P(cx,cy,R*.72,mA(0));arrowLine(g,cx,cy,x0,y0,'ray r1 thin');
+      turnArc(g,cx,cy,R*.4,90,k*45,!left);if(rev)turnArc(g,cx,cy,R*.55,90,(8-k)*45,left);el('circle',{cx,cy,r:5,class:'vertex'},g);}});}
+
+/* Paket 7: Winkel an geschnittenen Parallelen (AH S. 16 Nr. 5, ml S. 41 Nr. 5, ml S. 42 Nr. 13) – Nummern wie im AH: oben 1 4 / 2 3, unten 5 8 / 6 7 */
+const PARPOS={1:[0,'tl'],4:[0,'tr'],2:[0,'bl'],3:[0,'br'],5:[1,'tl'],8:[1,'tr'],6:[1,'bl'],7:[1,'br']};
+function t7parallel(){const t=pick([35,40,45,50,55,60,65,70,75,110,115,120,125,130,135,140,145]),val=p=>(p==='tr'||p==='bl')?t:180-t;
+  const ids=[1,2,3,4,5,6,7,8],gv=pick(ids),ak=pick(ids.filter(i=>i!==gv)),V=i=>val(PARPOS[i][1]);
+  const two=Math.random()<.2;
+  const pic=(svg,W,H,rev,showAll)=>{const g=el('g',{},svg),cx=W/2,y1=H*.32,y2=H*.68,L=W*.46,dx=(y2-y1)/Math.tan(t*Math.PI/180)/2;
+    ln(g,cx-L,y1,cx+L,y1,'ray r1 thin');ln(g,cx-L,y2,cx+L,y2,'ray r1 thin');
+    const I=[[cx+dx,y1],[cx-dx,y2]],ext=(H*.18)/Math.sin(t*Math.PI/180);ln(g,...P(I[0][0],I[0][1],ext,t),...P(I[1][0],I[1][1],ext,t+180),'ray r2 thin');
+    const mid={tr:t/2,tl:(t+180)/2,bl:180+t/2,br:270+t/2},st={tr:0,tl:t,bl:180,br:180+t};
+    ids.forEach(i=>{const[k,p]=PARPOS[i],[vx,vy]=I[k],d=val(p);const hi=i===gv||i===ak;
+      if(hi||showAll)sector(g,vx,vy,30,st[p],d,i===ak?'arcf2':'arcf');const[x,y]=P(vx,vy,hi||showAll?52:40,mid[p]);
+      tx(g,x,y,i===gv?`${i}: ${d}°`:i===ak&&!two?(rev?`${i}: ${d}°`:`${i}: ?`):showAll?`${i}: ${d}°`:String(i),i===ak&&!two?'tlab hot':hi?'tlab':'tsm');});};
+  if(two){const m=mcOpts('2',['1','2','4','8']);return Object.assign(m,{short:'Winkel an Parallelen',ask:`Zwei Parallelen werden von einer Geraden geschnitten. Winkel ${gv} ist ${V(gv)}°. <b>Wie viele verschieden große Winkel</b> gibt es?`,
+    expl:`Nur zwei: vier Winkel sind ${t<90?t:180-t}°, vier sind ${t<90?180-t:t}°. Zusammen ergeben zwei verschiedene 180°.`,draw:(svg,W,H,rev)=>pic(svg,W,H,rev,rev)});}
+  const same=V(ak)===V(gv),[k1,p1]=PARPOS[gv],[k2,p2]=PARPOS[ak];
+  const why=k1===k2?(same?`Winkel ${ak} liegt Winkel ${gv} genau gegenüber (Scheitelwinkel). Gegenüberliegende Winkel sind gleich groß.`:`Winkel ${ak} liegt neben Winkel ${gv} (Nebenwinkel). Zusammen ergeben sie 180°: 180° − ${V(gv)}° = ${V(ak)}°.`)
+    :p1===p2?`Winkel ${ak} liegt an der anderen Parallelen an der gleichen Stelle wie Winkel ${gv}. Die Gerade schneidet beide Parallelen gleich, darum sind sie gleich groß.`
+    :same?`Bei geschnittenen Parallelen gibt es nur zwei Winkelgrößen. Winkel ${ak} gehört zur gleichen Gruppe wie Winkel ${gv}: ${V(ak)}°.`
+    :`Bei geschnittenen Parallelen gibt es nur zwei Winkelgrößen, die sich zu 180° ergänzen: 180° − ${V(gv)}° = ${V(ak)}°.`;
+  return{short:'Winkel an Parallelen',num:true,ans:V(ak),tol:0,ask:`Zwei Parallelen werden von einer Geraden geschnitten. <b>Winkel ${gv} = ${V(gv)}°</b>. Wie groß ist <b>Winkel ${ak}</b>? Berechne, ohne zu messen.`,
+    expl:why,draw:(svg,W,H,rev)=>pic(svg,W,H,rev,rev)};}
+/* Paket 7: Winkel in Figuren messen (AH S. 18 Nr. 3) – maßstabsgetreu, echtes Geodreieck auf dem Bildschirm oder das virtuelle beim Messen */
+function t7figur(){let a,b,c;for(let t=0;t<100;t++){a=rnd(30,100);b=rnd(30,100);c=180-a-b;if(c>=25)break;}
+  const u=rnd(0,2),ang=[a,b,c],nm=['α','β','γ'];
+  return{short:'Winkel in Figuren messen',num:true,ans:ang[u],tol:2,ask:`Miss den Winkel <b>${nm[u]}</b> im Dreieck. Lege dein Geodreieck auf den Bildschirm (mit + vergrößern).`,
+    expl:`${nm[u]} = ${ang[u]}°. Nullpunkt auf den Scheitel, das Geodreieck an eine Seite anlegen, dann an der Winkelskala ablesen, die auf dieser Seite mit 10° beginnt. Kontrolle: ${a}° + ${b}° + ${c}° = 180°.`,
+    draw(svg,W,H,rev){const g=el('g',{},svg),rad=Math.PI/180,Ls=Math.sin(b*rad)/Math.sin(c*rad),pts=[[0,0],[1,0],[Ls*Math.cos(a*rad),Ls*Math.sin(a*rad)]];
+      const xs=pts.map(p=>p[0]),mnx=Math.min(...xs),mxx=Math.max(...xs),mxy=Math.max(...pts.map(p=>p[1])),s=fitScale(W,H,mxx-mnx,mxy,50),ox=(W-(mxx-mnx)*s)/2-mnx*s,oy=(H+mxy*s)/2,Q=pts.map(p=>[ox+p[0]*s,oy-p[1]*s]);
+      el('polygon',{points:Q.map(p=>p.join(',')).join(' '),class:'shape'},g);
+      [[0,1,2],[1,2,0],[2,0,1]].forEach(([i,j,k])=>cornerArc(g,Q[i],Q[j],Q[k],Math.min(40,s*.12),i===u?(rev?`${nm[i]} = ${ang[i]}°`:nm[i]):(rev?`${ang[i]}°`:nm[i]),i===u?'arcf2':'arcf'));}};}
+
+/* Paket 8: Parallele im Abstand (Parallelen zeichnen 3) */
+function t8abstand(){const nx=8,ny=6,vert=Math.random()<.4,g0=vert?rnd(2,6):rnd(2,4),d=rnd(1,2),mx=vert?nx:ny;
+  return{short:'Parallele im Abstand',inter:true,want:d,grade:(q,v)=>{const ok=v!=null&&Math.abs(v-g0)===d;return{correct:ok,score:ok?1:0,msg:ok?`${pick(PRAISE)} ${q.expl}`:`Leider nein. Der Abstand muss genau ${d} Kästchen sein. ${q.expl}`};},
+    fmt:v=>v==null?'–':`Abstand ${Math.abs(v-g0)} Kästchen`,rightText:`Abstand ${d} Kästchen`,
+    ask:`Zeichne eine <b>Parallele</b> zu g im Abstand von <b>${d} Kästchen</b>. Tippe dorthin, wo sie verlaufen soll.`,
+    expl:`Eine Parallele hat überall den gleichen Abstand zu g – hier ${d} Kästchen, egal auf welcher Seite. Im Heft legst du die parallele Hilfslinie mit der Zahl für den Abstand (in cm) auf g und zeichnest an der langen Kante.`,
+    draw(svg,W,H,rev){const F=gridFig(svg,W,H,nx,ny,false),line=(v,cls)=>vert?ln(F.g,F.X(v),F.Y(-.3),F.X(v),F.Y(ny+.3),cls):ln(F.g,F.X(-.3),F.Y(v),F.X(nx+.3),F.Y(v),cls);
+      line(g0,'ray r1 thin');tx(F.g,vert?F.X(g0)+12:F.X(-.3)-12,vert?F.Y(ny+.3)-4:F.Y(g0),'g','tlab r1t');
+      if(rev){[g0-d,g0+d].filter(v=>v>=0&&v<=mx).forEach(v=>line(v,'ghost'));}
+      if(G.drawVal!=null)line(G.drawVal,'ray r2 thin');
+      if(G.drawVal==null&&!rev)tx(svg,W/2,22,'Tippe, wo die Parallele verlaufen soll','help');gridTap(svg,F,nx,ny,rev,vert?'x':'y');}};}
+/* Paket 8: Rechteck vervollständigen (Rechtecke zeichnen 1–3) */
+function t8rechteck(){const nx=8,ny=6;let A,B,C,D;
+  for(let t=0;t<300;t++){const a=rnd(1,4),b=pick([0,0,1,2]),k=pick([1,1,2]),u=[a,b],v=[-b*k,a*k],s=Math.random()<.5?1:-1,vv=[v[0]*s,v[1]*s];
+    B=[rnd(0,nx),rnd(0,ny)];A=[B[0]+u[0],B[1]+u[1]];C=[B[0]+vv[0],B[1]+vv[1]];D=[A[0]+vv[0],A[1]+vv[1]];
+    if([A,C,D].every(p=>p[0]>=0&&p[0]<=nx&&p[1]>=0&&p[1]<=ny))break;}
+  return{short:'Rechteck ergänzen',inter:true,want:D,grade:ptGrade,fmt:ptTxt,rightText:ptTxt(D),
+    ask:'Ergänze das <b>Rechteck ABCD</b>: Tippe den fehlenden Eckpunkt <b>D</b> an.',
+    expl:`Gegenüberliegende Seiten eines Rechtecks sind parallel und gleich lang, alle Ecken sind rechte Winkel. Von A nach D gehst du genauso wie von B nach C: D${ptTxt(D)}.`,
+    draw(svg,W,H,rev){const F=gridFig(svg,W,H,nx,ny,false),Q=p=>[F.X(p[0]),F.Y(p[1])];
+      el('polyline',{points:[A,B,C].map(p=>Q(p).join(',')).join(' '),style:'fill:none;stroke:var(--text);stroke-width:3;stroke-linejoin:round'},F.g);
+      [[A,'A'],[B,'B'],[C,'C']].forEach(([p,n])=>{el('circle',{cx:Q(p)[0],cy:Q(p)[1],r:5,class:'pt'},F.g);tx(F.g,Q(p)[0]+14,Q(p)[1]-14,n,'tlab');});
+      const r=16,ux=[(A[0]-B[0]),(A[1]-B[1])],vx2=[(C[0]-B[0]),(C[1]-B[1])],lu=Math.hypot(...ux),lv=Math.hypot(...vx2),Bp=Q(B),p1=[Bp[0]+ux[0]/lu*r,Bp[1]-ux[1]/lu*r],p3=[Bp[0]+vx2[0]/lv*r,Bp[1]-vx2[1]/lv*r],p2=[p1[0]+vx2[0]/lv*r,p1[1]-vx2[1]/lv*r];
+      el('path',{d:`M ${p1.join(' ')} L ${p2.join(' ')} L ${p3.join(' ')}`,class:'rsq'},F.g);
+      if(rev){el('polyline',{points:[C,D,A].map(p=>Q(p).join(',')).join(' '),class:'ghost'},F.g);okPt(F.g,...Q(D));tx(F.g,Q(D)[0]+14,Q(D)[1]-14,'D','tlab');}
+      if(G.drawVal)tapPt(F.g,...Q(G.drawVal));
+      if(G.drawVal==null&&!rev)tx(svg,W/2,22,'Tippe auf einen Gitterpunkt','help');gridTap(svg,F,nx,ny,rev);}};}
+
+const TASKS={p5:[t5dreh,t5wohin,t5kurs,t5bruch,t5koord,t5punkt,t5weg,t5gleich],p6:[t6teil,t6griech,t6geo,t6wissen],p7:[t7neben,t7voll,t7scheitel,t7dreieck,t7trick,t7summe,t7parallel,t7parallel,t7figur],p8:[t8lage,t8recht,t8zeichnen,t8wissen,t8abstand,t8rechteck]};
+/* nur für Tests: window.__wkForce='t7parallel' erzwingt eine Aufgabenart */
+window.__wkTasks=Object.fromEntries(Object.values(TASKS).flat().map(f=>[f.name,f]));
 const selA=()=>PACKS.some(p=>p.gen&&S.sel.includes(p.id));
 const selT=()=>PACKS.some(p=>p.task&&S.sel.includes(p.id));
 function genTask(){
   let packs=PACKS.filter(p=>p.task&&S.sel.includes(p.id));
   let p;if(G.mode==='test'){G.tp=(G.tp||0)+1;if(!G.tpo)G.tpo=shuffle(packs);p=G.tpo[G.tp%G.tpo.length];}else p=pick(packs);
-  let f;for(let t=0;t<10;t++){f=pick(TASKS[p.id]);if(f!==G.lastF)break;}G.lastF=f;
+  let f;for(let t=0;t<10;t++){f=pick(TASKS[p.id]);if(f!==G.lastF)break;}G.lastF=f;if(window.__wkForce&&window.__wkTasks[window.__wkForce])f=window.__wkTasks[window.__wkForce];
   return Object.assign(f(),{kind:'task',pack:p.id});
 }
-function taskAnsText(q,v){if(q.opts)return q.opts[v];if(q.inter)return v==null?'–':v+'°';return v+(q.unit==null?'°':q.unit);}
-function taskRightText(q){if(q.opts)return q.opts[q.ans];if(q.inter)return q.short;return q.ans+(q.unit==null?'°':q.unit);}
+function taskAnsText(q,v){if(q.fmt)return q.fmt(v);if(q.opts)return q.opts[v];if(q.inter)return v==null?'–':v+'°';return v+(q.unit==null?'°':q.unit);}
+function taskRightText(q){if(q.rightText)return q.rightText;if(q.opts)return q.opts[q.ans];if(q.inter)return q.short;return q.ans+(q.unit==null?'°':q.unit);}
 function gradeTask(q,v){
+  if(q.grade)return q.grade(q,v);
   if(q.inter){const d0=Math.abs(((v-q.target)%180+180)%180),d=Math.min(d0,180-d0),sc=d<=3?1:d<=7?.5:0;
     return{correct:sc===1,score:sc,msg:(sc===1?pick(PRAISE)+' ':sc?`Fast: ${d}° daneben. `:`Leider ${d}° daneben. `)+q.expl};}
   const ok=q.opts?+v===q.ans:Math.abs(v-q.ans)<=(q.tol||0);
@@ -1261,7 +1370,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.6.1">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.7.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1271,24 +1380,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.6.1"></script>
+<script src="../js/lernplan.js?v=7.7.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.6.1">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.7.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.6.1"></script>
+<script src="../js/nutzer.js?v=7.7.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.6.1"></script>
+<script src="../js/home-btn.js?v=7.7.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.6.1"></script>
+<script src="../js/arena-btn.js?v=7.7.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.6.1"></script>
+<script src="../js/lernzettel-btn.js?v=7.7.0"></script>
 </body>
 </html>
