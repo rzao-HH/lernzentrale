@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.6.0"></script>
+<script src="../js/app-core.js?v=7.6.1"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.6.0"></script>
+<script src="../js/nutzer-init.js?v=7.6.1"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -852,11 +852,13 @@ const W8=[
   ['Zwei Geraden schneiden sich nie und haben überall den gleichen Abstand. Sie sind …','parallel',['senkrecht','gestreckt','überstumpf']],
   ['Zwei Geraden bilden einen rechten Winkel. Sie sind …','senkrecht zueinander',['parallel','gleich lang','spitz']],
   ['Mit welchem Teil des Geodreiecks zeichnest du am einfachsten Parallelen?','mit den parallelen Hilfslinien',['mit der äußeren Winkelskala','mit der 45°-Ecke','mit dem Nullpunkt allein']],
-  ['Wie viele rechte Winkel hat jedes Rechteck?','4',['2','1','keinen']],
+  ['Wie viele rechte Winkel hat jedes Rechteck?','4',['2','1','keinen'],'rect'],
   ['Du sollst eine Parallele im Abstand von 1 cm zeichnen. Was hilft dir?','die Hilfslinie mit der Beschriftung 1 auf dem Geodreieck',['die 90°-Ecke','die Zahl 10 auf der Winkelskala','die 45°-Ecke']]
 ];
-function t8wissen(){const[q,c,d]=pick(W8),m=mcOpts(c,d);return Object.assign(m,{short:'Wissen: Senkrechte & Parallelen',ask:q,expl:`Richtig ist: ${c}.`,
-  draw(svg,W,H){const g=el('g',{},svg),cx=W/2,cy=H/2,L=Math.min(W,H)*.36;lineThrough(g,cx,cy-L*.3,0,L,'ray r1 thin');lineThrough(g,cx,cy+L*.3,0,L,'ray r1 thin');lineThrough(g,cx,cy,90,L*.8,'ray r2 thin');}});}
+function t8wissen(){const[q,c,d,fig]=pick(W8),m=mcOpts(c,d);return Object.assign(m,{short:'Wissen: Senkrechte & Parallelen',ask:q,expl:fig==='rect'?'Ein Rechteck hat vier Ecken, und jede Ecke ist ein rechter Winkel (90°). Prüfe es mit der 90°-Ecke deines Geodreiecks.':`Richtig ist: ${c}.`,
+  draw(svg,W,H,rev){const g=el('g',{},svg),cx=W/2,cy=H/2,L=Math.min(W,H)*.36;
+    if(fig==='rect'){const w=L*1.5,h=L*.9,x0=cx-w/2,y0=cy-h/2;el('rect',{x:x0,y:y0,width:w,height:h,class:'shape'},g);
+      if(rev)[[x0,y0,1,1],[x0+w,y0,-1,1],[x0+w,y0+h,-1,-1],[x0,y0+h,1,-1]].forEach(([x,y,sx,sy])=>{const r=18;el('path',{d:`M ${x+sx*r} ${y} L ${x+sx*r} ${y+sy*r} L ${x} ${y+sy*r}`,class:'rsq'},g);});return;}lineThrough(g,cx,cy-L*.3,0,L,'ray r1 thin');lineThrough(g,cx,cy+L*.3,0,L,'ray r1 thin');lineThrough(g,cx,cy,90,L*.8,'ray r2 thin');}});}
 
 const TASKS={p5:[t5dreh,t5wohin,t5kurs,t5bruch,t5koord],p6:[t6teil,t6griech,t6geo,t6wissen],p7:[t7neben,t7voll,t7scheitel,t7dreieck,t7trick,t7summe],p8:[t8lage,t8recht,t8zeichnen,t8wissen]};
 const selA=()=>PACKS.some(p=>p.gen&&S.sel.includes(p.id));
@@ -1259,7 +1261,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.6.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.6.1">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1269,24 +1271,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.6.0"></script>
+<script src="../js/lernplan.js?v=7.6.1"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.6.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.6.1">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.6.0"></script>
+<script src="../js/nutzer.js?v=7.6.1"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.6.0"></script>
+<script src="../js/home-btn.js?v=7.6.1"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.6.0"></script>
+<script src="../js/arena-btn.js?v=7.6.1"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.6.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.6.1"></script>
 </body>
 </html>

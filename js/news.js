@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.6.1","29.09.2026",["📐 Winkel-Akademie: Bei „Wie viele rechte Winkel hat jedes Rechteck?“ ist jetzt ein Rechteck zu sehen; nach der Antwort sind die vier rechten Winkel markiert"]],
  ["7.6.0","29.09.2026",["📄 Winkel-Akademie: Der 📄-Knopf oben öffnet jetzt auch die Mathe-Lernzettel – 45 Blätter zu Kompass, Winkelarten, Messen, Zeichnen, Berechnen und Geodreieck, mit Lösungen"]],
  ["7.5.0","28.09.2026",["🧭 Winkel-Akademie, „Wissen“: Kompass und Kurs ausführlich – Kompassrose mit Gradzahlen, Drehungen als Bruchteil mit Bildern, Kurs Schritt für Schritt im Koordinatensystem","🙈 Aufgaben-Mission verrät die Lösung nicht mehr: keine Gradzahl bei „Wie viel Grad sind ¾ Drehung?“, kein eingefärbter Bruchteil bei „Welcher Bruchteil sind 270°?“, keine Beschriftung S, a, b, α bei den Fragen zu den Teilen des Winkels"]],
  ["7.4.0","28.09.2026",["📄 Neuer Knopf oben in der Wasser-Zauberschule, der Küsten-Crew und im Detektiv-Büro: öffnet die Lernzettel (Fotos der Arbeitsblätter) in einem neuen Tab – in Englisch mit Auswahl zwischen Unit 5/6 und Simple Past. Braucht Internet.","📱 Wasser-Zauberschule und Detektiv-Büro: Die Kopfleiste passt jetzt auch auf schmale Handys (🔊 ragte über den Rand, der Rangname wurde abgeschnitten)"]],
