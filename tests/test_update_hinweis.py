@@ -11,5 +11,10 @@ async def main():
     await p.route('**/sw.js?check=*',newer)
     await p.evaluate("__lzUpdCheck()");await p.wait_for_timeout(500)
     t=await p.inner_text('#lzUpd');print(t);assert '99.0.0' in t
+    # Versionsnummer in jeder App
+    ver=(await p.inner_text('.ver')).split()[1]
+    for k,fn in [('W','winkel.html'),('Z','wasser.html'),('E','kueste.html'),('D','detektiv.html')]:
+      await p.goto('http://app.test/#'+k);await p.wait_for_timeout(2000);f=[x for x in p.frames if x.url.split('?')[0].endswith(fn)][0]
+      t=await f.inner_text('#lzVer');print(k,t);assert t=='Version '+ver
     print('errors',errs);assert not errs;await br.close()
 asyncio.run(main())

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.9.1"></script>
+<script src="../js/app-core.js?v=7.10.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.9.1"></script>
+<script src="../js/nutzer-init.js?v=7.10.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -199,6 +199,9 @@ h2{font-family:var(--display);font-size:24px;margin:30px 0 12px;display:flex;ali
 .geonum2{fill:var(--accent2);font-family:var(--body);font-weight:800}
 .geozero{fill:var(--bad)}
 .geohandle{fill:var(--arc);stroke:var(--bg);stroke-width:2}
+.ksteps{margin:0 0 8px;padding-left:22px;font-size:14px;line-height:1.5;color:var(--muted)}.ksteps .done{color:var(--ok)}.ksteps .now{color:var(--text);font-weight:800}
+.khint{font-size:16px;line-height:1.45;margin-bottom:8px}.kmsg{background:var(--badbg,#fde8e6);color:var(--bad);border-radius:10px;padding:8px 10px;margin-bottom:8px;font-weight:700}
+.kwait{align-self:center;font-size:14px;color:var(--muted);font-weight:700}.kgo{background:var(--ok)!important;color:#fff!important;border-color:var(--ok)!important}
 .geoctl{display:flex;flex-wrap:wrap;gap:8px}
 .geoctl .btn-s{min-height:46px}
 /* Result */
@@ -335,6 +338,7 @@ const MODES={
   visual:{icon:'👁️',title:'Winkelart erkennen',desc:'Sieh dir den Winkel an und bestimme die Winkelart.'},
   degree:{icon:'🔢',title:'Gradzahl einordnen',desc:'Eine Gradzahl erscheint. Welche Winkelart ist das?'},
   estimate:{icon:'🎯',title:'Schätzen',desc:'Ohne Geodreieck: Wie gut ist dein Augenmaß?'},
+  konstr:{icon:'🛠️',title:'Winkel konstruieren',desc:'Mit dem Geodreieck wie im Heft: Schenkel zeichnen, anlegen, Gradzahl markieren, verbinden, Bogen einzeichnen.'},
   draw:{icon:'✍️',title:'Winkel zeichnen',desc:'Dreh den grünen Laser mit dem Finger auf die richtige Gradzahl.'},
   time:{icon:'⏱️',title:'Zeitrunde',desc:'60 Sekunden: so viele richtige Antworten wie möglich.'},
   task:{icon:'🧭',title:'Aufgaben-Mission',desc:'Kompass, Bezeichnungen, Berechnen, Senkrechte & Parallelen – aus deinen Paketen 5–8.'},
@@ -589,6 +593,78 @@ function renderGeo(){
   const end=()=>{drag=null;};
   g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
 }
+
+/* ===== Winkel konstruieren mit dem Geodreieck (Infoblätter „Winkel zeichnen 1 + 2“) =====
+   Schritte: 0 Schenkel a zeichnen · 1 Geodreieck anlegen (Nullpunkt auf S) · 2 Gradzahl markieren ·
+   3 Geodreieck an S und Markierung anlegen · 4 Schenkel b zeichnen · 5 Winkelbogen auf der richtigen Seite */
+const K_STEPS=['Ersten Schenkel a zeichnen','Geodreieck anlegen','Gradzahl markieren','Geodreieck an S und Markierung anlegen','Zweiten Schenkel b zeichnen','Winkelbogen einzeichnen'];
+const kAng=(p,q)=>((Math.atan2(-(q.y-p.y),q.x-p.x)*180/Math.PI)%360+360)%360;
+function kGeoShape(g,Hh){
+  el('polygon',{points:`${-Hh},0 ${Hh},0 0,${-Hh}`,class:'geobody'},g);
+  const R=Hh*.68,fs=Math.max(10,Math.round(Hh/21)),big=Hh*.07;
+  for(let t=0;t<=180;t++){const len=t%10===0?big:t%5===0?Hh*.045:Hh*.025,c=Math.cos(t*Math.PI/180),s=Math.sin(t*Math.PI/180);
+    el('line',{x1:R*c,y1:-R*s,x2:(R-len)*c,y2:-(R-len)*s,class:'geotick'},g);
+    if(t%10===0){const r1=R-big-fs*.8,r2=R-big-fs*2;
+      const a=el('text',{x:r1*c,y:-r1*s,class:'geonum','font-size':fs,'text-anchor':'middle','dominant-baseline':'middle'},g);a.textContent=t;
+      const b=el('text',{x:r2*c,y:-r2*s,class:'geonum2','font-size':fs*.85,'text-anchor':'middle','dominant-baseline':'middle'},g);b.textContent=180-t;}}
+  const cm=Hh/8;for(let i=-7;i<=7;i++){el('line',{x1:i*cm,y1:0,x2:i*cm,y2:-Hh*.045,class:'geotick'},g);if(i){const tx=el('text',{x:i*cm,y:-Hh*.045-fs*.6,class:'geonum','font-size':fs*.8,'text-anchor':'middle'},g);tx.textContent=Math.abs(i);}}
+  el('line',{x1:0,y1:0,x2:0,y2:-R*.55,class:'geotick'},g);el('circle',{cx:0,cy:0,r:4,class:'geozero'},g);}
+function kSetup(){const q=G.q;if(!q.k)q.k={step:0};const k=q.k,{svg,W,H}=prepSvg();k.W=W;k.H=H;k.Hh=Math.min(W*.36,H*.6);
+  if(!k.geo)k.geo={x:W*.5,y:H-14,rot:0};kDraw();kPointer(svg);kPanel();}
+function kDraw(){const q=G.q,k=q.k,svg=$('#svg');if(!svg)return;[...svg.querySelectorAll('.kl')].forEach(e=>e.remove());
+  const g=el('g',{class:'kl'},svg),Hh=k.Hh;
+  if(k.S&&k.A){ln(g,k.S.x,k.S.y,k.A.x,k.A.y,'ray r1');tx(g,k.A.x+(k.A.x>k.S.x?-14:14),k.A.y-16,'a','tlab');}
+  if(k.drag0&&k.step===0)ln(g,k.drag0.x,k.drag0.y,k.drag1.x,k.drag1.y,'ray r1');
+  if(k.S){el('circle',{cx:k.S.x,cy:k.S.y,r:5,class:'vertex'},g);tx(g,k.S.x-16,k.S.y+18,'S','tlab');}
+  if(k.B)ln(g,k.S.x,k.S.y,k.B.x,k.B.y,'ray r2');
+  if(k.M){el('circle',{cx:k.M.x,cy:k.M.y,r:6,style:'fill:var(--bad);stroke:var(--bg);stroke-width:2'},g);}
+  if(k.arc){const a0=kAng(k.S,k.A),d=k.arcDeg,start=k.arc==='ccw'?a0:a0-d,r=34;sector(g,k.S.x,k.S.y,r,start,d,'arcf');
+    const[lx,ly]=P(k.S.x,k.S.y,r+22,start+d/2);tx(g,lx,ly,q.name,'tlab');}
+  if(G.revealed&&k.S&&k.A){const a0=kAng(k.S,k.A),want=q.deg<=180?q.deg:360-q.deg,dir=k.dirSign||1,[x,y]=P(k.S.x,k.S.y,Math.hypot(k.A.x-k.S.x,k.A.y-k.S.y),a0+dir*want);ln(g,k.S.x,k.S.y,x,y,'ghost');}
+  if(k.step>=1&&k.step<=4&&!G.revealed){const gg=el('g',{class:'geo kgeo',transform:`translate(${k.geo.x} ${k.geo.y}) rotate(${-k.geo.rot})`},g);kGeoShape(gg,Hh);
+    if(k.step===1||k.step===3){const hy=-Hh-34;el('line',{x1:0,y1:-Hh,x2:0,y2:hy,class:'geotick'},gg);el('circle',{cx:0,cy:hy,r:22,class:'geohandle kh'},gg);
+      const t=el('text',{x:0,y:hy,'text-anchor':'middle','dominant-baseline':'central','font-size':22,style:'pointer-events:none'},gg);t.textContent='⟳';}
+    else gg.style.pointerEvents='none';}
+  if(k.step===0&&!k.drag0&&!k.S)tx(svg,k.W/2,24,'Zieh mit dem Finger eine gerade Linie','help').classList.add('kl');}
+function kPt(svg,e){const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;return{x:(e.clientX-r.left)*vb.width/r.width,y:(e.clientY-r.top)*vb.height/r.height};}
+function kSnap(){const k=G.q.k,geo=k.geo;k.ok=false;
+  if(k.step===1){const a=kAng(k.S,k.A);if(Math.hypot(geo.x-k.S.x,geo.y-k.S.y)<18)for(const t of[a,a+180])if(angDiff(geo.rot,t)<5){geo.x=k.S.x;geo.y=k.S.y;geo.rot=(t+360)%360;k.ok=true;break;}}
+  if(k.step===3){const am=kAng(k.S,k.M);for(const t of[am,am+180])if(angDiff(geo.rot,t)<5){const ux=Math.cos(t*Math.PI/180),uy=-Math.sin(t*Math.PI/180),dS=Math.abs((k.S.x-geo.x)*uy-(k.S.y-geo.y)*ux);
+      if(dS<16){const s=(geo.x-k.S.x)*ux+(geo.y-k.S.y)*uy;geo.x=k.S.x+ux*s;geo.y=k.S.y+uy*s;geo.rot=(t+360)%360;k.ok=true;}break;}}}
+function kPointer(svg){const k=G.q.k;let drag=null;
+  svg.onpointerdown=e=>{if(G.locked)return;const p=kPt(svg,e);try{svg.setPointerCapture(e.pointerId);}catch(_){}
+    if(k.step===0){k.drag0=p;k.drag1=p;drag={m:'line'};}
+    else if(k.step===1||k.step===3){const h=e.target.closest&&e.target.closest('.kh'),onGeo=e.target.closest&&e.target.closest('.kgeo');if(h)drag={m:'rot'};else if(onGeo)drag={m:'move',dx:k.geo.x-p.x,dy:k.geo.y-p.y};}
+    else if(k.step===2){k.M=p;const a=angDiff(kAng(k.S,k.A),kAng(k.S,p));k.mdeg=Math.round(a);kDraw();kPanel();}
+    else if(k.step===4){drag={m:'b'};kB(p);}
+    else if(k.step===5){kArc(p);}};
+  svg.onpointermove=e=>{if(!drag)return;const p=kPt(svg,e);
+    if(drag.m==='line'){k.drag1=p;kDraw();}
+    else if(drag.m==='move'){k.geo.x=p.x+drag.dx;k.geo.y=p.y+drag.dy;kSnap();kDraw();kPanel();}
+    else if(drag.m==='rot'){k.geo.rot=((kAng(k.geo,p)-90)%360+360)%360;kSnap();kDraw();kPanel();}
+    else if(drag.m==='b')kB(p);};
+  svg.onpointerup=svg.onpointercancel=()=>{if(!drag)return;const m=drag.m;drag=null;
+    if(m==='line'){const L=Math.hypot(k.drag1.x-k.drag0.x,k.drag1.y-k.drag0.y);
+      if(L>=k.Hh*.7){k.S=k.drag0;k.A=k.drag1;k.drag0=null;k.step=1;k.msg='';}else{k.drag0=null;k.msg='Der Schenkel ist zu kurz. Er soll mindestens 6 cm lang sein – zieh eine längere Linie.';}
+      kDraw();kPanel();}
+    if(m==='b'&&k.B){const need=Math.hypot(k.M.x-k.S.x,k.M.y-k.S.y);if(Math.hypot(k.B.x-k.S.x,k.B.y-k.S.y)>=need-4){k.step=5;k.msg='';}else k.msg='Zieh die Linie vom Scheitel S bis über deine Markierung hinaus.';kDraw();kPanel();}};}
+function kB(p){const k=G.q.k,t=kAng(k.S,k.M)*Math.PI/180,ux=Math.cos(t),uy=-Math.sin(t),s=Math.max(0,(p.x-k.S.x)*ux+(p.y-k.S.y)*uy);k.B={x:k.S.x+ux*s,y:k.S.y+uy*s};kDraw();}
+function kArc(p){const k=G.q.k,a0=kAng(k.S,k.A),am=kAng(k.S,k.M),at=kAng(k.S,p),ccw=((am-a0)%360+360)%360,inCcw=((at-a0)%360+360)%360<ccw;
+  k.arc=inCcw?'ccw':'cw';k.arcDeg=inCcw?ccw:360-ccw;k.dirSign=ccw<=180?1:-1;kDraw();
+  answer(Math.round(k.arcDeg));}
+function kPanel(){const q=G.q,k=q.k,st=$('#kst');if(!st)return;const big=q.deg>180,draw=big?360-q.deg:q.deg;
+  const hint=[`Zieh mit dem Finger eine gerade Linie. Sie soll mindestens 6 cm lang sein. Wo du anfängst, ist der Scheitel S.`,
+    `Schieb das Geodreieck (am Körper) und dreh es (am ⟳-Griff), bis der <b>Nullpunkt genau auf S</b> liegt und die <b>lange Kante auf Schenkel a</b>.`,
+    `Wähle die Winkelskala, die auf der Seite von Schenkel a mit 10° beginnt. Tippe dort bei <b>${draw}°</b> eine Markierung.${big?` <br><small>Überstumpf: ${q.deg}° kannst du nicht direkt ablesen. Trick: 360° − ${q.deg}° = <b>${draw}°</b> zeichnen und später den großen Bogen nehmen.</small>`:''}`,
+    `Leg das Geodreieck neu an: Die <b>lange Kante</b> muss durch den Scheitel S und durch deine Markierung gehen.`,
+    `Zieh den zweiten Schenkel b an der Kante entlang – vom Scheitel S bis über die Markierung hinaus.`,
+    `Tippe in den Winkel, den du gezeichnet hast, um den Winkelbogen einzuzeichnen.${big?' Achtung: Bei überstumpfen Winkeln ist das der <b>große</b> Bogen auf der anderen Seite.':''}`][k.step];
+  st.innerHTML=`<ol class="ksteps">${K_STEPS.map((t,i)=>`<li class="${i<k.step?'done':i===k.step?'now':''}">${i<k.step?'✓ ':''}${t}</li>`).join('')}</ol>
+    <div class="khint">${hint}</div>${k.msg?`<div class="kmsg">${k.msg}</div>`:''}
+    ${k.step===1||k.step===3?`<div class="geoctl"><button class="btn-s" data-kr="1">⟲ 1°</button><button class="btn-s" data-kr="-1">⟳ 1°</button>${k.ok?'<button class="btn-s kgo" id="kok">Liegt richtig – weiter ✔</button>':'<span class="kwait">Noch nicht genau angelegt</span>'}</div>`:''}
+    ${k.step===2&&k.M?`<div class="geoctl"><span class="kwait">${G.mode==='test'?'Markierung gesetzt':`Markierung bei ${k.mdeg}°`}</span><button class="btn-s kgo" id="kok">Markierung passt – weiter ✔</button></div>`:''}`;
+  st.querySelectorAll('[data-kr]').forEach(b=>b.onclick=()=>{k.geo.rot=(k.geo.rot+ +b.dataset.kr+360)%360;kSnap();kDraw();kPanel();});
+  const ok=$('#kok');if(ok)ok.onclick=()=>{k.step++;k.msg='';if(k.step===3)k.geo={x:k.W*.5,y:k.H-14,rot:0};kDraw();kPanel();};}
 
 /* Spiel-Engine */
 let G=null,lastDeg=null,LZ_HL=null,LZ_IDS=[];
@@ -990,6 +1066,7 @@ function gradeTask(q,v){
 function okFor(kind,d){
   if(kind==='measure'||kind==='estimate')return d>=10&&d<=350;
   if(kind==='draw')return d>=5&&d<=355;
+  if(kind==='konstr')return d>=15&&d<=345&&d!==180&&d%5===0;
   if(kind==='visual')return!((Math.abs(d-90)<6&&d!==90)||(Math.abs(d-180)<6&&d!==180)||(d>0&&d<6)||(d>354&&d<360));
   return true;
 }
@@ -1015,7 +1092,7 @@ function startMode(m){
   if(!S.sel.length)return;
   stopAll();
   G={mode:m,i:0,total:m==='test'?12:m==='time'?Infinity:10,score:0,log:[],locked:false,xp:0,finished:false};
-  if(m==='test'){const a=selA(),t=selT();G.kinds=shuffle(a&&t?['degree','degree','visual','visual','measure','measure','measure','draw','task','task','task','task','task','task','task']:t?Array(12).fill('task'):['degree','degree','degree','degree','visual','visual','visual','visual','measure','measure','measure','draw']);G.total=G.kinds.length;}
+  if(m==='test'){const a=selA(),t=selT();G.kinds=shuffle(a&&t?['degree','degree','visual','visual','measure','measure','konstr','draw','task','task','task','task','task','task','task']:t?Array(12).fill('task'):['degree','degree','degree','visual','visual','visual','measure','measure','measure','draw','konstr','konstr']);G.total=G.kinds.length;}
   app.innerHTML=`<div class="game">
     <div class="gbar"><button class="icon-btn" id="back" aria-label="Zurück zur Übersicht">←</button>
       <div class="gtitle">${MODES[m].icon} ${MODES[m].title}</div><div class="gprog" id="gprog"></div>
@@ -1041,7 +1118,7 @@ function next(){
   G.locked=false;G.drawVal=null;G.revealed=false;G.buf='';
   const kind=kindFor();
   if(kind==='task')G.q=genTask();
-  else{const d=genDeg(kind);G.q={kind,deg:d.deg,pack:d.pack,rot:rotFor(kind)};}
+  else{const d=genDeg(kind);G.q={kind,deg:d.deg,pack:d.pack,rot:rotFor(kind)};if(kind==='konstr')G.q.name=pick(['α','β','γ','δ','ε']);}
   renderQ();
 }
 function redraw(){
@@ -1049,6 +1126,7 @@ function redraw(){
   const q=G.q;
   if(q.kind==='task'){const{svg,W,H}=prepSvg();q.draw(svg,W,H,!!G.revealed);}
   else if(q.kind==='draw'){setupDraw();if(G.revealed)revealDraw();}
+  else if(q.kind==='konstr')kSetup();
   else if(q.kind!=='degree')renderAngle(q,{reveal:G.revealed});
   renderGeo();
 }
@@ -1059,9 +1137,10 @@ function renderQ(){
   if(q.kind==='degree'){prepSvg();bn.textContent=q.deg+'°';}
   else if(q.kind==='task'){const{svg,W,H}=prepSvg();q.draw(svg,W,H,false);}
   else if(q.kind==='draw')setupDraw();
+  else if(q.kind==='konstr'){}
   else renderAngle(q);
   renderGeo();
-  renderPanel();
+  renderPanel();if(q.kind==='konstr')kSetup();
   ZM.px=0;ZM.py=0;zoomApply();
 }
 function askText(q){
@@ -1070,6 +1149,7 @@ function askText(q){
     case'visual':return'Welche Winkelart siehst du?';
     case'degree':return'Welche Winkelart hat diese Gradzahl?';
     case'estimate':return'Schätze ohne Geodreieck: Wie viel Grad hat der Winkel?';
+    case'konstr':return`Konstruiere mit dem Geodreieck den Winkel <span class="tgt">${q.name} = ${q.deg}°</span>.`;
     case'draw':return`Zeichne einen Winkel von <span class="tgt">${q.deg}°</span>.<br><small style="color:var(--muted)">Der Bogen zeigt dir, welcher Winkel entsteht (gegen den Uhrzeigersinn).</small>`;
   }
 }
@@ -1086,6 +1166,7 @@ function renderPanel(){
   if(q.kind==='measure')h+=`<div class="geoctl" id="geoctl"></div>`;
   if(q.kind==='visual'||q.kind==='degree')h+=`<div class="types">${TYPE_ORDER.map(t=>`<button class="tbtn" data-t="${t}">${TYPES[t].short}</button>`).join('')}</div>`;
   else if(q.kind==='draw')h+=`<button class="big go" id="done" ${G.drawVal==null?'disabled':''}>Fertig ✔</button>`;
+  else if(q.kind==='konstr')h+=`<div id="kst"></div>`;
   else h+=`<div class="npd" id="npd">– °</div><div class="numpad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-n="${n}">${n}</button>`).join('')}<button data-n="del" aria-label="Löschen">⌫</button><button data-n="0">0</button><button data-n="ok" class="ok">OK</button></div>`;
   if(q.kind==='measure'&&!test)h+=`<button class="hintbtn" id="hintbtn">💡 Tipp zum Messen</button><div class="hint" id="hint" hidden>${HINT}</div>`;
   h+=`<div id="fb"></div>`;}
@@ -1124,6 +1205,10 @@ function grade(q,v){
     const d=Math.abs(v-q.deg),score=d<=5?1:d<=10?.66:d<=20?.33:0,st=Math.round(score*3);
     return{correct:d<=10,score,msg:`<span style="color:var(--arc);font-size:24px">${'★'.repeat(st)}${'☆'.repeat(3-st)}</span><br>Tatsächlich: ${q.deg}° – du lagst ${d}° ${d===0?'daneben? Nein, genau richtig!':'daneben.'}`};
   }
+  if(q.kind==='konstr'){const d=Math.abs(v-q.deg),big=q.deg>180,side=big?Math.abs((360-v)-q.deg)<=3&&d>3:Math.abs((360-v)-q.deg)<=3&&d>3;
+    if(d<=2)return{correct:true,score:1,msg:`${pick(PRAISE)} Dein Winkel ${q.name} hat ${v}° – Ziel ${q.deg}°. Sauber konstruiert!`};
+    if(side)return{correct:false,score:.5,msg:`Fast! Die Schenkel stimmen, aber der Winkelbogen liegt auf der falschen Seite: Du hast ${v}° markiert, gesucht ist ${q.deg}°.${big?' Bei überstumpfen Winkeln kommt der Bogen auf die große Seite.':''}`};
+    return{correct:false,score:d<=5?.5:0,msg:`Dein Winkel hat ${v}°, gesucht war ${q.deg}°. ${d<=5?'Knapp daneben – setz die Markierung genauer.':'Prüfe: Nullpunkt genau auf S? Richtige Skala (die bei Schenkel a mit 10° beginnt)?'} Die gestrichelte Linie zeigt den richtigen Schenkel.`};}
   const d=Math.abs(v-q.deg);
   return{correct:d<=5,score:d<=5?1:d<=10?.5:0,msg:d<=5?`${pick(PRAISE)} Dein Winkel: ${v}°, Ziel: ${q.deg}°.`:`Dein Winkel: ${v}°, Ziel: ${q.deg}°. Die gestrichelte Linie zeigt, wo der Schenkel hingehört.`};
 }
@@ -1150,7 +1235,7 @@ function answer(val){
   const xp=q.kind==='estimate'?Math.round(r.score*3)*4:r.score===1?10:r.score>0?5:0;
   if(xp){G.xp+=xp;addXP(xp);}
   G.revealed=true;
-  if(q.kind==='task')redraw();else if(q.kind==='draw')revealDraw();else if(q.kind!=='degree')renderAngle(q,{reveal:true});
+  if(q.kind==='task')redraw();else if(q.kind==='draw')revealDraw();else if(q.kind==='konstr')kDraw();else if(q.kind!=='degree')renderAngle(q,{reveal:true});
   $('#panel').classList.add('answered');
   const fb=$('#fb');
   fb.innerHTML=`<div class="fbox ${r.correct?'ok':r.score>0?'half':'bad'}"><div>${r.msg}</div>${xp?`<div class="xpgain sm">+${xp} Punkte</div>`:''}<button class="big go" id="weiter">${G.i+1>=G.total?'Auswertung ▶':'Weiter ▶'}</button></div>`;
@@ -1179,6 +1264,7 @@ function finish(){
       else if(q.kind==='degree')t=`${q.deg}° einordnen: ${TYPES[l.val].short}${r.correct?'':` (richtig: ${TYPES[T].short})`}`;
       else if(q.kind==='visual')t=`Winkelart im Bild: ${TYPES[l.val].short}${r.correct?'':` (richtig: ${TYPES[T].short}, ${q.deg}°)`}`;
       else if(q.kind==='measure')t=`Messen: ${l.val}° (richtig: ${q.deg}°)`;
+      else if(q.kind==='konstr')t=`${q.deg}° konstruieren: du hattest ${l.val}°`;
       else t=`${q.deg}° zeichnen: du hattest ${l.val}°`;
       const c=r.score===1?'ok':r.score>0?'half':'bad';
       return`<li class="${c}"><span>${r.score===1?'✓':r.score>0?'½':'✗'}</span>${i+1}. ${t}</li>`;
@@ -1328,9 +1414,9 @@ function home(){
   };
   const packs=`<p class="pgrp">📐 Winkelarten &amp; Messen</p><div class="packs">${PACKS.filter(p=>!p.task).map(packCard).join('')}</div><p class="pgrp">🧭 Karte, Kompass &amp; Zeichnen</p><div class="packs">${PACKS.filter(p=>p.task).map(packCard).join('')}</div>`;
   const dis=!S.sel.length,sa=selA(),st=selT();
-  const need=m=>['measure','visual','degree','estimate','draw','time'].includes(m)?sa:m==='task'?st:m==='test'?!dis:true;
+  const need=m=>['measure','visual','degree','estimate','draw','konstr','time'].includes(m)?sa:m==='task'?st:m==='test'?!dis:true;
   const isHl=(m,ok)=>{if(!LZ_HL||!lzSame(S.sel,LZ_IDS))return false;if(LZ_HL==='learn')return m==='learn';if(LZ_HL==='rep')return m!=='learn'&&m!=='test'&&ok;return LZ_HL===m;};
-  const modes=['measure','visual','degree','estimate','draw','task','time','test','learn'].map(m=>{const ok=need(m);return`<button class="mode ${m==='test'?'feature':''}${isHl(m,ok)?' hl':''}" data-m="${m}" ${ok?'':'disabled'}><span class="mi">${MODES[m].icon}</span><b>${MODES[m].title}</b><span>${MODES[m].desc}${ok||dis?'':m==='task'?' <em>Dafür ein Paket 5–8 wählen.</em>':' <em>Dafür ein Paket 1–4 wählen.</em>'}</span></button>`;}).join('');
+  const modes=['measure','visual','degree','estimate','draw','konstr','task','time','test','learn'].map(m=>{const ok=need(m);return`<button class="mode ${m==='test'?'feature':''}${isHl(m,ok)?' hl':''}" data-m="${m}" ${ok?'':'disabled'}><span class="mi">${MODES[m].icon}</span><b>${MODES[m].title}</b><span>${MODES[m].desc}${ok||dis?'':m==='task'?' <em>Dafür ein Paket 5–8 wählen.</em>':' <em>Dafür ein Paket 1–4 wählen.</em>'}</span></button>`;}).join('');
   app.innerHTML=`<div class="home">
     <section class="hero">
       <svg viewBox="0 0 150 120" aria-hidden="true"><defs><filter id="hg" x="0" y="0" width="150" height="120" filterUnits="userSpaceOnUse"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
@@ -1370,7 +1456,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.9.1">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.10.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1380,24 +1466,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.9.1"></script>
+<script src="../js/lernplan.js?v=7.10.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.9.1">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.10.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.9.1"></script>
+<script src="../js/nutzer.js?v=7.10.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.9.1"></script>
+<script src="../js/home-btn.js?v=7.10.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.9.1"></script>
+<script src="../js/arena-btn.js?v=7.10.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.9.1"></script>
+<script src="../js/lernzettel-btn.js?v=7.10.0"></script>
 </body>
 </html>

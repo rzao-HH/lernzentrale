@@ -13,3 +13,9 @@ window.lzFind=(function(){
   const mark=(html,q)=>{const w=String(q||"").split(/\s+/).filter(Boolean).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));if(!w.length)return html;
     const re=new RegExp("("+w.join("|")+")","gi");return html.split(/(<[^>]*>)/).map(p=>p.startsWith("<")?p:p.replace(re,"<mark>$1</mark>")).join("");};
   return{norm,hit,mark};})();
+
+/* Versionsnummer klein unten links in jeder App (aus dem ?v= dieses Skripts) */
+(function(){try{const v=((document.currentScript||{}).src||"").split("v=")[1];if(!v)return;
+  const add=()=>{if(document.getElementById("lzVer"))return;const d=document.createElement("div");d.id="lzVer";d.textContent="Version "+v;
+    d.style.cssText="position:fixed;left:8px;bottom:calc(4px + env(safe-area-inset-bottom,0px));z-index:5;font:700 11px/1 system-ui,sans-serif;opacity:.45;pointer-events:none;color:inherit";document.body.appendChild(d);};
+  if(document.body)add();else document.addEventListener("DOMContentLoaded",add);}catch(e){}})();
