@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.12.0"></script>
+<script src="../js/app-core.js?v=7.12.1"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.12.0"></script>
+<script src="../js/nutzer-init.js?v=7.12.1"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -449,13 +449,16 @@ function vlErr(q,v,r){
 }
 function vlRecord(q,v,r){
   if(!S.vl)S.vl={};
-  const key=q.pack+'|'+q.kind,s=S.vl[key]||(S.vl[key]={n:0,ok:0,ms:0,mn:0,h:[],err:{}});
-  s.n++;if(r.correct)s.ok++;
-  s.h.push(r.correct?1:0);if(s.h.length>10)s.h.shift();
-  if(G&&G.mode!=='time'&&G.t0){const ms=Date.now()-G.t0;if(ms>0&&ms<180000){s.ms+=ms;s.mn++;}}
-  const e=vlErr(q,v,r);
-  if(e){s.err[e]=(s.err[e]||0)+1;const ks=Object.keys(s.err);if(ks.length>12){ks.sort((a,b)=>s.err[a]-s.err[b]);delete s.err[ks[0]];}}
-  s.t=Date.now();save();
+  const e=vlErr(q,v,r),ms=G&&G.mode!=='time'&&G.t0?Date.now()-G.t0:0;
+  const add=key=>{const s=S.vl[key]||(S.vl[key]={n:0,ok:0,ms:0,mn:0,h:[],err:{}});
+    s.n++;if(r.correct)s.ok++;
+    s.h.push(r.correct?1:0);if(s.h.length>10)s.h.shift();
+    if(ms>0&&ms<180000){s.ms+=ms;s.mn++;}
+    if(e){s.err[e]=(s.err[e]||0)+1;const ks=Object.keys(s.err).filter(x=>x!==e);if(ks.length>=12){ks.sort((a,b)=>s.err[a]-s.err[b]);delete s.err[ks[0]];}}
+    s.t=Date.now();};
+  add(q.pack+'|'+q.kind);
+  if(G&&G.mode==='test')add(q.pack+'|'+q.kind+'|T');
+  save();
 }
 
 /* Geometrie */
@@ -1508,9 +1511,10 @@ function vlSum(list){
 const vlLevel=a=>a.n<5?'few':a.q<.6?'weak':a.q<.85?'mid':'good';
 const VL_LV={few:['no','noch zu wenig geübt'],weak:['bad','hier hakt es'],mid:['half','auf gutem Weg'],good:['ok','sitzt']};
 function vlScope(r){
-  const ks=(r.test||r.m==='test')?null:(r.kinds||VL_KINDS[r.m]||[]);
+  const tst=!!(r.test||r.m==='test'),ks=tst?null:(r.kinds||VL_KINDS[r.m]||[]);
   const per=r.packs.map(pid=>{
-    const l=Object.keys(S.vl||{}).filter(key=>{const[p,k]=key.split('|');return p===pid&&(!ks||ks.includes(k));}).map(key=>[key.split('|')[1],S.vl[key]]);
+    const tp=!!packById(pid).task;
+    const l=Object.keys(S.vl||{}).filter(key=>{const[p,k,t]=key.split('|');return p===pid&&(t==='T')===tst&&(!ks||ks.includes(k)||(ks.length&&tp&&k==='task'));}).map(key=>[key.split('|')[1],S.vl[key]]);
     return{pid,l,a:vlSum(l)};});
   return{per,all:vlSum([].concat(...per.map(x=>x.l)))};
 }
@@ -1533,7 +1537,8 @@ function vlAdvice(r,sc){
   sc.per.forEach(x=>x.l.forEach(([k,s])=>{if(s.n)cand.push({pid:x.pid,k,n:s.n,q:vlQ(s.h)});}));
   cand.sort((x,y)=>(y.n>=3)-(x.n>=3)||x.q-y.q||y.n-x.n);
   const w=cand[0],dflt=r.packs.find(pid=>!sc.per.find(x=>x.pid===pid).l.length&&vlOK([pid],r.m))||r.packs.find(pid=>vlOK([pid],r.m))||r.packs[0];
-  if(lv==='few')return{txt:'Dazu gibt es noch zu wenig Übung für eine Aussage. Mach mindestens 10 Aufgaben'+(r.m==='test'?'.':' in '+pk(dflt)+'.'),btns:[[r.m==='test'?'🏆 Test starten':'Üben ▶',r.m==='test'?r.packs.join(','):dflt,r.m]]};
+  if(lv==='few')return{txt:r.m==='test'?'Hier zählen nur Antworten aus dem Abschlusstest – dazu gibt es noch keine. Mach den Abschlusstest mit allen Paketen.':'Dazu gibt es noch zu wenig Übung für eine Aussage. Mach mindestens 10 Aufgaben in '+pk(dflt)+'.',btns:[[r.m==='test'?'🏆 Test starten':'Üben ▶',r.m==='test'?r.packs.join(','):dflt,r.m]]};
+  if(lv==='weak'&&r.m==='test')return{txt:'Im Abschlusstest hakt es noch.'+(top?' Häufigster Fehler: '+vlErrText(top[0])+'.':'')+(w?' Am schwächsten: '+pk(w.pid)+' („'+MODES[w.k].title+'“). Das erst üben, dann den Test wiederholen.':''),btns:w?[['Üben ▶',w.pid,w.k]]:[]};
   if(lv==='weak'){
     const btns=w?[['Üben ▶',w.pid,w.k]]:[];if(top&&(top[0]==='ueber'||top[0]==='skala'))btns.unshift(['📖 Wissen lesen','','learn']);
     return{txt:'Hier hakt es noch.'+(top?' Häufigster Fehler: '+vlErrText(top[0])+'.':'')+(w?' Übe '+pk(w.pid)+' („'+MODES[w.k].title+'“) noch einmal, am besten 10 Aufgaben.':''),btns};
@@ -1569,7 +1574,7 @@ function vlLabel(id){if(id[0]==='k')return'Ich kann '+CL_KANN[+id.slice(1)].t.re
 /* Zusammenfassung für die Eltern: Text und Tabelle aus denselben Zahlen, ohne KI */
 function vlParent(){
   const rows=CL_KANN.map((r,i)=>{const sc=vlScope(r);return{id:'k'+i,r,sc,lv:r.m==='learn'?null:vlLevel(sc.all)};});
-  let total=0;Object.keys(S.vl||{}).forEach(k=>total+=S.vl[k].n);
+  let total=0;Object.keys(S.vl||{}).filter(k=>!k.endsWith('|T')).forEach(k=>total+=S.vl[k].n);
   const shortT=r=>r.t.replace(/^…\s*/,'').replace(/\.$/,'');
   const lines=[];
   if(!total)lines.push('Es liegen noch keine Übungsdaten vor. Sobald geübt wird, erscheint hier eine Auswertung.');
@@ -1697,7 +1702,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.12.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.12.1">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1707,24 +1712,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.12.0"></script>
+<script src="../js/lernplan.js?v=7.12.1"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.12.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.12.1">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.12.0"></script>
+<script src="../js/nutzer.js?v=7.12.1"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.12.0"></script>
+<script src="../js/home-btn.js?v=7.12.1"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.12.0"></script>
+<script src="../js/arena-btn.js?v=7.12.1"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.12.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.12.1"></script>
 </body>
 </html>

@@ -42,6 +42,8 @@ async def main():
     assert await f.query_selector('.cl-par[open]'),'Übersicht bleibt nach dem Neuaufbau offen'
     pt=' '.join((await f.inner_text('.cl-par')).split())
     assert 'Bisher 8 Aufgaben beantwortet' in pt,pt
+    assert 'Wissen überprüfen – 25' not in pt and 'Winkelarten unterscheiden' in pt,'Übungen dürfen nicht als Abschlusstest zählen: '+pt
+    k4=' '.join((await f.inner_text('.cl-det[data-id="k4"]')).split());assert 'noch zu wenig' in k4,k4
     # 4) Selbsteinschätzung + eigene Frage; danach bleiben die Details offen und alles ist gespeichert
     await f.click('.cl-det[data-id="n6"] .cl-sb[data-v="1"]');await p.wait_for_timeout(200)
     assert await f.query_selector('.cl-det[data-id="n6"][open]'),'Details klappen nach Klick auf ein Gefühl nicht zu'
