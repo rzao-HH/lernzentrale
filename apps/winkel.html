@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.10.2"></script>
+<script src="../js/app-core.js?v=7.11.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.10.2"></script>
+<script src="../js/nutzer-init.js?v=7.11.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -136,6 +136,7 @@ h2{font-family:var(--display);font-size:24px;margin:30px 0 12px;display:flex;ali
 .zoomctl{position:absolute;right:8px;top:8px;z-index:3;display:flex;gap:4px;align-items:center;background:var(--panel2,rgba(255,255,255,.12));border-radius:12px;padding:3px}
 .zoomctl button{width:40px;height:40px;border-radius:10px;border:0;background:var(--panel,rgba(255,255,255,.2));color:inherit;font-size:20px;font-weight:800;cursor:pointer}
 .zoomctl button:disabled{opacity:.35}
+.zoomctl[hidden]{display:none}
 .zoomctl .zl{min-width:34px;text-align:center;font-size:.8rem;font-weight:800}
 .stage.zoomed{cursor:grab}
 .stage{flex:1;position:relative;min-width:0;min-height:0;transition:box-shadow .2s}
@@ -338,7 +339,7 @@ const MODES={
   visual:{icon:'👁️',title:'Winkelart erkennen',desc:'Sieh dir den Winkel an und bestimme die Winkelart.'},
   degree:{icon:'🔢',title:'Gradzahl einordnen',desc:'Eine Gradzahl erscheint. Welche Winkelart ist das?'},
   estimate:{icon:'🎯',title:'Schätzen',desc:'Ohne Geodreieck: Wie gut ist dein Augenmaß?'},
-  konstr:{icon:'🛠️',title:'Winkel konstruieren',desc:'Mit dem Geodreieck wie im Heft: Schenkel zeichnen, anlegen, Gradzahl markieren, verbinden, Bogen einzeichnen.'},
+  konstr:{icon:'🛠️',title:'Winkel konstruieren',desc:'Mit dem Geodreieck genau wie auf den Infoblättern „Winkel zeichnen 1 + 2“: Schenkel zeichnen, beschriften, anlegen, markieren, verbinden, Bogen und Name.'},
   draw:{icon:'✍️',title:'Winkel zeichnen',desc:'Dreh den grünen Laser mit dem Finger auf die richtige Gradzahl.'},
   time:{icon:'⏱️',title:'Zeitrunde',desc:'60 Sekunden: so viele richtige Antworten wie möglich.'},
   task:{icon:'🧭',title:'Aufgaben-Mission',desc:'Kompass, Bezeichnungen, Berechnen, Senkrechte & Parallelen – aus deinen Paketen 5–8.'},
@@ -594,10 +595,16 @@ function renderGeo(){
   g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
 }
 
-/* ===== Winkel konstruieren mit dem Geodreieck (Infoblätter „Winkel zeichnen 1 + 2“) =====
-   Schritte: 0 Schenkel a zeichnen · 1 Geodreieck anlegen (Nullpunkt auf S) · 2 Gradzahl markieren ·
-   3 Geodreieck an S und Markierung anlegen · 4 Schenkel b zeichnen · 5 Winkelbogen auf der richtigen Seite */
-const K_STEPS=['Ersten Schenkel a zeichnen','Geodreieck anlegen','Gradzahl markieren','Geodreieck an S und Markierung anlegen','Zweiten Schenkel b zeichnen','Winkelbogen einzeichnen'];
+/* ===== Winkel konstruieren mit dem Geodreieck – genau nach den Infoblättern =====
+   „Winkel zeichnen 1“ (spitz/stumpf) und „Winkel zeichnen 2“ (überstumpf, Trick 360° − β).
+   Interne Schritte: -1 Trick rechnen (nur überstumpf) · 0 Schenkel a ziehen · 1 S und a beschriften ·
+   2 Geodreieck anlegen (Blatt 1: verkehrt, Spitze nach oben · Blatt 2: unten an) · 3 Gradzahl markieren ·
+   4 Geodreieck an S und Markierung anlegen · 5 Schenkel b ziehen · 6 Winkelbogen · 7 b und Winkel beschriften */
+const K_SHEET=[['Ersten Schenkel zeichnen (mindestens 6 cm)','Scheitel S markieren und Schenkel a beschriften','Geodreieck verkehrt auf Schenkel a legen, Nullpunkt genau bei S','Skala wählen, die bei a mit 10° beginnt – Gradzahl markieren','Scheitel S mit der Markierung verbinden','Schenkel b beschriften, Winkelbogen zeichnen, Winkel beschriften'],
+  ['Trick: überstumpfen Winkel von 360° abziehen','Ersten Schenkel zeichnen, Scheitel S markieren, Schenkel a beschriften','Geodreieck unten an Schenkel a anlegen, Nullpunkt genau bei S','Skala wählen, die bei a mit 10° beginnt – Differenz markieren','Scheitel S mit der Markierung verbinden','Schenkel b beschriften, Winkelbogen auf der richtigen Seite, Winkel beschriften']];
+const K_STEPS=K_SHEET[0];
+const kBig=()=>G.q.deg>180;
+function kSheetNo(st,big){return big?(st<0?0:st<=1?1:st<=3?st:st<=5?4:5):(st<=3?st:st<=5?4:5);}
 const kAng=(p,q)=>((Math.atan2(-(q.y-p.y),q.x-p.x)*180/Math.PI)%360+360)%360;
 function kGeoShape(g,Hh){
   el('polygon',{points:`${-Hh},0 ${Hh},0 0,${-Hh}`,class:'geobody'},g);
@@ -609,38 +616,51 @@ function kGeoShape(g,Hh){
       const b=el('text',{x:r2*c,y:-r2*s,class:'geonum2','font-size':fs*.85,'text-anchor':'middle','dominant-baseline':'middle'},g);b.textContent=180-t;}}
   const cm=Hh/8;for(let i=-7;i<=7;i++){el('line',{x1:i*cm,y1:0,x2:i*cm,y2:-Hh*.045,class:'geotick'},g);if(i){const tx=el('text',{x:i*cm,y:-Hh*.045-fs*.6,class:'geonum','font-size':fs*.8,'text-anchor':'middle'},g);tx.textContent=Math.abs(i);}}
   el('line',{x1:0,y1:0,x2:0,y2:-R*.55,class:'geotick'},g);el('circle',{cx:0,cy:0,r:4,class:'geozero'},g);}
-function kSetup(){const q=G.q;if(!q.k)q.k={step:0};const k=q.k,{svg,W,H}=prepSvg();k.W=W;k.H=H;k.Hh=Math.min(W*.36,H*.6);
-  if(!k.geo)k.geo={x:W*.5,y:H-14,rot:0};kDraw();kPointer(svg);kPanel();}
+function kSetup(){const q=G.q;if(!q.k)q.k={step:q.deg>180?-1:0};const k=q.k,{svg,W,H}=prepSvg();k.W=W;k.H=H;k.Hh=Math.min(W*.36,H*.6);
+  if(!k.geo)k.geo={x:W*.5,y:H-14,rot:0};kLbSync();kDraw();kPointer(svg);kPanel();}
+function kLbSync(){const k=G.q.k;G.lb=k.step===1?k.lbA:k.step===7?k.lbB:null;G.lbOn=G.lb?()=>{kDraw();kPanel();}:null;}
+function kGeoA(){const k=G.q.k;return{S:k.S,A:k.A,B:null,a0:kAng(k.S,k.A),deg:0,ccw:true,R:34};}
+function kGeoLb(){const k=G.q.k;return{S:k.S,A:k.A,B:k.B,a0:kAng(k.S,k.A),deg:k.arcDeg,ccw:k.arc==='ccw',R:34};}
 function kDraw(){const q=G.q,k=q.k,svg=$('#svg');if(!svg)return;[...svg.querySelectorAll('.kl')].forEach(e=>e.remove());
   const g=el('g',{class:'kl'},svg),Hh=k.Hh;
-  if(k.S&&k.A){ln(g,k.S.x,k.S.y,k.A.x,k.A.y,'ray r1');tx(g,k.A.x+(k.A.x>k.S.x?-14:14),k.A.y-16,'a','tlab');}
+  if(k.S&&k.A)ln(g,k.S.x,k.S.y,k.A.x,k.A.y,'ray r1');
   if(k.drag0&&k.step===0)ln(g,k.drag0.x,k.drag0.y,k.drag1.x,k.drag1.y,'ray r1');
-  if(k.S){el('circle',{cx:k.S.x,cy:k.S.y,r:5,class:'vertex'},g);tx(g,k.S.x-16,k.S.y+18,'S','tlab');}
+  if(k.S)el('circle',{cx:k.S.x,cy:k.S.y,r:5,class:'vertex'},g);
   if(k.B)ln(g,k.S.x,k.S.y,k.B.x,k.B.y,'ray r2');
-  if(k.M){el('circle',{cx:k.M.x,cy:k.M.y,r:6,style:'fill:var(--bad);stroke:var(--bg);stroke-width:2'},g);}
-  if(k.arc){const a0=kAng(k.S,k.A),d=k.arcDeg,start=k.arc==='ccw'?a0:a0-d,r=34;sector(g,k.S.x,k.S.y,r,start,d,'arcf');
-    const[lx,ly]=P(k.S.x,k.S.y,r+22,start+d/2);tx(g,lx,ly,q.name,'tlab');}
-  if(G.revealed&&k.S&&k.A){const a0=kAng(k.S,k.A),want=q.deg<=180?q.deg:360-q.deg,dir=k.dirSign||1,[x,y]=P(k.S.x,k.S.y,Math.hypot(k.A.x-k.S.x,k.A.y-k.S.y),a0+dir*want);ln(g,k.S.x,k.S.y,x,y,'ghost');}
-  if(k.step>=1&&k.step<=4&&!G.revealed){const gg=el('g',{class:'geo kgeo',transform:`translate(${k.geo.x} ${k.geo.y}) rotate(${-k.geo.rot})`},g);kGeoShape(gg,Hh);
-    if(k.step===1||k.step===3){const hy=-Hh-34;el('line',{x1:0,y1:-Hh,x2:0,y2:hy,class:'geotick'},gg);el('circle',{cx:0,cy:hy,r:22,class:'geohandle kh'},gg);
+  if(k.M&&k.step>=3){el('line',{x1:k.M.x-7,y1:k.M.y-7,x2:k.M.x+7,y2:k.M.y+7,style:'stroke:var(--bad);stroke-width:3'},g);el('line',{x1:k.M.x-7,y1:k.M.y+7,x2:k.M.x+7,y2:k.M.y-7,style:'stroke:var(--bad);stroke-width:3'},g);
+    el('circle',{cx:k.M.x,cy:k.M.y,r:14,style:'fill:transparent'},g);}
+  if(k.arc){const a0=kAng(k.S,k.A),d=k.arcDeg,start=k.arc==='ccw'?a0:a0-d;sector(g,k.S.x,k.S.y,34,start,d,'arcf');}
+  if(k.step>=2&&k.lbA)lbStatic(g,k.lbA);
+  if(G.revealed&&k.S&&k.A){const a0=kAng(k.S,k.A),want=q.deg<=180?q.deg:360-q.deg,dir=q.deg>180?-1:1,[x,y]=P(k.S.x,k.S.y,Math.hypot(k.A.x-k.S.x,k.A.y-k.S.y),a0+dir*want);ln(g,k.S.x,k.S.y,x,y,'ghost');}
+  if((k.step===2||k.step===3||k.step===4)&&!G.revealed){const gg=el('g',{class:'geo kgeo',transform:`translate(${k.geo.x} ${k.geo.y}) rotate(${-k.geo.rot})`},g);kGeoShape(gg,Hh);
+    if(k.step===2||k.step===4){const hy=-Hh-34;el('line',{x1:0,y1:-Hh,x2:0,y2:hy,class:'geotick'},gg);el('circle',{cx:0,cy:hy,r:22,class:'geohandle kh'},gg);
       const t=el('text',{x:0,y:hy,'text-anchor':'middle','dominant-baseline':'central','font-size':22,style:'pointer-events:none'},gg);t.textContent='⟳';}
     else gg.style.pointerEvents='none';}
+  if(k.step===1&&G.lb){lbPointer(svg);lbDraw(svg,k.W,G.lb,false,null,'');}
+  if(k.step===7&&G.lb){lbPointer(svg);lbDraw(svg,k.W,G.lb,!!G.revealed,kGeoLb(),q.name);}
   if(k.step===0&&!k.drag0&&!k.S)tx(svg,k.W/2,24,'Zieh mit dem Finger eine gerade Linie','help').classList.add('kl');}
-function kSave(){const k=G.q.k,c={};['step','S','A','M','B','geo','mdeg','arc','arcDeg','dirSign'].forEach(x=>c[x]=k[x]===undefined?undefined:JSON.parse(JSON.stringify(k[x])));(k.hist=k.hist||[]).push(c);}
-function kNext(){const k=G.q.k;kSave();k.step++;k.msg='';k.ok=false;if(k.step===3)k.geo={x:k.W*.5,y:k.H-14,rot:0};kDraw();kPanel();}
-function kBack(){const k=G.q.k;if(!k.hist||!k.hist.length)return;const c=k.hist.pop();Object.assign(k,c);if(k.step<5){k.arc=null;}if(k.step<4)k.B=null;if(k.step<2)k.M=null;k.msg='';k.ok=false;kDraw();kPanel();}
-function kPt(svg,e){const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;return{x:(e.clientX-r.left)*vb.width/r.width,y:(e.clientY-r.top)*vb.height/r.height};}
-function kSnap(){const k=G.q.k,geo=k.geo;k.ok=false;
-  if(k.step===1){const a=kAng(k.S,k.A);if(Math.hypot(geo.x-k.S.x,geo.y-k.S.y)<18)for(const t of[a,a+180])if(angDiff(geo.rot,t)<5){geo.x=k.S.x;geo.y=k.S.y;geo.rot=(t+360)%360;k.ok=true;break;}}
-  if(k.step===3){const am=kAng(k.S,k.M);for(const t of[am,am+180])if(angDiff(geo.rot,t)<5){const ux=Math.cos(t*Math.PI/180),uy=-Math.sin(t*Math.PI/180),dS=Math.abs((k.S.x-geo.x)*uy-(k.S.y-geo.y)*ux);
+const K_KEYS=['step','S','A','M','B','geo','mdeg','arc','arcDeg','lbA','lbB','labAok','trick'];
+function kSave(){const k=G.q.k,c={};K_KEYS.forEach(x=>c[x]=k[x]===undefined?undefined:JSON.parse(JSON.stringify(k[x])));(k.hist=k.hist||[]).push(c);}
+function kNext(){const k=G.q.k;kSave();k.step++;k.msg='';k.ok=false;if(k.step===4)k.geo={x:k.W*.5,y:k.H-14,rot:0};
+  if(k.step===7&&!k.lbB){const o=pick(GREEK.map(x=>x[0]).filter(x=>x!==G.q.name));k.lbB={chips:shuffle(['b',G.q.name,'B',o,'S']),pos:{}};}
+  kLbSync();kDraw();kPanel();}
+function kBack(){const k=G.q.k;if(!k.hist||!k.hist.length)return;const c=k.hist.pop();K_KEYS.forEach(x=>k[x]=c[x]);k.msg='';k.ok=false;kLbSync();kDraw();kPanel();}
+function kPt(svg,e){const M=svg.getScreenCTM&&svg.getScreenCTM();if(M){const I=M.inverse();return{x:I.a*e.clientX+I.c*e.clientY+I.e,y:I.b*e.clientX+I.d*e.clientY+I.f};}const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;return{x:(e.clientX-r.left)*vb.width/r.width,y:(e.clientY-r.top)*vb.height/r.height};}
+/* Blatt 1: Geodreieck „verkehrt“ – Spitze auf der Seite, auf der der Winkel entsteht (links von a, bei a nach rechts also oben).
+   Blatt 2: „unten an“ – Spitze auf der anderen Seite; dort wird die Differenz 360° − β gezeichnet. */
+function kSnap(){const k=G.q.k,geo=k.geo;k.ok=false;k.side=false;
+  if(k.step===2){const a=kAng(k.S,k.A),want=kBig()?a+180:a;if(Math.hypot(geo.x-k.S.x,geo.y-k.S.y)<18){
+      if(angDiff(geo.rot,want)<5){geo.x=k.S.x;geo.y=k.S.y;geo.rot=(want+360)%360;k.ok=true;}
+      else if(angDiff(geo.rot,want+180)<5)k.side=true;}}
+  if(k.step===4){const am=kAng(k.S,k.M);for(const t of[am,am+180])if(angDiff(geo.rot,t)<5){const ux=Math.cos(t*Math.PI/180),uy=-Math.sin(t*Math.PI/180),dS=Math.abs((k.S.x-geo.x)*uy-(k.S.y-geo.y)*ux);
       if(dS<16){const s=(geo.x-k.S.x)*ux+(geo.y-k.S.y)*uy;geo.x=k.S.x+ux*s;geo.y=k.S.y+uy*s;geo.rot=(t+360)%360;k.ok=true;}break;}}}
 function kPointer(svg){const k=G.q.k;let drag=null;
   svg.onpointerdown=e=>{if(G.locked)return;const p=kPt(svg,e);try{svg.setPointerCapture(e.pointerId);}catch(_){}
     if(k.step===0){k.drag0=p;k.drag1=p;drag={m:'line'};}
-    else if(k.step===1||k.step===3){const h=e.target.closest&&e.target.closest('.kh'),onGeo=e.target.closest&&e.target.closest('.kgeo');if(h)drag={m:'rot'};else if(onGeo)drag={m:'move',dx:k.geo.x-p.x,dy:k.geo.y-p.y};}
-    else if(k.step===2){drag={m:'mark'};kMark(p);}
-    else if(k.step===4){drag={m:'b'};kB(p);}
-    else if(k.step===5){kArc(p);}};
+    else if(k.step===2||k.step===4){const h=e.target.closest&&e.target.closest('.kh'),onGeo=e.target.closest&&e.target.closest('.kgeo');if(h)drag={m:'rot'};else if(onGeo)drag={m:'move',dx:k.geo.x-p.x,dy:k.geo.y-p.y};}
+    else if(k.step===3){drag={m:'mark'};kMark(p);}
+    else if(k.step===5){drag={m:'b'};kB(p);}
+    else if(k.step===6){kArc(p);}};
   svg.onpointermove=e=>{if(!drag)return;const p=kPt(svg,e);
     if(drag.m==='line'){k.drag1=p;kDraw();}
     else if(drag.m==='move'){k.geo.x=p.x+drag.dx;k.geo.y=p.y+drag.dy;kSnap();kDraw();kPanel();}
@@ -648,30 +668,87 @@ function kPointer(svg){const k=G.q.k;let drag=null;
     else if(drag.m==='b')kB(p);
     else if(drag.m==='mark')kMark(p);};
   svg.onpointerup=svg.onpointercancel=()=>{if(!drag)return;const m=drag.m;drag=null;
-    if((m==='move'||m==='rot')&&k.ok&&(k.step===1||k.step===3)){kNext();return;}
+    if((m==='move'||m==='rot')&&k.ok&&(k.step===2||k.step===4)){kNext();return;}
     if(m==='line'){const L=Math.hypot(k.drag1.x-k.drag0.x,k.drag1.y-k.drag0.y);
-      if(L>=k.Hh*.7){kSave();k.S=k.drag0;k.A=k.drag1;k.drag0=null;k.step=1;k.msg='';}else{k.drag0=null;k.msg='Der Schenkel ist zu kurz. Er soll mindestens 6 cm lang sein – zieh eine längere Linie.';}
+      if(L>=k.Hh*.7){kSave();k.S=k.drag0;k.A=k.drag1;k.drag0=null;k.step=1;k.msg='';k.lbA={chips:shuffle(['S','a','s','A','b']),pos:{}};kLbSync();}
+      else{k.drag0=null;k.msg='Der Schenkel ist zu kurz. Er soll mindestens 6 cm lang sein – zieh eine längere Linie.';}
       kDraw();kPanel();}
-    if(m==='b'&&k.B){const need=Math.hypot(k.M.x-k.S.x,k.M.y-k.S.y);if(Math.hypot(k.B.x-k.S.x,k.B.y-k.S.y)>=need-4){const B=k.B;kSave();k.hist[k.hist.length-1].B=null;k.B=B;k.step=5;k.msg='';}else k.msg='Zieh die Linie vom Scheitel S bis über deine Markierung hinaus.';kDraw();kPanel();}};}
-function kMark(p){const k=G.q.k;k.M=p;k.mdeg=Math.round(angDiff(kAng(k.S,k.A),kAng(k.S,p)));kDraw();kPanel();}
+    if(m==='b'&&k.B){const need=Math.hypot(k.M.x-k.S.x,k.M.y-k.S.y);if(Math.hypot(k.B.x-k.S.x,k.B.y-k.S.y)>=need-4){const B=k.B;kSave();k.hist[k.hist.length-1].B=null;k.B=B;k.step=6;k.msg='';}else k.msg='Zieh die Linie vom Scheitel S bis über deine Markierung hinaus.';kDraw();kPanel();}};}
+/* Markierung nur an der Skala: auf der Seite von a, auf der das Geodreieck liegt */
+function kMarkSide(p){const k=G.q.k,rel=((kAng(k.S,p)-kAng(k.S,k.A))%360+360)%360;return kBig()?rel>180&&rel<360:rel>0&&rel<180;}
+function kMark(p){const k=G.q.k;k.M=p;k.mdeg=Math.round(angDiff(kAng(k.S,k.A),kAng(k.S,p)));k.mside=kMarkSide(p);kDraw();kPanel();}
 function kB(p){const k=G.q.k,t=kAng(k.S,k.M)*Math.PI/180,ux=Math.cos(t),uy=-Math.sin(t),s=Math.max(0,(p.x-k.S.x)*ux+(p.y-k.S.y)*uy);k.B={x:k.S.x+ux*s,y:k.S.y+uy*s};kDraw();}
 function kArc(p){const k=G.q.k,a0=kAng(k.S,k.A),am=kAng(k.S,k.M),at=kAng(k.S,p),ccw=((am-a0)%360+360)%360,inCcw=((at-a0)%360+360)%360<ccw;
-  k.arc=inCcw?'ccw':'cw';k.arcDeg=inCcw?ccw:360-ccw;k.dirSign=ccw<=180?1:-1;kDraw();
-  answer(Math.round(k.arcDeg));}
-function kPanel(){const q=G.q,k=q.k,st=$('#kst');if(!st)return;const big=q.deg>180,draw=big?360-q.deg:q.deg;
-  const hint=[`Zieh mit dem Finger eine gerade Linie. Sie soll mindestens 6 cm lang sein. Wo du anfängst, ist der Scheitel S.`,
-    `Schieb das Geodreieck (am Körper) und dreh es (am ⟳-Griff), bis der <b>Nullpunkt genau auf S</b> liegt und die <b>lange Kante auf Schenkel a</b>. Liegt es fast richtig, rastet es ein.`,
-    `Wähle die Winkelskala, die auf der Seite von Schenkel a mit 10° beginnt. Tippe dort bei <b>${draw}°</b> eine Markierung. Du kannst sie verschieben oder neu setzen.${big?` <br><small>Überstumpf: ${q.deg}° kannst du nicht direkt ablesen. Trick: 360° − ${q.deg}° = <b>${draw}°</b> zeichnen und später den großen Bogen nehmen.</small>`:''}`,
-    `Leg das Geodreieck neu an: Die <b>lange Kante</b> muss durch den Scheitel S und durch deine Markierung gehen.`,
-    `Zieh den zweiten Schenkel b an der Kante entlang – vom Scheitel S bis über die Markierung hinaus.`,
-    `Tippe in den Winkel, den du gezeichnet hast, um den Winkelbogen einzuzeichnen.${big?' Achtung: Bei überstumpfen Winkeln ist das der <b>große</b> Bogen auf der anderen Seite.':''}`][k.step];
-  st.innerHTML=`<ol class="ksteps">${K_STEPS.map((t,i)=>`<li class="${i<k.step?'done':i===k.step?'now':''}">${i<k.step?'✓ ':''}${t}</li>`).join('')}</ol>
+  kSave();k.arc=inCcw?'ccw':'cw';k.arcDeg=inCcw?ccw:360-ccw;kNext();k.hist.pop();}
+function kLabA(){const k=G.q.k,r=lbCheck(k.lbA,{S:'S',a:'a'},kGeoA());
+  if(!r.ok&&G.mode!=='test'){k.msg=`Noch nicht richtig. Der Scheitel heißt <b>S</b> (großer Buchstabe) und kommt an den Anfang der Linie. Der Schenkel heißt <b>a</b> (kleiner Buchstabe) und kommt an die Linie.${r.miss.length?' Es fehlt: '+r.miss.join(', ')+'.':''}`;kPanel();return;}
+  k.labAok=r.ok;kNext();}
+function kTrick(){const k=G.q.k,inp=$('#ktrick'),v=+(inp&&inp.value||'').replace(',','.');
+  if(v===360-G.q.deg){k.trick=v;kNext();}else{k.msg=`Rechne nochmal: 360° − ${G.q.deg}° = ?`;kPanel();}}
+function kPanel(){const q=G.q,k=q.k,st=$('#kst');if(!st)return;const big=q.deg>180,draw=big?360-q.deg:q.deg,sheet=K_SHEET[big?1:0],now=kSheetNo(k.step,big);
+  const hint={'-1':`Einen überstumpfen Winkel kann man am Geodreieck nicht direkt ablesen. <b>Trick:</b> Zieh ihn von 360° ab und zeichne einen Winkel mit der Differenz.<div class="geoctl" style="margin-top:6px"><b>360° − ${q.deg}° =</b> <input id="ktrick" type="number" inputmode="numeric" style="width:80px;font-size:18px" value="${k.trick||''}">° <button class="btn-s kgo" id="ktok">Weiter ✔</button></div>`,
+    0:`Zieh mit dem Finger eine gerade Linie. Sie soll mindestens 6 cm lang sein. Wo du anfängst, ist der Scheitel.`,
+    1:`Beschrifte: Zieh den Buchstaben für den <b>Scheitel</b> an den Anfang der Linie und den Buchstaben für den <b>Schenkel</b> an die Linie. Nicht alle Buchstaben passen.`,
+    2:big?`Leg das Geodreieck <b>unten an</b> den Schenkel a an (Spitze nach unten): <b>Nullpunkt genau auf S</b>, lange Kante auf a. Schieben am Körper, drehen am ⟳-Griff. Liegt es richtig, rastet es ein.`
+         :`Leg das Geodreieck <b>verkehrt</b> auf den Schenkel a (Spitze nach oben): <b>Nullpunkt genau auf S</b>, lange Kante auf a. Schieben am Körper, drehen am ⟳-Griff. Liegt es richtig, rastet es ein.`,
+    3:`Wähle die Winkelskala, die auf der Seite von Schenkel a mit 10° beginnt. Suche dort <b>${draw}°</b>${big?` (dein Ergebnis aus dem Trick)`:''} und tippe eine Markierung.`,
+    4:`Verbinde S mit der Markierung: Leg das Geodreieck so an, dass die <b>lange Kante</b> durch den Scheitel S und durch deine Markierung geht.`,
+    5:`Zieh die Linie an der Kante entlang – vom Scheitel S bis über die Markierung hinaus. Das ist der zweite Schenkel.`,
+    6:big?`Zeichne den Winkelbogen <b>auf der richtigen Seite</b> ein: Tippe in den Winkel ${q.name} = ${q.deg}°. Achtung: Das ist der <b>große</b> Winkel, nicht der ${draw}°-Winkel.`:`Zeichne den Winkelbogen ein: Tippe in den Winkel, den du gezeichnet hast.`,
+    7:`Beschrifte den zweiten Schenkel mit <b>b</b> und schreib den Winkelnamen <b>${q.name}</b> in den Winkelbogen: Buchstaben dorthin ziehen. Nicht alle passen. Dann „Fertig“.`}[k.step];
+  st.innerHTML=`<div class="kwait" style="margin-bottom:4px">📄 Wie auf dem Infoblatt „Winkel zeichnen ${big?2:1}“ (${big?'überstumpfe Winkel':'spitze und stumpfe Winkel'})</div>
+    <ol class="ksteps">${sheet.map((t,i)=>`<li class="${i<now?'done':i===now?'now':''}">${i<now?'✓ ':''}${t}</li>`).join('')}</ol>
     <div class="khint">${hint}</div>${k.msg?`<div class="kmsg">${k.msg}</div>`:''}
-    ${k.step===1||k.step===3?`<div class="geoctl"><button class="btn-s" data-kr="1">⟲ 1°</button><button class="btn-s" data-kr="-1">⟳ 1°</button><span class="kwait">Rastet ein und geht von selbst weiter, sobald es richtig liegt</span></div>`:''}
-    ${k.step===2&&k.M?`<div class="geoctl"><span class="kwait">${G.mode==='test'?'Markierung gesetzt':`Markierung bei ${k.mdeg}°`}</span><button class="btn-s kgo" id="kok">Markierung passt – weiter ✔</button></div><small class="kwait">Zum Korrigieren einfach neu tippen oder den Punkt verschieben.</small>`:''}
-    ${k.step>0&&!G.locked?'<div class="geoctl" style="margin-top:8px"><button class="btn-s" id="kback">↶ Schritt zurück</button></div>':''}`;
+    ${(k.step===2||k.step===4)&&k.side?`<div class="kmsg">Nullpunkt passt, aber das Geodreieck liegt auf der falschen Seite von a. ${big?'Blatt 2: <b>unten an</b> den Schenkel legen.':'Blatt 1: <b>verkehrt</b> auflegen, die Spitze zeigt nach oben.'} Dreh es um 180°.</div>`:''}
+    ${k.step===2||k.step===4?`<div class="geoctl"><button class="btn-s" data-kr="1">⟲ 1°</button><button class="btn-s" data-kr="-1">⟳ 1°</button><span class="kwait">Rastet ein und geht von selbst weiter, sobald es richtig liegt</span></div>`:''}
+    ${k.step===1&&!G.locked?`<button class="btn-s kgo" id="klab" ${G.lb&&Object.keys(G.lb.pos).length?'':'disabled'}>Beschriftet – weiter ✔</button>`:''}
+    ${k.step===3&&k.M?(k.mside?`<div class="geoctl"><span class="kwait">${G.mode==='test'?'Markierung gesetzt':`Markierung bei ${k.mdeg}°`}</span><button class="btn-s kgo" id="kok">Markierung passt – weiter ✔</button></div><small class="kwait">Zum Korrigieren einfach neu tippen oder die Markierung verschieben.</small>`:`<div class="kmsg">Die Markierung gehört an die Skala – auf die Seite, auf der das Geodreieck liegt.</div>`):''}
+    ${k.step===7&&!G.locked?`<button class="big go" id="kfin" ${G.lb&&Object.keys(G.lb.pos).length?'':'disabled'}>Fertig ✔</button>`:''}
+    ${k.step>(big?-1:0)&&!G.locked?'<div class="geoctl" style="margin-top:8px"><button class="btn-s" id="kback">↶ Schritt zurück</button></div>':''}`;
   st.querySelectorAll('[data-kr]').forEach(b=>b.onclick=()=>{k.geo.rot=(k.geo.rot+ +b.dataset.kr+360)%360;kSnap();if(k.ok)return kNext();kDraw();kPanel();});
-  const ok=$('#kok');if(ok)ok.onclick=kNext;const bk=$('#kback');if(bk)bk.onclick=kBack;}
+  const ok=$('#kok');if(ok)ok.onclick=kNext;const bk=$('#kback');if(bk)bk.onclick=kBack;const kl=$('#klab');if(kl)kl.onclick=kLabA;
+  const tk=$('#ktok');if(tk){tk.onclick=kTrick;const ti=$('#ktrick');ti.onkeydown=e=>{if(e.key==='Enter')kTrick();};}
+  const kf=$('#kfin');if(kf)kf.onclick=()=>{const r=lbCheck(G.lb,{b:'b',[q.name]:'w'},kGeoLb());answer({deg:Math.round(k.arcDeg),lab:{ok:r.ok&&k.labAok!==false,miss:r.miss,a:k.labAok!==false}});};}
+
+/* ===== Beschriften per Ziehen (Infoblatt „Winkel zeichnen 1“, Schritt 6; AB „Der Winkel“) =====
+   Buchstaben-Kärtchen oben in der Leiste; auf Scheitel, Schenkel a, Schenkel b und in den Winkelbogen ziehen. */
+function lbChips(name){const other=pick(GREEK.map(x=>x[0]).filter(x=>x!==name));return shuffle(['S','a','b',name,'s','A',other]);}
+function lbWhere(p,geo){const d=(P1,P2)=>{const vx=P2.x-P1.x,vy=P2.y-P1.y,L=vx*vx+vy*vy,t=Math.max(0,Math.min(1,((p.x-P1.x)*vx+(p.y-P1.y)*vy)/L));return Math.hypot(p.x-P1.x-t*vx,p.y-P1.y-t*vy);};
+  const r=Math.hypot(p.x-geo.S.x,p.y-geo.S.y);if(r<34)return'S';
+  const at=kAng(geo.S,p),rel=((at-geo.a0)%360+360)%360,inArc=!!geo.deg&&(geo.ccw?rel<geo.deg:(360-rel)%360<geo.deg);
+  if(inArc&&r<geo.R+40)return'w';
+  if(d(geo.S,geo.A)<26)return'a';if(geo.B&&d(geo.S,geo.B)<26)return'b';
+  if(inArc&&r<geo.R+70)return'w';return null;}
+/* want: Buchstabe → Ort ('S' Scheitel, 'a'/'b' Schenkel, 'w' Winkelbogen). Falsche Buchstaben irgendwo abgelegt = Fehler. */
+function lbCheck(pl,want,geo){let ok=true,miss=[];
+  Object.keys(pl.pos).forEach(id=>{const c=pl.chips[id],w=lbWhere(pl.pos[id],geo);if(want[c]){if(w!==want[c])ok=false;}else if(w)ok=false;});
+  Object.keys(want).forEach(c=>{if(!Object.keys(pl.pos).some(id=>pl.chips[id]===c))miss.push(c);});return{ok:ok&&!miss.length,miss};}
+function lbStatic(g,pl){Object.keys(pl.pos).forEach(i=>{const p=pl.pos[i],c=pl.chips[i],t=el('text',{x:p.x,y:p.y,'text-anchor':'middle','dominant-baseline':'central',class:'tlab',style:/[α-ω]/.test(c)?'font-style:italic':''},g);t.textContent=c;});}
+function lbDraw(svg,W,pl,rev,geo,name){const g=el('g',{class:'kl lbl'},svg),y0=26;el('rect',{x:6,y:4,width:Math.min(W-12,pl.chips.length*46+12),height:44,rx:12,style:'fill:var(--panel);stroke:var(--line);opacity:.9'},g);
+  pl.chips.forEach((c,i)=>{const p=pl.pos[i]||{x:26+i*46,y:y0},cg=el('g',{class:'lbchip','data-i':i,transform:`translate(${p.x} ${p.y})`,style:'cursor:grab'},g);
+    const isGreek=/[α-ω]/.test(c);el('circle',{r:17,style:`fill:${pl.pos[i]?'var(--bg)':'var(--panel2,#eef)'};stroke:var(--accent);stroke-width:2.5`},cg);
+    const t=el('text',{'text-anchor':'middle','dominant-baseline':'central',style:`font:${isGreek?'italic 700 22px "Times New Roman",serif':'800 19px var(--body)'};fill:var(--text);pointer-events:none`},cg);t.textContent=c;});
+  if(rev&&geo){const put=(x,y,t)=>{const e=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central',style:'font:800 18px var(--body);fill:var(--ok)'},g);e.textContent=t;};
+    const[sx,sy]=[geo.S.x-22,geo.S.y+22];put(sx,sy,'S');const ua=P(geo.S.x,geo.S.y,Math.hypot(geo.A.x-geo.S.x,geo.A.y-geo.S.y)*.8,geo.a0),ub=P(geo.S.x,geo.S.y,Math.hypot(geo.B.x-geo.S.x,geo.B.y-geo.S.y)*.8,kAng(geo.S,geo.B));
+    put(ua[0]+ (geo.ccw?0:0),ua[1]+ (geo.ccw?20:-20),'a');put(ub[0]+12,ub[1]-12,'b');const m=P(geo.S.x,geo.S.y,geo.R+22,geo.a0+(geo.ccw?1:-1)*geo.deg/2);put(m[0],m[1],name);}}
+function lbPointer(svg){if(svg.__lb)return;svg.__lb=1;let drag=null;
+  svg.addEventListener('pointerdown',e=>{const pl=G&&G.lb;if(!pl||G.locked||G.revealed)return;const cg=e.target.closest&&e.target.closest('.lbchip');if(!cg)return;e.stopImmediatePropagation();
+    const i=+cg.dataset.i;drag=i;try{svg.setPointerCapture(e.pointerId);}catch(_){}},true);
+  svg.addEventListener('pointermove',e=>{if(drag==null)return;e.stopImmediatePropagation();const pl=G.lb,p=kPt(svg,e);pl.pos[drag]=p;
+    const cg=svg.querySelector(`.lbchip[data-i="${drag}"]`);if(cg)cg.setAttribute('transform',`translate(${p.x} ${p.y})`);},true);
+  const up=e=>{if(drag==null)return;e.stopImmediatePropagation();const pl=G.lb;if(pl.pos[drag]&&pl.pos[drag].y<50)delete pl.pos[drag];drag=null;G.lbOn&&G.lbOn();};
+  svg.addEventListener('pointerup',up,true);svg.addEventListener('pointercancel',up,true);}
+
+/* Aufgabe Paket 6: Winkel beschriften */
+function t6beschriften(){const deg=rnd(40,140),rot=rnd(-20,20),name=pick(GREEK)[0],chips=lbChips(name);
+  let geo=null;
+  return{short:'Winkel beschriften',inter:true,ask:`Beschrifte den Winkel: Zieh die richtigen Buchstaben an den <b>Scheitel</b>, an die <b>Schenkel a und b</b> und den Winkelnamen <b>${name}</b> in den Winkelbogen. Nicht alle Buchstaben passen.`,
+    fmt:v=>v&&v.ok?'richtig beschriftet':'nicht richtig beschriftet',rightText:'S am Scheitel, a und b an den Schenkeln, '+name+' im Bogen',
+    grade:(q,v)=>{const r=lbCheck(v,{S:'S',a:'a',b:'b',[name]:'w'},geo);return{correct:r.ok,score:r.ok?1:0,msg:r.ok?`${pick(PRAISE)} Scheitel S (großer Buchstabe), Schenkel a und b (kleine Buchstaben), Winkel mit griechischem Buchstaben.`:`Nicht ganz.${r.miss.length?' Es fehlt: '+r.miss.join(', ')+'.':''} Der Scheitel heißt S (groß), die Schenkel a und b (klein), der Winkel bekommt einen griechischen Buchstaben – hier ${name}. Die grünen Buchstaben zeigen die richtigen Stellen.`};},
+    draw(svg,W,H,rev){const S={x:W*.3,y:H*.72},L=Math.min(W*.55,H*.55),a0=rot,A={x:S.x+L*Math.cos(a0*Math.PI/180),y:S.y-L*Math.sin(a0*Math.PI/180)},B={x:S.x+L*Math.cos((a0+deg)*Math.PI/180),y:S.y-L*Math.sin((a0+deg)*Math.PI/180)};
+      geo={S,A,B,a0,deg,ccw:true,R:40};const g=el('g',{},svg);sector(g,S.x,S.y,40,a0,deg,'arcf');ln(g,S.x,S.y,A.x,A.y,'ray r1');ln(g,S.x,S.y,B.x,B.y,'ray r2');el('circle',{cx:S.x,cy:S.y,r:5,class:'vertex'},g);
+      const pl=G.lb||(G.lb={chips,pos:{}});lbDraw(svg,W,pl,rev,geo,name);
+      lbPointer(svg);G.lbOn=()=>{G.drawVal=pl;const d=$('#done');if(d)d.disabled=!Object.keys(pl.pos).length;redraw();};}};}
 
 /* Spiel-Engine */
 let G=null,lastDeg=null,LZ_HL=null,LZ_IDS=[];
@@ -1049,7 +1126,7 @@ function t8rechteck(){const nx=8,ny=6;let A,B,C,D;
       if(G.drawVal)tapPt(F.g,...Q(G.drawVal));
       if(G.drawVal==null&&!rev)tx(svg,W/2,22,'Tippe auf einen Gitterpunkt','help');gridTap(svg,F,nx,ny,rev);}};}
 
-const TASKS={p5:[t5dreh,t5wohin,t5kurs,t5bruch,t5koord,t5punkt,t5weg,t5gleich],p6:[t6teil,t6griech,t6geo,t6wissen],p7:[t7neben,t7voll,t7scheitel,t7dreieck,t7trick,t7summe,t7parallel,t7parallel,t7figur],p8:[t8lage,t8recht,t8zeichnen,t8wissen,t8abstand,t8rechteck]};
+const TASKS={p5:[t5dreh,t5wohin,t5kurs,t5bruch,t5koord,t5punkt,t5weg,t5gleich],p6:[t6teil,t6griech,t6geo,t6wissen,t6beschriften,t6beschriften],p7:[t7neben,t7voll,t7scheitel,t7dreieck,t7trick,t7summe,t7parallel,t7parallel,t7figur],p8:[t8lage,t8recht,t8zeichnen,t8wissen,t8abstand,t8rechteck]};
 /* nur für Tests: window.__wkForce='t7parallel' erzwingt eine Aufgabenart */
 window.__wkTasks=Object.fromEntries(Object.values(TASKS).flat().map(f=>[f.name,f]));
 const selA=()=>PACKS.some(p=>p.gen&&S.sel.includes(p.id));
@@ -1122,7 +1199,7 @@ function kindFor(){const m=G.mode;if(m==='test')return G.kinds[G.i];if(m==='time
 function next(){
   if(G.finished)return;
   if(G.i>=G.total)return finish();
-  G.locked=false;G.drawVal=null;G.revealed=false;G.buf='';
+  G.locked=false;G.drawVal=null;G.revealed=false;G.buf='';G.lb=null;G.lbOn=null;
   const kind=kindFor();
   if(kind==='task')G.q=genTask();
   else{const d=genDeg(kind);G.q={kind,deg:d.deg,pack:d.pack,rot:rotFor(kind)};if(kind==='konstr')G.q.name=pick(['α','β','γ','δ','ε']);}
@@ -1212,10 +1289,15 @@ function grade(q,v){
     const d=Math.abs(v-q.deg),score=d<=5?1:d<=10?.66:d<=20?.33:0,st=Math.round(score*3);
     return{correct:d<=10,score,msg:`<span style="color:var(--arc);font-size:24px">${'★'.repeat(st)}${'☆'.repeat(3-st)}</span><br>Tatsächlich: ${q.deg}° – du lagst ${d}° ${d===0?'daneben? Nein, genau richtig!':'daneben.'}`};
   }
-  if(q.kind==='konstr'){const d=Math.abs(v-q.deg),big=q.deg>180,side=big?Math.abs((360-v)-q.deg)<=3&&d>3:Math.abs((360-v)-q.deg)<=3&&d>3;
+  if(q.kind==='konstr'){const lab=v&&v.lab,labOk=!lab||lab.ok;v=v&&v.deg!=null?v.deg:v;const r0=kGrade(q,v);
+    if(!labOk){const t=` Beschriftung nicht vollständig richtig${lab.miss.length?' (es fehlt: '+lab.miss.join(', ')+')':''}: Scheitel S groß, Schenkel a und b klein, der Winkel ${q.name} in den Bogen. Die grünen Buchstaben zeigen die richtigen Stellen.`;return{correct:false,score:r0.score===1?.5:r0.score/2,msg:r0.msg+t};}
+    return r0;}
+  return gradeRest(q,v);}
+function kGrade(q,v){const d=Math.abs(v-q.deg),big=q.deg>180,side=big?Math.abs((360-v)-q.deg)<=3&&d>3:Math.abs((360-v)-q.deg)<=3&&d>3;
     if(d<=2)return{correct:true,score:1,msg:`${pick(PRAISE)} Dein Winkel ${q.name} hat ${v}° – Ziel ${q.deg}°. Sauber konstruiert!`};
     if(side)return{correct:false,score:.5,msg:`Fast! Die Schenkel stimmen, aber der Winkelbogen liegt auf der falschen Seite: Du hast ${v}° markiert, gesucht ist ${q.deg}°.${big?' Bei überstumpfen Winkeln kommt der Bogen auf die große Seite.':''}`};
     return{correct:false,score:d<=5?.5:0,msg:`Dein Winkel hat ${v}°, gesucht war ${q.deg}°. ${d<=5?'Knapp daneben – setz die Markierung genauer.':'Prüfe: Nullpunkt genau auf S? Richtige Skala (die bei Schenkel a mit 10° beginnt)?'} Die gestrichelte Linie zeigt den richtigen Schenkel.`};}
+function gradeRest(q,v){
   const d=Math.abs(v-q.deg);
   return{correct:d<=5,score:d<=5?1:d<=10?.5:0,msg:d<=5?`${pick(PRAISE)} Dein Winkel: ${v}°, Ziel: ${q.deg}°.`:`Dein Winkel: ${v}°, Ziel: ${q.deg}°. Die gestrichelte Linie zeigt, wo der Schenkel hingehört.`};
 }
@@ -1242,7 +1324,7 @@ function answer(val){
   const xp=q.kind==='estimate'?Math.round(r.score*3)*4:r.score===1?10:r.score>0?5:0;
   if(xp){G.xp+=xp;addXP(xp);}
   G.revealed=true;
-  if(q.kind==='task')redraw();else if(q.kind==='draw')revealDraw();else if(q.kind==='konstr')kDraw();else if(q.kind!=='degree')renderAngle(q,{reveal:true});
+  if(q.kind==='task')redraw();else if(q.kind==='draw')revealDraw();else if(q.kind==='konstr'){kDraw();kPanel();}else if(q.kind!=='degree')renderAngle(q,{reveal:true});
   $('#panel').classList.add('answered');
   const fb=$('#fb');
   fb.innerHTML=`<div class="fbox ${r.correct?'ok':r.score>0?'half':'bad'}"><div>${r.msg}</div>${xp?`<div class="xpgain sm">+${xp} Punkte</div>`:''}<button class="big go" id="weiter">${G.i+1>=G.total?'Auswertung ▶':'Weiter ▶'}</button></div>`;
@@ -1271,7 +1353,7 @@ function finish(){
       else if(q.kind==='degree')t=`${q.deg}° einordnen: ${TYPES[l.val].short}${r.correct?'':` (richtig: ${TYPES[T].short})`}`;
       else if(q.kind==='visual')t=`Winkelart im Bild: ${TYPES[l.val].short}${r.correct?'':` (richtig: ${TYPES[T].short}, ${q.deg}°)`}`;
       else if(q.kind==='measure')t=`Messen: ${l.val}° (richtig: ${q.deg}°)`;
-      else if(q.kind==='konstr')t=`${q.deg}° konstruieren: du hattest ${l.val}°`;
+      else if(q.kind==='konstr')t=`${q.deg}° konstruieren: du hattest ${l.val&&l.val.deg!=null?l.val.deg:l.val}°${l.val&&l.val.lab&&!l.val.lab.ok?', Beschriftung fehlerhaft':''}`;
       else t=`${q.deg}° zeichnen: du hattest ${l.val}°`;
       const c=r.score===1?'ok':r.score>0?'half':'bad';
       return`<li class="${c}"><span>${r.score===1?'✓':r.score>0?'½':'✗'}</span>${i+1}. ${t}</li>`;
@@ -1385,8 +1467,8 @@ function checklist(){
 }
 const LEARN2=`
   <h2>✍️ So zeichnest du einen Winkel</h2>
-  <div class="box"><ol><li>Zeichne den ersten Schenkel. Er soll mindestens 6 cm lang sein.</li><li>Markiere den Scheitel S und beschrifte den Schenkel a.</li><li>Lege das Geodreieck auf den Schenkel a. Der Nullpunkt liegt genau bei S.</li><li>Wähle die Winkelskala, die auf der Seite von Schenkel a mit 10° beginnt. Suche die Gradzahl und mache eine Markierung.</li><li>Verbinde S mit der Markierung.</li><li>Beschrifte den zweiten Schenkel mit b, zeichne den Winkelbogen und beschrifte den Winkel.</li></ol>
-  <b>Überstumpf, zum Beispiel β = 310°:</b> 360° − 310° = 50°. Zeichne 50° und markiere den großen Bogen auf der anderen Seite.</div>
+  <div class="box"><ol><li>Zeichne den ersten Schenkel. Er soll mindestens 6 cm lang sein.</li><li>Markiere den Scheitel S und beschrifte den Schenkel a.</li><li>Lege das Geodreieck <b>verkehrt</b> auf den Schenkel a (Spitze nach oben). Der Nullpunkt liegt genau bei S.</li><li>Wähle die Winkelskala, die auf der Seite von Schenkel a mit 10° beginnt. Suche die Gradzahl und mache eine Markierung.</li><li>Verbinde S mit der Markierung.</li><li>Beschrifte den zweiten Schenkel mit b, zeichne den Winkelbogen und beschrifte den Winkel.</li></ol>
+  <b>Überstumpf (Infoblatt „Winkel zeichnen 2“), zum Beispiel β = 310°:</b> Trick: 360° − 310° = 50°. Zeichne den ersten Schenkel, markiere S und beschrifte a. Lege das Geodreieck <b>unten an</b> den Schenkel a an (Nullpunkt bei S), markiere 50° und verbinde. Dann b beschriften und den Winkelbogen auf der <b>richtigen Seite</b> einzeichnen – das ist der große Bogen – und β hineinschreiben.</div>
   <h2>🏷️ Teile des Winkels</h2>
   <div class="box">Der Punkt, an dem sich die Schenkel treffen, heißt <b>Scheitel S</b>. Die beiden Strahlen heißen <b>Schenkel a</b> und <b>b</b>. Der <b>Winkelbogen</b> zeigt, welcher Winkel gemeint ist.<br>Winkel werden mit griechischen Buchstaben beschriftet: <b>α</b> Alpha, <b>β</b> Beta, <b>γ</b> Gamma, <b>δ</b> Delta, <b>ε</b> Epsilon.<br><br><b>Das Geodreieck:</b> Nullpunkt, Mittellinie, Längenmaß (Lineal an der langen Kante), innere und äußere Winkelskala, parallele Hilfslinien, eine 90°-Ecke und zwei 45°-Ecken.</div>
   <h2>🧭 Kompass und Kurs</h2>
@@ -1465,7 +1547,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.10.2">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.11.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1475,24 +1557,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.10.2"></script>
+<script src="../js/lernplan.js?v=7.11.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.10.2">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.11.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.10.2"></script>
+<script src="../js/nutzer.js?v=7.11.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.10.2"></script>
+<script src="../js/home-btn.js?v=7.11.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.10.2"></script>
+<script src="../js/arena-btn.js?v=7.11.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.10.2"></script>
+<script src="../js/lernzettel-btn.js?v=7.11.0"></script>
 </body>
 </html>
