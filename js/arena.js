@@ -77,7 +77,7 @@ function loadApp(k){
       else if(k==="D")v=JSON.parse(JSON.stringify({I:w.__lzArena.I.filter(i=>i.t==="mc"&&i.o.length<=5||i.t==="comma"||i.t==="tap"),sel:w.__lzArena.sel()}));
     }catch(e){v=null;}fin(v);},250);
     setTimeout(()=>fin(null),8000);
-    f.src=APPURL[k]+"?v=7.8.0";document.body.appendChild(f);});
+    f.src=APPURL[k]+"?v=7.9.0";document.body.appendChild(f);});
 }
 const DEG=[{n:"Nullwinkel",f:a=>a===0},{n:"spitzer Winkel",f:a=>a>0&&a<90},{n:"rechter Winkel",f:a=>a===90},{n:"stumpfer Winkel",f:a=>a>90&&a<180},{n:"gestreckter Winkel",f:a=>a===180},{n:"überstumpfer Winkel",f:a=>a>180&&a<360},{n:"Vollwinkel",f:a=>a===360}];
 function qW(sel){

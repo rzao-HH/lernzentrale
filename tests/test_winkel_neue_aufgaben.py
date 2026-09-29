@@ -16,8 +16,11 @@ async def main():
         if kind=='mc':
           btn=await f.query_selector_all('.tbtn');await btn[0].click()
         elif kind=='num':
-          for ch in ('9','9'):await f.click(f'button:text-is("{ch}")')
-          await f.click('button:text-is("OK")')
+          tb=await f.query_selector_all('.tbtn')
+          if tb:await tb[0].click()  # Parallelen: manchmal „Wie viele verschieden große Winkel?“ als Auswahl
+          else:
+            for ch in ('9','9'):await f.click(f'button:text-is("{ch}")')
+            await f.click('button:text-is("OK")')
         else:
           svg=await f.query_selector('#stage svg');bb=await svg.bounding_box()
           await p.mouse.click(bb['x']+bb['width']*(0.5 if right else 0.2),bb['y']+bb['height']*(0.5 if right else 0.8))

@@ -2,11 +2,11 @@
 <html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Detektiv-Büro</title>
-<script src="../js/app-core.js?v=7.8.0"></script>
+<script src="../js/app-core.js?v=7.9.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="D";window.__DATAKEY="detektivbuero-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.8.0"></script>
+<script src="../js/nutzer-init.js?v=7.9.0"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -318,6 +318,51 @@ const MC=[
  ['p6','Welche Zeitform heißt auch „vollendete Gegenwart“?',['Perfekt','Plusquamperfekt','Präsens','Präteritum'],'Perfekt','']
 ];
 MC.forEach(([p,s,o,a,ex])=>{const tense=p==='p6'&&o.length===5;ITEMS.push({t:'mc',p,tag:p==='p6'?'tense':'konj',q:tense?'Welche Zeitform ist das?':/___/.test(s)?(p==='p6'?'Setze die richtige Form ein.':'Welche Konjunktion passt?'):'',s,o,a,ex});});
+/* Regel-Check: zu JEDER Lernkarte eine Frage (Reihenfolge wie CARDS) – richtige Antwort zuerst, dann drei falsche.
+   Damit kommen alle Karteninhalte in Übung, Blitz-Ermittlung und Abschlusstest vor. */
+const REGEL={
+ p1:[["Er könnte allein stehen; die gebeugte Verbform steht meist an 2. Stelle.",["Er beginnt immer mit einer Konjunktion wie weil.","Die gebeugte Verbform steht immer am Ende.","Er steht immer nach einem Komma."]],
+  ["Er kann nicht allein stehen; die gebeugte Verbform steht am Ende.",["Er kann allein stehen; das Verb steht an 2. Stelle.","Er beginnt immer mit und oder aber.","Er hat gar keine Verbform."]],
+  ["Die Verbform, die sich nach der Person richtet (ich gehe, du gehst).",["Die Grundform eines Verbs (gehen).","Das Partizip II (gegangen).","Das Wort, das immer am Satzanfang steht."]],
+  ["Den Satz in eine andere Person setzen: Was sich ändert, ist die gebeugte Verbform.",["Das längste Wort im Satz suchen.","Immer das letzte Wort des Satzes nehmen.","Das Wort direkt nach dem Komma nehmen."]],
+  ["Aus mehreren Hauptsätzen oder aus Haupt- und Nebensätzen.",["Nur aus Nebensätzen.","Aus einem einzigen Hauptsatz mit vielen Wörtern.","Aus Aufzählungen ohne Verb."]],
+  ["als, weil, obwohl, dass, wenn, nachdem",["und, oder, aber, denn","doch, sondern, und, oder","ich, du, er, sie"]]],
+ p2:[["Aneinandergereihte Hauptsätze, getrennt mit Komma oder Punkt.",["Ein Hauptsatz mit einem Nebensatz.","Eine Aufzählung von Nomen.","Ein Satz ohne gebeugte Verbform."]],
+  ["Nein, es muss keins stehen – erlaubt ist es trotzdem.",["Ja, immer.","Nein, dort ist ein Komma verboten.","Nur vor oder, nicht vor und."]],
+  ["doch, aber, sondern, denn",["und, oder","weil, obwohl, dass","als, wenn, nachdem"]],
+  ["Aufzählen (und, oder), Gegensatz (aber, doch, sondern), Grund (denn)",["Aufzählen (denn), Gegensatz (und), Grund (oder)","Nur eine Zeit (als, nachdem, bevor)","Eine Bedingung (wenn) und einen Zweck (damit)"]],
+  ["Ein Hauptsatz – die Wortstellung ändert sich nicht.",["Ein Nebensatz – das Verb wandert ans Ende.","Eine Aufzählung ohne Verb.","Immer ein Fragesatz."]],
+  ["Wörter, die du nicht wiederholen willst.",["Die gebeugte Verbform des zweiten Satzes.","Das Komma vor aber.","Nichts – alle Wörter müssen bleiben."]]],
+ p3:[["Aus einem Hauptsatz und mindestens einem Nebensatz.",["Aus zwei Hauptsätzen mit und.","Nur aus Nebensätzen.","Aus einem Hauptsatz und einer Aufzählung."]],
+  ["Immer ein Komma.",["Nur manchmal ein Komma.","Ein Punkt.","Nichts."]],
+  ["An der letzten Stelle.",["An der 2. Stelle.","Ganz am Anfang.","Direkt nach dem Komma."]],
+  ["Der Hauptsatz beginnt dann mit dem Verb.",["Das Komma fällt weg.","Der Nebensatz verliert sein Verb.","Der Hauptsatz beginnt dann mit weil."]],
+  ["weil, da, während, wenn, obwohl, damit",["und, oder, aber, denn","doch, sondern, und","ich, wir, sie, es"]],
+  ["Sie stehen oft mitten im Satz – mit Komma davor und danach.",["Sie stehen immer am Satzende, ohne Komma.","Sie sind Hauptsätze.","Vor ihnen steht nie ein Komma."]]],
+ p4:[["weil, da, denn",["obwohl, aber, doch","als, nachdem, bevor","damit, sodass"]],
+  ["obwohl, aber, doch, sondern",["weil, da, denn","als, nachdem, seit","und, oder"]],
+  ["als, nachdem, bevor, während, seit",["weil, da, denn","obwohl, aber, doch","damit, sodass"]],
+  ["wenn",["obwohl","denn","sodass"]],
+  ["damit nennt den Zweck, sodass die Folge.",["damit nennt die Folge, sodass den Zweck.","Beide nennen einen Grund.","damit nennt eine Zeit, sodass eine Bedingung."]],
+  ["Gleiche Bedeutung – bei weil wandert das Verb ans Ende.",["Bei denn wandert das Verb ans Ende.","denn nennt einen Gegensatz, weil einen Grund.","Kein Unterschied, auch nicht bei der Wortstellung."]],
+  ["als: einmal in der Vergangenheit. wenn: immer wieder oder als Bedingung.",["als: immer wieder. wenn: einmal in der Vergangenheit.","als nur für die Zukunft, wenn für die Vergangenheit.","Beide bedeuten genau dasselbe."]],
+  ["ob bei einer offenen Ja-Nein-Frage, dass bei einer Aussage.",["dass bei einer Frage, ob bei einer Aussage.","ob nennt einen Grund, dass eine Zeit.","ob darf nur am Satzanfang stehen."]]],
+ p5:[["Mit Komma.",["Mit Punkt.","Mit und zwischen allen Teilen.","Gar nicht."]],
+  ["Nein.",["Ja, immer.","Nur vor oder.","Nur, wenn der letzte Teil lang ist."]],
+  ["Nur Hauptsätze → Satzreihe. Hauptsatz + Nebensatz → Satzgefüge.",["Eine Satzreihe hat immer ein Komma, ein Satzgefüge nie.","Nur Nebensätze → Satzreihe.","Ein Satzgefüge hat immer und."]],
+  ["Gebeugte Verbformen suchen – Teilsätze zählen – an jede Grenze ein Komma.",["Nach jedem dritten Wort ein Komma.","Nur vor und ein Komma setzen.","Dort ein Komma, wo man beim Lesen Luft holt."]],
+  ["Nur zwischen Hauptsätzen (Satzreihe).",["Nur vor einem Nebensatz.","Überall, wo sonst ein Komma steht.","Nur in Aufzählungen."]]],
+ p6:[["Die Gegenwart: Ich gehe ins Kino.",["Die Vergangenheit: Ich ging ins Kino.","Die Zukunft: Ich werde ins Kino gehen.","Die Vorvergangenheit: Ich war ins Kino gegangen."]],
+  ["Die erste Vergangenheit: Ich ging ins Kino.",["Die Gegenwart: Ich gehe ins Kino.","Die Vorvergangenheit: Ich war ins Kino gegangen.","Die Zukunft: Ich werde ins Kino gehen."]],
+  ["haben/sein im Präsens + Partizip II",["haben/sein im Präteritum + Partizip II","werden + Grundform","nur ein Verb in der Vergangenheit"]],
+  ["haben/sein im Präteritum + Partizip II",["haben/sein im Präsens + Partizip II","werden + Grundform","Präsens mit der Endung -te"]],
+  ["werden + Grundform (Infinitiv)",["haben + Partizip II","sein im Präteritum + Partizip II","nur die Grundform"]],
+  ["Bei Verben der Bewegung (rennen, laufen, gehen, kommen, fallen).",["Bei allen Verben.","Bei Verben wie schaffen, machen, üben.","Nie – das Perfekt geht nur mit haben."]],
+  ["Für etwas, das vor einem anderen vergangenen Ereignis passiert ist.",["Für etwas, das gerade jetzt passiert.","Für etwas in der Zukunft.","Für Befehle."]],
+  ["nachdem-Satz im Plusquamperfekt, Hauptsatz im Präteritum.",["Beide Teile im Präsens.","nachdem-Satz im Futur, Hauptsatz im Perfekt.","nachdem-Satz im Präteritum, Hauptsatz im Plusquamperfekt."]]]
+};
+Object.keys(REGEL).forEach(p=>REGEL[p].forEach(([a,w],i)=>{const cd=CARDS[p][i];if(!cd)return;
+  ITEMS.push({t:'mc',p,tag:'regel',q:'Regel-Check: Welche Antwort stimmt?',s:cd[0],o:[a,...w],a,ex:cd[1]+(cd[2]?' (📄 '+cd[2]+')':'')});}));
 const TYP=[
  ['Setze ins Perfekt: Die Show beginnt.',['Die Show hat begonnen.']],
  ['Setze ins Präteritum: Die Show beginnt.',['Die Show begann.']],
@@ -381,6 +426,7 @@ function confetti(){const c=document.createElement('div');c.style.cssText='posit
 function recordStat(p,ok){const a=S.stats[p]=S.stats[p]||[];a.push(ok?1:0);if(a.length>20)a.shift();save();}
 const MODES={
  book:{i:'📒',t:'Akte lesen',d:'Lernkarten: umdrehen, dann „Weiß ich!“ oder „Nochmal“.',g:'Lernen'},
+ regel:{i:'🧠',t:'Regel-Check',d:'Zu jeder Lernkarte eine Frage: Welche Regel stimmt?',g:'Üben',f:i=>i.tag==='regel'},
  verb:{i:'🔎',t:'Verb-Jäger',d:'Tippe die gebeugten (finiten) Verbformen oder die Konjunktion an.',g:'Üben',f:i=>i.t==='tap'},
  comma:{i:'✒️',t:'Komma-Setzer',d:'Tippe zwischen die Wörter, wo ein Komma hingehört.',g:'Üben',f:i=>i.t==='comma'},
  sort:{i:'🗂️',t:'Satzreihe oder Satzgefüge?',d:'Entscheide, welcher Satzbau vorliegt.',g:'Üben',f:i=>i.tag==='srsg'},
@@ -416,9 +462,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-lzsel]');i
 function shell(m){const M=MODES[m];app.innerHTML=`<div class="pbar2"><button class="icon-btn" id="back" aria-label="Zurück zur Übersicht">←</button><div class="t">${M.i} ${M.t}</div><div id="pprog"></div></div><div class="card" id="card"></div>`;$('#back').onclick=home;app.scrollTop=0;}
 function startMode(m){if(!avail(m))return;if(m==='book')return book();if(m==='blitz')return blitz();if(m==='write')return writeTest();
   const pool=poolFor(m);let qs;
-  if(m==='test'){const by={};pool.forEach(i=>(by[i.p]=by[i.p]||[]).push(i));Object.keys(by).forEach(k=>by[k]=shuffle(by[k]));qs=[];let k=0;const keys=Object.keys(by);while(qs.length<12&&keys.some(x=>by[x].length)){const p=keys[k%keys.length];if(by[p].length)qs.push(by[p].shift());k++;}qs=shuffle(qs);}
+  if(m==='test'){/* 3 von 12 Aufgaben sind Regel-Fragen zu den Lernkarten, verteilt auf die gewählten Akten */
+    const pick_=(src,n)=>{const by={};src.forEach(i=>(by[i.p]=by[i.p]||[]).push(i));Object.keys(by).forEach(k=>by[k]=shuffle(by[k]));const out=[];let k=0;const keys=shuffle(Object.keys(by));while(out.length<n&&keys.some(x=>by[x].length)){const p=keys[k%keys.length];if(by[p].length)out.push(by[p].shift());k++;}return out;};
+    const R=pick_(pool.filter(i=>i.tag==='regel'),3);qs=shuffle(R.concat(pick_(pool.filter(i=>i.tag!=='regel'),12-R.length)));}
   else qs=shuffle(pool).slice(0,10);
-  G={mode:m,qs,i:0,score:0,log:[],test:m==='test'};shell(m);item();}
+  G={mode:m,qs,i:0,score:0,log:[],test:m==='test'};window.__detQs=()=>G&&G.qs;shell(m);item();}
 /* ---------- Aufgaben ---------- */
 function parseTap(s){return s.split(' ').map(w=>{const m=w.match(/^(\*?)(.*?)(\*?)([.,!?;:“”]*)$/);const hit=/^\*.*\*[.,!?;:]*$/.test(w)||(/^\*/.test(w)&&/\*/.test(w.slice(1)));const clean=w.replace(/\*/g,'');return{w:clean,hit:w.includes('*')};});}
 function parseComma(s){const toks=s.split(' ');return toks.map(t=>{let c=0;if(/\(,\)$/.test(t)){c=2;t=t.replace(/\(,\)$/,'');}else if(/,$/.test(t)){c=1;t=t.slice(0,-1);}return{w:t,c};});}
@@ -432,7 +480,7 @@ function item(){
     c.appendChild(box);$('#nx').onclick=()=>{G.i++;if(G.i>=G.qs.length)return end();item();app.scrollTop=0;};box.scrollIntoView({behavior:'smooth',block:'nearest'});};
   if(q.t==='mc'){
     c.innerHTML=`${q.q?`<div class="q">${esc(q.q)}</div>`:''}<div class="sent">${esc(q.s).replace('___','<b>____</b>')}</div><div class="opts">${shuffle(q.o).map(o=>`<button class="opt" data-o="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
-    c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(G.done)return;const ok=b.dataset.o===q.a;c.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(x.dataset.o===q.a)x.classList.add('right');});if(!ok)b.classList.add('wrong');fin(ok,ok?'':'Richtig: '+esc(q.a)+'.');});
+    c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(G.done)return;const ok=b.dataset.o===q.a;c.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(x.dataset.o===q.a)x.classList.add('right');});if(!ok)b.classList.add('wrong');fin(ok,ok?'':'Richtig: '+esc(q.a).replace(/[.!?]$/,'')+'.');});
   }else if(q.t==='tap'){
     const W=parseTap(q.s),sel=new Set();
     c.innerHTML=`<div class="q">${esc(q.q)}</div><div class="words tapm">${W.map((x,i)=>`<button class="w" data-i="${i}">${esc(x.w)}</button>`).join('')}</div><button class="big go" id="chk">Prüfen</button>`;
@@ -604,7 +652,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:var(--on);--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-deutsch", "prefix": "D", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Akten gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Akten auswählen.", "units": [{"id": "p1", "icon": "🔍", "name": "Hauptsatz & Nebensatz", "learn": "Erst „Akte lesen“, dann Verb-Jäger.", "rep": "Verb-Jäger oder Satzreihe oder Satzgefüge?"}, {"id": "p2", "icon": "🔗", "name": "Satzreihe", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Konjunktion wählen.", "rep": "Komma-Setzer oder Satz-Baumeister."}, {"id": "p3", "icon": "🧩", "name": "Satzgefüge", "learn": "Erst „Akte lesen“, dann Satz-Baumeister und Komma-Setzer.", "rep": "Satz-Baumeister oder Verb-Jäger."}, {"id": "p4", "icon": "🗝️", "name": "Konjunktionen", "learn": "Erst „Akte lesen“, dann Konjunktion wählen.", "rep": "Konjunktion wählen oder Satz-Baumeister."}, {"id": "p5", "icon": "✒️", "name": "Komma-Profi", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Satzreihe oder Satzgefüge?", "rep": "Komma-Setzer."}, {"id": "p6", "icon": "⏳", "name": "Zeitformen", "learn": "Erst „Akte lesen“, dann Zeitmaschine.", "rep": "Zeitmaschine."}], "testName": "Abschlusstest", "write": true, "est": {"learn": 15, "rep": 5, "test": 10, "final": 20, "write": 15}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.8.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.9.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -614,18 +662,18 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.8.0"></script>
+<script src="../js/lernplan.js?v=7.9.0"></script>
 <!-- ===== /Lernplan ===== -->
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.8.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.9.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.8.0"></script>
+<script src="../js/nutzer.js?v=7.9.0"></script>
 <!-- ===== /Nutzer ===== -->
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank{min-width:0;flex:1 1 auto;overflow:hidden}#rank b{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#rank .rt{display:none}}</style>
-<script src="../js/home-btn.js?v=7.8.0"></script>
+<script src="../js/home-btn.js?v=7.9.0"></script>
 <!-- ===== /Start ===== -->
-<script src="../js/arena-btn.js?v=7.8.0"></script>
+<script src="../js/arena-btn.js?v=7.9.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Deutsch: Satzbau und Zeitformen",f:"deutsch-satzbau-zeitformen.html",d:"Nr. 29–41 und Heft Zeitformen, Lösungen am Ende"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.8.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.9.0"></script>
 </body></html>
