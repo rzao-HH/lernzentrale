@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.11.0"></script>
+<script src="../js/app-core.js?v=7.12.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.11.0"></script>
+<script src="../js/nutzer-init.js?v=7.12.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -268,6 +268,26 @@ h2{font-family:var(--display);font-size:24px;margin:30px 0 12px;display:flex;ali
 .cl-go{border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:12px;padding:8px 12px;font-weight:800;flex:none}
 .clcard{background:var(--panel);border:2px solid var(--ok);border-radius:16px;padding:14px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
 .clcard>div{flex:1 1 240px}.clcard b{font-family:var(--display);font-size:19px}.clcard small{display:block;color:var(--muted);font-weight:700}
+.cl-vgo{border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:12px;padding:8px 12px;font-weight:800;min-height:40px}
+.cl-chip.bad{background:var(--badbg);color:var(--bad)}
+.cl-det{flex:1 1 100%;border-top:1px dashed var(--line);padding-top:6px;min-width:0}
+.cl-det.cl-par{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 14px;margin:10px 0 14px}
+.cl-det>summary{cursor:pointer;font-weight:800;color:var(--accent);list-style:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:40px}
+.cl-det>summary::-webkit-details-marker{display:none}
+.cl-det>summary::before{content:'▸';display:inline-block;transition:transform .15s}
+.cl-det[open]>summary::before{transform:rotate(90deg)}
+.cl-vl{display:grid;gap:10px;padding:6px 0 4px;font-size:15px;line-height:1.4}
+.cl-tab{width:100%;border-collapse:collapse;font-size:14px}
+.cl-tab th,.cl-tab td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line)}
+.cl-tab th{color:var(--muted);font-size:12px}.cl-tab tr.tot td{font-weight:800}
+.cl-err{margin:4px 0 0;padding-left:20px}.cl-err small{color:var(--muted);font-weight:700}
+.cl-tip{background:var(--panel2);border-radius:12px;padding:10px 12px}
+.cl-warn{background:var(--halfbg);color:var(--half);border-radius:12px;padding:10px 12px;font-weight:700}
+.cl-acts,.cl-self{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.cl-sb{border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 12px;font-weight:800;min-height:44px}
+.cl-sb.on{border-color:var(--accent);background:var(--panel2);color:var(--accent)}
+.cl-nl{display:grid;gap:4px;font-weight:800}
+.cl-note{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);color:var(--text);font:inherit;font-weight:500;resize:vertical}
 /* Toast & confetti */
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 70px);transform:translateX(-50%);z-index:50;background:var(--panel);border:2px solid var(--arc);border-radius:16px;padding:12px 20px;font-weight:900;font-size:18px;box-shadow:0 10px 40px rgba(0,0,0,.35);animation:tin .3s ease-out}
 @keyframes tin{from{opacity:0;transform:translate(-50%,-12px)}}
@@ -414,6 +434,28 @@ function recordStat(pid,ok){
     addXP(50);
   }
   save();
+}
+/* Verlauf pro Paket und Aufgabenart (für die Checkliste): Versuche, Treffer, Zeit, häufige Fehler.
+   S.vl["<paket>|<art>"]={n,ok,ms,mn,h:[letzte 10: 1/0],err:{Fehlerart:Anzahl},t}. Zeit nur bei einzelnen Aufgaben, nicht in der Zeitrunde. */
+function vlErr(q,v,r){
+  if(r.correct)return null;
+  if(q.kind==='task')return 't|'+(q.short||q.tname||'Aufgabe');
+  if(q.kind==='visual'||q.kind==='degree')return 'v|'+typeOf(q.deg)+'|'+v;
+  const dg=v&&typeof v==='object'?v.deg:v;if(typeof dg!=='number')return null;
+  if(q.kind==='konstr'&&v&&v.lab&&!v.lab.ok&&Math.abs(dg-q.deg)<=2)return'lab';
+  if(Math.abs((360-dg)-q.deg)<=3)return'ueber';
+  if(Math.abs((180-dg)-q.deg)<=3)return'skala';
+  return dg<q.deg?'klein':'gross';
+}
+function vlRecord(q,v,r){
+  if(!S.vl)S.vl={};
+  const key=q.pack+'|'+q.kind,s=S.vl[key]||(S.vl[key]={n:0,ok:0,ms:0,mn:0,h:[],err:{}});
+  s.n++;if(r.correct)s.ok++;
+  s.h.push(r.correct?1:0);if(s.h.length>10)s.h.shift();
+  if(G&&G.mode!=='time'&&G.t0){const ms=Date.now()-G.t0;if(ms>0&&ms<180000){s.ms+=ms;s.mn++;}}
+  const e=vlErr(q,v,r);
+  if(e){s.err[e]=(s.err[e]||0)+1;const ks=Object.keys(s.err);if(ks.length>12){ks.sort((a,b)=>s.err[a]-s.err[b]);delete s.err[ks[0]];}}
+  s.t=Date.now();save();
 }
 
 /* Geometrie */
@@ -1135,7 +1177,7 @@ function genTask(){
   let packs=PACKS.filter(p=>p.task&&S.sel.includes(p.id));
   let p;if(G.mode==='test'){G.tp=(G.tp||0)+1;if(!G.tpo)G.tpo=shuffle(packs);p=G.tpo[G.tp%G.tpo.length];}else p=pick(packs);
   let f;for(let t=0;t<10;t++){f=pick(TASKS[p.id]);if(f!==G.lastF)break;}G.lastF=f;if(window.__wkForce&&window.__wkTasks[window.__wkForce])f=window.__wkTasks[window.__wkForce];
-  return Object.assign(f(),{kind:'task',pack:p.id});
+  return Object.assign(f(),{kind:'task',pack:p.id,tname:f.name});
 }
 function taskAnsText(q,v){if(q.fmt)return q.fmt(v);if(q.opts)return q.opts[v];if(q.inter)return v==null?'–':v+'°';return v+(q.unit==null?'°':q.unit);}
 function taskRightText(q){if(q.rightText)return q.rightText;if(q.opts)return q.opts[q.ans];if(q.inter)return q.short;return q.ans+(q.unit==null?'°':q.unit);}
@@ -1199,7 +1241,7 @@ function kindFor(){const m=G.mode;if(m==='test')return G.kinds[G.i];if(m==='time
 function next(){
   if(G.finished)return;
   if(G.i>=G.total)return finish();
-  G.locked=false;G.drawVal=null;G.revealed=false;G.buf='';G.lb=null;G.lbOn=null;
+  G.locked=false;G.drawVal=null;G.revealed=false;G.buf='';G.lb=null;G.lbOn=null;G.t0=Date.now();
   const kind=kindFor();
   if(kind==='task')G.q=genTask();
   else{const d=genDeg(kind);G.q={kind,deg:d.deg,pack:d.pack,rot:rotFor(kind)};if(kind==='konstr')G.q.name=pick(['α','β','γ','δ','ε']);}
@@ -1311,7 +1353,7 @@ function answer(val){
   G.locked=true;
   const q=G.q,r=grade(q,val);
   G.log.push({q,val,r});
-  recordStat(q.pack,r.correct);if(q.kind==='konstr'&&r.correct){S.konOk=(S.konOk||0)+1;save();}
+  recordStat(q.pack,r.correct);vlRecord(q,val,r);if(q.kind==='konstr'&&r.correct){S.konOk=(S.konOk||0)+1;save();}
   if(G.mode==='test'){G.i++;return next();}
   if(q.kind==='visual'||q.kind==='degree')markButtons(val);
   if(q.kind==='task'&&q.opts)document.querySelectorAll('.tbtn').forEach(b=>{if(+b.dataset.t===q.ans)b.classList.add('ok');else if(b.dataset.t===String(val))b.classList.add('bad');});
@@ -1401,9 +1443,9 @@ const ALL_IDS=PACKS.map(p=>p.id);
 const A14=['p1','p2','p3','p4'],A13=['p1','p2','p3'];
 const CL_KANN=[
   {t:'… Winkelgrößen von einem Kompass entnehmen.',packs:['p5'],m:'task'},
-  {t:'… Winkelarten unterscheiden und sie mit den griechischen Buchstaben α, β, γ und δ bezeichnen.',packs:['p1','p2','p3','p4','p6'],m:'visual'},
+  {t:'… Winkelarten unterscheiden und sie mit den griechischen Buchstaben α, β, γ und δ bezeichnen.',packs:['p1','p2','p3','p4','p6'],m:'visual',kinds:['visual','degree']},
   {t:'… mit dem Geodreieck umgehen und Winkel messen.',packs:A13,m:'measure'},
-  {t:'… Winkel nach vorgegebenen Größen zeichnen.',packs:['p1','p2','p3','p7','p8'],m:'konstr',kon:3},
+  {t:'… Winkel nach vorgegebenen Größen zeichnen.',packs:['p1','p2','p3','p7','p8'],m:'konstr',kinds:['konstr','draw'],kon:3},
   {t:'… mein Wissen überprüfen.',test:true,packs:ALL_IDS,m:'test'}
 ];
 const CL_TEILE=[
@@ -1446,16 +1488,119 @@ function kannState(r){
 }
 function clCounts(){return{k:CL_KANN.filter(r=>kannState(r)[0]==='ok').length,d:CL_TEILE.filter(r=>r.n&&S.cl[r.n]).length};}
 function clCard(){const c=clCounts();return`<div class="clcard"><div><b>✅ Checkliste „Karte und Kompass – Winkel“</b><small>${c.k} von 5 Zielen erreicht · ${c.d} von 24 Schulaufgaben abgehakt</small></div><button class="big go" id="clOpen">Checkliste öffnen</button></div>`;}
+
+/* ===== Auswertung in der Checkliste: Aufgaben, Treffer, Zeit, Fehlerarten, Empfehlung, Selbsteinschätzung ===== */
+const VL_KINDS={measure:['measure'],visual:['visual'],degree:['degree'],estimate:['estimate'],draw:['draw'],konstr:['konstr'],task:['task'],learn:[]};
+const VL_BASE={visual:10,degree:10,estimate:20,measure:60,draw:60,konstr:120,task:60};/* Sekunden pro Aufgabe; darüber gilt „dauert lange“ */
+const VL_OPEN=new Set();
+const SELF=[[1,'🙂','kann ich gut'],[2,'😐','geht so'],[3,'😟','ist noch schwierig']];
+const vlEsc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const vlQ=h=>h.length?h.reduce((a,b)=>a+b,0)/h.length:0;
+const vlTime=s=>s<1?'unter 1 s':s<60?Math.round(s)+' s':Math.floor(s/60)+' min '+Math.round(s%60)+' s';
+const vlPct=a=>a.n?Math.round(a.q*100)+' %':'–';
+const vlDate=()=>new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
+function vlSum(list){
+  const a={n:0,ok:0,ms:0,mn:0,base:0,h:[],err:{}};
+  list.forEach(([k,s])=>{a.n+=s.n;a.ok+=s.ok;a.ms+=s.ms;a.mn+=s.mn;a.base+=s.mn*(VL_BASE[k]||60)*1000;a.h=a.h.concat(s.h);Object.keys(s.err).forEach(e=>a.err[e]=(a.err[e]||0)+s.err[e]);});
+  a.q=vlQ(a.h);a.avg=a.mn?a.ms/a.mn/1000:0;a.slow=a.mn>=5&&a.ms>a.base;return a;
+}
+/* Stand: zu wenig geübt / hier hakt es (unter 60 % der letzten Aufgaben) / auf gutem Weg / sitzt (ab 85 %) */
+const vlLevel=a=>a.n<5?'few':a.q<.6?'weak':a.q<.85?'mid':'good';
+const VL_LV={few:['no','noch zu wenig geübt'],weak:['bad','hier hakt es'],mid:['half','auf gutem Weg'],good:['ok','sitzt']};
+function vlScope(r){
+  const ks=(r.test||r.m==='test')?null:(r.kinds||VL_KINDS[r.m]||[]);
+  const per=r.packs.map(pid=>{
+    const l=Object.keys(S.vl||{}).filter(key=>{const[p,k]=key.split('|');return p===pid&&(!ks||ks.includes(k));}).map(key=>[key.split('|')[1],S.vl[key]]);
+    return{pid,l,a:vlSum(l)};});
+  return{per,all:vlSum([].concat(...per.map(x=>x.l)))};
+}
+const vlTop=(a,n)=>Object.keys(a.err).map(e=>[e,a.err[e]]).sort((x,y)=>y[1]-x[1]).slice(0,n);
+function vlErrText(e){
+  if(e==='ueber')return'kleinen und großen Winkel verwechselt (360° − Winkel)';
+  if(e==='skala')return'auf der falschen Skala abgelesen (innen/außen, 180° − Winkel)';
+  if(e==='klein')return'Winkel zu klein angegeben';
+  if(e==='gross')return'Winkel zu groß angegeben';
+  if(e==='lab')return'Beschriftung fehlerhaft (S, a, b oder Winkelname)';
+  if(e.startsWith('t|'))return'Aufgabe „'+e.slice(2)+'“ falsch';
+  if(e.startsWith('v|')){const[,ri,ch]=e.split('|');return(TYPES[ri]?TYPES[ri].short:ri)+' als '+(TYPES[ch]?TYPES[ch].short:ch)+' eingeordnet';}
+  return e;
+}
+const vlOK=(pids,m)=>m==='task'?PACKS.some(p=>p.task&&pids.includes(p.id)):['measure','visual','degree','estimate','draw','konstr','time'].includes(m)?PACKS.some(p=>p.gen&&pids.includes(p.id)):true;
+function vlAdvice(r,sc){
+  if(r.m==='learn')return{txt:'Erst im Bereich „Wissen“ nachlesen, dann in der Übung anwenden.',btns:[['📖 Wissen lesen','','learn']]};
+  const a=sc.all,lv=vlLevel(a),top=vlTop(a,1)[0],pk=id=>'Paket '+packById(id).nr+' · '+packById(id).name;
+  const cand=[];
+  sc.per.forEach(x=>x.l.forEach(([k,s])=>{if(s.n)cand.push({pid:x.pid,k,n:s.n,q:vlQ(s.h)});}));
+  cand.sort((x,y)=>(y.n>=3)-(x.n>=3)||x.q-y.q||y.n-x.n);
+  const w=cand[0],dflt=r.packs.find(pid=>!sc.per.find(x=>x.pid===pid).l.length&&vlOK([pid],r.m))||r.packs.find(pid=>vlOK([pid],r.m))||r.packs[0];
+  if(lv==='few')return{txt:'Dazu gibt es noch zu wenig Übung für eine Aussage. Mach mindestens 10 Aufgaben'+(r.m==='test'?'.':' in '+pk(dflt)+'.'),btns:[[r.m==='test'?'🏆 Test starten':'Üben ▶',r.m==='test'?r.packs.join(','):dflt,r.m]]};
+  if(lv==='weak'){
+    const btns=w?[['Üben ▶',w.pid,w.k]]:[];if(top&&(top[0]==='ueber'||top[0]==='skala'))btns.unshift(['📖 Wissen lesen','','learn']);
+    return{txt:'Hier hakt es noch.'+(top?' Häufigster Fehler: '+vlErrText(top[0])+'.':'')+(w?' Übe '+pk(w.pid)+' („'+MODES[w.k].title+'“) noch einmal, am besten 10 Aufgaben.':''),btns};
+  }
+  if(lv==='mid')return{txt:'Auf gutem Weg.'+(top?' Ab und zu passiert noch: '+vlErrText(top[0])+'.':'')+(w?' Noch 10 Aufgaben in '+pk(w.pid)+', dann sitzt es.':''),btns:w?[['Üben ▶',w.pid,w.k]]:[]};
+  const fast=a.slow&&['visual','degree','estimate'].includes(r.m)&&vlOK(r.packs,'time');
+  return{txt:'Das sitzt.'+(a.slow?' Du brauchst aber noch recht lange pro Aufgabe (Ø '+vlTime(a.avg)+').':' Nur ab und zu kurz auffrischen.')+(fast?' Die Zeitrunde hilft, schneller zu werden.':''),
+    btns:fast?[['⏱️ Zeitrunde',r.packs.filter(pid=>packById(pid).gen).join(','),'time']]:[]};
+}
+function vlDetail(id,r){
+  const sc=vlScope(r),ad=vlAdvice(r,sc),a=sc.all,lv=r.m==='learn'?null:vlLevel(a);
+  const sf=(S.self||{})[id],nt=((S.note||{})[id]||{}).t||'';
+  const tr=x=>`<tr><td>Paket ${packById(x.pid).nr}</td><td>${x.a.n||'–'}</td><td>${vlPct(x.a)}</td><td>${x.a.mn?vlTime(x.a.avg):'–'}</td></tr>`;
+  const errs=vlTop(a,3).map(([e,c])=>`<li>${vlEsc(vlErrText(e))} <small>(${c}×)</small></li>`).join('');
+  let warn='';
+  if(sf&&lv){
+    if(sf.v===1&&lv==='weak')warn='⚠️ Du fühlst dich sicher, aber die letzten Ergebnisse sind schwächer. Schau dir die Fehler an – das lohnt sich.';
+    else if(sf.v===3&&(lv==='good'||lv==='mid')&&a.q>=.75)warn='👍 Deine Ergebnisse sind besser, als du denkst. Du kannst mehr, als du fühlst!';
+    else if(sf.v===1&&a.slow)warn='⏳ Die Antworten stimmen, dauern aber lange. Vielleicht warst du abgelenkt – oder es ist noch nicht ganz sicher.';
+  }
+  const summ=`📊 Ergebnisse &amp; Tipp${lv?` <span class="cl-chip ${VL_LV[lv][0]}">${VL_LV[lv][1]}</span>`:''}${sf?` <span class="cl-chip no">${SELF[sf.v-1][1]} ${SELF[sf.v-1][2]}</span>`:''}`;
+  return`<details class="cl-det" data-id="${id}"${VL_OPEN.has(id)?' open':''}><summary>${summ}</summary><div class="cl-vl">
+    ${r.m==='learn'?'':`<table class="cl-tab"><thead><tr><th>Paket</th><th>Aufgaben</th><th>Treffer zuletzt</th><th>Ø Zeit</th></tr></thead><tbody>${sc.per.map(tr).join('')}${sc.per.length>1?`<tr class="tot"><td>gesamt</td><td>${a.n||'–'}</td><td>${vlPct(a)}</td><td>${a.mn?vlTime(a.avg):'–'}</td></tr>`:''}</tbody></table>`}
+    ${errs?`<div><b>Häufige Fehler</b><ul class="cl-err">${errs}</ul></div>`:''}
+    <div class="cl-tip">💡 ${vlEsc(ad.txt)}</div>
+    ${ad.btns.length?`<div class="cl-acts">${ad.btns.map(([t,p,m])=>`<button type="button" class="cl-vgo" data-vp="${p}" data-vm="${m}">${t}</button>`).join('')}</div>`:''}
+    <div><b>Wie fühlt sich das für dich an?</b><div class="cl-self">${SELF.map(([v,ic,t])=>`<button type="button" class="cl-sb${sf&&sf.v===v?' on':''}" data-id="${id}" data-v="${v}">${ic} ${t}</button>`).join('')}</div></div>
+    ${warn?`<div class="cl-warn">${warn}</div>`:''}
+    <label class="cl-nl">Meine Frage oder was mir schwerfällt (freiwillig)<textarea class="cl-note" data-id="${id}" maxlength="400" rows="2">${vlEsc(nt)}</textarea></label>
+  </div></details>`;
+}
+function vlLabel(id){if(id[0]==='k')return'Ich kann '+CL_KANN[+id.slice(1)].t.replace(/^…\s*/,'');const r=CL_TEILE.find(x=>x.n===+id.slice(1));return r?'Aufgabe '+r.n+': '+r.t:id;}
+/* Zusammenfassung für die Eltern: Text und Tabelle aus denselben Zahlen, ohne KI */
+function vlParent(){
+  const rows=CL_KANN.map((r,i)=>{const sc=vlScope(r);return{id:'k'+i,r,sc,lv:r.m==='learn'?null:vlLevel(sc.all)};});
+  let total=0;Object.keys(S.vl||{}).forEach(k=>total+=S.vl[k].n);
+  const shortT=r=>r.t.replace(/^…\s*/,'').replace(/\.$/,'');
+  const lines=[];
+  if(!total)lines.push('Es liegen noch keine Übungsdaten vor. Sobald geübt wird, erscheint hier eine Auswertung.');
+  else{
+    lines.push(`Bisher ${total} Aufgaben beantwortet.`);
+    rows.forEach(x=>{if(!x.lv||x.lv==='few')return;const a=x.sc.all,t=vlTop(a,1)[0];
+      lines.push(`${x.lv==='weak'?'⚠️ Schwerpunkt':x.lv==='mid'?'🟡 Auf gutem Weg':'✅ Sitzt'}: ich kann ${shortT(x.r)} – ${vlPct(a)} Treffer${t&&x.lv!=='good'?', häufigster Fehler: '+vlErrText(t[0]):''}${a.slow?', braucht viel Zeit':''}.`);});
+    const few=rows.filter(x=>x.lv==='few').length;if(few)lines.push(`Zu ${few} von 5 Zielen gibt es noch zu wenig Übung für eine Aussage.`);
+  }
+  const tab=`<table class="cl-tab"><thead><tr><th>Ziel</th><th>Aufgaben</th><th>Treffer zuletzt</th><th>Ø Zeit</th><th>Gefühl</th><th>Stand</th></tr></thead><tbody>${rows.map(x=>{const a=x.sc.all,sf=(S.self||{})[x.id];
+    return`<tr><td>${vlEsc(shortT(x.r))}</td><td>${x.lv?a.n||'–':'–'}</td><td>${x.lv?vlPct(a):'–'}</td><td>${x.lv&&a.mn?vlTime(a.avg):'–'}</td><td>${sf?SELF[sf.v-1][1]:'–'}</td><td>${x.lv?VL_LV[x.lv][1]:'–'}</td></tr>`;}).join('')}</tbody></table>`;
+  return`<details class="cl-det cl-par" data-id="par"${VL_OPEN.has('par')?' open':''}><summary>👨‍👩‍👧 Übersicht für Eltern</summary><div class="cl-vl">
+    <ul class="cl-err">${lines.map(l=>`<li>${vlEsc(l)}</li>`).join('')}</ul>${tab}
+    <div id="clParNotes">${vlNotes()}</div>
+  </div></details>`;
+}
+function vlNotes(){
+  const notes=Object.keys(S.note||{}).filter(id=>S.note[id]&&S.note[id].t);
+  return notes.length?`<b>Fragen und Anmerkungen (vom Kind selbst geschrieben)</b><ul class="cl-err">${notes.map(id=>`<li><small>${vlEsc(vlLabel(id))} · ${vlEsc(S.note[id].d||'')}</small><br>${vlEsc(S.note[id].t)}</li>`).join('')}</ul>`:'';
+}
 function clGo(packs,m){if(m==='learn'){S.sel=packs.slice();save();return learn();}S.sel=packs.slice();save();home();setTimeout(()=>{const t=app.querySelector('[data-m="'+m+'"]');if(t){t.scrollIntoView({behavior:'smooth',block:'center'});t.focus();}},60);}
 function checklist(){
   stopAll();G=null;const y=app.scrollTop;
   const pn=ps=>ps.length===8?'alle Pakete':'Paket '+ps.map(id=>packById(id).nr).join(', ');
-  const kann=CL_KANN.map((r,i)=>{const[st,txt]=kannState(r);return`<div class="cl-row${st==='ok'?' done':''}"><span class="cl-nr">${st==='ok'?'✓':i+1}</span><div class="cl-t"><b>Ich kann ${r.t}</b><small>${pn(r.packs)} · ${txt}</small></div><span class="cl-chip ${st}">${st==='ok'?'geschafft':st==='half'?'teilweise':'offen'}</span><button class="cl-go" data-k="${i}">Üben ▶</button></div>`;}).join('');
+  const kann=CL_KANN.map((r,i)=>{const[st,txt]=kannState(r);return`<div class="cl-row${st==='ok'?' done':''}"><span class="cl-nr">${st==='ok'?'✓':i+1}</span><div class="cl-t"><b>Ich kann ${r.t}</b><small>${pn(r.packs)} · ${txt}</small></div><span class="cl-chip ${st}">${st==='ok'?'geschafft':st==='half'?'teilweise':'offen'}</span><button class="cl-go" data-k="${i}">Üben ▶</button>${vlDetail('k'+i,r)}</div>`;}).join('');
   const teile=CL_TEILE.map(r=>{if(!r.n)return`<div class="cl-sec">${r[0]}</div>`;const on=!!S.cl[r.n];
-    return`<div class="cl-row${on?' done':''}"><input type="checkbox" class="cl-cb" id="cl${r.n}" data-n="${r.n}" ${on?'checked':''}><span class="cl-nr">${r.n}</span><label class="cl-t" for="cl${r.n}"><b>${r.t}</b><small>In der App: ${r.app}${on?` · erledigt am ${S.cl[r.n]}`:''}</small></label><button class="cl-go" data-n="${r.n}">Üben ▶</button></div>`;}).join('');
+    return`<div class="cl-row${on?' done':''}"><input type="checkbox" class="cl-cb" id="cl${r.n}" data-n="${r.n}" ${on?'checked':''}><span class="cl-nr">${r.n}</span><label class="cl-t" for="cl${r.n}"><b>${r.t}</b><small>In der App: ${r.app}${on?` · erledigt am ${S.cl[r.n]}`:''}</small></label><button class="cl-go" data-n="${r.n}">Üben ▶</button>${vlDetail('n'+r.n,r)}</div>`;}).join('');
   const c=clCounts();
   app.innerHTML=`<div class="learn"><button class="btn-s back" id="lb">← Zur Basis</button>
     <h2>✅ Karte und Kompass – Winkel</h2><p class="sub">Die Checkliste aus der Schule. Die Ziele werden grün, wenn du die Lernziele der passenden Pakete erreichst. Die Schulaufgaben hakst du selbst ab.</p>
+    ${vlParent()}
     <h2 style="font-size:20px">🎯 Ich kann … <span class="cl-chip ${c.k===5?'ok':'no'}">${c.k} / 5</span></h2><div class="cl-list">${kann}</div>
     <h2 style="font-size:20px">📚 Aufgaben aus der Schule <span class="cl-chip ${c.d===24?'ok':'no'}">${c.d} / 24</span></h2>
     <p class="sub">AH = Arbeitsheft Grundlagen 6 · ml = mathe live 6 · AB = Arbeitsblatt. „Üben ▶“ wählt die passenden Pakete und springt zur passenden Mission.</p>
@@ -1463,6 +1608,11 @@ function checklist(){
   $('#lb').onclick=home;
   app.querySelectorAll('.cl-cb').forEach(cb=>cb.onchange=()=>{const n=cb.dataset.n;if(cb.checked)S.cl[n]=new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});else delete S.cl[n];save();const yy=app.scrollTop;checklist();app.scrollTop=yy;});
   app.querySelectorAll('.cl-go').forEach(b=>b.onclick=()=>{if(b.dataset.k!=null){const r=CL_KANN[+b.dataset.k];clGo(r.packs,r.m);}else{const r=CL_TEILE.find(x=>x.n===+b.dataset.n);clGo(r.packs,r.m);}});
+  app.querySelectorAll('details.cl-det').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)VL_OPEN.add(d.dataset.id);else VL_OPEN.delete(d.dataset.id);}));
+  /* „Üben ▶“ in der Auswertung startet die empfohlene Übung sofort mit dem empfohlenen Paket */
+  app.querySelectorAll('.cl-vgo').forEach(b=>b.onclick=()=>{const m=b.dataset.vm;if(m==='learn')return learn();S.sel=b.dataset.vp.split(',').filter(Boolean);save();startMode(m);});
+  app.querySelectorAll('.cl-sb').forEach(b=>b.onclick=()=>{const id=b.dataset.id,v=+b.dataset.v;S.self=S.self||{};if(S.self[id]&&S.self[id].v===v)delete S.self[id];else S.self[id]={v,d:vlDate()};save();const yy=app.scrollTop;checklist();app.scrollTop=yy;});
+  app.querySelectorAll('.cl-note').forEach(t=>t.oninput=()=>{S.note=S.note||{};if(t.value.trim())S.note[t.dataset.id]={t:t.value.slice(0,400),d:vlDate()};else delete S.note[t.dataset.id];save();const pn=$('#clParNotes');if(pn)pn.innerHTML=vlNotes();});
   app.scrollTop=y||0;
 }
 const LEARN2=`
@@ -1547,7 +1697,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.11.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.12.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1557,24 +1707,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.11.0"></script>
+<script src="../js/lernplan.js?v=7.12.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.11.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.12.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.11.0"></script>
+<script src="../js/nutzer.js?v=7.12.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.11.0"></script>
+<script src="../js/home-btn.js?v=7.12.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.11.0"></script>
+<script src="../js/arena-btn.js?v=7.12.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.11.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.12.0"></script>
 </body>
 </html>

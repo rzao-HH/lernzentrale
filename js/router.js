@@ -7,7 +7,7 @@ function showApp(k,plan){
   loadAll();["W","Z","E","D"].forEach(x=>{try{sessionStorage.setItem("nutzer-ok-"+x,"1");}catch(e){}});
   let f=FR[k];
   if(!f){f=FR[k]=document.createElement("iframe");f.title=APPS.find(a=>a.k===k).name;document.getElementById("appv").appendChild(f);}
-  if(f.dataset.sig!==sig(k)){f.dataset.sig=sig(k);/* sonst lädt ein zweiter Aufruf (Klick + Adresswechsel) die gerade startende App als leere Seite neu */f.dataset.ready="";f.addEventListener("load",()=>{f.dataset.ready="1";},{once:true});if(!f.getAttribute("src"))f.src=APPURL[k]+"?v=7.11.0";else{try{f.contentWindow.location.reload();}catch(e){f.src=APPURL[k]+"?v=7.11.0&r="+Date.now();}}}
+  if(f.dataset.sig!==sig(k)){f.dataset.sig=sig(k);/* sonst lädt ein zweiter Aufruf (Klick + Adresswechsel) die gerade startende App als leere Seite neu */f.dataset.ready="";f.addEventListener("load",()=>{f.dataset.ready="1";},{once:true});if(!f.getAttribute("src"))f.src=APPURL[k]+"?v=7.12.0";else{try{f.contentWindow.location.reload();}catch(e){f.src=APPURL[k]+"?v=7.12.0&r="+Date.now();}}}
   if(plan)openPlan(f);
   Object.values(FR).forEach(x=>x.classList.toggle("on",x===f));
   document.getElementById("appv").classList.add("on");document.documentElement.style.overflow="hidden";curApp=k;

@@ -30,6 +30,8 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 ## Speicher
 Auf dem Gerät liegt alles im localStorage derselben Adresse. Schlüssel u. a. `nutzer-alle`, `lz-ergebnisse`, `lernplan-*@<person>` (Lernplan pro Person), `lzp-*`, App-Stände (`winkelakademie-v1`, `wasserzauberschule-v1`, `unit6-progress`, `detektivbuero-v1`), `lz-groups@…`, `lz-arena-…`.
 
+**Winkel-Akademie, Auswertung:** In `winkelakademie-v1` liegen zusätzlich `vl` (Verlauf je `<Paket>|<Aufgabenart>`: Versuche `n`, Treffer `ok`, Zeit `ms`/`mn`, letzte 10 Ergebnisse `h`, Fehlerarten `err`), `self` (Gefühl je Checklisten-Zeile: 1 gut · 2 geht so · 3 schwierig) und `note` (freie Frage des Kindes). Angezeigt in der Checkliste („Ergebnisse & Tipp“, „Übersicht für Eltern“); Empfehlungen entstehen ohne KI aus diesen Zahlen. Sie wandern über den normalen Abgleich mit (`app:W`).
+
 ## Konten
 Jede Person meldet sich mit einem Benutzernamen an (überall eindeutig, Groß-/Kleinschreibung egal, noch ohne Passwort). In `nutzer-alle` steht er als `acc`.
 Auf dem Server liegen ihre Daten unter `lernzentrale:<benutzername>` mit geräteunabhängigen Schlüsseln: `profile`, `app:W|Z|E|D`, `lzp:…`, `plan:…`, `arena`, `groups`, `story`, `erg`, `g:<geister-duell>`.
