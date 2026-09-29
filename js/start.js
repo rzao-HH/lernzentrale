@@ -375,3 +375,18 @@ render();
 
 /* Offline-Modus: alle Dateien dauerhaft im Browser speichern */
 if("serviceWorker" in navigator){addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
+/* Neue Version erkennen: Tablets bleiben oft stundenlang offen und zeigen sonst noch die alte App.
+   Alle 5 Minuten und beim Zurückkehren sw.js am Server nachsehen; ist VER neuer, Leiste zum Aktualisieren zeigen. */
+(function(){
+  const cur=((document.querySelector('script[src*="start.js"]')||{}).src||"").split("v=")[1]||"";if(!cur)return;
+  let last=0,shown=false;
+  async function check(){if(shown||Date.now()-last<60000)return;last=Date.now();
+    try{const t=await(await fetch("sw.js?check="+Date.now(),{cache:"no-store"})).text(),m=t.match(/VER="([\d.]+)"/);
+      if(m&&m[1]!==cur){shown=true;const b=document.createElement("button");b.id="lzUpd";b.type="button";
+        b.innerHTML="🆕 Neue Version "+m[1]+" ist da – <u>jetzt aktualisieren</u>";
+        b.style.cssText="position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:10000;max-width:calc(100vw - 24px);border:0;border-radius:14px;padding:12px 18px;background:#1b7f3b;color:#fff;font:800 16px/1.3 Nunito,system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.3);cursor:pointer";
+        b.onclick=()=>location.reload();document.body.appendChild(b);}}catch(e){}}
+  setInterval(check,300000);setTimeout(check,15000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)check();});
+  window.__lzUpdCheck=()=>{last=0;return check();};
+})();

@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.9.1","29.09.2026",["🆕 Gibt es eine neue Version, erscheint unten auf der Startseite „Neue Version ist da – jetzt aktualisieren“ (vorher lief auf lange offenen Tablets manchmal noch die alte App)"]],
  ["7.9.0","29.09.2026",["🧠 Detektiv-Büro: Neue Übung „Regel-Check“ – zu jeder der 39 Lernkarten eine Frage mit vier Antworten","⚡ Die Regel-Fragen kommen auch in der Blitz-Ermittlung vor, im Abschlusstest sind 3 von 12 Aufgaben Regel-Fragen"]],
  ["7.8.0","29.09.2026",["🔎 Lernkarten „Alle ansehen“ im Detektiv-Büro und in der Wasser-Zauberschule: Suchfeld – findet ein Wort in allen Karten aller Pakete und markiert es gelb"]],
  ["7.7.0","29.09.2026",["📐 Winkel-Akademie, Aufgaben-Mission – neu nach Abgleich mit den Lernzetteln:","🧭 Punkte einzeichnen, Wege mit Kurs und Kästchen gehen (Schatzsuche), links oder rechts herum in dieselbe Richtung","🧮 Winkel an geschnittenen Parallelen (AH S. 16 Nr. 5) und Winkel im Dreieck messen (AH S. 18)","📏 Parallele im Abstand zeichnen und Rechtecke ergänzen (Übungsheft Geodreieck)"]],
