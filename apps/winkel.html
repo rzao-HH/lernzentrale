@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.12.1"></script>
+<script src="../js/app-core.js?v=7.13.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.12.1"></script>
+<script src="../js/nutzer-init.js?v=7.13.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -270,7 +270,8 @@ h2{font-family:var(--display);font-size:24px;margin:30px 0 12px;display:flex;ali
 .clcard>div{flex:1 1 240px}.clcard b{font-family:var(--display);font-size:19px}.clcard small{display:block;color:var(--muted);font-weight:700}
 .cl-vgo{border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:12px;padding:8px 12px;font-weight:800;min-height:40px}
 .cl-chip.bad{background:var(--badbg);color:var(--bad)}
-.cl-det{flex:1 1 100%;border-top:1px dashed var(--line);padding-top:6px;min-width:0}
+.cl-tw{overflow-x:auto;max-width:100%}.cl-vl{min-width:0}.cl-vl>*{min-width:0}
+.cl-det{max-width:100%;box-sizing:border-box;flex:1 1 100%;border-top:1px dashed var(--line);padding-top:6px;min-width:0}
 .cl-det.cl-par{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 14px;margin:10px 0 14px}
 .cl-det>summary{cursor:pointer;font-weight:800;color:var(--accent);list-style:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:40px}
 .cl-det>summary::-webkit-details-marker{display:none}
@@ -281,6 +282,10 @@ h2{font-family:var(--display);font-size:24px;margin:30px 0 12px;display:flex;ali
 .cl-tab th,.cl-tab td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line)}
 .cl-tab th{color:var(--muted);font-size:12px}.cl-tab tr.tot td{font-weight:800}
 .cl-err{margin:4px 0 0;padding-left:20px}.cl-err small{color:var(--muted);font-weight:700}
+.cl-hist{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}.cl-hist small{color:var(--muted);font-weight:700}
+.cl-spark line{stroke:var(--line)}.cl-spark .g{fill:var(--ok)}.cl-spark .m{fill:var(--half)}.cl-spark .b{fill:var(--bad)}
+.cl-tab tr.weak td{color:var(--bad);font-weight:800}
+.cl-par .cl-tab{font-size:13px}.cl-par .cl-tab th,.cl-par .cl-tab td{padding:5px 4px}
 .cl-tip{background:var(--panel2);border-radius:12px;padding:10px 12px}
 .cl-warn{background:var(--halfbg);color:var(--half);border-radius:12px;padding:10px 12px;font-weight:700}
 .cl-acts,.cl-self{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
@@ -447,14 +452,28 @@ function vlErr(q,v,r){
   if(Math.abs((180-dg)-q.deg)<=3)return'skala';
   return dg<q.deg?'klein':'gross';
 }
+function vlDay(t){const d=t?new Date(t):new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+/* Abbrüche: Übung verlassen, nachdem mindestens eine Aufgabe beantwortet wurde (S.ab[<Übung>]={s:gestartet,a:abgebrochen,w:direkt nach Fehler}) */
+function vlLeave(){
+  if(!G||G.finished||G.ab||!G.mode||G.mode==='learn'||!G.log||!G.log.length)return;
+  G.ab=true;S.ab=S.ab||{};const a=S.ab[G.mode]||(S.ab[G.mode]={s:0,a:0,w:0});
+  a.a++;const l=G.log[G.log.length-1];if(l&&!l.r.correct)a.w++;a.t=Date.now();save();
+}
+addEventListener('pagehide',vlLeave);
 function vlRecord(q,v,r){
   if(!S.vl)S.vl={};
-  const e=vlErr(q,v,r),ms=G&&G.mode!=='time'&&G.t0?Date.now()-G.t0:0;
+  const e=vlErr(q,v,r),ms=G&&G.mode!=='time'&&G.t0?Date.now()-G.t0:0,dk=vlDay();
   const add=key=>{const s=S.vl[key]||(S.vl[key]={n:0,ok:0,ms:0,mn:0,h:[],err:{}});
     s.n++;if(r.correct)s.ok++;
     s.h.push(r.correct?1:0);if(s.h.length>10)s.h.shift();
     if(ms>0&&ms<180000){s.ms+=ms;s.mn++;}
     if(e){s.err[e]=(s.err[e]||0)+1;const ks=Object.keys(s.err).filter(x=>x!==e);if(ks.length>=12){ks.sort((a,b)=>s.err[a]-s.err[b]);delete s.err[ks[0]];}}
+    /* Lernverlauf: pro Übungstag [Aufgaben, richtig], höchstens 60 Tage */
+    s.d=s.d||{};const dd=s.d[dk]||(s.d[dk]=[0,0]);dd[0]++;if(r.correct)dd[1]++;
+    const dks=Object.keys(s.d).sort();while(dks.length>60)delete s.d[dks.shift()];
+    /* Aufgaben-Mission: jede Aufgabenart einzeln (z. B. „Kurs bestimmen“) */
+    if(q.kind==='task'&&q.tname){s.sub=s.sub||{};const u=s.sub[q.tname]||(s.sub[q.tname]={l:q.short||q.tname,n:0,ok:0,h:[]});
+      u.n++;if(r.correct)u.ok++;u.h.push(r.correct?1:0);if(u.h.length>10)u.h.shift();u.t=Date.now();}
     s.t=Date.now();};
   add(q.pack+'|'+q.kind);
   if(G&&G.mode==='test')add(q.pack+'|'+q.kind+'|T');
@@ -1179,7 +1198,8 @@ const selT=()=>PACKS.some(p=>p.task&&S.sel.includes(p.id));
 function genTask(){
   let packs=PACKS.filter(p=>p.task&&S.sel.includes(p.id));
   let p;if(G.mode==='test'){G.tp=(G.tp||0)+1;if(!G.tpo)G.tpo=shuffle(packs);p=G.tpo[G.tp%G.tpo.length];}else p=pick(packs);
-  let f;for(let t=0;t<10;t++){f=pick(TASKS[p.id]);if(f!==G.lastF)break;}G.lastF=f;if(window.__wkForce&&window.__wkTasks[window.__wkForce])f=window.__wkTasks[window.__wkForce];
+  let f;for(let t=0;t<10;t++){f=pick(TASKS[p.id]);if(f!==G.lastF)break;}G.lastF=f;
+  if(G.force&&window.__wkTasks[G.force]){f=window.__wkTasks[G.force];p=PACKS.find(x=>TASKS[x.id]&&TASKS[x.id].includes(f))||p;}if(window.__wkForce&&window.__wkTasks[window.__wkForce])f=window.__wkTasks[window.__wkForce];
   return Object.assign(f(),{kind:'task',pack:p.id,tname:f.name});
 }
 function taskAnsText(q,v){if(q.fmt)return q.fmt(v);if(q.opts)return q.opts[v];if(q.inter)return v==null?'–':v+'°';return v+(q.unit==null?'°':q.unit);}
@@ -1220,11 +1240,13 @@ function startMode(m){
   if(m==='learn')return learn();
   if(!S.sel.length)return;
   stopAll();
-  G={mode:m,i:0,total:m==='test'?12:m==='time'?Infinity:10,score:0,log:[],locked:false,xp:0,finished:false};
+  vlLeave();
+  G={mode:m,i:0,total:m==='test'?12:m==='time'?Infinity:10,score:0,log:[],locked:false,xp:0,finished:false,force:m==='task'?VL_FORCE:null};VL_FORCE=null;
+  S.ab=S.ab||{};(S.ab[m]=S.ab[m]||{s:0,a:0,w:0}).s++;save();
   if(m==='test'){const a=selA(),t=selT();G.kinds=shuffle(a&&t?['degree','degree','visual','visual','measure','measure','konstr','draw','task','task','task','task','task','task','task']:t?Array(12).fill('task'):['degree','degree','degree','visual','visual','visual','measure','measure','measure','draw','konstr','konstr']);G.total=G.kinds.length;}
   app.innerHTML=`<div class="game">
     <div class="gbar"><button class="icon-btn" id="back" aria-label="Zurück zur Übersicht">←</button>
-      <div class="gtitle">${MODES[m].icon} ${MODES[m].title}</div><div class="gprog" id="gprog"></div>
+      <div class="gtitle">${MODES[m].icon} ${MODES[m].title}${G.force&&window.__wkTasks[G.force]?' · gezielt':''}</div><div class="gprog" id="gprog"></div>
       ${m==='time'?'<div class="timebar" id="timebar"></div>':''}</div>
     <div class="gbody"><div class="stage" id="stage"><div class="zoomctl" id="zoomctl" hidden><button type="button" data-z="-1" aria-label="Verkleinern">−</button><span class="zl">1×</span><button type="button" data-z="1" aria-label="Vergrößern">+</button></div><svg id="svg" xmlns="${NS}"></svg><svg id="geo" xmlns="${NS}"></svg><div class="bignum" id="bignum" hidden></div></div>
     <div class="panel" id="panel"></div></div></div>`;
@@ -1427,6 +1449,7 @@ function miniSVG(deg){
   return s+`<circle cx="${vx}" cy="${vy}" r="4.5" class="vertex"/></svg>`;
 }
 function learn(){
+  vlLeave();
   stopAll();G=null;
   const ex={null:0,spitz:45,recht:90,stumpf:130,gestreckt:180,ueber:250,voll:360};
   app.innerHTML=`<div class="learn"><button class="btn-s back" id="lb">← Zur Basis</button>
@@ -1495,7 +1518,7 @@ function clCard(){const c=clCounts();return`<div class="clcard"><div><b>✅ Chec
 /* ===== Auswertung in der Checkliste: Aufgaben, Treffer, Zeit, Fehlerarten, Empfehlung, Selbsteinschätzung ===== */
 const VL_KINDS={measure:['measure'],visual:['visual'],degree:['degree'],estimate:['estimate'],draw:['draw'],konstr:['konstr'],task:['task'],learn:[]};
 const VL_BASE={visual:10,degree:10,estimate:20,measure:60,draw:60,konstr:120,task:60};/* Sekunden pro Aufgabe; darüber gilt „dauert lange“ */
-const VL_OPEN=new Set();
+const VL_OPEN=new Set();let VL_FORCE=null;const VL_STALE=7;/* Tage */
 const SELF=[[1,'🙂','kann ich gut'],[2,'😐','geht so'],[3,'😟','ist noch schwierig']];
 const vlEsc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const vlQ=h=>h.length?h.reduce((a,b)=>a+b,0)/h.length:0;
@@ -1503,11 +1526,31 @@ const vlTime=s=>s<1?'unter 1 s':s<60?Math.round(s)+' s':Math.floor(s/60)+' min '
 const vlPct=a=>a.n?Math.round(a.q*100)+' %':'–';
 const vlDate=()=>new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
 function vlSum(list){
-  const a={n:0,ok:0,ms:0,mn:0,base:0,h:[],err:{}};
-  list.forEach(([k,s])=>{a.n+=s.n;a.ok+=s.ok;a.ms+=s.ms;a.mn+=s.mn;a.base+=s.mn*(VL_BASE[k]||60)*1000;a.h=a.h.concat(s.h);Object.keys(s.err).forEach(e=>a.err[e]=(a.err[e]||0)+s.err[e]);});
-  a.q=vlQ(a.h);a.avg=a.mn?a.ms/a.mn/1000:0;a.slow=a.mn>=5&&a.ms>a.base;return a;
+  const a={n:0,ok:0,ms:0,mn:0,base:0,h:[],err:{},d:{},sub:{},t:0};
+  list.forEach(([k,s])=>{a.n+=s.n;a.ok+=s.ok;a.ms+=s.ms;a.mn+=s.mn;a.base+=s.mn*(VL_BASE[k]||60)*1000;a.h=a.h.concat(s.h);Object.keys(s.err).forEach(e=>a.err[e]=(a.err[e]||0)+s.err[e]);
+    a.t=Math.max(a.t,s.t||0);Object.keys(s.d||{}).forEach(d=>{const x=a.d[d]||(a.d[d]=[0,0]);x[0]+=s.d[d][0];x[1]+=s.d[d][1];});
+    Object.keys(s.sub||{}).forEach(f=>{const u=s.sub[f],x=a.sub[f]||(a.sub[f]={l:u.l,n:0,ok:0,h:[],t:0});x.n+=u.n;x.ok+=u.ok;x.h=x.h.concat(u.h);x.t=Math.max(x.t,u.t||0);});});
+  a.q=vlQ(a.h);a.avg=a.mn?a.ms/a.mn/1000:0;a.slow=a.mn>=5&&a.ms>a.base;
+  a.since=a.t?Math.floor((Date.now()-a.t)/864e5):null;return a;
 }
 /* Stand: zu wenig geübt / hier hakt es (unter 60 % der letzten Aufgaben) / auf gutem Weg / sitzt (ab 85 %) */
+/* Tendenz: letzte 7 Tage gegen die 3 Wochen davor (je mindestens 5 Aufgaben) */
+function vlTrend(a){
+  const now=Date.now();let r=[0,0],f=[0,0];
+  Object.keys(a.d).forEach(k=>{const age=(now-new Date(k+'T12:00').getTime())/864e5,v=a.d[k];if(age<7.5){r[0]+=v[0];r[1]+=v[1];}else if(age<28.5){f[0]+=v[0];f[1]+=v[1];}});
+  if(r[0]<5||f[0]<5)return null;const pr=r[1]/r[0],pf=f[1]/f[0],x=pr-pf;
+  return{pf,pr,dir:x>=.1?'up':x<=-.1?'down':'flat'};
+}
+const VL_TR={up:['↗','besser geworden'],flat:['→','gleich geblieben'],down:['↘','schwächer geworden']};
+const vlTrTxt=t=>t?`${VL_TR[t.dir][0]} ${VL_TR[t.dir][1]}: früher ${Math.round(t.pf*100)} %, letzte 7 Tage ${Math.round(t.pr*100)} %`:'';
+/* Verlaufskurve: Treffer pro Übungstag, die letzten 14 Übungstage */
+function vlSpark(a){
+  const ks=Object.keys(a.d).sort().slice(-14);if(ks.length<2)return'';const w=ks.length*14+4;
+  return`<svg class="cl-spark" viewBox="0 0 ${w} 42" width="${w}" height="42" role="img" aria-label="Treffer pro Übungstag"><line x1="0" y1="39.5" x2="${w}" y2="39.5"/>${ks.map((k,i)=>{const[n,ok]=a.d[k],p=n?ok/n:0,h=Math.max(3,Math.round(p*36));
+    return`<rect x="${i*14+3}" y="${39-h}" width="10" height="${h}" rx="2" class="${p>=.85?'g':p>=.6?'m':'b'}"><title>${k.slice(8)}.${k.slice(5,7)}.: ${ok} von ${n} richtig</title></rect>`;}).join('')}</svg>`;
+}
+const vlStale=(a,lv)=>a.since!=null&&a.since>=VL_STALE&&(lv==='good'||lv==='mid');
+const vlAgo=d=>d===0?'heute':d===1?'gestern':'vor '+d+' Tagen';
 const vlLevel=a=>a.n<5?'few':a.q<.6?'weak':a.q<.85?'mid':'good';
 const VL_LV={few:['no','noch zu wenig geübt'],weak:['bad','hier hakt es'],mid:['half','auf gutem Weg'],good:['ok','sitzt']};
 function vlScope(r){
@@ -1534,15 +1577,21 @@ function vlAdvice(r,sc){
   if(r.m==='learn')return{txt:'Erst im Bereich „Wissen“ nachlesen, dann in der Übung anwenden.',btns:[['📖 Wissen lesen','','learn']]};
   const a=sc.all,lv=vlLevel(a),top=vlTop(a,1)[0],pk=id=>'Paket '+packById(id).nr+' · '+packById(id).name;
   const cand=[];
-  sc.per.forEach(x=>x.l.forEach(([k,s])=>{if(s.n)cand.push({pid:x.pid,k,n:s.n,q:vlQ(s.h)});}));
+  sc.per.forEach(x=>x.l.forEach(([k,s])=>{if(s.n)cand.push({pid:x.pid,k,n:s.n,q:vlQ(s.h),t:s.t||0});}));
+  const sw=Object.keys(a.sub).map(f=>Object.assign({f,q:vlQ(a.sub[f].h)},a.sub[f])).filter(u=>u.n>=3&&u.q<.6).sort((x,y)=>x.q-y.q)[0];
+  const swBtn=sw?[['🎯 Gezielt: '+sw.l,'','task',sw.f]]:[];
   cand.sort((x,y)=>(y.n>=3)-(x.n>=3)||x.q-y.q||y.n-x.n);
   const w=cand[0],dflt=r.packs.find(pid=>!sc.per.find(x=>x.pid===pid).l.length&&vlOK([pid],r.m))||r.packs.find(pid=>vlOK([pid],r.m))||r.packs[0];
   if(lv==='few')return{txt:r.m==='test'?'Hier zählen nur Antworten aus dem Abschlusstest – dazu gibt es noch keine. Mach den Abschlusstest mit allen Paketen.':'Dazu gibt es noch zu wenig Übung für eine Aussage. Mach mindestens 10 Aufgaben in '+pk(dflt)+'.',btns:[[r.m==='test'?'🏆 Test starten':'Üben ▶',r.m==='test'?r.packs.join(','):dflt,r.m]]};
+  if(vlStale(a,lv)){const o=cand.slice().sort((x,y)=>x.t-y.t)[0];
+    return{txt:`Zuletzt ${vlAgo(a.since)} geübt. Kurz auffrischen, damit es nicht wieder verloren geht: 5–10 Aufgaben reichen.`,btns:o?[['🔄 Auffrischen',o.pid,o.k]]:[]};}
   if(lv==='weak'&&r.m==='test')return{txt:'Im Abschlusstest hakt es noch.'+(top?' Häufigster Fehler: '+vlErrText(top[0])+'.':'')+(w?' Am schwächsten: '+pk(w.pid)+' („'+MODES[w.k].title+'“). Das erst üben, dann den Test wiederholen.':''),btns:w?[['Üben ▶',w.pid,w.k]]:[]};
   if(lv==='weak'){
     const btns=w?[['Üben ▶',w.pid,w.k]]:[];if(top&&(top[0]==='ueber'||top[0]==='skala'))btns.unshift(['📖 Wissen lesen','','learn']);
+    if(sw)return{txt:'Hier hakt es noch. Am schwierigsten ist die Aufgabe „'+sw.l+'“ ('+Math.round(sw.q*100)+' % richtig). Übe genau diese Aufgabe gezielt, am besten 10 Mal.',btns:swBtn.concat(btns)};
     return{txt:'Hier hakt es noch.'+(top?' Häufigster Fehler: '+vlErrText(top[0])+'.':'')+(w?' Übe '+pk(w.pid)+' („'+MODES[w.k].title+'“) noch einmal, am besten 10 Aufgaben.':''),btns};
   }
+  if(lv==='mid'&&sw)return{txt:'Auf gutem Weg. Nur „'+sw.l+'“ klappt noch nicht ('+Math.round(sw.q*100)+' % richtig) – die gezielt üben.',btns:swBtn};
   if(lv==='mid')return{txt:'Auf gutem Weg.'+(top?' Ab und zu passiert noch: '+vlErrText(top[0])+'.':'')+(w?' Noch 10 Aufgaben in '+pk(w.pid)+', dann sitzt es.':''),btns:w?[['Üben ▶',w.pid,w.k]]:[]};
   const fast=a.slow&&['visual','degree','estimate'].includes(r.m)&&vlOK(r.packs,'time');
   return{txt:'Das sitzt.'+(a.slow?' Du brauchst aber noch recht lange pro Aufgabe (Ø '+vlTime(a.avg)+').':' Nur ab und zu kurz auffrischen.')+(fast?' Die Zeitrunde hilft, schneller zu werden.':''),
@@ -1552,6 +1601,11 @@ function vlDetail(id,r){
   const sc=vlScope(r),ad=vlAdvice(r,sc),a=sc.all,lv=r.m==='learn'?null:vlLevel(a);
   const sf=(S.self||{})[id],nt=((S.note||{})[id]||{}).t||'';
   const tr=x=>`<tr><td>Paket ${packById(x.pid).nr}</td><td>${x.a.n||'–'}</td><td>${vlPct(x.a)}</td><td>${x.a.mn?vlTime(x.a.avg):'–'}</td></tr>`;
+  const subs=Object.keys(a.sub).map(f=>Object.assign({f,q:vlQ(a.sub[f].h)},a.sub[f])).sort((x,y)=>x.q-y.q);
+  const subTab=subs.length?`<div><b>Aufgaben-Mission nach Aufgabenart</b><div class="cl-tw"><table class="cl-tab"><thead><tr><th>Aufgabe</th><th>Anzahl</th><th>Treffer zuletzt</th></tr></thead><tbody>${subs.map(u=>`<tr${u.n>=3&&u.q<.6?' class="weak"':''}><td>${vlEsc(u.l)}</td><td>${u.n}</td><td>${Math.round(u.q*100)} %</td></tr>`).join('')}</tbody></table></div></div>`:'';
+  const trd=vlTrend(a),sp=vlSpark(a),stale=lv&&vlStale(a,lv);
+  const abx=(S.ab||{})[r.m],abTxt=abx&&abx.a>=2&&abx.a/Math.max(abx.s,1)>=.3?`🚪 „${MODES[r.m].title}“ wurde oft vorzeitig beendet (${abx.a} von ${abx.s} Mal${abx.w?`, ${abx.w}× direkt nach einem Fehler`:''}). Vielleicht zu schwer oder zu lang – kürzere Runden oder erst „Wissen“ lesen.`:'';
+  const hist=(sp||trd||a.t)&&r.m!=='learn'?`<div class="cl-hist">${sp?`<div><b>Verlauf</b> <small>(Treffer pro Übungstag)</small><br>${sp}</div>`:''}<div>${trd?`<div>${vlTrTxt(trd)}</div>`:''}${a.t?`<small>Zuletzt geübt: ${vlAgo(a.since)}</small>`:''}</div></div>`:'';
   const errs=vlTop(a,3).map(([e,c])=>`<li>${vlEsc(vlErrText(e))} <small>(${c}×)</small></li>`).join('');
   let warn='';
   if(sf&&lv){
@@ -1559,12 +1613,14 @@ function vlDetail(id,r){
     else if(sf.v===3&&(lv==='good'||lv==='mid')&&a.q>=.75)warn='👍 Deine Ergebnisse sind besser, als du denkst. Du kannst mehr, als du fühlst!';
     else if(sf.v===1&&a.slow)warn='⏳ Die Antworten stimmen, dauern aber lange. Vielleicht warst du abgelenkt – oder es ist noch nicht ganz sicher.';
   }
-  const summ=`📊 Ergebnisse &amp; Tipp${lv?` <span class="cl-chip ${VL_LV[lv][0]}">${VL_LV[lv][1]}</span>`:''}${sf?` <span class="cl-chip no">${SELF[sf.v-1][1]} ${SELF[sf.v-1][2]}</span>`:''}`;
+  const summ=`📊 Ergebnisse &amp; Tipp${lv?` <span class="cl-chip ${VL_LV[lv][0]}">${VL_LV[lv][1]}</span>`:''}${stale?' <span class="cl-chip half">⏰ lange nicht geübt</span>':''}${trd?` <span class="cl-chip no" title="${VL_TR[trd.dir][1]}">${VL_TR[trd.dir][0]}</span>`:''}${sf?` <span class="cl-chip no">${SELF[sf.v-1][1]} ${SELF[sf.v-1][2]}</span>`:''}`;
   return`<details class="cl-det" data-id="${id}"${VL_OPEN.has(id)?' open':''}><summary>${summ}</summary><div class="cl-vl">
-    ${r.m==='learn'?'':`<table class="cl-tab"><thead><tr><th>Paket</th><th>Aufgaben</th><th>Treffer zuletzt</th><th>Ø Zeit</th></tr></thead><tbody>${sc.per.map(tr).join('')}${sc.per.length>1?`<tr class="tot"><td>gesamt</td><td>${a.n||'–'}</td><td>${vlPct(a)}</td><td>${a.mn?vlTime(a.avg):'–'}</td></tr>`:''}</tbody></table>`}
+    ${r.m==='learn'?'':`<div class="cl-tw"><table class="cl-tab"><thead><tr><th>Paket</th><th>Aufgaben</th><th>Treffer zuletzt</th><th>Ø Zeit</th></tr></thead><tbody>${sc.per.map(tr).join('')}${sc.per.length>1?`<tr class="tot"><td>gesamt</td><td>${a.n||'–'}</td><td>${vlPct(a)}</td><td>${a.mn?vlTime(a.avg):'–'}</td></tr>`:''}</tbody></table></div>`}
+    ${hist}${subTab}
     ${errs?`<div><b>Häufige Fehler</b><ul class="cl-err">${errs}</ul></div>`:''}
+    ${abTxt?`<div class="cl-warn">${abTxt}</div>`:''}
     <div class="cl-tip">💡 ${vlEsc(ad.txt)}</div>
-    ${ad.btns.length?`<div class="cl-acts">${ad.btns.map(([t,p,m])=>`<button type="button" class="cl-vgo" data-vp="${p}" data-vm="${m}">${t}</button>`).join('')}</div>`:''}
+    ${ad.btns.length?`<div class="cl-acts">${ad.btns.map(([t,p,m,f])=>`<button type="button" class="cl-vgo" data-vp="${p}" data-vm="${m}"${f?` data-vf="${f}"`:''}>${vlEsc(t)}</button>`).join('')}</div>`:''}
     <div><b>Wie fühlt sich das für dich an?</b><div class="cl-self">${SELF.map(([v,ic,t])=>`<button type="button" class="cl-sb${sf&&sf.v===v?' on':''}" data-id="${id}" data-v="${v}">${ic} ${t}</button>`).join('')}</div></div>
     ${warn?`<div class="cl-warn">${warn}</div>`:''}
     <label class="cl-nl">Meine Frage oder was mir schwerfällt (freiwillig)<textarea class="cl-note" data-id="${id}" maxlength="400" rows="2">${vlEsc(nt)}</textarea></label>
@@ -1580,12 +1636,17 @@ function vlParent(){
   if(!total)lines.push('Es liegen noch keine Übungsdaten vor. Sobald geübt wird, erscheint hier eine Auswertung.');
   else{
     lines.push(`Bisher ${total} Aufgaben beantwortet.`);
-    rows.forEach(x=>{if(!x.lv||x.lv==='few')return;const a=x.sc.all,t=vlTop(a,1)[0];
-      lines.push(`${x.lv==='weak'?'⚠️ Schwerpunkt':x.lv==='mid'?'🟡 Auf gutem Weg':'✅ Sitzt'}: ich kann ${shortT(x.r)} – ${vlPct(a)} Treffer${t&&x.lv!=='good'?', häufigster Fehler: '+vlErrText(t[0]):''}${a.slow?', braucht viel Zeit':''}.`);});
+    const all=vlSum(Object.keys(S.vl||{}).filter(k=>!k.endsWith('|T')).map(k=>[k.split('|')[1],S.vl[k]]));
+    const days=Object.keys(all.d).filter(k=>(Date.now()-new Date(k+'T12:00').getTime())/864e5<14),n7=Object.keys(all.d).filter(k=>(Date.now()-new Date(k+'T12:00').getTime())/864e5<7.5).reduce((s,k)=>s+all.d[k][0],0);
+    lines.push(`Übungsrhythmus: an ${days.length} der letzten 14 Tage geübt, ${n7} Aufgaben in den letzten 7 Tagen${all.t?', zuletzt '+vlAgo(all.since):''}.`);
+    rows.forEach(x=>{if(!x.lv||x.lv==='few')return;const a=x.sc.all,t=vlTop(a,1)[0],tr=vlTrend(a);
+      lines.push(`${x.lv==='weak'?'⚠️ Schwerpunkt':x.lv==='mid'?'🟡 Auf gutem Weg':'✅ Sitzt'}: ich kann ${shortT(x.r)} – ${vlPct(a)} Treffer${tr?' ('+VL_TR[tr.dir][1]+', früher '+Math.round(tr.pf*100)+' %)':''}${t&&x.lv!=='good'?', häufigster Fehler: '+vlErrText(t[0]):''}${a.slow?', braucht viel Zeit':''}${vlStale(a,x.lv)?', ⏰ lange nicht geübt ('+vlAgo(a.since)+')':''}.`);});
+    const ab=Object.keys(S.ab||{}).filter(m=>S.ab[m].a>=2&&S.ab[m].a/Math.max(S.ab[m].s,1)>=.3&&MODES[m]).map(m=>`„${MODES[m].title}“ ${S.ab[m].a} von ${S.ab[m].s} Mal${S.ab[m].w?` (${S.ab[m].w}× direkt nach einem Fehler)`:''}`);
+    if(ab.length)lines.push('🚪 Oft vorzeitig beendet: '+ab.join(', ')+'.');
     const few=rows.filter(x=>x.lv==='few').length;if(few)lines.push(`Zu ${few} von 5 Zielen gibt es noch zu wenig Übung für eine Aussage.`);
   }
-  const tab=`<table class="cl-tab"><thead><tr><th>Ziel</th><th>Aufgaben</th><th>Treffer zuletzt</th><th>Ø Zeit</th><th>Gefühl</th><th>Stand</th></tr></thead><tbody>${rows.map(x=>{const a=x.sc.all,sf=(S.self||{})[x.id];
-    return`<tr><td>${vlEsc(shortT(x.r))}</td><td>${x.lv?a.n||'–':'–'}</td><td>${x.lv?vlPct(a):'–'}</td><td>${x.lv&&a.mn?vlTime(a.avg):'–'}</td><td>${sf?SELF[sf.v-1][1]:'–'}</td><td>${x.lv?VL_LV[x.lv][1]:'–'}</td></tr>`;}).join('')}</tbody></table>`;
+  const tab=`<div class="cl-tw"><table class="cl-tab"><thead><tr><th>Ziel</th><th>Aufgaben</th><th>Treffer zuletzt</th><th>Ø Zeit</th><th>Tendenz</th><th>Gefühl</th><th>Stand</th></tr></thead><tbody>${rows.map(x=>{const a=x.sc.all,sf=(S.self||{})[x.id];
+    return`<tr><td>${vlEsc(shortT(x.r))}</td><td>${x.lv?a.n||'–':'–'}</td><td>${x.lv?vlPct(a):'–'}</td><td>${x.lv&&a.mn?vlTime(a.avg):'–'}</td><td>${x.lv&&vlTrend(a)?VL_TR[vlTrend(a).dir][0]:'–'}</td><td>${sf?SELF[sf.v-1][1]:'–'}</td><td>${x.lv?VL_LV[x.lv][1]+(vlStale(a,x.lv)?' ⏰':''):'–'}</td></tr>`;}).join('')}</tbody></table></div>`;
   return`<details class="cl-det cl-par" data-id="par"${VL_OPEN.has('par')?' open':''}><summary>👨‍👩‍👧 Übersicht für Eltern</summary><div class="cl-vl">
     <ul class="cl-err">${lines.map(l=>`<li>${vlEsc(l)}</li>`).join('')}</ul>${tab}
     <div id="clParNotes">${vlNotes()}</div>
@@ -1597,6 +1658,7 @@ function vlNotes(){
 }
 function clGo(packs,m){if(m==='learn'){S.sel=packs.slice();save();return learn();}S.sel=packs.slice();save();home();setTimeout(()=>{const t=app.querySelector('[data-m="'+m+'"]');if(t){t.scrollIntoView({behavior:'smooth',block:'center'});t.focus();}},60);}
 function checklist(){
+  vlLeave();
   stopAll();G=null;const y=app.scrollTop;
   const pn=ps=>ps.length===8?'alle Pakete':'Paket '+ps.map(id=>packById(id).nr).join(', ');
   const kann=CL_KANN.map((r,i)=>{const[st,txt]=kannState(r);return`<div class="cl-row${st==='ok'?' done':''}"><span class="cl-nr">${st==='ok'?'✓':i+1}</span><div class="cl-t"><b>Ich kann ${r.t}</b><small>${pn(r.packs)} · ${txt}</small></div><span class="cl-chip ${st}">${st==='ok'?'geschafft':st==='half'?'teilweise':'offen'}</span><button class="cl-go" data-k="${i}">Üben ▶</button>${vlDetail('k'+i,r)}</div>`;}).join('');
@@ -1615,7 +1677,10 @@ function checklist(){
   app.querySelectorAll('.cl-go').forEach(b=>b.onclick=()=>{if(b.dataset.k!=null){const r=CL_KANN[+b.dataset.k];clGo(r.packs,r.m);}else{const r=CL_TEILE.find(x=>x.n===+b.dataset.n);clGo(r.packs,r.m);}});
   app.querySelectorAll('details.cl-det').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)VL_OPEN.add(d.dataset.id);else VL_OPEN.delete(d.dataset.id);}));
   /* „Üben ▶“ in der Auswertung startet die empfohlene Übung sofort mit dem empfohlenen Paket */
-  app.querySelectorAll('.cl-vgo').forEach(b=>b.onclick=()=>{const m=b.dataset.vm;if(m==='learn')return learn();S.sel=b.dataset.vp.split(',').filter(Boolean);save();startMode(m);});
+  app.querySelectorAll('.cl-vgo').forEach(b=>b.onclick=()=>{const m=b.dataset.vm;if(m==='learn')return learn();
+    if(b.dataset.vf&&window.__wkTasks[b.dataset.vf]){const f=window.__wkTasks[b.dataset.vf],pk=PACKS.find(x=>TASKS[x.id]&&TASKS[x.id].includes(f));S.sel=pk?[pk.id]:S.sel;VL_FORCE=b.dataset.vf;}
+    else S.sel=b.dataset.vp.split(',').filter(Boolean);
+    save();startMode(m);});
   app.querySelectorAll('.cl-sb').forEach(b=>b.onclick=()=>{const id=b.dataset.id,v=+b.dataset.v;S.self=S.self||{};if(S.self[id]&&S.self[id].v===v)delete S.self[id];else S.self[id]={v,d:vlDate()};save();const yy=app.scrollTop;checklist();app.scrollTop=yy;});
   app.querySelectorAll('.cl-note').forEach(t=>t.oninput=()=>{S.note=S.note||{};if(t.value.trim())S.note[t.dataset.id]={t:t.value.slice(0,400),d:vlDate()};else delete S.note[t.dataset.id];save();const pn=$('#clParNotes');if(pn)pn.innerHTML=vlNotes();});
   app.scrollTop=y||0;
@@ -1648,6 +1713,7 @@ const LEARN2=`
 
 /* Basis */
 function home(){
+  vlLeave();
   stopAll();G=null;
   const k=combo();
   const packCard=p=>{
@@ -1702,7 +1768,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.12.1">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.13.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1712,24 +1778,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.12.1"></script>
+<script src="../js/lernplan.js?v=7.13.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.12.1">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.13.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.12.1"></script>
+<script src="../js/nutzer.js?v=7.13.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.12.1"></script>
+<script src="../js/home-btn.js?v=7.13.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.12.1"></script>
+<script src="../js/arena-btn.js?v=7.13.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.12.1"></script>
+<script src="../js/lernzettel-btn.js?v=7.13.0"></script>
 </body>
 </html>
