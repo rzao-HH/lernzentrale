@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.10.2","29.09.2026",["🛠️ Winkel konstruieren: Das Geodreieck geht von selbst weiter, sobald es richtig liegt – kein Bestätigen mehr","📍 Die Markierung lässt sich verschieben oder neu setzen; mit „↶ Schritt zurück“ kann man jeden Schritt korrigieren"]],
  ["7.10.1","29.09.2026",["🗓️ Winkel-Akademie: Der Lernplan nennt bei den Paketen 1–3 jetzt auch „Winkel konstruieren“ und rahmt die Übung beim Wiederholen ein","✅ Checkliste: „Ich kann Winkel nach vorgegebenen Größen zeichnen“ ist erst geschafft, wenn auch 3 Winkel richtig konstruiert sind; die Schulaufgaben 18–20 führen zu „Winkel konstruieren“","🧭 Schatzsuche (AH S. 17): Wege jetzt auch schräg mit Kurs 45°, 135°, 225° und 315°"]],
  ["7.10.0","29.09.2026",["🛠️ Winkel-Akademie: Neue Übung „Winkel konstruieren“ – mit dem Geodreieck wie im Heft: Schenkel zeichnen, Geodreieck anlegen, Gradzahl markieren, neu anlegen, zweiten Schenkel ziehen, Winkelbogen auf der richtigen Seite (auch überstumpf mit dem 360°-Trick)","🎓 Im Abschlusstest der Winkel-Akademie kommen 1–2 Konstruktionen vor","🔢 Jede App zeigt unten links ihre Versionsnummer"]],
  ["7.9.1","29.09.2026",["🆕 Gibt es eine neue Version, erscheint unten auf der Startseite „Neue Version ist da – jetzt aktualisieren“ (vorher lief auf lange offenen Tablets manchmal noch die alte App)"]],

@@ -18,11 +18,12 @@ async def run(p,f,deg_force,wrong_side=False):
   geo=await f.evaluate("(()=>{const g=document.querySelector('.kgeo').getAttribute('transform');return g})()")
   gx,gy=[float(v) for v in geo.split('translate(')[1].split(')')[0].split()]
   await drag(p,P(gx,gy-15),P(S[0],S[1]-15));await p.wait_for_timeout(200)
-  assert await f.query_selector('#kok'),'Geodreieck rastet nicht ein'
-  await f.click('#kok')
+  assert 'Gradzahl markieren' in await f.inner_text('.ksteps .now'),('Geodreieck rastet nicht ein',await f.inner_text('#kst'))
   d=deg if deg<180 else 360-deg
   mx,my=S[0]+math.cos(math.radians(d))*W*.2,S[1]-math.sin(math.radians(d))*W*.2
-  await p.mouse.click(*P(mx,my));await p.wait_for_timeout(150);await f.click('#kok')
+  # erst daneben tippen, dann korrigieren (verschieben)
+  await p.mouse.click(*P(mx+40,my+30));await p.wait_for_timeout(100)
+  await drag(p,P(mx+40,my+30),P(mx,my));await p.wait_for_timeout(150);await f.click('#kok')
   # Geodreieck neu anlegen: drehen am Griff, dann schieben
   geo=await f.evaluate("document.querySelector('.kgeo').getAttribute('transform')");gx,gy=[float(v) for v in geo.split('translate(')[1].split(')')[0].split()]
   hh=await f.evaluate("(()=>{const h=document.querySelector('.kh');const r=h.getBoundingClientRect();return[r.x+r.width/2,r.y+r.height/2]})()")
@@ -34,8 +35,7 @@ async def run(p,f,deg_force,wrong_side=False):
   off=(S[0]-gx)*(-uy)+(S[1]-gy)*ux  # Abstand senkrecht
   grab=(gx+nx*(-12)+0,gy+ny*(-12))
   await drag(p,P(*grab),P(grab[0]+(-uy)*off,grab[1]+ux*off));await p.wait_for_timeout(150)
-  assert await f.query_selector('#kok'),('Kante nicht durch S',await f.inner_text('#kst'))
-  await f.click('#kok')
+  assert 'Zweiten Schenkel' in await f.inner_text('.ksteps .now'),('Kante nicht durch S',await f.inner_text('#kst'))
   bx,by=S[0]+ux*W*.3,S[1]+uy*W*.3
   await drag(p,P(*S),P(bx,by));await p.wait_for_timeout(150)
   mid=d/2 if ((deg<180)!=wrong_side) else d/2+180
@@ -50,5 +50,12 @@ async def main():
       deg,fb=await run(p,f,None,ws);print(deg,ws,'|',fb[:150])
       await p.screenshot(path=OUTDIR+f'konstr-{int(ws)}.png')
       assert (('konstruiert' in fb) if not ws else ('falschen Seite' in fb)),fb
+    # Schritt zurück: nach dem Markieren zurück, Markierung bleibt korrigierbar
+    await p.goto('http://app.test/#W');await p.wait_for_timeout(1500);f=[x for x in p.frames if x.url.split('?')[0].endswith('winkel.html')][0]
+    await f.evaluate("lzSelect('p1','rep')");await f.click('[data-m="konstr"]');await p.wait_for_timeout(300)
+    svg=await f.query_selector('#svg');bb=await svg.bounding_box();W,H=await f.evaluate("(()=>{const s=document.getElementById('svg').viewBox.baseVal;return[s.width,s.height]})()");sc=bb['width']/W
+    P=lambda x,y:(bb['x']+x*sc,bb['y']+y*sc)
+    await drag(p,P(W*.25,H*.6),P(W*.8,H*.6));await f.click('#kback');await p.wait_for_timeout(100)
+    assert 'Ersten Schenkel' in await f.inner_text('.ksteps .now')
     print('errors',errs);assert not errs;await br.close()
 asyncio.run(main())
