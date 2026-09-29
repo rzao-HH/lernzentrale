@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.7.0"></script>
+<script src="../js/app-core.js?v=7.8.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="Z";window.__DATAKEY="wasserzauberschule-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.7.0"></script>
+<script src="../js/nutzer-init.js?v=7.8.0"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -350,6 +350,9 @@ input[type=range]{width:100%;height:44px;accent-color:var(--house)}
 .pkgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
 .pkg{font-size:12px;font-weight:800;border-radius:999px;padding:3px 9px;background:var(--panel2);color:var(--muted);border:1px dashed var(--line)}
 .pkg.ok{border-style:solid;color:var(--text)}.pkg.n1,.pkg.n2{background:var(--okbg);border-color:var(--ok)}.pkg.n3,.pkg.n4{background:var(--halfbg);border-color:var(--half)}.pkg.n5,.pkg.n6{background:var(--badbg);border-color:var(--bad)}
+.bksearch{width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:17px;padding:0 14px}.bksearch:focus{outline:none;border-color:var(--accent)}
+mark{background:#ffe27a;color:#1b1b1b;border-radius:4px;padding:0 2px}
+.bkfound{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;line-height:1.45}.bkfound .fsrc2{font-size:12px;font-weight:800;opacity:.7}
 .fcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .fc{perspective:900px;height:190px;background:none;border:0;padding:0}
 .fci{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
@@ -889,18 +892,25 @@ function book(sel,view){
   if(!sel.length)sel=['p1'];
   sel=PACKS.map(p=>p.id).filter(id=>sel.includes(id));
   S.bksel=sel;save();
-  G={mode:'book',finished:false,view,sel};
+  const oq=G&&G.mode==='book'?G.q:'';G={mode:'book',finished:false,view,sel,q:oq};
   shell('book');
   const c=$('#card'),key=(pid,i)=>pid+':'+i,PI=Object.fromEntries(PACKS.map(p=>[p.id,p]));
   const all=[];sel.forEach(pid=>CARDS[pid].forEach((_,i)=>all.push([pid,i])));
   const head=`<div class="bkhint">Bereiche wählen (mehrere möglich):</div><div class="tabs bktabs">${PACKS.map(p=>`<button data-t="${p.id}" class="${sel.includes(p.id)?'on':''}" aria-pressed="${sel.includes(p.id)}">${sel.includes(p.id)?'✓ ':''}${p.icon} ${p.name}</button>`).join('')}</div>
   <div class="bkseg" role="tablist"><button data-v="practice" class="${view==='practice'?'on':''}" role="tab" aria-selected="${view==='practice'}">🃏 Karten üben</button><button data-v="all" class="${view==='all'?'on':''}" role="tab" aria-selected="${view==='all'}">📋 Alle ansehen</button></div>`;
   if(view==='all'){
-    c.innerHTML=head+`<p class="sub" style="margin:0">Tippe eine Karte an, um sie umzudrehen.</p>`+sel.map(pid=>`${sel.length>1?`<h3 class="bkh">${PI[pid].icon} ${PI[pid].name}</h3>`:''}
+    const Q=()=>G.q||'',M=t=>lzFind.mark(esc(t),Q());
+    c.innerHTML=head+`<input type="search" id="bks" class="bksearch" placeholder="🔎 In allen Karten suchen, z. B. Siedetemperatur" value="${esc(Q())}" autocomplete="off" enterkeyhint="search"><div id="bkl" style="display:flex;flex-direction:column;gap:12px"></div>`;
+    const list=()=>{const q=Q().trim();
+      if(q){let n=0;$('#bkl').innerHTML=PACKS.map(p=>{const cs=CARDS[p.id].filter(([f,b,src])=>lzFind.hit(q,[f,b,src]));n+=cs.length;
+        return cs.length?`<h3 class="bkh">${p.icon} ${p.name}</h3>`+cs.map(([f,b,src])=>`<div class="bkfound"><b>${M(f)}</b><span>${M(b)}</span>${src?`<small class="fsrc2">📄 ${M(src)}</small>`:''}</div>`).join(''):'';}).join('');
+        $('#bkl').insertAdjacentHTML('afterbegin',`<p class="sub" style="margin:0">${n?`${n} ${n===1?'Karte':'Karten'} gefunden – in allen Bereichen`:'Keine Karte gefunden. Versuche ein anderes Wort.'}</p>`);return;}
+    $('#bkl').innerHTML=`<p class="sub" style="margin:0">Tippe eine Karte an, um sie umzudrehen.</p>`+sel.map(pid=>`${sel.length>1?`<h3 class="bkh">${PI[pid].icon} ${PI[pid].name}</h3>`:''}
   <div class="fcards">${CARDS[pid].map(([f,b,src])=>`<button class="fc"><div class="fci"><div class="fcf">${esc(f)}</div><div class="fcb"><span>${esc(b)}</span>${src?`<small class="fsrc">📄 ${esc(src)}</small>`:''}</div></div></button>`).join('')}</div>
   ${pid==='p2'?`<div class="pic" style="align-self:stretch">${transSVG(null)}</div>`:''}
   ${pid==='p1'?`<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">${STATES.map((s,i)=>`<div class="pic" style="text-align:center;font-weight:900">${modelSVG(s,11+i)}<br>${s}</div>`).join('')}</div>`:''}`).join('');
-    c.querySelectorAll('.fc').forEach(b=>b.onclick=()=>b.classList.toggle('flip'));
+      $('#bkl').querySelectorAll('.fc').forEach(b=>b.onclick=()=>b.classList.toggle('flip'));};
+    list();$('#bks').oninput=e=>{G.q=e.target.value;list();};
   }else{
     G.deck=shuffle(all);G.known=0;G.flip=false;
     c.innerHTML=head+`<div class="bkp" id="bkp"></div>`;
@@ -2126,7 +2136,7 @@ applyHouse();renderHeader();home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--teal);--lp-on:#fff;--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-wasser", "prefix": "Z", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🧊", "name": "Die drei Zustände", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p2", "icon": "🔄", "name": "Verwandlungen", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p3", "icon": "🧪", "name": "Eis schwimmt", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p4", "icon": "🏞️", "name": "Das Geheimnis des Sees", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p5", "icon": "🔬", "name": "Forschen wie Profis", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20, "write": 15}, "write": true};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.7.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.8.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -2136,22 +2146,22 @@ applyHouse();renderHeader();home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.7.0"></script>
+<script src="../js/lernplan.js?v=7.8.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.7.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.8.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.7.0"></script>
+<script src="../js/nutzer.js?v=7.8.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank .rt,#rank>div{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.7.0"></script>
+<script src="../js/home-btn.js?v=7.8.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.7.0"></script>
+<script src="../js/arena-btn.js?v=7.8.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"NWT: Wasser",f:"nwt-wasser.html",d:"Aggregatzustände, Übergänge, Eis, See im Winter, Versuchsprotokoll"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.7.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.8.0"></script>
 </body>
 </html>

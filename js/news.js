@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.8.0","29.09.2026",["🔎 Lernkarten „Alle ansehen“ im Detektiv-Büro und in der Wasser-Zauberschule: Suchfeld – findet ein Wort in allen Karten aller Pakete und markiert es gelb"]],
  ["7.7.0","29.09.2026",["📐 Winkel-Akademie, Aufgaben-Mission – neu nach Abgleich mit den Lernzetteln:","🧭 Punkte einzeichnen, Wege mit Kurs und Kästchen gehen (Schatzsuche), links oder rechts herum in dieselbe Richtung","🧮 Winkel an geschnittenen Parallelen (AH S. 16 Nr. 5) und Winkel im Dreieck messen (AH S. 18)","📏 Parallele im Abstand zeichnen und Rechtecke ergänzen (Übungsheft Geodreieck)"]],
  ["7.6.1","29.09.2026",["📐 Winkel-Akademie: Bei „Wie viele rechte Winkel hat jedes Rechteck?“ ist jetzt ein Rechteck zu sehen; nach der Antwort sind die vier rechten Winkel markiert"]],
  ["7.6.0","29.09.2026",["📄 Winkel-Akademie: Der 📄-Knopf oben öffnet jetzt auch die Mathe-Lernzettel – 45 Blätter zu Kompass, Winkelarten, Messen, Zeichnen, Berechnen und Geodreieck, mit Lösungen"]],

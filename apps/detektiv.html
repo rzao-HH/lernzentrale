@@ -2,11 +2,11 @@
 <html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Detektiv-Büro</title>
-<script src="../js/app-core.js?v=7.7.0"></script>
+<script src="../js/app-core.js?v=7.8.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="D";window.__DATAKEY="detektivbuero-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.7.0"></script>
+<script src="../js/nutzer-init.js?v=7.8.0"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -105,6 +105,8 @@ h2{font-family:var(--display);font-size:22px;margin:10px 0 0;display:flex;align-
 .wnav{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .wdots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.wdots button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel);font-weight:800}.wdots button.done{background:var(--okbg);border-color:var(--ok)}.wdots button.on{outline:3px solid var(--accent)}
 .wspin{width:46px;height:46px;border-radius:50%;border:5px solid var(--line);border-top-color:var(--accent);animation:wsp 1s linear infinite;margin:20px auto 0}@keyframes wsp{to{transform:rotate(360deg)}}
+.bksearch{width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:17px;padding:0 14px}.bksearch:focus{outline:none;border-color:var(--accent)}
+mark{background:#ffe27a;color:#2a221c;border-radius:4px;padding:0 2px}
 .wans{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;text-align:left;line-height:1.45}
 .wmine,.wmodel,.wcom,.wover{border-radius:12px;padding:10px 12px;white-space:pre-wrap;line-height:1.5}
 .wmine small,.wmodel small,.wcom small,.wover small{display:block;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;opacity:.7;margin-bottom:2px}
@@ -511,11 +513,16 @@ function blitzEnd(){
 /* ---------- Akte (Lernkarten) ---------- */
 function book(sel,view){
   sel=Array.isArray(sel)?sel:(S.sel.length?S.sel.slice():['p1']);view=view||'practice';S.bk=S.bk||{};
-  G={mode:'book',sel,view};shell('book');const c=$('#card'),PI=Object.fromEntries(PACKS.map(p=>[p.id,p])),key=(p,i)=>p+':'+i;
+  const oq=G&&G.mode==='book'?G.q:'';G={mode:'book',sel,view,q:oq};shell('book');const c=$('#card'),PI=Object.fromEntries(PACKS.map(p=>[p.id,p])),key=(p,i)=>p+':'+i;
   const all=[];sel.forEach(p=>CARDS[p].forEach((_,i)=>all.push([p,i])));
   const head=`<div class="chips">${PACKS.map(p=>`<button data-t="${p.id}" class="${sel.includes(p.id)?'on':''}">${sel.includes(p.id)?'✓ ':''}${p.icon} ${p.name}</button>`).join('')}</div>
   <div class="chips"><button data-v="practice" class="${view==='practice'?'on':''}">🃏 Karten üben</button><button data-v="all" class="${view==='all'?'on':''}">📋 Alle ansehen</button></div>`;
-  if(view==='all'){c.innerHTML=head+sel.map(p=>`<h2>${PI[p].icon} ${PI[p].name}</h2>`+CARDS[p].map(([f,b,q,x])=>`<div class="wans"><b>${esc(f)}</b><span>${esc(b)}</span>${x?`<small class="fex">${esc(x)}</small>`:''}${q?`<small class="fsrc2">📄 ${esc(q)}</small>`:''}</div>`).join('')).join('');}
+  if(view==='all'){const Q=()=>G.q||'',M=s=>lzFind.mark(esc(s),Q());
+    c.innerHTML=head+`<input type="search" id="bks" class="bksearch" placeholder="🔎 In allen Karten suchen, z. B. finit" value="${esc(Q())}" autocomplete="off" enterkeyhint="search"><div id="bkl" style="display:flex;flex-direction:column;gap:12px"></div>`;
+    const list=()=>{const q=Q().trim(),packs=q?PACKS.map(p=>p.id):sel;let n=0;
+      const h=packs.map(p=>{const cs=CARDS[p].filter(([f,b,s,x])=>!q||lzFind.hit(q,[f,b,s,x]));n+=cs.length;return cs.length?`<h2>${PI[p].icon} ${PI[p].name}</h2>`+cs.map(([f,b,s,x])=>`<div class="wans"><b>${M(f)}</b><span>${M(b)}</span>${x?`<small class="fex">${M(x)}</small>`:''}${s?`<small class="fsrc2">📄 ${M(s)}</small>`:''}</div>`).join(''):'';}).join('');
+      $('#bkl').innerHTML=(q?`<p class="sub" style="margin:0">${n?`${n} ${n===1?'Karte':'Karten'} gefunden – in allen Akten`:'Keine Karte gefunden. Versuche ein anderes Wort.'}</p>`:'')+h;};
+    list();G.q=G.q||'';$('#bks').oninput=e=>{G.q=e.target.value;list();};}
   else{G.deck=shuffle(all);G.known=0;G.flip=false;c.innerHTML=head+'<div id="bkp" style="display:flex;flex-direction:column;gap:12px"></div>';
     const draw=()=>{const p=$('#bkp'),N=all.length,bar=`<div class="bkprog"><div class="bar"><i style="width:${Math.round(100*G.known/N)}%"></i></div><span>${G.known} / ${N} 🔎</span></div>`;
       if(!G.deck.length){p.innerHTML=bar+`<div class="rcard" style="margin:0 auto"><div style="font-size:44px">🕵️</div><h2 style="justify-content:center">Alle Karten gewusst!</h2><button class="big go" id="bkagain">Nochmal von vorn</button></div>`;$('#bkagain').onclick=()=>book(sel,'practice');return;}
@@ -597,7 +604,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:var(--on);--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-deutsch", "prefix": "D", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Akten gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Akten auswählen.", "units": [{"id": "p1", "icon": "🔍", "name": "Hauptsatz & Nebensatz", "learn": "Erst „Akte lesen“, dann Verb-Jäger.", "rep": "Verb-Jäger oder Satzreihe oder Satzgefüge?"}, {"id": "p2", "icon": "🔗", "name": "Satzreihe", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Konjunktion wählen.", "rep": "Komma-Setzer oder Satz-Baumeister."}, {"id": "p3", "icon": "🧩", "name": "Satzgefüge", "learn": "Erst „Akte lesen“, dann Satz-Baumeister und Komma-Setzer.", "rep": "Satz-Baumeister oder Verb-Jäger."}, {"id": "p4", "icon": "🗝️", "name": "Konjunktionen", "learn": "Erst „Akte lesen“, dann Konjunktion wählen.", "rep": "Konjunktion wählen oder Satz-Baumeister."}, {"id": "p5", "icon": "✒️", "name": "Komma-Profi", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Satzreihe oder Satzgefüge?", "rep": "Komma-Setzer."}, {"id": "p6", "icon": "⏳", "name": "Zeitformen", "learn": "Erst „Akte lesen“, dann Zeitmaschine.", "rep": "Zeitmaschine."}], "testName": "Abschlusstest", "write": true, "est": {"learn": 15, "rep": 5, "test": 10, "final": 20, "write": 15}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.7.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.8.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -607,18 +614,18 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.7.0"></script>
+<script src="../js/lernplan.js?v=7.8.0"></script>
 <!-- ===== /Lernplan ===== -->
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.7.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.8.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.7.0"></script>
+<script src="../js/nutzer.js?v=7.8.0"></script>
 <!-- ===== /Nutzer ===== -->
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank{min-width:0;flex:1 1 auto;overflow:hidden}#rank b{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#rank .rt{display:none}}</style>
-<script src="../js/home-btn.js?v=7.7.0"></script>
+<script src="../js/home-btn.js?v=7.8.0"></script>
 <!-- ===== /Start ===== -->
-<script src="../js/arena-btn.js?v=7.7.0"></script>
+<script src="../js/arena-btn.js?v=7.8.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Deutsch: Satzbau und Zeitformen",f:"deutsch-satzbau-zeitformen.html",d:"Nr. 29–41 und Heft Zeitformen, Lösungen am Ende"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.7.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.8.0"></script>
 </body></html>
