@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.13.1"></script>
+<script src="../js/app-core.js?v=7.13.2"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.13.1"></script>
+<script src="../js/nutzer-init.js?v=7.13.2"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -709,7 +709,8 @@ function kNext(){const k=G.q.k;kSave();k.step++;k.msg='';k.ok=false;if(k.step===
   if(k.step===7&&!k.lbB){const o=pick(GREEK.map(x=>x[0]).filter(x=>x!==G.q.name));k.lbB={chips:shuffle(['b',G.q.name,'B',o,'S']),pos:{}};}
   kLbSync();kDraw();kPanel();}
 function kBack(){const k=G.q.k;if(!k.hist||!k.hist.length)return;const c=k.hist.pop();K_KEYS.forEach(x=>k[x]=c[x]);k.msg='';k.ok=false;kLbSync();kDraw();kPanel();}
-function kPt(svg,e){const M=svg.getScreenCTM&&svg.getScreenCTM();if(M){const I=M.inverse();return{x:I.a*e.clientX+I.c*e.clientY+I.e,y:I.b*e.clientX+I.d*e.clientY+I.f};}const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;return{x:(e.clientX-r.left)*vb.width/r.width,y:(e.clientY-r.top)*vb.height/r.height};}
+/* Wie überall in der App über getBoundingClientRect – getScreenCTM liefert auf dem iPad (Safari, im iframe, gescrollt) verschobene Punkte: Tipp in den 90°-Winkel landete im 270°-Bereich */
+function kPt(svg,e){const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;return{x:(e.clientX-r.left)*vb.width/r.width,y:(e.clientY-r.top)*vb.height/r.height};}
 /* Blatt 1: Geodreieck „verkehrt“ – Spitze auf der Seite, auf der der Winkel entsteht (links von a, bei a nach rechts also oben).
    Blatt 2: „unten an“ – Spitze auf der anderen Seite; dort wird die Differenz 360° − β gezeichnet. */
 function kSnap(){const k=G.q.k,geo=k.geo;k.ok=false;k.side=false;
@@ -1775,7 +1776,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.13.1">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.13.2">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1785,24 +1786,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.13.1"></script>
+<script src="../js/lernplan.js?v=7.13.2"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.13.1">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.13.2">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.13.1"></script>
+<script src="../js/nutzer.js?v=7.13.2"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.13.1"></script>
+<script src="../js/home-btn.js?v=7.13.2"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.13.1"></script>
+<script src="../js/arena-btn.js?v=7.13.2"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.13.1"></script>
+<script src="../js/lernzettel-btn.js?v=7.13.2"></script>
 </body>
 </html>
