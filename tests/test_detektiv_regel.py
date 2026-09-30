@@ -9,7 +9,7 @@ async def main():
     f=[x for x in p.frames if x.url.split('?')[0].endswith('detektiv.html')][0]
     r=await f.evaluate("""(()=>{const I=window.__lzArena.I,out={};I.filter(i=>i.tag==='regel').forEach(i=>out[i.p]=(out[i.p]||0)+1);
       const bad=I.filter(i=>i.tag==='regel'&&(i.o.length!==4||new Set(i.o).size!==4||!i.o.includes(i.a))).length;return{out,bad};})()""")
-    print(r);assert r['out']=={'p1':6,'p2':6,'p3':6,'p4':8,'p5':5,'p6':8} and r['bad']==0
+    print(r);assert r['out']=={'p1':6,'p2':6,'p3':6,'p4':8,'p5':5,'p6':9} and r['bad']==0
     # Abschlusstest mit allen Akten: genau 3 Regel-Fragen
     n=[]
     for k in range(4):
