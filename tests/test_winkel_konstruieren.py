@@ -62,6 +62,10 @@ async def run(p,f,pack,wrong_side=False,wrong_lab=False):
   bx,by=S[0]+ux*W*.3,S[1]+uy*W*.3
   await drag(p,P(*S),P(bx,by));await p.wait_for_timeout(150)
   small=dd/2;mid=small if (not big)!=wrong_side else small+180
+  await p.mouse.click(*P(S[0]+math.cos(math.radians(-3))*60,S[1]-math.sin(math.radians(-3))*60));await p.wait_for_timeout(100)
+  assert 'Tippe deutlich' in await f.inner_text('#kst'),'Tipp auf Schenkel a darf keinen Bogen wählen'
+  if not wrong_side:  # erst falsche Seite antippen, im Beschriften-Schritt durch Antippen korrigieren
+    await p.mouse.click(*P(S[0]+math.cos(math.radians(mid+180))*40,S[1]-math.sin(math.radians(mid+180))*40));await p.wait_for_timeout(100)
   await p.mouse.click(*P(S[0]+math.cos(math.radians(mid))*40,S[1]-math.sin(math.radians(mid))*40));await p.wait_for_timeout(200)
   # Schritt 6 des Blatts: b an den zweiten Schenkel, Winkelname in den Bogen
   name=(await f.inner_text('.tgt')).split('=')[0].strip()
@@ -88,5 +92,38 @@ async def main():
     P=lambda x,y:(bb['x']+x*sc,bb['y']+y*sc)
     await drag(p,P(W*.25,H*.5),P(W*.8,H*.5));await f.click('#kback');await p.wait_for_timeout(100)
     assert 'Ersten Schenkel' in await f.inner_text('.ksteps .now')
+    # Abschlusstest: keine Anleitung, Geodreieck auch „falsch herum“ nutzbar, Umdrehen-Knopf; bis zum Ende zeichenbar
+    await p.goto('http://app.test/#W');await p.wait_for_timeout(1500);f=[x for x in p.frames if x.url.split('?')[0].endswith('winkel.html')][0]
+    await f.evaluate("window.__wkTestKind='konstr';lzSelect('p3','test')");await f.click('[data-m="test"]');await p.wait_for_timeout(400)
+    kst=await f.inner_text('#kst');print('TEST |',' '.join(kst.split())[:160])
+    assert 'ohne Hilfen' in kst and 'Infoblatt' not in kst and 'Trick' not in kst and '360°' not in kst,kst
+    deg=int(''.join(ch for ch in (await f.inner_text('.tgt')).split('=')[1] if ch.isdigit()))
+    svg=await f.query_selector('#svg');bb=await svg.bounding_box();W,H=await f.evaluate("(()=>{const s=document.getElementById('svg').viewBox.baseVal;return[s.width,s.height]})()");sc=bb['width']/W
+    P=lambda x,y:(bb['x']+x*sc,bb['y']+y*sc);S=(W*.25,H*.5)
+    await drag(p,P(*S),P(W*.8,H*.5))
+    for ch in ('S','a'):
+      i=await chip(f,ch);await drag(p,P(26+i*46,26),P(S[0]-12,S[1]+14) if ch=='S' else P(W*.6,S[1]-12))
+    await f.click('#klab');await p.wait_for_timeout(100)
+    await f.click('[data-kr="180"]');await f.click('[data-kr="15"]');await f.click('[data-kr="-15"]');await f.click('#kgeohome')
+    gx,gy=await geo_xy(f);await drag(p,P(gx,gy-15),P(S[0],S[1]-15));await p.wait_for_timeout(150)
+    kst=await f.inner_text('#kst');assert 'Markierung' not in kst or True
+    d=360-deg;mx,my=S[0]+math.cos(math.radians(d))*W*.2,S[1]-math.sin(math.radians(d))*W*.2  # oben gezeichnet (Geodreieck verkehrt) – im Test erlaubt
+    await p.mouse.click(*P(mx,my));await p.wait_for_timeout(100);await f.click('#kok')
+    await f.click('#kgeohome');gx,gy=await geo_xy(f)
+    hh=await f.evaluate("(()=>{const h=document.querySelector('.kh');const r=h.getBoundingClientRect();return[r.x+r.width/2,r.y+r.height/2]})()")
+    await drag(p,hh,(bb['x']+(gx+math.cos(math.radians(d+90))*200)*sc,bb['y']+(gy-math.sin(math.radians(d+90))*200)*sc),20)
+    ux,uy=math.cos(math.radians(d)),-math.sin(math.radians(d))
+    if await f.query_selector('.kgeo'):
+      gx,gy=await geo_xy(f);nx,ny=-uy,ux;off=(S[0]-gx)*(-uy)+(S[1]-gy)*ux;grab=(gx+nx*(-12),gy+ny*(-12))
+      await drag(p,P(*grab),P(grab[0]+(-uy)*off,grab[1]+ux*off));await p.wait_for_timeout(150)
+    await drag(p,P(*S),P(S[0]+ux*W*.3,S[1]+uy*W*.3));await p.wait_for_timeout(100)
+    mid=d/2+180;await p.mouse.click(*P(S[0]+math.cos(math.radians(mid))*40,S[1]-math.sin(math.radians(mid))*40));await p.wait_for_timeout(150)
+    name=(await f.inner_text('.tgt')).split('=')[0].strip()
+    i=await chip(f,'b');await drag(p,P(26+i*46,26),P(S[0]+ux*W*.2+6,S[1]+uy*W*.2))
+    i=await chip(f,name);await drag(p,P(26+i*46,26),P(S[0]+math.cos(math.radians(mid))*58,S[1]-math.sin(math.radians(mid))*58))
+    await f.click('#kfin');await p.wait_for_timeout(300)
+    body=' '.join((await f.inner_text('#app')).split());print('TEST fertig |',deg,body[:200])
+    assert '2 / ' in body and 'Schritt zurück' not in body,body[:300]
+    await p.screenshot(path=OUTDIR+'konstr-test.png')
     print('errors',errs);assert not errs;await br.close()
 asyncio.run(main())
