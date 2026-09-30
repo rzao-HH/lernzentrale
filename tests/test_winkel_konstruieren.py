@@ -29,9 +29,9 @@ async def run(p,f,pack,wrong_side=False,wrong_lab=False):
   await drag(p,P(*S),P(*A));await p.wait_for_timeout(200)
   # Schritt 2 des Blatts: S und a beschriften – erst falsch (kleines s an den Scheitel), dann richtig
   tray=lambda i:P(26+i*46,26)
-  await drag(p,tray(await chip(f,'s')),P(S[0]-12,S[1]+14));await drag(p,tray(await chip(f,'a')),P(W*.6,S[1]-12))
-  await f.click('#klab');await p.wait_for_timeout(100);assert 'Noch nicht richtig' in await f.inner_text('#kst')
-  await drag(p,P(S[0]-12,S[1]+14),tray(await chip(f,'s')));await drag(p,tray(await chip(f,'S')),P(S[0]-12,S[1]+14))
+  await drag(p,tray(await chip(f,'s')),P(S[0]-12,S[1]+14));await drag(p,tray(await chip(f,'a')),P(W*.78,S[1]+34))  # wie auf dem iPad: a unter dem Linienende
+  await f.click('#klab');await p.wait_for_timeout(100);kt=await f.inner_text('#kst');assert 'Noch nicht richtig' in kt and 's gehört nicht dazu' in kt and 'a ist' not in kt and 'a liegt' not in kt,kt
+  await drag(p,P(S[0]-12,S[1]+14),tray(await chip(f,'s')));await drag(p,tray(await chip(f,'S')),P(S[0]-32,S[1]+14))
   await f.click('#klab');await p.wait_for_timeout(150)
   assert 'Geodreieck' in await f.inner_text('.ksteps .now'),await f.inner_text('#kst')
   # Geodreieck auf S schieben (Spitze oben). Blatt 2 verlangt „unten an“ → Hinweis, dann um 180° drehen

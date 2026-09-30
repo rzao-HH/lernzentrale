@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.15.0"></script>
+<script src="../js/app-core.js?v=7.15.1"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.15.0"></script>
+<script src="../js/nutzer-init.js?v=7.15.1"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -751,7 +751,7 @@ function kArc(p,re){const k=G.q.k,a0=kAng(k.S,k.A),am=kAng(k.S,k.M),at=kAng(k.S,
   if(re){k.arc=inCcw?'ccw':'cw';k.arcDeg=inCcw?ccw:360-ccw;k.msg='';kDraw();kPanel();return;}
   kSave();k.arc=inCcw?'ccw':'cw';k.arcDeg=inCcw?ccw:360-ccw;kNext();k.hist.pop();}
 function kLabA(){const k=G.q.k,r=lbCheck(k.lbA,{S:'S',a:'a'},kGeoA());
-  if(!r.ok&&G.mode!=='test'){k.msg=`Noch nicht richtig. Der Scheitel heißt <b>S</b> (großer Buchstabe) und kommt an den Anfang der Linie. Der Schenkel heißt <b>a</b> (kleiner Buchstabe) und kommt an die Linie.${r.miss.length?' Es fehlt: '+r.miss.join(', ')+'.':''}`;kPanel();return;}
+  if(!r.ok&&G.mode!=='test'){k.msg=`Noch nicht richtig. ${lbHints(k.lbA,{S:'S',a:'a'},kGeoA())}`;kPanel();return;}
   k.labAok=r.ok;kNext();}
 function kTrick(){const k=G.q.k,inp=$('#ktrick'),v=+(inp&&inp.value||'').replace(',','.');
   if(v===360-G.q.deg){k.trick=v;kNext();}else{k.msg=`Rechne nochmal: 360° − ${G.q.deg}° = ?`;kPanel();}}
@@ -786,11 +786,19 @@ function kPanel(){const q=G.q,k=q.k,st=$('#kst');if(!st)return;const big=q.deg>1
    Buchstaben-Kärtchen oben in der Leiste; auf Scheitel, Schenkel a, Schenkel b und in den Winkelbogen ziehen. */
 function lbChips(name){const other=pick(GREEK.map(x=>x[0]).filter(x=>x!==name));return shuffle(['S','a','b',name,'s','A',other]);}
 function lbWhere(p,geo){const d=(P1,P2)=>{const vx=P2.x-P1.x,vy=P2.y-P1.y,L=vx*vx+vy*vy,t=Math.max(0,Math.min(1,((p.x-P1.x)*vx+(p.y-P1.y)*vy)/L));return Math.hypot(p.x-P1.x-t*vx,p.y-P1.y-t*vy);};
-  const r=Math.hypot(p.x-geo.S.x,p.y-geo.S.y);if(r<34)return'S';
+  /* großzügig wie auf Papier: Buchstabe neben den Scheitel bzw. neben die Linie (Kärtchen haben selbst 17 px Radius) */
+  const r=Math.hypot(p.x-geo.S.x,p.y-geo.S.y);if(r<50)return'S';
   const at=kAng(geo.S,p),rel=((at-geo.a0)%360+360)%360,inArc=!!geo.deg&&(geo.ccw?rel<geo.deg:(360-rel)%360<geo.deg);
-  if(inArc&&r<geo.R+40)return'w';
-  if(d(geo.S,geo.A)<26)return'a';if(geo.B&&d(geo.S,geo.B)<26)return'b';
-  if(inArc&&r<geo.R+70)return'w';return null;}
+  const da=d(geo.S,geo.A),db=geo.B?d(geo.S,geo.B):1e9;
+  if(inArc&&r<geo.R+40&&da>16&&db>16)return'w';
+  if(da<42&&da<=db)return'a';if(db<42)return'b';
+  if(inArc&&r<geo.R+80)return'w';return null;}
+/* Rückmeldung je Buchstabe: was liegt wo? */
+function lbHints(pl,want,geo){const out=[],place={S:'an den Scheitel (Anfang der Linie)',a:'an den Schenkel a',b:'an den zweiten Schenkel',w:'in den Winkelbogen'};
+  Object.keys(pl.pos).forEach(id=>{const c=pl.chips[id],w=lbWhere(pl.pos[id],geo);
+    if(want[c]){if(w!==want[c])out.push(w?`<b>${c}</b> liegt an der falschen Stelle – er gehört ${place[want[c]]}.`:`<b>${c}</b> ist zu weit weg – zieh ihn näher ${place[want[c]]}.`);}
+    else if(w)out.push(`<b>${c}</b> gehört nicht dazu${/^[sA]$/.test(c)?' (achte auf groß und klein)':''} – zieh ihn zurück nach oben.`);});
+  Object.keys(want).forEach(c=>{if(!Object.keys(pl.pos).some(id=>pl.chips[id]===c))out.push(`<b>${c}</b> fehlt noch.`);});return out.join(' ');}
 /* want: Buchstabe → Ort ('S' Scheitel, 'a'/'b' Schenkel, 'w' Winkelbogen). Falsche Buchstaben irgendwo abgelegt = Fehler. */
 function lbCheck(pl,want,geo){let ok=true,miss=[];
   Object.keys(pl.pos).forEach(id=>{const c=pl.chips[id],w=lbWhere(pl.pos[id],geo);if(want[c]){if(w!==want[c])ok=false;}else if(w)ok=false;});
@@ -1776,7 +1784,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.15.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.15.1">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1786,24 +1794,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.15.0"></script>
+<script src="../js/lernplan.js?v=7.15.1"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.15.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.15.1">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.15.0"></script>
+<script src="../js/nutzer.js?v=7.15.1"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.15.0"></script>
+<script src="../js/home-btn.js?v=7.15.1"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.15.0"></script>
+<script src="../js/arena-btn.js?v=7.15.1"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.15.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.15.1"></script>
 </body>
 </html>
