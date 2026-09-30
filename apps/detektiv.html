@@ -2,11 +2,11 @@
 <html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Detektiv-Büro</title>
-<script src="../js/app-core.js?v=7.14.0"></script>
+<script src="../js/app-core.js?v=7.15.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="D";window.__DATAKEY="detektivbuero-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.14.0"></script>
+<script src="../js/nutzer-init.js?v=7.15.0"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -418,6 +418,197 @@ const WQ=[
 ];
 
 (function(){
+/* ===================== ZUSATZ-AUFGABEN (7.15.0) =====================
+   1) Aufgabentypen von den Lernzetteln, die bisher fehlten:
+      – Nr. 36/5b: Sätze mit und/oder verbinden und Wiederholtes streichen
+      – Nr. 37/6: prüfen, welche Konjunktion zwei Hauptsätze sinnvoll verbindet (Weltraum-Text)
+      – Nr. 39/3–5: Satzgrenzen erkennen – Punkte, Kommas, Großschreibung
+      – Nr. 40/2: Nebensatz nach vorne stellen, der Hauptsatz beginnt mit dem Verb
+   2) Mehr Abwechslung: eigene Übungssätze (nicht von den Zetteln) zu allen Aufgabentypen,
+      damit nicht immer dieselben Sätze kommen. Grammatik und Regeln wie auf den Lernzetteln. */
+[
+ ['p1','Der Detektiv *sucht* nach Spuren, weil der Schmuck verschwunden *ist*.','sucht (Hauptsatz) und ist (Nebensatz, am Ende). verschwunden ist nicht gebeugt.'],
+ ['p1','Mia *liest* ein Buch, während ihr Bruder Fußball *spielt*.','liest und spielt.'],
+ ['p1','Als der Wecker *klingelte*, *sprang* Tom sofort aus dem Bett.','Nebensatz vorne: klingelte am Ende, danach sprang.'],
+ ['p1','Der Hund *bellt* laut.','Nur ein gebeugtes Verb: ein einfacher Satz.'],
+ ['p1','Ich *weiß* nicht, ob der Bus schon abgefahren *ist*.','weiß und ist. abgefahren ist nicht gebeugt.'],
+ ['p1','Die Kinder *müssen* ihre Hausaufgaben machen, bevor sie nach draußen *dürfen*.','müssen und dürfen. machen ist die Grundform.'],
+ ['p2','Paul *kocht* Nudeln und seine Schwester *deckt* den Tisch.','Zwei Hauptsätze: kocht und deckt.'],
+ ['p2','Es *ist* schon spät, aber wir *wollen* noch nicht schlafen.','ist und wollen. schlafen ist die Grundform.'],
+ ['p2','Der Zug *hatte* Verspätung, deshalb *kamen* wir zu spät.','hatte und kamen.'],
+ ['p3','Wenn die Sonne *scheint*, *gehen* wir ins Freibad.','scheint (Nebensatz) und gehen (Hauptsatz).'],
+ ['p3','Das Buch, das du mir geliehen *hast*, *ist* sehr spannend.','hast (eingeschobener Nebensatz) und ist. geliehen ist nicht gebeugt.'],
+ ['p3','Obwohl sie müde *war*, *lief* Lea bis ins Ziel.','war und lief.'],
+ ['p3','Die Astronauten *trainierten* lange, damit bei der Landung nichts schiefgehen *konnte*.','trainierten und konnte. schiefgehen ist die Grundform.']
+].forEach(([p,s,ex])=>ITEMS.push({t:'tap',p,q:V,s,ex,z:1}));
+[
+ ['p2','Wir wollten ins Kino gehen, *doch* alle Karten waren ausverkauft.','doch: Gegensatz, verbindet zwei Hauptsätze.'],
+ ['p2','Möchtest du Tee trinken *oder* hast du lieber Saft?','oder verbindet zwei Hauptsätze.'],
+ ['p2','Der Hund bellte nicht, *sondern* er wedelte mit dem Schwanz.','sondern nach einer Verneinung.'],
+ ['p2','Ben ging früh ins Bett, *denn* er war sehr müde.','denn: Grund, danach ein Hauptsatz.'],
+ ['p3','Ich rufe dich an, *sobald* ich zu Hause bin.','sobald leitet den Nebensatz ein.'],
+ ['p3','Die Polizei wartete, *bis* der Täter aus dem Haus kam.','bis: Ende einer Zeitspanne.'],
+ ['p3','Sie lernt Vokabeln, *während* ihr Bruder schläft.','während: gleichzeitig.'],
+ ['p3','*Nachdem* der Regen aufgehört hatte, spielten wir wieder draußen.','Der Nebensatz steht vorne.'],
+ ['p4','Tom hat aber keine Zeit, *weil* er noch trainieren muss.','Falle! aber heißt hier „jedoch“ und verbindet nichts. Die Konjunktion ist weil.'],
+ ['p4','Weißt du denn, *ob* das Museum heute geöffnet ist?','Falle! denn heißt hier „eigentlich“. Verbunden wird mit ob.'],
+ ['p4','Er kam doch noch mit, *obwohl* er keine Lust hatte.','Falle! doch heißt hier „trotzdem“. Die Konjunktion ist obwohl.']
+].forEach(([p,s,ex])=>ITEMS.push({t:'tap',p,q:K,s,ex,z:1}));
+/* Nr. 36/5b: Satzpaare mit und/oder verbinden – Wörter streichen, die man nicht wiederholen will */
+[
+ ['Forscher beobachten den Mond und *sie* untersuchen seine Umlaufbahn.','Kürzer: „Forscher beobachten den Mond und untersuchen seine Umlaufbahn.“ (Nr. 36)'],
+ ['Die Mondastronauten bewegten sich durch Hüpfen oder *sie* fuhren mit einem batteriebetriebenen Fahrzeug.','Kürzer: „… bewegten sich durch Hüpfen oder fuhren mit einem batteriebetriebenen Fahrzeug.“ (Nr. 36)'],
+ ['Lisa holt ihr Rad aus dem Keller und *sie* pumpt die Reifen auf.','Kürzer: „Lisa holt ihr Rad aus dem Keller und pumpt die Reifen auf.“'],
+ ['Die Kinder laufen zum Strand und *sie* springen ins Wasser.','Kürzer: „Die Kinder laufen zum Strand und springen ins Wasser.“'],
+ ['Mein Vater liest die Zeitung oder *er* hört Radio.','Kürzer: „Mein Vater liest die Zeitung oder hört Radio.“'],
+ ['Der Detektiv öffnet die Tür und *er* betritt leise den Raum.','Kürzer: „Der Detektiv öffnet die Tür und betritt leise den Raum.“']
+].forEach(([s,ex])=>ITEMS.push({t:'tap',p:'p2',tag:'kurz',q:'Die Sätze sind mit und/oder verbunden. Tippe das Wort an, das du streichen kannst, weil es sich wiederholt.',s,ex,z:1}));
+[
+ ['p2','Es klingelt, Mia öffnet die Tür, aber draußen steht niemand.','Drei Hauptsätze: Komma zwischen ihnen und vor aber.'],
+ ['p2','Ich wollte dich anrufen, doch mein Handy war leer.','Komma vor doch.'],
+ ['p2','Wir fahren ans Meer(,) oder wir bleiben zu Hause.','Vor oder zwischen Hauptsätzen muss kein Komma stehen (erlaubt ist es).'],
+ ['p2','Der Hund bellt nicht, sondern er wedelt mit dem Schwanz.','Komma vor sondern.'],
+ ['p2','Tom lacht(,) und Anna kichert leise.','Vor und muss kein Komma stehen.'],
+ ['p3','Als wir am Bahnhof ankamen, war der Zug schon weg.','Nebensatz vorne, Komma danach.'],
+ ['p3','Der Kuchen, den Oma gebacken hat, schmeckt köstlich.','Eingeschobener Nebensatz: Komma davor und danach.'],
+ ['p3','Ich weiß nicht, ob ich morgen Zeit habe.','Komma vor ob.'],
+ ['p3','Wenn du Hilfe brauchst, sag mir Bescheid.','Nebensatz vorne, Komma danach.'],
+ ['p3','Der Detektiv wartete, bis es dunkel wurde.','Komma vor bis.'],
+ ['p3','Obwohl es regnete, spielten die Kinder draußen.','Nebensatz vorne, Komma danach.'],
+ ['p5','Im Rucksack sind Brote, Äpfel, eine Flasche Wasser und ein Regenschirm.','Aufzählung, kein Komma vor und.'],
+ ['p5','Auf dem Markt kaufen wir Tomaten, Gurken, Paprika oder Zucchini.','Aufzählung, kein Komma vor oder.'],
+ ['p5','Der Detektiv braucht eine Lupe, ein Notizbuch und eine Taschenlampe.','Aufzählung, kein Komma vor und.'],
+ ['p5','Anna, Ben, Carla und David spielen Fußball.','Aufzählung von Namen.'],
+ ['p5','Tim putzt die Zähne, kämmt sich und zieht seine Jacke an.','Auch Tätigkeiten kann man aufzählen: Kommas, aber keins vor und.']
+].forEach(([p,s,ex])=>ITEMS.push({t:'comma',p,s,ex,z:1}));
+[
+ ['Ich gehe schwimmen, weil es heute heiß ist.','SG'],['Ich gehe schwimmen, denn es ist heute heiß.','SR'],
+ ['Es regnet und wir bleiben drinnen.','SR'],['Wenn es regnet, bleiben wir drinnen.','SG'],
+ ['Die Katze schläft, aber der Hund spielt im Garten.','SR'],['Der Junge, der neben mir sitzt, heißt Max.','SG'],
+ ['Wir warten, bis der Bus kommt.','SG'],['Lea spielt Klavier oder sie malt ein Bild.','SR'],
+ ['Obwohl der Film lang war, fanden ihn alle spannend.','SG'],['Der Detektiv fand eine Spur, doch der Täter war schon verschwunden.','SR'],
+ ['Morgen schreiben wir eine Mathearbeit.','ES'],['Nach dem Training duschen alle Spieler.','ES']
+].forEach(([s,a])=>ITEMS.push({t:'mc',p:a==='ES'?'p1':'p5',tag:'srsg',q:'Satzreihe, Satzgefüge oder einfacher Satz?',s,o:['Satzreihe (SR)','Satzgefüge (SG)','einfacher Satz'],a:{SR:'Satzreihe (SR)',SG:'Satzgefüge (SG)',ES:'einfacher Satz'}[a],z:1,
+  ex:a==='SR'?'Nur Hauptsätze, das Verb steht jeweils an 2. Stelle.':a==='SG'?'Ein Teil ist ein Nebensatz: Er beginnt mit einer Konjunktion (auch der, die, das), die gebeugte Verbform steht am Ende.':'Nur ein gebeugtes Verb, also kein zusammengesetzter Satz.'}));
+[
+ ['p3','Ich komme heute nicht. Ich bin krank.','Ich komme heute nicht, weil','ich krank bin','.'],
+ ['p3','Wir gehen ins Freibad. Die Sonne scheint.','Wir gehen ins Freibad, wenn','die Sonne scheint','.'],
+ ['p3','Lea lief bis ins Ziel. Sie war sehr müde.','Lea lief bis ins Ziel, obwohl','sie sehr müde war','.'],
+ ['p3','Ich rufe dich an. Ich bin dann zu Hause.','Ich rufe dich an, sobald','ich zu Hause bin','.'],
+ ['p3','Ich habe Hunger. Ich esse einen Apfel.','Weil','ich Hunger habe',', esse ich einen Apfel.'],
+ ['p3','Der Film war zu Ende. Wir gingen nach Hause.','Als','der Film zu Ende war',', gingen wir nach Hause.'],
+ ['p3','Wir bleiben drinnen. Es regnet stark.','Wir bleiben drinnen, weil','es stark regnet','.'],
+ ['p4','Ich nehme einen Schirm mit. Ich werde nicht nass.','Ich nehme einen Schirm mit, damit','ich nicht nass werde','.'],
+ ['p4','Die Kinder lernen Vokabeln. Sie wollen im Test gut sein.','Die Kinder lernen Vokabeln, weil','sie im Test gut sein wollen','.',['sie gut im Test sein wollen']],
+ ['p2','Ben geht früh ins Bett. Er ist sehr müde.','Ben geht früh ins Bett, denn','er ist sehr müde','.'],
+ ['p2','Wir bleiben drinnen. Es regnet stark.','Wir bleiben drinnen, denn','es regnet stark','.']
+].forEach(([p,src,head,w,tail,alt])=>ITEMS.push({t:'order',p,q:'Baue den zweiten Satz richtig ein.',src,head,w,tail,alt:alt||[],z:1,
+  ex:/denn$/.test(head)?'Nach denn folgt ein Hauptsatz: Die Wortstellung ändert sich nicht.':'Im Nebensatz steht das gebeugte Verb am Ende.'}));
+/* Nr. 40/2: Sätze vertauschen – steht der Nebensatz vorne, beginnt der Hauptsatz mit dem gebeugten Verb */
+[
+ ['Ein argentinischer Fischer flüchtete sich auf einen Baum, als ein Hochwasser seine Hütte überschwemmte.','Als ein Hochwasser seine Hütte überschwemmte,','flüchtete sich ein argentinischer Fischer auf einen Baum',['flüchtete ein argentinischer Fischer sich auf einen Baum']],
+ ['Er musste dort oben sitzen bleiben, bis das Hochwasser wieder zurückging.','Bis das Hochwasser wieder zurückging,','musste er dort oben sitzen bleiben',[]],
+ ['Er ernährte sich von Blättern und Wasser, weil er oben im Baum keine andere Nahrung hatte.','Weil er oben im Baum keine andere Nahrung hatte,','ernährte er sich von Blättern und Wasser',['ernährte er sich von Wasser und Blättern']],
+ ['Der Baumbewohner musste mehrere Tage warten, bis ihn andere Menschen entdeckten.','Bis ihn andere Menschen entdeckten,','musste der Baumbewohner mehrere Tage warten',[]],
+ ['Ein Hubschrauber holte ihn aus dem Baum, nachdem man die Polizei benachrichtigt hatte.','Nachdem man die Polizei benachrichtigt hatte,','holte ein Hubschrauber ihn aus dem Baum',['holte ihn ein Hubschrauber aus dem Baum']]
+].forEach(([src,head,w,alt])=>ITEMS.push({t:'order',p:'p4',q:'Stell den Nebensatz nach vorne (Nr. 40). Wie geht der Hauptsatz weiter?',src,head,w,tail:'.',alt,z:1,
+  ex:'Steht der Nebensatz vorne, beginnt der Hauptsatz mit dem gebeugten Verb – und zwischen beiden steht ein Komma.'}));
+[
+ ['p4','Ich bleibe zu Hause, ___ ich erkältet bin.',['weil','obwohl','damit','bis'],'weil','Grund.'],
+ ['p4','Wir gehen spazieren, ___ es regnet.',['obwohl','weil','damit','sobald'],'obwohl','Gegensatz: Wir gehen trotz Regen.'],
+ ['p4','Mama spricht leise, ___ das Baby nicht aufwacht.',['damit','weil','obwohl','als'],'damit','Zweck: damit.'],
+ ['p4','Es regnete stark, ___ das Spiel abgesagt wurde.',['sodass','damit','obwohl','ob'],'sodass','Folge: sodass.'],
+ ['p4','___ ich klein war, wohnten wir in Hamburg.',['Als','Wenn','Ob','Damit'],'Als','Einmal in der Vergangenheit: als.'],
+ ['p4','___ ich Ferien habe, schlafe ich lange.',['Wenn','Als','Obwohl','Damit'],'Wenn','Immer wieder: wenn.'],
+ ['p4','Putz dir die Zähne, ___ du ins Bett gehst.',['bevor','nachdem','obwohl','sodass'],'bevor','Erst Zähne putzen, dann ins Bett: bevor.'],
+ ['p4','Ich frage mich, ___ morgen Schule ist.',['ob','dass','als','weil'],'ob','Offene Ja-Nein-Frage: ob.'],
+ ['p4','Ich glaube, ___ er recht hat.',['dass','ob','als','denn'],'dass','Aussage: dass.'],
+ ['p4','Tim hört Musik, ___ er seine Hausaufgaben macht.',['während','ob','obwohl','sodass'],'während','Gleichzeitig: während.'],
+ ['p2','Ich wollte Pizza essen, ___ der Laden war schon geschlossen.',['aber','denn','oder','sondern'],'aber','Gegensatz.'],
+ ['p2','Tom spielt nicht Fußball, ___ er geht zum Schwimmen.',['sondern','denn','oder','weil'],'sondern','sondern nach einer Verneinung.'],
+ ['p2','Wir müssen uns beeilen, ___ der Film beginnt gleich.',['denn','aber','oder','sondern'],'denn','Grund.'],
+ ['p2','Kommst du mit ins Kino ___ bleibst du lieber zu Hause?',['oder','denn','sondern','aber'],'oder','Zwei Möglichkeiten: oder.'],
+ /* Nr. 37/6 „Einmal Mond und zurück“: Welche Konjunktion verbindet die Hauptsätze sinnvoll? */
+ ['p2','Russische Raumfahrtbehörden bieten etwas Ungewöhnliches an, ___ es besteht bei immer mehr Menschen Interesse an einem Urlaub im Weltall.',['denn','sondern','oder'],'denn','So steht es als Beispiel auf dem Blatt (Nr. 37): denn nennt den Grund.'],
+ ['p2','Man kann eine Woche auf der internationalen Raumstation ISS verbringen, ___ man kann in einer Weltraumkapsel einmal um den Mond fliegen.',['oder','sondern','denn'],'oder','Zwei Möglichkeiten zur Auswahl: oder (Nr. 37).'],
+ ['p2','Bisher haben erst zwei Weltraumtouristen ihre Ferien dort verbracht, ___ die Reisen kosten mehrere Millionen Dollar.',['denn','sondern','oder'],'denn','Der zweite Satz nennt den Grund (Nr. 37).'],
+ ['p2','Neil Armstrong war für viele ein Held, ___ er war ein normaler Mensch.',['aber','denn','oder'],'aber','Gegensatz (Nr. 36). Auch doch passt.']
+].forEach(([p,s,o,a,ex])=>ITEMS.push({t:'mc',p,tag:'konj',q:/___/.test(s)?(p==='p6'?'Setze die richtige Form ein.':'Welche Konjunktion passt?'):'',s,o,a,ex,z:1}));
+/* Nr. 39/3–5: Satzgrenzen – wo endet ein Satz? Punkte, Kommas, Großschreibung */
+[
+ ['die Mutter ruft am Morgen mehrere Male im Kühlschrank warten Marmelade Käse und frische Milch',
+  'Die Mutter ruft am Morgen mehrere Male. Im Kühlschrank warten Marmelade, Käse und frische Milch.',
+  ['Die Mutter ruft am Morgen mehrere Male im Kühlschrank. Warten Marmelade, Käse und frische Milch.','Die Mutter ruft am Morgen mehrere Male. Im Kühlschrank warten Marmelade, Käse, und frische Milch.'],'Nr. 39 „Jeden Morgen dasselbe“: Die Mutter ruft nicht im Kühlschrank! Aufzählung mit Komma, keins vor und.'],
+ ['im Bad rauscht das Badewasser im Toaster steckt das Toastbrot',
+  'Im Bad rauscht das Badewasser. Im Toaster steckt das Toastbrot.',
+  ['Im Bad rauscht das Badewasser im Toaster. Steckt das Toastbrot.','Im Bad rauscht das Badewasser, im Toaster. Steckt das Toastbrot.'],'Nr. 39: Jeder Satz braucht sein gebeugtes Verb: rauscht – steckt.'],
+ ['im Radio spricht jemand den Wetterbericht durch die Gardinen fallen die ersten Sonnenstrahlen auf mein Bett',
+  'Im Radio spricht jemand den Wetterbericht. Durch die Gardinen fallen die ersten Sonnenstrahlen auf mein Bett.',
+  ['Im Radio spricht jemand den Wetterbericht durch die Gardinen. Fallen die ersten Sonnenstrahlen auf mein Bett.','Im Radio spricht jemand. Den Wetterbericht durch die Gardinen fallen die ersten Sonnenstrahlen auf mein Bett.'],'Nr. 39: spricht – fallen, zwei Sätze.'],
+ ['in Mikes Zimmer herrscht wie an jedem Morgen ein großes Durcheinander auf dem Fußboden liegen einige CDs zwischen Socken',
+  'In Mikes Zimmer herrscht wie an jedem Morgen ein großes Durcheinander. Auf dem Fußboden liegen einige CDs zwischen Socken.',
+  ['In Mikes Zimmer herrscht wie an jedem Morgen ein großes Durcheinander auf dem Fußboden. Liegen einige CDs zwischen Socken.','In Mikes Zimmer herrscht. Wie an jedem Morgen ein großes Durcheinander auf dem Fußboden liegen einige CDs zwischen Socken.'],'Nr. 39 „Mikes Zimmer“: herrscht – liegen, zwei Sätze.'],
+ ['auf der Heizung trocknet seine Badehose der Turnbeutel mit Turnschuhen Handtuch und Turnhose hängt an der Türklinke',
+  'Auf der Heizung trocknet seine Badehose. Der Turnbeutel mit Turnschuhen, Handtuch und Turnhose hängt an der Türklinke.',
+  ['Auf der Heizung trocknet seine Badehose der Turnbeutel. Mit Turnschuhen, Handtuch und Turnhose hängt an der Türklinke.','Auf der Heizung trocknet seine Badehose. Der Turnbeutel mit Turnschuhen, Handtuch, und Turnhose hängt an der Türklinke.'],'Nr. 39: trocknet – hängt. In der Aufzählung kein Komma vor und.'],
+ ['der Detektiv betrat das Zimmer auf dem Tisch lagen eine Lupe ein Notizbuch und ein alter Schlüssel',
+  'Der Detektiv betrat das Zimmer. Auf dem Tisch lagen eine Lupe, ein Notizbuch und ein alter Schlüssel.',
+  ['Der Detektiv betrat das Zimmer auf dem Tisch. Lagen eine Lupe, ein Notizbuch und ein alter Schlüssel.','Der Detektiv betrat das Zimmer. Auf dem Tisch lagen eine Lupe ein Notizbuch, und ein alter Schlüssel.'],'betrat – lagen: zwei Sätze. Aufzählung mit Komma, keins vor und.'],
+ ['nach der Schule fuhr Lea mit dem Rad nach Hause in ihrem Zimmer packte sie Bücher Hefte und Stifte aus',
+  'Nach der Schule fuhr Lea mit dem Rad nach Hause. In ihrem Zimmer packte sie Bücher, Hefte und Stifte aus.',
+  ['Nach der Schule fuhr Lea mit dem Rad nach Hause in ihrem Zimmer. Packte sie Bücher, Hefte und Stifte aus.','Nach der Schule fuhr Lea. Mit dem Rad nach Hause in ihrem Zimmer packte sie Bücher, Hefte, und Stifte aus.'],'fuhr – packte … aus: zwei Sätze. Aufzählung ohne Komma vor und.']
+].forEach(([s,a,w,ex])=>ITEMS.push({t:'mc',p:'p5',tag:'grenze',q:'Hier fehlen Punkte und Kommas. Welche Schreibung ist richtig?',s,o:[a,...w],a,ex,z:1}));
+/* Zeitformen: mehr Sätze */
+[
+ ['Wir spielten gestern Fußball.','Präteritum'],['Wir haben gestern Fußball gespielt.','Perfekt'],['Wir hatten vorher Fußball gespielt.','Plusquamperfekt'],
+ ['Morgen werden wir Fußball spielen.','Futur'],['Lea schreibt einen Brief.','Präsens'],['Der Detektiv hat den Fall gelöst.','Perfekt'],
+ ['Der Dieb war schon geflohen.','Plusquamperfekt'],['Die Polizei fand den Schmuck.','Präteritum'],['Ihr werdet die Wahrheit herausfinden.','Futur'],
+ ['Ich bin mit dem Rad gefahren.','Perfekt'],['Du hattest die Tür abgeschlossen.','Plusquamperfekt'],['Sie lesen jeden Abend.','Präsens']
+].forEach(([s,a])=>ITEMS.push({t:'mc',p:'p6',tag:'tense',q:'Welche Zeitform ist das?',s,o:['Präsens','Präteritum','Perfekt','Plusquamperfekt','Futur'],a,ex:'',z:1}));
+[
+ ['Wir ___ nach Berlin gefahren.',['sind','haben'],'sind','fahren: Ortsveränderung, also sein.'],
+ ['Ich ___ ein Eis gegessen.',['habe','bin'],'habe','essen: haben.'],
+ ['Der Ball ___ ins Tor gerollt.',['ist','hat'],'ist','rollen: Bewegung von einem Ort zum anderen, also sein.'],
+ ['Ihr ___ lange geschlafen.',['habt','seid'],'habt','schlafen: haben.'],
+ ['Du ___ nach Hause gerannt.',['bist','hast'],'bist','rennen: Bewegung, also sein.'],
+ ['Mama ___ einen Brief geschrieben.',['hat','ist'],'hat','schreiben: haben.'],
+ ['Die Vögel ___ nach Süden geflogen.',['sind','haben'],'sind','fliegen: Bewegung, also sein.'],
+ ['Wir ___ den Film gesehen.',['haben','sind'],'haben','sehen: haben.']
+].forEach(([s,o,a,ex])=>ITEMS.push({t:'mc',p:'p6',tag:'tense',q:'Setze die richtige Form ein.',s,o,a,ex,z:1}));
+[
+ ['Setze ins Perfekt: Wir spielen Fußball.',['Wir haben Fußball gespielt.']],
+ ['Setze ins Präteritum: Wir spielen Fußball.',['Wir spielten Fußball.']],
+ ['Setze ins Perfekt: Lea läuft nach Hause.',['Lea ist nach Hause gelaufen.']],
+ ['Setze ins Plusquamperfekt: Lea läuft nach Hause.',['Lea war nach Hause gelaufen.']],
+ ['Setze ins Präteritum: Der Detektiv findet eine Spur.',['Der Detektiv fand eine Spur.']],
+ ['Setze ins Futur: Wir lösen den Fall.',['Wir werden den Fall lösen.']],
+ ['Setze ins Perfekt: Ich schreibe einen Brief.',['Ich habe einen Brief geschrieben.']],
+ ['Setze ins Präteritum: Die Kinder schwimmen im See.',['Die Kinder schwammen im See.']]
+].forEach(([s,a])=>ITEMS.push({t:'type',p:'p6',tag:'tense',q:'Schreibe die richtige Form.',s,a,ex:'',z:1}));
+/* Buch S. 235 Nr. 5b: nachdem-Sätze in allen Personen – bei jedem Laden eine andere Person */
+(()=>{const P=[['ich','hatte','war'],['du','hattest','warst'],['er','hatte','war'],['wir','hatten','waren'],['ihr','hattet','wart'],['sie','hatten','waren']];
+  const T=[['die Knoten ___ (üben)','geübt',1,'befestigte|befestigtest|befestigte|befestigten|befestigtet|befestigten','die Taue'],
+    ['die Hausaufgaben ___ (machen)','gemacht',1,'spielte|spieltest|spielte|spielten|spieltet|spielten','draußen'],
+    ['nach Hause ___ (kommen)','gekommen',2,'trank|trankst|trank|tranken|trankt|tranken','ein Glas Wasser']];
+  T.forEach(([mid,pp,aux,vs,obj])=>{const i=Math.floor(Math.random()*6),[pr,h,w]=P[i],v=vs.split('|')[i];
+    ITEMS.push({t:'type',p:'p6',tag:'tense',q:'Schreibe die richtige Form.',s:`Ergänze im Plusquamperfekt: Nachdem ${pr} ${mid}, ${v} ${pr} ${obj}.`,a:[pp+' '+(aux===1?h:w)],ex:'Plusquamperfekt: hatte/war (gebeugt) + Partizip II – passend zur Person.',z:1});});})();
+WQ.push(
+{p:'p1',q:'Bestimme im Satz „Mia liest ein Buch, während ihr Bruder Fußball spielt.“ die gebeugten Verben und die Konjunktion. Welcher Teil ist der Nebensatz?',k:['gebeugte Verben: liest und spielt','Konjunktion: während','Nebensatz: „während ihr Bruder Fußball spielt“ – das gebeugte Verb steht am Ende'],a:'Gebeugte Verben: liest, spielt. Konjunktion: während. Nebensatz: „während ihr Bruder Fußball spielt“ – das gebeugte Verb steht am Ende.'},
+{p:'p1',q:'Welche Sätze sind zusammengesetzt? Begründe: 1) Der Hund bellt laut. 2) Der Hund bellt, weil es klingelt. 3) Es klingelt und der Hund bellt.',k:['1) einfacher Satz – nur ein gebeugtes Verb','2) zusammengesetzt: Hauptsatz + Nebensatz (weil …)','3) zusammengesetzt: zwei Hauptsätze, mit und verbunden'],a:'1) nicht zusammengesetzt (nur „bellt“). 2) zusammengesetzt: Hauptsatz + Nebensatz. 3) zusammengesetzt: zwei Hauptsätze (Satzreihe).'},
+{p:'p2',q:'Verbinde zu einer Satzreihe und setze die Kommas: 1) Tina zögert nicht lange. Sie macht sich schnell auf den Heimweg. 2) Trinkst du gern Kakao? Magst du lieber Milch?',k:['1) z. B. „Tina zögert nicht lange, sondern sie macht sich schnell auf den Heimweg.“ – Komma vor sondern','2) z. B. „Trinkst du gern Kakao oder magst du lieber Milch?“ – vor oder kein Pflichtkomma','passende Konjunktionen gewählt'],a:'1) Tina zögert nicht lange, sondern sie macht sich schnell auf den Heimweg. 2) Trinkst du gern Kakao oder magst du lieber Milch?'},
+{p:'p2',q:'Verbinde mit und oder oder und streiche, was du nicht wiederholen willst: 1) Forscher beobachten den Mond. Sie untersuchen seine Umlaufbahn. 2) Die Mondastronauten bewegten sich durch Hüpfen. Sie fuhren mit einem batteriebetriebenen Fahrzeug.',k:['1) „Forscher beobachten den Mond und untersuchen seine Umlaufbahn.“','2) „Die Mondastronauten bewegten sich durch Hüpfen oder fuhren mit einem batteriebetriebenen Fahrzeug.“ (auch mit und)','das wiederholte „sie“ gestrichen, kein Komma vor und/oder'],a:'1) Forscher beobachten den Mond und untersuchen seine Umlaufbahn. 2) Die Mondastronauten bewegten sich durch Hüpfen oder fuhren mit einem batteriebetriebenen Fahrzeug.'},
+{p:'p3',q:'Verbinde zu Satzgefügen: 1) Die Menschen flüchteten auf Hausdächer. Dort konnte das Wasser sie nicht erreichen. 2) Nicht alle Menschen konnten die Stadt verlassen. Sie hatten keine Autos.',k:['1) z. B. „Die Menschen flüchteten auf Hausdächer, wo das Wasser sie nicht erreichen konnte.“','2) z. B. „Nicht alle Menschen konnten die Stadt verlassen, weil sie keine Autos hatten.“','Komma gesetzt, gebeugtes Verb am Ende des Nebensatzes'],a:'1) Die Menschen flüchteten auf Hausdächer, wo das Wasser sie nicht erreichen konnte. 2) Nicht alle Menschen konnten die Stadt verlassen, weil sie keine Autos hatten.'},
+{p:'p3',q:'Schreibe zwei eigene Satzgefüge über einen Detektiv: eines mit obwohl und eines mit damit.',k:['ein Satzgefüge mit obwohl (Gegensatz)','ein Satzgefüge mit damit (Zweck)','jeweils Komma und gebeugtes Verb am Ende des Nebensatzes'],a:'Der Detektiv suchte weiter, obwohl es schon dunkel war. Er machte Fotos, damit er die Spuren später vergleichen konnte.'},
+{p:'p4',q:'Stell den Nebensatz nach vorne: „Ein Hubschrauber holte ihn aus dem Baum, nachdem man die Polizei benachrichtigt hatte.“ Was passiert dabei mit dem Hauptsatz?',k:['„Nachdem man die Polizei benachrichtigt hatte, holte ein Hubschrauber ihn aus dem Baum.“','Komma nach dem Nebensatz','der Hauptsatz beginnt jetzt mit dem gebeugten Verb (holte)'],a:'Nachdem man die Polizei benachrichtigt hatte, holte ein Hubschrauber ihn aus dem Baum. Der Hauptsatz beginnt jetzt mit dem gebeugten Verb.'},
+{p:'p4',q:'Setze passende Konjunktionen ein und begründe: „Ein argentinischer Fischer flüchtete sich auf einen Baum, ___ ein Hochwasser seine Hütte überschwemmte.“ – „Er musste dort oben sitzen bleiben, ___ das Hochwasser wieder zurückging.“',k:['1) als – einmal in der Vergangenheit','2) bis – Ende einer Zeitspanne','Begründungen passen'],a:'1) als (einmaliges Ereignis in der Vergangenheit). 2) bis (so lange, bis das Wasser zurückging).'},
+{p:'p5',q:'Setze die fehlenden Kommas und erkläre die Regel: „Dackel Collie Dalmatiner oder Pekinese und Schäferhund sind beliebte Hunderassen.“',k:['„Dackel, Collie, Dalmatiner oder Pekinese und Schäferhund sind beliebte Hunderassen.“','Kommas zwischen den Teilen der Aufzählung','kein Komma vor oder und und'],a:'Dackel, Collie, Dalmatiner oder Pekinese und Schäferhund sind beliebte Hunderassen. In Aufzählungen trennt man mit Komma, vor und/oder steht keins.'},
+{p:'p5',q:'Setze Punkte und Kommas und schreibe die Satzanfänge groß: „im Bad rauscht das Badewasser im Toaster steckt das Toastbrot im Kühlschrank warten Marmelade Käse und frische Milch“',k:['„Im Bad rauscht das Badewasser. Im Toaster steckt das Toastbrot. Im Kühlschrank warten Marmelade, Käse und frische Milch.“','Satzanfänge großgeschrieben','Komma in der Aufzählung, keins vor und'],a:'Im Bad rauscht das Badewasser. Im Toaster steckt das Toastbrot. Im Kühlschrank warten Marmelade, Käse und frische Milch.'},
+{p:'p6',q:'Setze „Lea läuft nach Hause.“ ins Präteritum, Perfekt und Plusquamperfekt. Begründe, warum du sein benutzt.',k:['Präteritum: „Lea lief nach Hause.“','Perfekt: „Lea ist nach Hause gelaufen.“ – Plusquamperfekt: „Lea war nach Hause gelaufen.“','laufen ist ein Verb der Bewegung → sein'],a:'Lea lief nach Hause. – Lea ist nach Hause gelaufen. – Lea war nach Hause gelaufen. laufen ist ein Verb der Bewegung, deshalb sein.'},
+{p:'p6',q:'Schreibe den Satz für „wir“ und für „ihr“ auf: „Nachdem ich die Knoten geübt hatte, befestigte ich die Taue.“',k:['„Nachdem wir die Knoten geübt hatten, befestigten wir die Taue.“','„Nachdem ihr die Knoten geübt hattet, befestigtet ihr die Taue.“','nachdem-Satz im Plusquamperfekt, Hauptsatz im Präteritum'],a:'Nachdem wir die Knoten geübt hatten, befestigten wir die Taue. – Nachdem ihr die Knoten geübt hattet, befestigtet ihr die Taue.'});
+/* Abwechslung: zuletzt gesehene Aufgaben kommen erst wieder, wenn die anderen dran waren (pro Gerät/Konto gespeichert) */
+const iKey=q=>{const t=(q.t||'w')+'|'+(q.s||q.src||q.q||'')+'|'+(q.head||'');let h=0;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return(h>>>0).toString(36);};
+function seenMark(q){S.seen=S.seen||{};S.seenN=(S.seenN||0)+1;S.seen[iKey(q)]=S.seenN;const ks=Object.keys(S.seen);if(ks.length>700)ks.sort((a,b)=>S.seen[a]-S.seen[b]).slice(0,ks.length-550).forEach(k=>delete S.seen[k]);}
+function fresh(arr){const s=S.seen||{};return shuffle(arr).sort((a,b)=>(s[iKey(a)]||0)-(s[iKey(b)]||0));}
 const KEY='detektivbuero-v1'+(window.__UK||'');
 const DEF={sel:['p1'],xp:0,stats:{},bk:{},grades:{},sound:true};
 let S;try{S=Object.assign(JSON.parse(JSON.stringify(DEF)),JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){S=JSON.parse(JSON.stringify(DEF));}
@@ -440,8 +631,8 @@ function recordStat(p,ok){const a=S.stats[p]=S.stats[p]||[];a.push(ok?1:0);if(a.
 const MODES={
  book:{i:'📒',t:'Akte lesen',d:'Lernkarten: umdrehen, dann „Weiß ich!“ oder „Nochmal“.',g:'Lernen'},
  regel:{i:'🧠',t:'Regel-Check',d:'Zu jeder Lernkarte eine Frage: Welche Regel stimmt?',g:'Üben',f:i=>i.tag==='regel'},
- verb:{i:'🔎',t:'Verb-Jäger',d:'Tippe die gebeugten (finiten) Verbformen oder die Konjunktion an.',g:'Üben',f:i=>i.t==='tap'},
- comma:{i:'✒️',t:'Komma-Setzer',d:'Tippe zwischen die Wörter, wo ein Komma hingehört.',g:'Üben',f:i=>i.t==='comma'},
+ verb:{i:'🔎',t:'Verb-Jäger',d:'Tippe die gebeugten (finiten) Verbformen, die Konjunktion oder überflüssige Wörter an.',g:'Üben',f:i=>i.t==='tap'},
+ comma:{i:'✒️',t:'Komma-Setzer',d:'Tippe zwischen die Wörter, wo ein Komma hingehört – und finde Satzgrenzen.',g:'Üben',f:i=>i.t==='comma'||i.tag==='grenze'},
  sort:{i:'🗂️',t:'Satzreihe oder Satzgefüge?',d:'Entscheide, welcher Satzbau vorliegt.',g:'Üben',f:i=>i.tag==='srsg'},
  build:{i:'🧱',t:'Satz-Baumeister',d:'Verbinde zwei Sätze. Wohin wandert das Verb?',g:'Üben',f:i=>i.t==='order'},
  konj:{i:'🗝️',t:'Konjunktion wählen',d:'Welches Bindewort passt?',g:'Üben',f:i=>i.tag==='konj'},
@@ -476,16 +667,16 @@ function shell(m){const M=MODES[m];app.innerHTML=`<div class="pbar2"><button cla
 function startMode(m){if(!avail(m))return;if(m==='book')return book();if(m==='blitz')return blitz();if(m==='write')return writeTest();
   const pool=poolFor(m);let qs;
   if(m==='test'){/* 3 von 12 Aufgaben sind Regel-Fragen zu den Lernkarten, verteilt auf die gewählten Akten */
-    const pick_=(src,n)=>{const by={};src.forEach(i=>(by[i.p]=by[i.p]||[]).push(i));Object.keys(by).forEach(k=>by[k]=shuffle(by[k]));const out=[];let k=0;const keys=shuffle(Object.keys(by));while(out.length<n&&keys.some(x=>by[x].length)){const p=keys[k%keys.length];if(by[p].length)out.push(by[p].shift());k++;}return out;};
+    const pick_=(src,n)=>{const by={};src.forEach(i=>(by[i.p]=by[i.p]||[]).push(i));Object.keys(by).forEach(k=>by[k]=fresh(by[k]));const out=[];let k=0;const keys=shuffle(Object.keys(by));while(out.length<n&&keys.some(x=>by[x].length)){const p=keys[k%keys.length];if(by[p].length)out.push(by[p].shift());k++;}return out;};
     const R=pick_(pool.filter(i=>i.tag==='regel'),3);qs=shuffle(R.concat(pick_(pool.filter(i=>i.tag!=='regel'),12-R.length)));}
-  else qs=shuffle(pool).slice(0,10);
+  else qs=shuffle(fresh(pool).slice(0,10));
   G={mode:m,qs,i:0,score:0,log:[],test:m==='test'};window.__detQs=()=>G&&G.qs;shell(m);item();}
 /* ---------- Aufgaben ---------- */
 function parseTap(s){return s.split(' ').map(w=>{const m=w.match(/^(\*?)(.*?)(\*?)([.,!?;:“”]*)$/);const hit=/^\*.*\*[.,!?;:]*$/.test(w)||(/^\*/.test(w)&&/\*/.test(w.slice(1)));const clean=w.replace(/\*/g,'');return{w:clean,hit:w.includes('*')};});}
 function parseComma(s){const toks=s.split(' ');return toks.map(t=>{let c=0;if(/\(,\)$/.test(t)){c=2;t=t.replace(/\(,\)$/,'');}else if(/,$/.test(t)){c=1;t=t.slice(0,-1);}return{w:t,c};});}
 const normT=s=>String(s).replace(/[„“”"]/g,'').replace(/\s+/g,' ').replace(/\s+([,.!?])/g,'$1').replace(/[.!?]+$/,'').trim();
 function item(){
-  const q=G.qs[G.i],c=$('#card');G.done=false;$('#pprog').textContent=`${G.i+1} / ${G.qs.length}`;
+  const q=G.qs[G.i],c=$('#card');G.done=false;seenMark(q);$('#pprog').textContent=`${G.i+1} / ${G.qs.length}`;
   const fin=(ok,extra)=>{if(G.done)return;G.done=true;G.score+=ok?1:0;G.log.push(ok);recordStat(q.p,ok);sfx(ok?'ok':'bad');if(ok)addXP(G.test?4:5);
     const ex=G.test?'':(q.ex||'');
     const box=document.createElement('div');box.className='fbox '+(ok?'ok':'bad');
@@ -545,7 +736,7 @@ function blitz(){
   blitzItem();}
 function blitzItem(){
   if(!G||G.mode!=='blitz'||G.fin)return;
-  const pool=poolFor('blitz');let q;for(let k=0;k<5;k++){q=pool[Math.floor(Math.random()*pool.length)];if(q!==G.last)break;}G.last=q;
+  const pool=fresh(poolFor('blitz')),half=Math.max(2,Math.ceil(pool.length/2));let q;for(let k=0;k<5;k++){q=pool[Math.floor(Math.random()*Math.min(half,pool.length))];if(q!==G.last)break;}G.last=q;seenMark(q);
   const c=$('#card');let done=false;
   const fin=(ok,sol)=>{if(done||G.fin)return;done=true;G.n++;if(ok)G.score++;recordStat(q.p,ok);sfx(ok?'ok':'bad');
     const f=document.createElement('div');f.className='bflash '+(ok?'ok':'bad');f.innerHTML=ok?'✓':'✗ '+(sol?'<small>'+sol+'</small>':'');c.appendChild(f);
@@ -602,7 +793,7 @@ function writeTest(){G={mode:'write',phase:'intro',n:5,qs:[],a:[],i:0,ai:undefin
 function wStatus(){if(G.ai===undefined)return`<div class="wstat">⏳ Prüfe, ob die KI-Korrektur verfügbar ist …</div>`;
   if(G.ai)return`<div class="wstat ok">🤖 <b>KI-Korrektur ist verfügbar.</b> Nach dem Abgeben korrigiert Claude deine Arbeit und gibt dir eine Note mit Rückmeldung. Beim ersten Mal fragt claude.ai einmal um Erlaubnis.</div>`;
   return`<div class="wstat">✍️ <b>Selbstkontrolle:</b> Nach dem Abgeben siehst du Musterantworten und Kernpunkte und hakst selbst ab, was du geschafft hast.</div>`;}
-function wPick(n){const by={};S.sel.forEach(p=>by[p]=shuffle(WQ.filter(q=>q.p===p)));const out=[];let k=0;while(out.length<n&&Object.values(by).some(a=>a.length)){const p=S.sel[k%S.sel.length];if(by[p]&&by[p].length)out.push(by[p].shift());k++;}return shuffle(out);}
+function wPick(n){const by={};S.sel.forEach(p=>by[p]=fresh(WQ.filter(q=>q.p===p)));const out=[];let k=0;while(out.length<n&&Object.values(by).some(a=>a.length)){const p=S.sel[k%S.sel.length];if(by[p]&&by[p].length)out.push(by[p].shift());k++;}out.forEach(seenMark);return shuffle(out);}
 function wIntro(){const c=$('#card'),max=WQ.filter(q=>S.sel.includes(q.p)).length;
   c.innerHTML=`<div class="q">Schreibtest – wie in der Klassenarbeit</div><p class="sub">Du bekommst Aufgaben aus deinen gewählten Akten und schreibst die Antworten selbst. Achte auf Kommas, Verbstellung und Zeitformen. Korrektur und Note gibt es erst am Ende.</p>
   <div class="wbox"><b>Akten:</b> ${S.sel.map(id=>{const p=packById(id);return p.icon+' '+p.name;}).join(', ')}</div>
@@ -665,7 +856,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:var(--on);--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-deutsch", "prefix": "D", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Akten gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Akten auswählen.", "units": [{"id": "p1", "icon": "🔍", "name": "Hauptsatz & Nebensatz", "learn": "Erst „Akte lesen“, dann Verb-Jäger.", "rep": "Verb-Jäger oder Satzreihe oder Satzgefüge?"}, {"id": "p2", "icon": "🔗", "name": "Satzreihe", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Konjunktion wählen.", "rep": "Komma-Setzer oder Satz-Baumeister."}, {"id": "p3", "icon": "🧩", "name": "Satzgefüge", "learn": "Erst „Akte lesen“, dann Satz-Baumeister und Komma-Setzer.", "rep": "Satz-Baumeister oder Verb-Jäger."}, {"id": "p4", "icon": "🗝️", "name": "Konjunktionen", "learn": "Erst „Akte lesen“, dann Konjunktion wählen.", "rep": "Konjunktion wählen oder Satz-Baumeister."}, {"id": "p5", "icon": "✒️", "name": "Komma-Profi", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Satzreihe oder Satzgefüge?", "rep": "Komma-Setzer."}, {"id": "p6", "icon": "⏳", "name": "Zeitformen", "learn": "Erst „Akte lesen“, dann Zeitmaschine.", "rep": "Zeitmaschine."}], "testName": "Abschlusstest", "write": true, "est": {"learn": 15, "rep": 5, "test": 10, "final": 20, "write": 15}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.14.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.15.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -675,18 +866,18 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.14.0"></script>
+<script src="../js/lernplan.js?v=7.15.0"></script>
 <!-- ===== /Lernplan ===== -->
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.14.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.15.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.14.0"></script>
+<script src="../js/nutzer.js?v=7.15.0"></script>
 <!-- ===== /Nutzer ===== -->
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank{min-width:0;flex:1 1 auto;overflow:hidden}#rank b{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#rank .rt{display:none}}</style>
-<script src="../js/home-btn.js?v=7.14.0"></script>
+<script src="../js/home-btn.js?v=7.15.0"></script>
 <!-- ===== /Start ===== -->
-<script src="../js/arena-btn.js?v=7.14.0"></script>
+<script src="../js/arena-btn.js?v=7.15.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Deutsch: Satzbau und Zeitformen",f:"deutsch-satzbau-zeitformen.html",d:"Nr. 29–41 und Heft Zeitformen, Lösungen am Ende"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.14.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.15.0"></script>
 </body></html>
