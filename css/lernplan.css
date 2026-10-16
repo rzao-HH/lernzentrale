@@ -64,3 +64,10 @@
 .lp-tag.l{border-color:var(--lp-accent);color:var(--lp-accent)}
 .lp-empty{text-align:center;padding:30px 10px}
 @media (min-width:700px){#lp{font-size:1.08rem}.lp-body{padding:22px}}
+.lp-rst{margin-top:16px}
+.lp-rst .lp-rst-go{height:44px;border-radius:10px;border:1px solid #c0392b;background:transparent;color:#c0392b!important;padding:0 14px;font-weight:800;margin-top:8px}
+.lp-rst.ask{border:2px solid #c0392b}
+.lp-rst-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lp-rst-row .lp-sm{flex:1 1 140px;height:48px;border-radius:12px;border:1px solid var(--lp-line);background:var(--lp-bg);font-weight:800}
+.lp-rst-row .lp-rst-yes{background:#c0392b;border-color:#c0392b;color:#fff!important}
+.lp-rst-ok{border:2px solid #1b7f3b;font-weight:800}

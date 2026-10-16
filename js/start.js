@@ -65,6 +65,8 @@ function st(k){const o={};
 function lzPurge(id){try{const re=new RegExp("@"+id+"(?!\\d)"),ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||"";if(re.test(k))ks.push(k);}ks.forEach(k=>localStorage.removeItem(k));}catch(e){}
   JW("lz-ergebnisse",J("lz-ergebnisse",[]).filter(r=>r.u!==id));}
 window.lzPurge=lzPurge;
+/* Aufruf aus einer App beim „Lernplan zurücksetzen“: Zieldatum dieses Fachs löschen, Zwischenspeicher verwerfen */
+window.lzPlanReset=k=>{try{if(S[k])S[k].goal="";JW(KEY,S);LPC={};PC={};}catch(e){}};
 const dlog=(k,t)=>{const L=pst(k).log;const o=L[t]=L[t]||{c:{},g:{}};o.a=o.a||{};return o;};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const dstr=d=>d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();

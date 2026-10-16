@@ -81,18 +81,39 @@ function rSet(){
     ${S.n?`<div class="lp-code" style="margin-top:8px"><span class="lp-muted">Code dieses Plans:</span><b>${code()}</b></div>`:""}
     <div class="lp-code" style="margin-top:10px"><input id="lpIn" placeholder="${C.prefix}6-3" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Plan-Code"><button class="lp-sm" id="lpUse">Code übernehmen</button></div>
     <div class="lp-msg" id="lpMsg"></div>
-  </div>`;
+  </div>${rstCard()}`;
   const setN=v=>{draft.n=Math.max(1,Math.min(30,v));$("#lpN").textContent=draft.n;};
   $("#lpM").onclick=()=>setN(draft.n-1); $("#lpP").onclick=()=>setN(draft.n+1);
   document.querySelectorAll(".lp-pk input").forEach(c=>c.onchange=()=>{const id=c.dataset.id;draft.done=draft.done.filter(x=>x!==id);if(c.checked)draft.done.push(id);});
   $("#lpGo").onclick=()=>{apply(draft.n,draft.done);};
+  rstBind();
   $("#lpUse").onclick=()=>{const r=parse($("#lpIn").value);if(r.err){$("#lpMsg").textContent=r.err;$("#lpMsg").style.color="#b3342b";return;}apply(r.n,r.done);};
 }
 function apply(n,done){
   const changed=n!==S.n||mask(done)!==mask(S.done);
   S.n=n;S.done=U.filter(u=>done.includes(u.id)).map(u=>u.id);
-  if(changed){S.ok=[];S.today=1;let L=[];try{L=(JSON.parse(localStorage.getItem("nutzer-alle")||"null")||{list:[{id:"u1"}]}).list;}catch(e){}lzSet((window.__NUTZER&&window.__NUTZER.cur)||"u1",{count:0,doneDate:"",log:{}});}
+  if(changed){S.ok=[];S.today=1;let L=[];try{L=(JSON.parse(localStorage.getItem("nutzer-alle")||"null")||{list:[{id:"u1"}]}).list;}catch(e){}lzSet((window.__NUTZER&&window.__NUTZER.cur)||"u1",{count:0,doneDate:"",log:{0:{end:Date.now()}}});}
   S.today=Math.min(S.today,n);draft=null;save();renderBtn();show("plan");
+}
+/* Neu anfangen: löscht Lernplan und Lernfortschritt NUR dieses Fachs und dieser Person.
+   Punkte (xp), Rang/Abzeichen, Rekorde und die anderen Fächer bleiben. Den App-Teil erledigt window.lzResetProgress der jeweiligen App. */
+function rstCard(){return `<div class="lp-card lp-rst" id="lpRst"><h3>🔄 Neu anfangen</h3>
+    <div class="lp-muted">Löscht den Lernplan und den Lernfortschritt in diesem Fach. Punkte und Abzeichen bleiben, die anderen Fächer auch.</div>
+    <button class="lp-sm lp-rst-go" id="lpRstGo">Lernplan zurücksetzen</button></div>`;}
+function rstBind(){const b=document.getElementById("lpRstGo");if(!b)return;b.onclick=()=>{const c=document.getElementById("lpRst");
+  c.classList.add("ask");c.innerHTML=`<h3>⚠️ Wirklich neu anfangen?</h3>
+    <div class="lp-muted"><b>Wird gelöscht:</b> der Lernplan und alles, was in diesem Fach schon als gelernt gilt (Pakete, Noten, Lernkarten, Checkliste).<br><b>Bleibt:</b> Punkte, Abzeichen und die anderen Fächer.</div>
+    <div class="lp-rst-row"><button class="lp-sm" id="lpRstNo">Abbrechen</button><button class="lp-sm lp-rst-yes" id="lpRstYes">Ja, zurücksetzen</button></div>`;
+  c.scrollIntoView({block:"nearest"});
+  document.getElementById("lpRstNo").onclick=()=>show(tab);
+  document.getElementById("lpRstYes").onclick=reset;};}
+function reset(){
+  S={n:0,done:[],today:1,ok:[]};save();draft=null;
+  lzSet(LZU,{count:0,doneDate:"",log:{0:{end:Date.now()}}});/* ältere Testergebnisse zählen nicht mehr */
+  try{if(window.lzResetProgress)window.lzResetProgress();}catch(e){}
+  try{if(parent&&parent!==window&&parent.lzPlanReset)parent.lzPlanReset(C.prefix);}catch(e){}
+  try{sessionStorage.setItem("lp-reset-"+C.prefix,"1");}catch(e){}
+  location.reload();
 }
 function item(i,u,txt,hint){return `<li><span class="i">${i}</span><span><b>${txt}</b> ${nm(u)}${hint?`<small>${esc(hint)}</small>`:""}</span></li>`;}
 
@@ -136,7 +157,8 @@ function rPlan(){
     if(!li.length)li.push(`<li><span class="i">☕</span><span class="lp-muted">Heute ist nichts eingeplant.</span></li>`);
     const ok=S.ok.includes(d.d), now=d.d===S.today;
     return `<div class="lp-card lp-day ${now?"now":""} ${ok?"ok":""}"><h3>Tag ${d.d}${now?`<span class="lp-now">heute</span>`:""}<span class="lp-min">⏱️ ca. ${X[d.d-1].min} Min.</span></h3><ul>${li.join("")}</ul>
-      <label class="lp-chk"><input type="checkbox" data-d="${d.d}" ${ok?"checked":""}> erledigt</label></div>`;}).join("")}`;
+      <label class="lp-chk"><input type="checkbox" data-d="${d.d}" ${ok?"checked":""}> erledigt</label></div>`;}).join("")}${rstCard()}`;
+  rstBind();
   $("#lpDay").onchange=e=>{{const p=lzGet(LZU);p.count=+e.target.value-1;p.doneDate="";p.log=p.log||{};for(let i=1;i<=p.count;i++){p.log[i]=p.log[i]||{c:{},g:{}};p.log[i].end=p.log[i].end||Date.now();}Object.keys(p.log).forEach(i=>{if(+i>p.count)delete p.log[i].end;});lzSet(LZU,p);lzSync();}save();renderBtn();rPlan();};
   document.querySelectorAll(".lp-chk input").forEach(c=>c.onchange=()=>{const d=+c.dataset.d,p=lzGet(LZU);if(c.checked){p.count=Math.max(p.count,d);p.doneDate=lzDay();p.log=p.log||{};for(let i=1;i<=d;i++){p.log[i]=p.log[i]||{c:{},g:{}};p.log[i].end=p.log[i].end||Date.now();}}else{p.count=Math.min(p.count,d-1);p.doneDate="";p.log=p.log||{};Object.keys(p.log).forEach(i=>{if(+i>=d)delete p.log[i].end;});}lzSet(LZU,p);lzSync();save();renderBtn();rPlan();});
   const nowEl=document.querySelector(".lp-day.now"); if(nowEl&&S.today>1)setTimeout(()=>nowEl.scrollIntoView({block:"start"}),30);
@@ -213,5 +235,7 @@ window.lzEval=function(units,grade,kind){
   btns.push(`<button type="button" class="lzh-btn lzh-home" data-lzhome>🏠 Zur Startseite</button>`);
   return`<div class="lzh lzh-ev">${h}<div class="lzh-acts">${btns.join("")}</div></div>`;
 };
-window.LP={build,parse,open};if(window.lzRehome)lzRehome();if(window.lzBar)lzBar();
+{let r=null;try{r=sessionStorage.getItem("lp-reset-"+C.prefix);sessionStorage.removeItem("lp-reset-"+C.prefix);}catch(e){}
+  if(r)setTimeout(()=>{open("set");const b=$("#lpBody");if(b)b.insertAdjacentHTML("afterbegin",`<div class="lp-card lp-rst-ok" id="lpRstOk">✅ Zurückgesetzt. Du startest in diesem Fach wieder bei null – jetzt einen neuen Lernplan erstellen.</div>`);},60);}
+window.LP={build,parse,open,reset};if(window.lzRehome)lzRehome();if(window.lzBar)lzBar();
 })();
