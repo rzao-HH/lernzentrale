@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Zeitreise mit Krabbi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;700;800&display=swap">
+<style>
+/* Layout: Videobühne (16:9, auf dem Handy höher) mit Untertitelleiste von Krabbi und Steuerung darunter.
+   Eine gewollt dunkle Meeres-Optik, deshalb nur ein Farbschema. */
+:root{
+  --bg:#0A1B27; --sea:#0F2E43; --sea2:#15405C; --line:#2C5A76;
+  --ink:#EEF6F8; --mute:#9DB7C3;
+  --present:#FFC24B; --past:#5ED0E6; --irreg:#B7E86C; --bad:#FF8E7E; --crab:#FF7A5C;
+  --f-head:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;font-size:14px}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--f-body);
+  padding-block:20px 32px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.eyebrow{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.eyebrow h1{font-family:var(--f-head);font-weight:800;font-size:1.35rem;margin:0}
+.eyebrow p{margin:0;color:var(--mute);font-size:.9rem}
+
+.stage{
+  container-type:inline-size; position:relative; display:grid;
+  background:radial-gradient(120% 90% at 50% 0%,var(--sea2) 0%,var(--sea) 60%);
+  border:1px solid var(--line); border-radius:14px; overflow:hidden;
+  aspect-ratio:16/9;
+}
+@media (max-width:640px){.stage{aspect-ratio:4/5}}
+.scene{
+  grid-area:1/1; min-width:0; display:flex; flex-direction:column; justify-content:center; gap:.7em;
+  padding:1.2em 1.4em; font-size:clamp(14px,calc(2cqw + 7px),26px); line-height:1.35;
+  opacity:0; visibility:hidden; transition:opacity .5s, visibility 0s .5s;
+}
+.scene.active{opacity:1;visibility:visible;transition:opacity .5s}
+h2,h3,p{margin:0}
+.t{font-family:var(--f-head);font-weight:800;font-size:1.7em;line-height:1.1;text-wrap:balance}
+.t.now,.now-c{color:var(--present)} .t.past,.past-c{color:var(--past)}
+.lead{color:var(--mute);font-size:1.05em}
+
+/* Einblendungen laufen über data-at (Millisekunden in der Szene) */
+[data-at]:not(.flip){opacity:0;transform:translateY(.45em);transition:opacity .45s,transform .45s}
+[data-at].on:not(.flip){opacity:1;transform:none}
+
+/* Titel */
+.s-title{align-items:center;text-align:center}
+.bigcrab{width:6.5em;height:5.2em}
+.h-big{font-family:var(--f-head);font-weight:800;font-size:2.8em;line-height:1.05;text-wrap:balance}
+.h-big .amp{color:var(--mute);font-weight:600}
+.sub{color:var(--mute);font-size:1.15em}
+.chips{display:flex;gap:.6em;flex-wrap:wrap;justify-content:center}
+.chip{display:inline-block;padding:.25em .7em;border-radius:.5em;border:1.5px solid var(--line);font-weight:800;font-size:.95em;background:rgba(10,27,39,.45)}
+.chip.now{border-color:var(--present);color:var(--present)}
+.chip.then{border-color:var(--past);color:var(--past)}
+
+/* Zeitstrahl */
+.tl{position:relative;display:flex;justify-content:space-between;padding:1.1em .5em .2em}
+.tl::before{content:"";position:absolute;left:.5em;right:.5em;top:1.55em;height:3px;background:var(--line)}
+.tl-pt{position:relative;text-align:center;font-weight:800;min-width:5em}
+.tl-pt::before{content:"";display:block;width:1em;height:1em;border-radius:50%;margin:0 auto .35em;background:var(--mute);position:relative}
+.tl-pt.past::before{background:var(--past)} .tl-pt.now::before{background:var(--present)}
+.tl-pt.fut{color:var(--mute);font-weight:600}
+.tl-pt.fut::before{background:var(--sea);border:2px dashed var(--mute)}
+.tl-pt small{display:block;font-weight:600;color:var(--mute);font-size:.7em}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:.8em}
+@media (max-width:640px){.pair{grid-template-columns:1fr}}
+.ex{padding:.6em .8em;border-radius:.5em;background:rgba(10,27,39,.5);border-left:4px solid var(--line);font-size:1.15em}
+.ex small{display:block;font-size:.65em;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.1em}
+.ex.past{border-color:var(--past)} .ex.past small,.ex.past b{color:var(--past)}
+.ex.now{border-color:var(--present)} .ex.now small,.ex.now b{color:var(--present)}
+
+/* Beispiellisten */
+.ex-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.45em}
+.ex-list li{font-size:1.3em;padding-left:.2em}
+.s-now .ex-list b{color:var(--present)} .s-past .ex-list b{color:var(--past)}
+.tip{display:inline-block;margin-left:.6em;font-size:.65em;padding:.15em .55em;border-radius:.4em;background:rgba(183,232,108,.14);color:var(--irreg);font-weight:800;vertical-align:.15em}
+.tip b{color:var(--irreg)!important}
+.signals{display:flex;flex-wrap:wrap;gap:.45em;align-items:center}
+.signals .lab{color:var(--mute);font-weight:700;font-size:.9em;margin-right:.2em}
+.signals .chip{font-size:.9em}
+.s-now .signals .chip{border-color:var(--present);color:var(--present)}
+.s-past .signals .chip{border-color:var(--past);color:var(--past)}
+
+/* -ed Regeln */
+.rows{display:flex;flex-direction:column;gap:.5em}
+.row{display:grid;grid-template-columns:4.2em 1.4em 5.6em 1fr;align-items:center;gap:.4em;font-size:1.3em}
+.row .v{font-weight:700} .row i{font-style:normal;color:var(--mute);text-align:center}
+.row .r{font-weight:800} .row .r b{color:var(--past)}
+.row .n{font-size:.62em;color:var(--irreg);font-weight:800}
+.foot{color:var(--mute);font-size:.95em}
+.foot b{color:var(--ink)}
+
+/* Karteikarten */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:.6em}
+@media (max-width:640px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{perspective:700px;height:3.1em}
+.card-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s}
+.card.on .card-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;display:grid;place-items:center;border-radius:.5em;font-weight:800;font-size:1.25em;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.f{background:rgba(10,27,39,.55);border:1.5px solid var(--line)}
+.face.b{background:var(--irreg);color:#0A1B27;transform:rotateY(180deg)}
+.be{font-size:1.05em;padding:.5em .8em;border-radius:.5em;background:rgba(10,27,39,.5);border-left:4px solid var(--irreg)}
+.be b{color:var(--irreg)}
+
+/* Verneinung und Fragen */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:1em}
+@media (max-width:640px){.cols{grid-template-columns:1fr}}
+.col{min-width:0;display:flex;flex-direction:column;gap:.3em}
+.col h4{margin:0 0 .1em;font-family:var(--f-head);font-size:1.15em}
+.col.now h4,.col.now b{color:var(--present)} .col.past h4,.col.past b{color:var(--past)}
+.col p{font-size:1.2em}
+.trick{display:flex;flex-direction:column;gap:.25em;padding:.6em .8em;border-radius:.5em;background:rgba(10,27,39,.5);border-left:4px solid var(--irreg)}
+.trick .w{color:var(--bad);font-size:1.2em}
+.trick .w s{text-decoration-thickness:.12em}
+.trick .g{color:var(--irreg);font-size:1.2em;font-weight:800}
+.trick .why{color:var(--mute);font-size:.9em}
+
+/* Quiz */
+.q{display:flex;flex-direction:column;gap:.1em}
+.q .s{font-size:1.25em}
+.gap{display:inline-block;min-width:4.4em;border-bottom:.1em solid var(--mute);text-align:center}
+.ans{display:inline-block;color:var(--irreg);font-weight:800}
+.paren{color:var(--mute);font-size:.7em;margin-left:.3em}
+.hint{font-size:.8em;color:var(--irreg)}
+
+/* Merksatz */
+.end{font-family:var(--f-head);font-weight:800;font-size:1.35em;text-wrap:balance}
+.col li{list-style:none}
+.col ul{margin:0;padding:0;display:flex;flex-direction:column;gap:.3em}
+.col ul li{font-size:1.1em}
+
+/* Untertitel und Steuerung */
+.caption{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:12px;background:var(--sea);border:1px solid var(--line);min-height:84px}
+.avatar{flex:none;width:56px;height:46px}
+.playing .avatar{animation:bob 1s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px) rotate(-3deg)}}
+#say{margin:0;font-size:1.05rem;line-height:1.45;min-width:0}
+.prog{height:6px;border-radius:3px;background:var(--sea);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--present),var(--past))}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ctrl button{
+  font:inherit;color:var(--ink);background:var(--sea);border:1px solid var(--line);border-radius:10px;
+  min-height:44px;min-width:44px;padding:0 14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700
+}
+.ctrl button:hover{background:var(--sea2)}
+.ctrl button:focus-visible,.dots button:focus-visible{outline:3px solid var(--past);outline-offset:2px}
+.ctrl button[aria-pressed="true"]{border-color:var(--present);color:var(--present)}
+#play{background:var(--present);color:#0A1B27;border-color:var(--present);min-width:120px}
+.ctrl svg{width:18px;height:18px;fill:currentColor}
+.dots{display:flex;gap:6px;align-items:center;margin-left:auto;flex-wrap:wrap}
+.dots button{min-height:28px;min-width:28px;padding:0;width:28px;border-radius:50%;background:transparent;border:0;cursor:pointer;display:grid;place-items:center}
+.dots button::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--line)}
+.dots button.on::after{background:var(--present)}
+.dots button.done::after{background:var(--past)}
+#where{color:var(--mute);font-size:.9rem}
+.note{color:var(--mute);font-size:.85rem;line-height:1.5;margin:0}
+
+@media (prefers-reduced-motion:reduce){
+  [data-at]:not(.flip){transform:none;transition:opacity .2s}
+  .card-in{transition:none}
+  .playing .avatar{animation:none}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="crab" viewBox="0 0 80 64">
+    <g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none">
+      <path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"/>
+      <path d="M22 36 Q8 34 8 22 M58 36 Q72 34 72 22"/>
+    </g>
+    <circle cx="8" cy="17" r="9" fill="#FF7A5C"/><circle cx="72" cy="17" r="9" fill="#FF7A5C"/>
+    <path d="M8 17 L8 9 M72 17 L72 9" stroke="#C94F36" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"/>
+    <path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="32" cy="16" r="6" fill="#fff"/><circle cx="48" cy="16" r="6" fill="#fff"/>
+    <circle cx="33" cy="16" r="2.6" fill="#0A1B27"/><circle cx="49" cy="16" r="2.6" fill="#0A1B27"/>
+    <path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<div class="wrap">
+  <div class="eyebrow">
+    <h1>Zeitreise mit Krabbi</h1>
+    <p>Englisch, 6. Klasse · Simple Present und Simple Past</p>
+  </div>
+
+  <div id="player">
+    <div class="stage" id="stage" aria-label="Erklärvideo">
+
+      <!-- 1 Titel -->
+      <section class="scene s-title" data-dur="7000" data-name="Start"
+        data-say="Hi, ich bin Krabbi! Heute zeige ich dir, wann man auf Englisch von heute spricht und wann von gestern.">
+        <svg class="bigcrab" data-at="0"><use href="#crab"/></svg>
+        <h2 class="h-big" data-at="500"><span class="now-c">Present</span> <span class="amp">&amp;</span> <span class="past-c">Simple Past</span></h2>
+        <p class="sub" data-at="1500">Eine Zeitreise mit Krabbi</p>
+        <div class="chips" data-at="2600">
+          <span class="chip now">Present = jetzt und immer</span>
+          <span class="chip then">Simple Past = gestern und vorbei</span>
+        </div>
+      </section>
+
+      <!-- 2 Zeitform -->
+      <section class="scene" data-dur="10000" data-name="Was ist eine Zeitform?"
+        data-say="Eine Zeitform verrät, wann etwas passiert. Dafür verändert das Verb sein Gesicht: walk gehört zu heute, walked zu gestern.">
+        <h3 class="t" data-at="0">Eine Zeitform sagt: <span class="now-c">Wann?</span></h3>
+        <div class="tl" data-at="800">
+          <div class="tl-pt past">gestern<small>vorbei</small></div>
+          <div class="tl-pt now">heute<small>jetzt, immer</small></div>
+          <div class="tl-pt fut">morgen<small>kommt später</small></div>
+        </div>
+        <div class="pair">
+          <div class="ex past" data-at="3000"><small>Simple Past</small><span>Yesterday I <b>walked</b> to school.</span></div>
+          <div class="ex now" data-at="5200"><small>Simple Present</small><span>Every day I <b>walk</b> to school.</span></div>
+        </div>
+      </section>
+
+      <!-- 3 Present -->
+      <section class="scene s-now" data-dur="12000" data-name="Simple Present"
+        data-say="Simple Present: Das gilt immer oder jeden Tag. Nur bei he, she und it kommt ein s ans Verb. Die Signalwörter helfen dir beim Erkennen.">
+        <h3 class="t now" data-at="0">Simple Present</h3>
+        <p class="lead" data-at="500">So ist es. Oder so mache ich es immer.</p>
+        <ul class="ex-list">
+          <li data-at="1500">I <b>play</b> football every day.</li>
+          <li data-at="3800">She <b>plays</b> guitar. <span class="tip">he / she / it bekommt <b>s</b></span></li>
+          <li data-at="6600">We <b>never eat</b> fish.</li>
+        </ul>
+        <div class="signals" data-at="8600">
+          <span class="lab">Signalwörter:</span>
+          <span class="chip">every day</span><span class="chip">always</span><span class="chip">usually</span><span class="chip">often</span><span class="chip">sometimes</span><span class="chip">never</span>
+        </div>
+      </section>
+
+      <!-- 4 Simple Past -->
+      <section class="scene s-past" data-dur="12000" data-name="Simple Past"
+        data-say="Simple Past: Das ist vorbei. Achte auf Wörter wie yesterday oder last week. Und es gibt kein s mehr, alle Personen sind gleich.">
+        <h3 class="t past" data-at="0">Simple Past</h3>
+        <p class="lead" data-at="500">Das war so. Und jetzt ist es vorbei.</p>
+        <ul class="ex-list">
+          <li data-at="1500">Yesterday I <b>played</b> football.</li>
+          <li data-at="3800">She <b>played</b> guitar last night. <span class="tip">kein <b>s</b> mehr</span></li>
+          <li data-at="6600">We <b>visited</b> the beach two days ago.</li>
+        </ul>
+        <div class="signals" data-at="8600">
+          <span class="lab">Signalwörter:</span>
+          <span class="chip">yesterday</span><span class="chip">last week</span><span class="chip">two days ago</span><span class="chip">in 2024</span><span class="chip">when I was ten</span>
+        </div>
+      </section>
+
+      <!-- 5 regelmäßig -->
+      <section class="scene s-past" data-dur="12000" data-name="Regelmäßige Verben"
+        data-say="Regelmäßige Verben bekommen ed. Manchmal nur ein d. Bei study wird aus y ied, und bei stop verdoppelt sich das p.">
+        <h3 class="t past" data-at="0">Regelmäßig: Verb + ed</h3>
+        <div class="rows">
+          <div class="row" data-at="1200"><span class="v">walk</span><i>→</i><span class="r">walk<b>ed</b></span><span class="n"></span></div>
+          <div class="row" data-at="3200"><span class="v">love</span><i>→</i><span class="r">love<b>d</b></span><span class="n">nur d</span></div>
+          <div class="row" data-at="5200"><span class="v">study</span><i>→</i><span class="r">stud<b>ied</b></span><span class="n">y wird ied</span></div>
+          <div class="row" data-at="7200"><span class="v">stop</span><i>→</i><span class="r">sto<b>pped</b></span><span class="n">p doppelt</span></div>
+        </div>
+        <p class="foot" data-at="9400">Aber: <b>play → played</b>. Steht vor dem y ein Vokal, bleibt es.</p>
+      </section>
+
+      <!-- 6 unregelmäßig -->
+      <section class="scene s-past" data-dur="14000" data-name="Unregelmäßige Verben"
+        data-say="Manche Verben machen ihr eigenes Ding. Go wird went, see wird saw. Die lernst du am besten mit Karteikarten. Nur be hat zwei Formen: was und were.">
+        <h3 class="t" style="color:var(--irreg)" data-at="0">Unregelmäßig: auswendig lernen</h3>
+        <div class="cards">
+          <div class="card flip" data-at="1500"><div class="card-in"><div class="face f">go</div><div class="face b">went</div></div></div>
+          <div class="card flip" data-at="2400"><div class="card-in"><div class="face f">see</div><div class="face b">saw</div></div></div>
+          <div class="card flip" data-at="3300"><div class="card-in"><div class="face f">have</div><div class="face b">had</div></div></div>
+          <div class="card flip" data-at="4200"><div class="card-in"><div class="face f">eat</div><div class="face b">ate</div></div></div>
+          <div class="card flip" data-at="5100"><div class="card-in"><div class="face f">come</div><div class="face b">came</div></div></div>
+          <div class="card flip" data-at="6000"><div class="card-in"><div class="face f">buy</div><div class="face b">bought</div></div></div>
+          <div class="card flip" data-at="6900"><div class="card-in"><div class="face f">make</div><div class="face b">made</div></div></div>
+          <div class="card flip" data-at="7800"><div class="card-in"><div class="face f">get</div><div class="face b">got</div></div></div>
+        </div>
+        <p class="be" data-at="9800"><b>be</b>: I / he / she / it → <b>was</b> · you / we / they → <b>were</b></p>
+      </section>
+
+      <!-- 7 Verneinung und Fragen -->
+      <section class="scene" data-dur="15000" data-name="Verneinung und Fragen"
+        data-say="Für Verneinung und Fragen brauchst du Helfer: do und does im Present, did im Simple Past. Wichtig: Nach did bleibt das Verb in der Grundform. Nicht didn't played, sondern didn't play.">
+        <div class="cols">
+          <div class="col now">
+            <h4 data-at="300">Present</h4>
+            <p data-at="1000">I <b>don't</b> play.</p>
+            <p data-at="1700">She <b>doesn't</b> play.</p>
+            <p data-at="2400"><b>Do</b> you play?</p>
+            <p data-at="3100"><b>Does</b> she play?</p>
+          </div>
+          <div class="col past">
+            <h4 data-at="3800">Simple Past</h4>
+            <p data-at="4400">I <b>didn't</b> play.</p>
+            <p data-at="5100">She <b>didn't</b> play.</p>
+            <p data-at="5800"><b>Did</b> you play?</p>
+            <p data-at="6500"><b>Did</b> she play?</p>
+          </div>
+        </div>
+        <div class="trick" data-at="7600">
+          <span class="w" data-at="7800">✗ She didn't <s>played</s></span>
+          <span class="g" data-at="9800">✓ She didn't play</span>
+          <span class="why" data-at="11200">did trägt schon die Vergangenheit. Das Verb bleibt in der Grundform.</span>
+          <span class="why" data-at="12800">Nur be geht ohne did: She wasn't there. Was she there?</span>
+        </div>
+      </section>
+
+      <!-- 8 Quiz -->
+      <section class="scene" data-dur="16500" data-name="Quiz"
+        data-say="Jetzt bist du dran! Such zuerst das Signalwort. Dann überlege, welche Zeit passt.">
+        <h3 class="t" data-at="0">Kleines Quiz</h3>
+        <div class="q" data-at="800">
+          <div class="s">Yesterday I <span class="gap"><span class="ans" data-at="2800">watched</span></span> a film.<span class="paren">(watch)</span></div>
+          <div class="hint" data-at="2800">Signalwort yesterday → Simple Past, + ed</div>
+        </div>
+        <div class="q" data-at="4400">
+          <div class="s">Every day she <span class="gap"><span class="ans" data-at="6400">eats</span></span> an apple.<span class="paren">(eat)</span></div>
+          <div class="hint" data-at="6400">every day → Present, she bekommt s</div>
+        </div>
+        <div class="q" data-at="8000">
+          <div class="s">We <span class="gap"><span class="ans" data-at="10000">went</span></span> to the beach last summer.<span class="paren">(go)</span></div>
+          <div class="hint" data-at="10000">last summer → Simple Past, go ist unregelmäßig</div>
+        </div>
+        <div class="q" data-at="11600">
+          <div class="s">Did you <span class="gap"><span class="ans" data-at="13600">see</span></span> the dolphin?<span class="paren">(see)</span></div>
+          <div class="hint" data-at="13600">did → das Verb bleibt in der Grundform</div>
+        </div>
+      </section>
+
+      <!-- 9 Merksatz -->
+      <section class="scene" data-dur="11000" data-name="Merksatz"
+        data-say="Present ist jetzt und immer, Simple Past ist gestern und vorbei. Und nach did bleibt das Verb in der Grundform. Du schaffst das!">
+        <h3 class="t" data-at="0">Das merkst du dir</h3>
+        <div class="cols">
+          <div class="col now">
+            <h4 data-at="600">Present</h4>
+            <ul>
+              <li data-at="1200">heute, immer, jeden Tag</li>
+              <li data-at="2200">Grundform, he / she / it + <b>s</b></li>
+              <li data-at="3200"><b>do / does</b>, <b>don't / doesn't</b></li>
+            </ul>
+          </div>
+          <div class="col past">
+            <h4 data-at="4200">Simple Past</h4>
+            <ul>
+              <li data-at="4800">gestern, vorbei, abgeschlossen</li>
+              <li data-at="5800">Verb + <b>ed</b> oder unregelmäßig</li>
+              <li data-at="6800"><b>did / didn't</b> + Grundform</li>
+            </ul>
+          </div>
+        </div>
+        <p class="end" data-at="8200">Present = jetzt und immer. Simple Past = gestern und vorbei.</p>
+      </section>
+    </div>
+
+    <div class="caption" style="margin-top:12px">
+      <svg class="avatar" aria-hidden="true"><use href="#crab"/></svg>
+      <p id="say" aria-live="polite"></p>
+    </div>
+    <div class="prog" style="margin-top:12px"><i id="fill"></i></div>
+    <div class="ctrl" style="margin-top:12px">
+      <button id="prev" type="button" aria-label="Vorherige Szene"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button id="play" type="button"><svg viewBox="0 0 24 24" id="playicon"><path d="M8 5v14l11-7z"/></svg><span id="playlabel">Start</span></button>
+      <button id="next" type="button" aria-label="Nächste Szene"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+      <button id="slow" type="button" aria-pressed="false">Langsam</button>
+      <button id="snd" type="button" aria-pressed="true">Ton an</button>
+      <div class="dots" id="dots" role="group" aria-label="Szenen"></div>
+    </div>
+    <p id="where" style="margin:10px 0 0"></p>
+  </div>
+
+  <p class="note">Die Beispiele orientieren sich an Simple Present und Simple Past aus Unit 5 und 6. Falls im Unterricht noch weitere Zeiten dran sind, lässt sich das Video um eine Szene erweitern.</p>
+</div>
+
+<script>
+(function(){
+  var scenes=[].slice.call(document.querySelectorAll('.scene'));
+  var player=document.getElementById('player');
+  var sayEl=document.getElementById('say'), fill=document.getElementById('fill');
+  var dotsEl=document.getElementById('dots'), whereEl=document.getElementById('where');
+  var playBtn=document.getElementById('play'), playLabel=document.getElementById('playlabel'), playIcon=document.getElementById('playicon');
+  var starts=[], total=0;
+  scenes.forEach(function(s){ starts.push(total); total+=+s.getAttribute('data-dur'); });
+  var timed=scenes.map(function(s){ return [].slice.call(s.querySelectorAll('[data-at]')); });
+  /* Soundeffekte: kleine Töne aus dem Browser (Web Audio), erst nach dem ersten Tippen hörbar */
+  var ac=null, soundOn=true, lastAt={}, quiet=false;
+  function unlock(){
+    try{
+      if(!ac){ var C=window.AudioContext||window.webkitAudioContext; if(C) ac=new C(); }
+      if(ac&&ac.state==='suspended') ac.resume();
+    }catch(e){}
+  }
+  function tone(f,d,type,v,delay,to){
+    if(!ac||!soundOn||ac.state!=='running') return;
+    var now=ac.currentTime+(delay||0), o=ac.createOscillator(), g=ac.createGain();
+    o.type=type||'sine'; o.frequency.setValueAtTime(f,now);
+    if(to) o.frequency.exponentialRampToValueAtTime(to,now+d);
+    g.gain.setValueAtTime(0.0001,now);
+    g.gain.exponentialRampToValueAtTime(v||0.08,now+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+d);
+    o.connect(g); g.connect(ac.destination); o.start(now); o.stop(now+d+0.02);
+  }
+  function once(k,fn){ var n=performance.now(); if(lastAt[k]&&n-lastAt[k]<120) return; lastAt[k]=n; fn(); }
+  var sfx={
+    pop:function(i){ once('pop',function(){ tone(480+(i%5)*70,.12,'sine',.07,0,720+(i%5)*70); }); },
+    flip:function(){ once('flip',function(){ tone(300,.1,'triangle',.07,0,900); tone(900,.08,'sine',.05,.09); }); },
+    good:function(){ once('good',function(){ tone(660,.14,'sine',.08); tone(880,.2,'sine',.08,.1); tone(1320,.25,'sine',.06,.2); }); },
+    bad:function(){ once('bad',function(){ tone(220,.25,'sawtooth',.05,0,150); }); },
+    whoosh:function(){ once('wh',function(){ tone(200,.35,'sine',.05,0,900); }); },
+    end:function(){ [523,659,784,1047].forEach(function(f,k){ tone(f,.3,'triangle',.08,k*.14); }); }
+  };
+  document.addEventListener('pointerdown',unlock);
+  document.addEventListener('keydown',unlock);
+
+  var t=0, speed=1, cur=-1, ended=false;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var playing=!reduce;
+
+  var dots=scenes.map(function(s,i){
+    var b=document.createElement('button'); b.type='button';
+    b.setAttribute('aria-label','Szene '+(i+1)+': '+s.getAttribute('data-name'));
+    b.title=s.getAttribute('data-name');
+    b.addEventListener('click',function(){ goto(i); });
+    dotsEl.appendChild(b); return b;
+  });
+
+  function setPlayUI(){
+    player.classList.toggle('playing',playing);
+    if(playing){ playLabel.textContent='Pause'; playIcon.innerHTML='<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>'; }
+    else { playLabel.textContent=ended?'Nochmal':(t>0?'Weiter':'Start'); playIcon.innerHTML=ended?'<path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/>':'<path d="M8 5v14l11-7z"/>'; }
+  }
+  function setScene(i){
+    if(i===cur) return;
+    scenes.forEach(function(s,k){
+      s.classList.toggle('active',k===i);
+      if(k!==i) timed[k].forEach(function(e){ e.classList.remove('on'); });
+    });
+    if(cur!==-1) sfx.whoosh();
+    cur=i;
+    sayEl.textContent=scenes[i].getAttribute('data-say');
+    dots.forEach(function(d,k){ d.classList.toggle('on',k===i); d.classList.toggle('done',k<i); });
+    whereEl.textContent='Szene '+(i+1)+' von '+scenes.length+' · '+scenes[i].getAttribute('data-name');
+  }
+  function render(){
+    var i=0;
+    for(var k=0;k<scenes.length;k++){ if(t>=starts[k]) i=k; }
+    setScene(i);
+    var local=t-starts[i];
+    timed[i].forEach(function(e,idx){
+      var want=local>=+e.getAttribute('data-at'), had=e.classList.contains('on');
+      if(want===had) return;
+      e.classList.toggle('on',want);
+      if(!want||quiet||!playing) return;
+      var c=e.classList;
+      if(c.contains('card')) sfx.flip();
+      else if(c.contains('ans')) sfx.good();
+      else if(c.contains('w')) sfx.bad();
+      else if(!c.contains('hint')) sfx.pop(idx);
+    });
+    fill.style.width=(t/total*100)+'%';
+  }
+  function goto(i){
+    i=Math.max(0,Math.min(scenes.length-1,i));
+    t=starts[i]; ended=false; quiet=true; render(); quiet=false; setPlayUI();
+  }
+  var last=performance.now();
+  function frame(now){
+    var dt=Math.min(now-last,100); last=now;
+    if(playing){
+      t+=dt*speed;
+      if(t>=total){ t=total-1; playing=false; ended=true; setPlayUI(); sfx.end(); }
+    }
+    render();
+    requestAnimationFrame(frame);
+  }
+  playBtn.addEventListener('click',function(){
+    if(ended){ t=0; ended=false; cur=-1; playing=true; }
+    else playing=!playing;
+    setPlayUI();
+  });
+  document.getElementById('prev').addEventListener('click',function(){
+    var local=t-starts[Math.max(cur,0)];
+    goto(local>2500?cur:cur-1);
+  });
+  document.getElementById('next').addEventListener('click',function(){ goto(cur+1); });
+  var slow=document.getElementById('slow');
+  slow.addEventListener('click',function(){
+    speed=speed===1?0.7:1; slow.setAttribute('aria-pressed',speed!==1?'true':'false');
+  });
+  var snd=document.getElementById('snd');
+  snd.addEventListener('click',function(){
+    soundOn=!soundOn; snd.setAttribute('aria-pressed',soundOn?'true':'false');
+    snd.textContent=soundOn?'Ton an':'Ton aus';
+  });
+  document.addEventListener('keydown',function(e){
+    var tag=(e.target&&e.target.tagName)||'';
+    if(tag==='BUTTON') return;
+    if(e.key===' '){ e.preventDefault(); playBtn.click(); }
+    else if(e.key==='ArrowRight') goto(cur+1);
+    else if(e.key==='ArrowLeft') goto(cur-1);
+  });
+  setPlayUI(); render();
+  requestAnimationFrame(function(n){ last=n; requestAnimationFrame(frame); });
+})();
+</script>
+</body>
+</html>

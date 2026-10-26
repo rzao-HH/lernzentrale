@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.22.0","26.10.2026",["🎬 Küsten-Crew: Neues Erklärvideo „Zeitreise mit Krabbi“ (unter Lernen) – Simple Present und Simple Past kurz erklärt, mit Untertiteln, Soundeffekten, Langsam-Knopf und kleinem Quiz. Öffnet in einem neuen Tab"]],
  ["7.21.0","26.10.2026",["⏱️ Küsten-Crew: Neue Übung „Zeiten-Werkstatt“ (unter Üben) – Simple Present, Present Progressive und Simple Past an Signalwörtern erkennen","🔍 Zeit erkennen: Satz lesen, Zeit wählen – mit Erklärung und Signalwort","🕵️ Zeit-Detektiv: erst das Signalwort antippen, dann die Zeit bestimmen","🔄 Satz umbauen: denselben Satz in eine andere Zeit schreiben","🗂️ Sätze sortieren: 9 Sätze in die richtige Zeit-Box legen"]],
  ["7.20.1","26.10.2026",["🛠️ Küsten-Crew: Die Überschrift oben überschneidet sich nicht mehr mit dem Rang (auf schmalen Bildschirmen steht oben nur noch der Rang)"]],
  ["7.20.0","26.10.2026",["☀️ Die Lernzentrale und alle vier Apps sehen jetzt immer so aus, wie sie gedacht sind (hell) – auch wenn auf dem Gerät der Dunkelmodus eingestellt ist"]],
