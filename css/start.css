@@ -5,7 +5,7 @@
   --body:"Nunito","Avenir Next","Segoe UI",Roboto,system-ui,sans-serif;
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+@media not all{:root:not([data-theme="light"]){
   --bg:#12152a;--card:#1c2140;--line:#323a66;--text:#eef0fb;--muted:#a3aad0;--soft:#252b52;
   --W:#8b98ff;--Z:#3ec4bb;--E:#ff8a6a;--D:#e2a15b;--ok:#5fd18a;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#12152a;--card:#1c2140;--line:#323a66;--text:#eef0fb;--muted:#a3aad0;--soft:#252b52;
@@ -122,7 +122,7 @@ h1{font-family:var(--display);font-weight:700;font-size:2rem;line-height:1.1;mar
 .open{flex:none;display:inline-flex;align-items:center;justify-content:center;height:46px;padding:0 18px;border-radius:14px;background:var(--c);color:#fff;
   text-decoration:none;font-family:var(--display);font-weight:600;font-size:1.05rem}
 :root[data-theme="dark"] .open{color:#12152a}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .open{color:#12152a}}
+@media not all{:root:not([data-theme="light"]) .open{color:#12152a}}
 .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
 .meta{font-size:.88rem;color:var(--muted)}
 .meta b{color:var(--text)}
@@ -181,7 +181,7 @@ details[open] summary::after{transform:rotate(180deg)}
 .chip.o{background:color-mix(in srgb,#d98a00 18%,var(--card));color:#a86400}
 .chip.r{background:color-mix(in srgb,var(--E) 15%,var(--card));color:var(--E)}
 :root[data-theme="dark"] .chip.o{color:#ffc34d}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip.o{color:#ffc34d}}
+@media not all{:root:not([data-theme="light"]) .chip.o{color:#ffc34d}}
 .cell .tg span{text-transform:none;letter-spacing:0;color:var(--muted);font-weight:700}
 .who{margin-top:10px}
 .whob{display:inline-flex;align-items:center;gap:6px;height:42px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:800;cursor:pointer}

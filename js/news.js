@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.20.0","26.10.2026",["☀️ Die Lernzentrale und alle vier Apps sehen jetzt immer so aus, wie sie gedacht sind (hell) – auch wenn auf dem Gerät der Dunkelmodus eingestellt ist"]],
  ["7.19.1","26.10.2026",["🛠️ Nachschreibtest: Bei der Variantenauswahl steht jetzt „0 = Original vom Nachschreibtest“"]],
  ["7.19.0","26.10.2026",["📄 Nachschreibtest Simple Past: Neue Variante 0 mit den Aufgaben vom Original-Zettel (Verben aus dem Test: draw, drink, cut, forget, freeze …) – auch als PDF mit Lösung und Bewertung. Die Varianten 1–7 bleiben mit anderen Sätzen"]],
  ["7.18.0","26.10.2026",["📄 Küsten-Crew, Nachschreibtest Simple Past: Jetzt 7 Varianten zur Auswahl – mit anderen Sätzen und Verben, damit nichts auswendig bekannt ist","🖨️ Zu jeder Variante gibt es den Test und die Lösung mit Bewertung als PDF zum Ausdrucken – mit Punkten pro Aufgabe (auch halbe Punkte) und Notenschlüssel zum Selbstbewerten"]],

@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="de"><head><meta charset="utf-8">
+<meta name="color-scheme" content="light">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Detektiv-Büro</title>
-<script src="../js/app-core.js?v=7.19.1"></script>
+<script src="../js/app-core.js?v=7.20.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="D";window.__DATAKEY="detektivbuero-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.19.1"></script>
+<script src="../js/nutzer-init.js?v=7.20.0"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f5efe3;--panel:#fffdf7;--panel2:#f0e7d6;--line:#dccfb6;--text:#2a221c;--muted:#7a6a57;--accent:#9c5418;--accent2:#1f3a5f;--on:#fff;
  --ok:#2e7d32;--okbg:#e5f4e6;--bad:#c0392b;--badbg:#fbe4e1;--half:#b7791f;--halfbg:#fff3d6;--display:'Special Elite','Courier New',monospace;--body:'Nunito',system-ui,sans-serif;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#1a1613;--panel:#251f1a;--panel2:#2f2721;--line:#43382e;--text:#f2e9dc;--muted:#b9a88f;--accent:#e2a15b;--accent2:#9fc0ea;--on:#1a1613;
+@media not all{:root{--bg:#1a1613;--panel:#251f1a;--panel2:#2f2721;--line:#43382e;--text:#f2e9dc;--muted:#b9a88f;--accent:#e2a15b;--accent2:#9fc0ea;--on:#1a1613;
  --ok:#6fd07a;--okbg:#1f3322;--bad:#ff8a7a;--badbg:#3a211d;--half:#f2c25f;--halfbg:#3a3020;color-scheme:dark}}
 *{box-sizing:border-box}html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--text);font-family:var(--body);display:flex;flex-direction:column;-webkit-tap-highlight-color:transparent}
@@ -858,7 +859,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:var(--on);--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-deutsch", "prefix": "D", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Akten gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Akten auswählen.", "units": [{"id": "p1", "icon": "🔍", "name": "Hauptsatz & Nebensatz", "learn": "Erst „Akte lesen“, dann Verb-Jäger.", "rep": "Verb-Jäger oder Satzreihe oder Satzgefüge?"}, {"id": "p2", "icon": "🔗", "name": "Satzreihe", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Konjunktion wählen.", "rep": "Komma-Setzer oder Satz-Baumeister."}, {"id": "p3", "icon": "🧩", "name": "Satzgefüge", "learn": "Erst „Akte lesen“, dann Satz-Baumeister und Komma-Setzer.", "rep": "Satz-Baumeister oder Verb-Jäger."}, {"id": "p4", "icon": "🗝️", "name": "Konjunktionen", "learn": "Erst „Akte lesen“, dann Konjunktion wählen.", "rep": "Konjunktion wählen oder Satz-Baumeister."}, {"id": "p5", "icon": "✒️", "name": "Komma-Profi", "learn": "Erst „Akte lesen“, dann Komma-Setzer und Satzreihe oder Satzgefüge?", "rep": "Komma-Setzer."}, {"id": "p6", "icon": "⏳", "name": "Zeitformen", "learn": "Erst „Akte lesen“, dann Zeitmaschine.", "rep": "Zeitmaschine."}], "testName": "Abschlusstest", "write": true, "est": {"learn": 15, "rep": 5, "test": 10, "final": 20, "write": 15}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.19.1">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.20.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -868,18 +869,18 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.19.1"></script>
+<script src="../js/lernplan.js?v=7.20.0"></script>
 <!-- ===== /Lernplan ===== -->
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.19.1">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.20.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.19.1"></script>
+<script src="../js/nutzer.js?v=7.20.0"></script>
 <!-- ===== /Nutzer ===== -->
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank{min-width:0;flex:1 1 auto;overflow:hidden}#rank b{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#rank .rt{display:none}}</style>
-<script src="../js/home-btn.js?v=7.19.1"></script>
+<script src="../js/home-btn.js?v=7.20.0"></script>
 <!-- ===== /Start ===== -->
-<script src="../js/arena-btn.js?v=7.19.1"></script>
+<script src="../js/arena-btn.js?v=7.20.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Deutsch: Satzbau und Zeitformen",f:"deutsch-satzbau-zeitformen.html",d:"Nr. 29–41 und Heft Zeitformen, Lösungen am Ende"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.19.1"></script>
+<script src="../js/lernzettel-btn.js?v=7.20.0"></script>
 </body></html>
