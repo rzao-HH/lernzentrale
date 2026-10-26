@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.19.1","26.10.2026",["🛠️ Nachschreibtest: Bei der Variantenauswahl steht jetzt „0 = Original vom Nachschreibtest“"]],
  ["7.19.0","26.10.2026",["📄 Nachschreibtest Simple Past: Neue Variante 0 mit den Aufgaben vom Original-Zettel (Verben aus dem Test: draw, drink, cut, forget, freeze …) – auch als PDF mit Lösung und Bewertung. Die Varianten 1–7 bleiben mit anderen Sätzen"]],
  ["7.18.0","26.10.2026",["📄 Küsten-Crew, Nachschreibtest Simple Past: Jetzt 7 Varianten zur Auswahl – mit anderen Sätzen und Verben, damit nichts auswendig bekannt ist","🖨️ Zu jeder Variante gibt es den Test und die Lösung mit Bewertung als PDF zum Ausdrucken – mit Punkten pro Aufgabe (auch halbe Punkte) und Notenschlüssel zum Selbstbewerten"]],
  ["7.17.0","26.10.2026",["📄 Küsten-Crew: Neuer Nachschreibtest „Simple Past“ unter „Prüfen“ – 30 Aufgaben wie auf dem Zettel (Verben einsetzen, Fragen und Verneinungen bilden), mit Note und Anzeige der Fehler"]],
