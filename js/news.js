@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.18.0","26.10.2026",["📄 Küsten-Crew, Nachschreibtest Simple Past: Jetzt 7 Varianten zur Auswahl – mit anderen Sätzen und Verben, damit nichts auswendig bekannt ist","🖨️ Zu jeder Variante gibt es den Test und die Lösung mit Bewertung als PDF zum Ausdrucken – mit Punkten pro Aufgabe (auch halbe Punkte) und Notenschlüssel zum Selbstbewerten"]],
  ["7.17.0","26.10.2026",["📄 Küsten-Crew: Neuer Nachschreibtest „Simple Past“ unter „Prüfen“ – 30 Aufgaben wie auf dem Zettel (Verben einsetzen, Fragen und Verneinungen bilden), mit Note und Anzeige der Fehler"]],
  ["7.16.0","17.10.2026",["🔄 Neu anfangen: In jedem Fach gibt es im Lernplan (🗓️) unter „Einstellen“ und unten im Plan „Lernplan zurücksetzen“. Nach einer Sicherheitsfrage sind Lernplan und Lernfortschritt dieses Fachs gelöscht (Pakete, Noten, Lernkarten, Checkliste) – Punkte, Abzeichen und die anderen Fächer bleiben. Danach direkt einen neuen Plan erstellen","🛠️ Ein neu erstellter Lernplan zählt ältere Testergebnisse nicht mehr als schon geschafft"]],
  ["7.15.1","01.10.2026",["🏷️ Winkel beschriften: Buchstaben dürfen jetzt wie auf Papier neben dem Scheitel bzw. neben der Linie liegen – vorher mussten sie fast genau darauf. Bei einem Fehler steht dabei, welcher Buchstabe nicht passt (z. B. „a ist zu weit weg“ oder „s gehört nicht dazu – achte auf groß und klein“)"]],

@@ -22,6 +22,7 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 | `js/app-core.js`, `js/nutzer-init.js`, `js/nutzer.js`, `js/lernplan.js`, `js/home-btn.js`, `js/arena-btn.js`, `css/nutzer.css`, `css/lernplan.css` | Gemeinsame Bausteine aller Apps |
 | `sw.js` | Service Worker (Offline) |
 | `tests/` | Automatische Browser-Tests (`python tests/run_all.py`) |
+| `nachtest/` | PDFs zum Nachschreibtest Simple Past (Küsten-Crew): `Nachschreibtest_Simple_Past_V1…V7.pdf` (Test) und `…_Loesung.pdf` (Lösung, Bewertung, Notenschlüssel). Die Aufgaben stehen in `apps/kueste.html` (`NX_VARS`), die PDFs müssen bei Änderungen dort neu erzeugt werden |
 | `archiv/` | Stände vor Version 5.0.0 |
 | `lernzettel/` | Fotos der Arbeitsblätter je Fach als HTML-Dateien, Übersicht in `lernzettel/README.md` (über den 📄-Knopf in den Apps erreichbar, nicht im Offline-Speicher) |
 
