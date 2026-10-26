@@ -10,13 +10,13 @@ async def main():
     await p.evaluate("location.hash='#E'"); await p.wait_for_timeout(2500)
     f=[fr for fr in p.frames if fr!=p.main_frame][0]
     await f.click('[data-ms="nach"]'); await p.wait_for_timeout(300)
-    assert await f.evaluate("document.querySelectorAll('#nxVs [data-v]').length")==7
+    assert await f.evaluate("document.querySelectorAll('#nxVs [data-v]').length")==8
     links=await f.evaluate("[...document.querySelectorAll('#scene a')].map(a=>a.getAttribute('href'))")
     print('links',links)
     root=os.path.join(os.path.dirname(__file__),'..','nachtest')
     for l in links: assert os.path.exists(os.path.join(root,os.path.basename(l))),l
     await p.screenshot(path=OUTDIR+'nach-intro.png')
-    for v in range(7):
+    for v in range(8):
       await f.click(f'#nxVs [data-v="{v}"]'); await p.wait_for_timeout(150)
       await f.click('#nxGo')
       # alle richtig, Teil 3 absichtlich 2 falsch
