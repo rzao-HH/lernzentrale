@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.23.0"></script>
+<script src="../js/app-core.js?v=7.24.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="E";window.__DATAKEY="unit6-progress";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="lp-en";</script>
-<script src="../js/nutzer-init.js?v=7.23.0"></script>
+<script src="../js/nutzer-init.js?v=7.24.0"></script>
 
 <meta charset="UTF-8">
 <meta name="color-scheme" content="light">
@@ -2836,38 +2836,40 @@ function renderRaceEnd(){
 /* ================= Küsten-Crew: Startseite, Pakete, Missionen, Punkte ================= */
 const KC_RANKS=[[0,"Schiffsjunge","🐚"],[100,"Matrose","⚓"],[250,"Bootsmann","🪢"],[500,"Steuermann","🧭"],[850,"Erster Offizier","🔭"],[1300,"Kapitän","⛵"],[2000,"Admiral","🚢"]];
 const KC_G={
-  g0:{ic:"⚡",name:"Unregelmäßige Verben 1–40",goal:"Ich kenne Simple Past und 3. Form der unregelmäßigen Verben 1–40.",items:()=>VERBS.slice(0,40),topic:"verbs"},
-  g1:{ic:"⚡",name:"Unregelmäßige Verben 41–"+VERBS.length,goal:"Ich kenne Simple Past und 3. Form der unregelmäßigen Verben ab Nr. 41.",items:()=>VERBS.slice(40),topic:"verbs"},
+  ...Object.fromEntries(Array.from({length:Math.ceil(VERBS.length/10)},(_,k)=>["i"+k,{ic:"⚡",name:"Unregelmäßige Verben "+(k*10+1)+"–"+Math.min(VERBS.length,k*10+10),goal:"Ich kenne Simple Past und 3. Form der unregelmäßigen Verben "+(k*10+1)+"–"+Math.min(VERBS.length,k*10+10)+".",items:()=>VERBS.slice(k*10,k*10+10),topic:"verbs",verbs:true}])),
   g6:{ic:"✅",name:"Regelmäßige Verben",goal:"Ich bilde das Simple Past regelmäßiger Verben richtig (-ed, -d, -ied, Verdopplung) und erkenne regelmäßig oder unregelmäßig.",items:()=>REGV,topic:"regverbs"},
   g2:{ic:"🧩",name:"Lücken: was, were, didn't",goal:"Ich setze was/were, wasn't/weren't, didn't + Verb und Simple-Past-Formen richtig ein.",items:()=>GAPS,topic:"gaps"},
   g3:{ic:"❓",name:"Fragen im Simple Past",goal:"Ich bilde Fragen mit Fragewörtern und mit Did, Was oder Were.",items:()=>QUESTIONS,topic:"questions"},
   g4:{ic:"🔎",name:"Fehler finden im Simple Past",goal:"Ich finde Fehler: didn't + Infinitiv, Did …?, Signalwörter wie yesterday oder last week.",items:()=>DETECT,topic:"detect"}
 };
-const KC_GORDER=["g0","g1","g6","g2","g3","g4"];
+const KC_IV=Array.from({length:Math.ceil(VERBS.length/10)},(_,k)=>"i"+k);
+const KC_GORDER=[...KC_IV,"g6","g2","g3","g4"];
 /* Auf welchen Lernzettel sich ein Grammatik-Paket bezieht (Vokabeln/Verbliste: Lernzettel fehlen noch) */
-const KC_GSRC={g0:"AB Station 5 · Irregular verbs",g1:"AB Station 5 · Irregular verbs",g6:"Buch G14 (S. 194–195) · Merkblatt Simple Past",g2:"Buch G14–G15 (S. 194–197) · Merkblatt Simple Past",g3:"Buch G16 (S. 198–199) · Merkblatt Simple Past",g4:"Buch G14–G16 · Merkblatt Simple Past"};
+const KC_GSRC={...Object.fromEntries(Array.from({length:8},(_,k)=>["i"+k,"AB Station 5 · Irregular verbs"])),g6:"Buch G14 (S. 194–195) · Merkblatt Simple Past",g2:"Buch G14–G15 (S. 194–197) · Merkblatt Simple Past",g3:"Buch G16 (S. 198–199) · Merkblatt Simple Past",g4:"Buch G14–G16 · Merkblatt Simple Past"};
 /* Vokabelpakete: Seiten der Vokabelliste im Buch (Reihenfolge der Wörter wie im Lernzettel) */
 const KC_VSRC=["Vokabelliste S. 258","Vokabelliste S. 258 und 261","Vokabelliste S. 261","Vokabelliste S. 261 und 257","Vokabelliste S. 257","Vokabelliste S. 257 und 259","Vokabelliste S. 259","Vokabelliste S. 259 und 260","Vokabelliste S. 260","Vokabelliste S. 260"];
 const KC_ROUND={verbs:10,regverbs:12,regirr:15,gaps:10,questions:8,detect:12};
 const KC_ITEMUNIT=new Map();
-VERBS.forEach((v,i)=>KC_ITEMUNIT.set(v,i<40?"g0":"g1"));REGV.forEach(v=>KC_ITEMUNIT.set(v,"g6"));REGIRR.forEach(v=>KC_ITEMUNIT.set(v,"g6"));
+VERBS.forEach((v,i)=>KC_ITEMUNIT.set(v,"i"+Math.floor(i/10)));REGV.forEach(v=>KC_ITEMUNIT.set(v,"g6"));REGIRR.forEach(v=>KC_ITEMUNIT.set(v,"g6"));
 GAPS.forEach(v=>KC_ITEMUNIT.set(v,"g2"));QUESTIONS.forEach(v=>KC_ITEMUNIT.set(v,"g3"));DETECT.forEach(v=>KC_ITEMUNIT.set(v,"g4"));
 let kcGramActive=false,kcInMission=false,LZ_HL=null,LZ_IDS=[];
-const lzSame=(a,b)=>a.slice().sort().join(',')===b.slice().sort().join(',');
+/* alte Auswahl (g0 = Verben 1–40, g1 = 41–77, auch aus dem Lernplan) auf 10er-Pakete abbilden */
+function kcNorm(a){const o=[];(a||[]).forEach(x=>{(x==="g0"?KC_IV.slice(0,4):x==="g1"?KC_IV.slice(4):[x]).forEach(y=>{if(!o.includes(y))o.push(y);});});return o;}
+const lzSame=(a,b)=>kcNorm(a).sort().join(',')===kcNorm(b).sort().join(',');
 /* Zeigt an, welcher Modus laut Lernplan gerade dran ist (dicker Rahmen) – nicht mehr per Hinscrollen.
    kind: "learn" (Lernen), "rep" (Wiederholen/Auffrischen), "test"/"write" (Prüfen) */
 function kcHlIds(kind){
   if(!kind||!lzSame(kcSel(),LZ_IDS))return[];
   if(kind==="learn")return KC_MS.filter(m=>m.g==="Lernen"&&kcNeedOk(m)).map(m=>m.id);
   if(kind==="rep")return KC_MS.filter(m=>m.g==="Üben"&&kcNeedOk(m)).map(m=>m.id);
-  const sel=kcSel(),grammar=sel.length&&sel.every(x=>x[0]==="g");
+  const sel=kcSel(),grammar=sel.length&&sel.every(x=>x[0]==="g"||/^i\d/.test(x));
   if(kind==="write")return["write"];
   return[grammar?"gtest":"test"];
 }
 const kcEsc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function kcSel(){const s=progress._sel;return Array.isArray(s)?s:["v0"];}
-function kcSetSel(a){progress._sel=a;saveProgress();}
-function kcHas(id){return kcSel().includes(id);}
+function kcSel(){const s=progress._sel;return Array.isArray(s)?kcNorm(s):["v0"];}
+function kcSetSel(a){progress._sel=kcNorm(a);saveProgress();}
+function kcHas(id){const s=kcSel();return id==="g0"?KC_IV.slice(0,4).some(x=>s.includes(x)):id==="g1"?KC_IV.slice(4).some(x=>s.includes(x)):s.includes(id);}
 function kcVSel(){return kcSel().filter(x=>x[0]==="v").map(x=>+x.slice(1)).filter(i=>PACKAGES[i]).sort((a,b)=>a-b);}
 function kcWords(){const v=kcVSel();return v.length?v.flatMap(i=>PACKAGES[i]):WORDS;}
 function kcXP(n){progress.xp=Math.max(0,(+progress.xp||0)+n);saveProgress();kcRankDraw();if(n>0&&n<=5)kcSfx(true);}
@@ -2880,7 +2882,7 @@ function kcRankDraw(){const el=document.getElementById("kcRank");if(!el)return;c
   el.innerHTML=`<b>${r[2]} ${r[1]}</b><span>${x.toLocaleString("de-DE")} Punkte${n?" · nächster Rang bei "+n[0].toLocaleString("de-DE"):""}</span>`;}
 function kcPool(topic){
   let items;
-  if(topic==="verbs"){items=[...(kcHas("g0")?KC_G.g0.items():[]),...(kcHas("g1")?KC_G.g1.items():[])];if(!items.length)items=VERBS;}
+  if(topic==="verbs"){items=ilVerbs();if(!items.length)items=VERBS;}
   else if(topic==="regirr")items=REGIRR;
   else items=G_TOPICS[topic].items;
   return shuffle(items).slice(0,KC_ROUND[topic]||10);
@@ -2888,11 +2890,12 @@ function kcPool(topic){
 const KC_MS=[
   {g:"Lernen",id:"flash",ic:"🃏",t:"Karten",d:"Wort ansehen, umdrehen, dann „Weiß ich!“ oder „Nochmal üben“.",need:"v"},
   {g:"Lernen",id:"rule",ic:"📘",t:"Simple Past erklärt",d:"Regelmäßig oder unregelmäßig? Mit Schreibregeln für -ed.",need:"g6"},
-  {g:"Lernen",id:"irrlern",ic:"📚",t:"Unregelmäßige Verben lernen",d:"In 5er-Portionen: erst ansehen, dann mit Hilfe üben, dann ohne Hilfe. Fehler kommen wieder.",need:["g0","g1"]},
+  {g:"Lernen",id:"irrcards",ic:"🗂️",t:"Verben-Karten",d:"Karten umdrehen: Englisch → Deutsch und die drei Formen. „Weiß ich!“ oder „Nochmal üben“.",need:KC_IV},
+  {g:"Lernen",id:"irrlern",ic:"📚",t:"Unregelmäßige Verben lernen",d:"In 5er-Portionen: erst ansehen, dann mit Hilfe üben, dann ohne Hilfe. Fehler kommen wieder.",need:KC_IV},
   {g:"Lernen",id:"video",ic:"🎬",t:"Erklärvideo: Zeitreise mit Krabbi",d:"Simple Present und Simple Past kurz erklärt – mit Untertiteln, Ton und kleinem Quiz. Öffnet in einem neuen Tab."},
   {g:"Üben",id:"quiz",ic:"❓",t:"Quiz Englisch → Deutsch",d:"Welche Übersetzung stimmt?",need:"v"},
   {g:"Üben",id:"quiz-rev",ic:"❗",t:"Quiz Deutsch → Englisch",d:"Welches englische Wort ist gemeint?",need:"v"},
-  {g:"Üben",id:"verbs",ic:"⚡",t:"Verbformen",d:"Simple Past und 3. Form der unregelmäßigen Verben eintippen.",need:["g0","g1"]},
+  {g:"Üben",id:"verbs",ic:"⚡",t:"Verbformen",d:"Simple Past und 3. Form der unregelmäßigen Verben eintippen.",need:KC_IV},
   {g:"Üben",id:"regverbs",ic:"✅",t:"Regelmäßige Verben",d:"-ed, -d, -ied oder Verdopplung?",need:"g6"},
   {g:"Üben",id:"regirr",ic:"🔀",t:"Regelmäßig oder unregelmäßig?",d:"Erkenne, welche Verben ihre eigene Form haben.",need:"g6"},
   {g:"Üben",id:"gaps",ic:"🧩",t:"Lückensätze",d:"was, were, didn't und Simple-Past-Formen einsetzen.",need:"g2"},
@@ -2908,13 +2911,13 @@ const KC_MS=[
   {g:"Spiele",id:"race",ic:"🏁",t:"Rennen",d:"Wettrennen mit mehreren Geräten gegeneinander."},
   {g:"Spiele",id:"gduel",ic:"🗡️",t:"Grammatik-Duell",d:"Vader-Duell mit Simple-Past-Aufgaben."},
   {g:"Prüfen",id:"test",ic:"🏆",t:"Vokabel-Test",d:"Wörter selbst schreiben, ohne Hilfen. Am Ende gibt es eine Note.",need:"v",prf:1},
-  {g:"Prüfen",id:"gtest",ic:"🎯",t:"Grammatik-Test",d:"Gemischte Simple-Past-Aufgaben mit Note.",need:["g0","g1","g2","g3","g4","g6"],prf:1},
+  {g:"Prüfen",id:"gtest",ic:"🎯",t:"Grammatik-Test",d:"Gemischte Simple-Past-Aufgaben mit Note.",need:[...KC_IV,"g2","g3","g4","g6"],prf:1},
   {g:"Prüfen",id:"write",ic:"📝",t:"Schreibtest",d:"Sätze selbst schreiben wie in der Klassenarbeit, dann mit Musterlösung prüfen. Mit Note.",need:["v0","v1","v2","v3","v4","v5","v6","v7","v8","v9","g0","g1","g2","g3","g4","g6"],prf:1},
   {g:"Prüfen",id:"nach",ic:"📄",t:"Nachschreibtest Simple Past",d:"30 Aufgaben wie auf dem Zettel in 8 Varianten (0–7) – in der App mit Note oder als PDF zum Ausdrucken.",prf:1},
   {g:"Prüfen",id:"story",ic:"✍️",t:"Schreibwerkstatt",d:"Eine Geschichte im Simple Past schreiben und bewerten.",prf:1}
 ];
 function kcNeedOk(m){if(!m.need)return true;const n=Array.isArray(m.need)?m.need:[m.need];return n.some(x=>x==="v"?kcVSel().length>0:kcHas(x));}
-function kcNeedTxt(m){const n=Array.isArray(m.need)?m.need:[m.need];if(n.length>6)return "ein Paket";return n.map(x=>x==="v"?"ein Vokabel-Paket":"„"+KC_G[x].name+"“").join(" oder ");}
+function kcNeedTxt(m){const n=Array.isArray(m.need)?m.need:[m.need];if(n.length>6)return n.every(x=>/^i\d/.test(x))?"ein Verben-Paket":"ein Paket";return n.map(x=>x==="v"?"ein Vokabel-Paket":"„"+KC_G[x].name+"“").join(" oder ");}
 function kcHomeHTML(){
   const sel=kcSel(),st=progress._st||{};
   const vCards=PACKAGES.map((p,i)=>{const id="v"+i,on=sel.includes(id),m=packageMastery(i),a=i*PKG_SIZE+1,b=i*PKG_SIZE+p.length;
@@ -2924,7 +2927,7 @@ function kcHomeHTML(){
       <span class="kc-bar"><i style="width:${m.pct}%"></i></span><span class="kc-fx">Fortschritt: ${m.known} von ${m.total} Wörtern sicher</span></button>`;}).join("");
   const gCards=KC_GORDER.map(id=>{const g=KC_G[id],on=sel.includes(id),a=st[id]||[],hit=a.reduce((x,y)=>x+y,0);
     return `<button type="button" class="kc-pk${on?" on":""}" data-pk="${id}" aria-pressed="${on}"><span class="kc-ck">${on?"✓":""}</span>
-      <small>Grammatik</small><b>${g.ic} ${kcEsc(g.name)}</b>
+      <small>${g.verbs?"Unregelmäßige Verben":"Grammatik"}</small><b>${g.ic} ${kcEsc(g.name)}</b>
       <span class="kc-goal"><em>Lernziel:</em> ${kcEsc(g.goal)}</span>${KC_GSRC[id]?`<span class="kc-fx">📄 ${KC_GSRC[id]}</span>`:""}
       <span class="kc-bar"><i style="width:${Math.round(hit/20*100)}%"></i></span><span class="kc-fx">Fortschritt: ${hit} von 20 Treffern (aus den letzten 20 Aufgaben)</span></button>`;}).join("");
   const hlIds=kcHlIds(LZ_HL);
@@ -2953,9 +2956,9 @@ function kcStart(id){
   if(!kcNeedOk(m)){kcToast("Wähle dafür oben "+kcNeedTxt(m)+".");return;}
   window.__riSkip=false;kcGramActive=false;
   if(id==="video"){if(navigator.onLine===false){kcToast("Zum Ansehen brauchst du Internet.");return;}window.open("../videos/zeitreise-krabbi.html","_blank","noopener");return;}
-  const X={cafe:cafeStart,verhoer:vhStart,map:mapStart,hear:hkStart,write:wtStart,nach:()=>nxStart(0),zeiten:zeMenu,irrlern:ilStart};
+  const X={cafe:cafeStart,verhoer:vhStart,map:mapStart,hear:hkStart,write:wtStart,nach:()=>nxStart(0),zeiten:zeMenu,irrlern:ilStart,irrcards:icStart};
   if(X[id]){section="vocab";kcMission();X[id]();return;}
-  const TOP={g0:"verbs",g1:"verbs",g2:"gaps",g3:"questions",g4:"detect",g6:"regverbs"};
+  const TOP={...Object.fromEntries(KC_IV.map(x=>[x,"verbs"])),g2:"gaps",g3:"questions",g4:"detect",g6:"regverbs"};
   if(["flash","quiz","quiz-rev","test","duel","falcon","race"].includes(id)){
     section="vocab";mode=id;selectedPkg="sel";
     if(id==="test"){const v=kcVSel();testSelectedPkgs=new Set(v);}
@@ -2971,7 +2974,7 @@ document.addEventListener("click",e=>{
   const pk=t.closest("[data-pk]");
   if(pk&&document.getElementById("kcHome").contains(pk)){const id=pk.dataset.pk;let s=kcSel().slice();s=s.includes(id)?s.filter(x=>x!==id):[...s,id];kcSetSel(s);const y=window.scrollY;kcShowHome();window.scrollTo(0,y);return;}
   const al=t.closest("[data-kcall],[data-kcnone]");
-  if(al){const k=al.dataset.kcall||al.dataset.kcnone,all=k==="v"?PACKAGES.map((_,i)=>"v"+i):KC_GORDER.slice();let s=kcSel().filter(x=>x[0]!==k);if(al.dataset.kcall)s=s.concat(all);kcSetSel(s);const y=window.scrollY;kcShowHome();window.scrollTo(0,y);return;}
+  if(al){const k=al.dataset.kcall||al.dataset.kcnone,all=k==="v"?PACKAGES.map((_,i)=>"v"+i):KC_GORDER.slice();let s=kcSel().filter(x=>k==="g"?!(x[0]==="g"||/^i\d/.test(x)):x[0]!==k);if(al.dataset.kcall)s=s.concat(all);kcSetSel(s);const y=window.scrollY;kcShowHome();window.scrollTo(0,y);return;}
   const ms=t.closest("[data-ms]");if(ms){kcStart(ms.dataset.ms);return;}
   if(t.closest("#kcBack")){kcShowHome();return;}
   if(t.closest("#kcSnd")){progress._mute=!progress._mute;saveProgress();kcSndDraw();if(!progress._mute)kcSfx(true);return;}
@@ -3442,7 +3445,7 @@ function zeSortDraw(){const C=ZE.cards,placed=C.filter(c=>c.at).length,all=place
 /* ---------- 📚 Unregelmäßige Verben lernen: Ansehen → Mit Hilfe üben → Ohne Hilfe ---------- */
 const IL_N=5;
 let IL=null;
-function ilVerbs(){const s=kcSel();let a=[];if(s.includes("g0"))a=a.concat(VERBS.slice(0,40));if(s.includes("g1"))a=a.concat(VERBS.slice(40));return a;}
+function ilVerbs(){const s=kcSel();let a=[];KC_IV.forEach((x,k)=>{if(s.includes(x))a=a.concat(VERBS.slice(k*10,k*10+10));});return a;}
 function ilFirst(v){return v.past.split(",")[0].trim();}
 function ilPat(v){const p=ilFirst(v);
   if(p===v.inf&&v.pp===v.inf)return"alle drei Formen gleich";
@@ -3450,8 +3453,8 @@ function ilPat(v){const p=ilFirst(v);
   if(v.pp===v.inf)return"1. und 3. Form gleich";
   if(p===v.inf)return"1. und 2. Form gleich";
   return"alle drei Formen verschieden";}
-function ilPick(){
-  const all=ilVerbs(),R=progress.irr||{},pk=[],add=v=>{if(v&&!pk.includes(v)&&pk.length<IL_N)pk.push(v);};
+function ilPick(N){N=N||IL_N;
+  const all=ilVerbs(),R=progress.irr||{},pk=[],add=v=>{if(v&&!pk.includes(v)&&pk.length<N)pk.push(v);};
   const learning=all.filter(v=>R[v.inf]&&R[v.inf].b===0),fresh=all.filter(v=>!R[v.inf]).sort((a,b)=>(a.inf==='be')-(b.inf==='be')),known=all.filter(v=>R[v.inf]&&R[v.inf].b>0).sort((a,b)=>R[a.inf].d-R[b.inf].d);
   shuffle(learning).slice(0,2).forEach(add);
   if(fresh.length){const pat=ilPat(fresh[0]);fresh.filter(v=>ilPat(v)===pat).forEach(add);fresh.forEach(add);}
@@ -3502,6 +3505,47 @@ function ilResult(){
     <div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-again" id="kcHomeB">← Übersicht</button><button class="btn btn-know" id="ilAgain">Nächste Verben ▶</button></div></div>`;
   window.scrollTo(0,0);document.getElementById("kcHomeB").onclick=kcShowHome;document.getElementById("ilAgain").onclick=()=>{IL.pk=ilPick();ilLook();};}
 
+/* ---------- 🗂️ Verben-Karten: Englisch → Deutsch, Formen, Deutsch → Formen ---------- */
+const IC_N=8;let IC=null;
+function icStart(){IC={};icIntro();}
+function icIntro(){kcProg(0,1,"🗂️");const all=ilVerbs(),R=progress.irr||{},ok=all.filter(v=>R[v.inf]&&R[v.inf].b>0).length,pct=all.length?Math.round(ok/all.length*100):0;
+  sceneEl.innerHTML=`<div class="test-setup il"><div class="setup-title">🗂️ Verben-Karten</div>
+    <p class="vh-p">Zu jedem Verb gibt es drei Karten: <b>Englisch → Deutsch</b>, <b>die Formen</b> (Simple Past und 3. Form) und – sobald du ein Verb schon kennst – <b>Deutsch → alle drei Formen</b>. Sag die Antwort erst laut, dann dreh die Karte um.</p>
+    <div class="il-bar"><i style="width:${pct}%"></i></div><p class="vh-p"><small>Schon gelernt: ${ok} von ${all.length} Verben aus deinen Paketen</small></p>
+    <button class="btn btn-know" id="icGo" style="width:100%">Los – ${Math.min(IC_N,all.length)} Verben</button>
+    <button class="btn btn-again" id="icBack" style="width:100%;margin-top:10px">← Übersicht</button></div>`;
+  document.getElementById("icGo").onclick=icBegin;document.getElementById("icBack").onclick=kcShowHome;}
+function icBegin(){const R=progress.irr||{};IC.pk=ilPick(IC_N);IC.res={};IC.q=[];
+  shuffle(IC.pk.flatMap(v=>{const t=["de","forms"];if(R[v.inf]&&R[v.inf].b>0)t.push("rev");return t.map(k=>({v,k}));})).forEach(c=>IC.q.push(c));
+  IC.total=IC.q.length;IC.done=0;icCard();}
+function icCard(){
+  if(!IC.q.length){icEnd();return;}
+  const c=IC.q[0],v=c.v;kcProg(IC.done,IC.total,"🗂️");
+  const say=`<button type="button" class="il-s" id="icSay" aria-label="Anhören">🔊</button>`;
+  let fl,fw,fh,bl,bw,bh="";
+  if(c.k==="de"){fl="ENGLISCH";fw=kcEsc(v.inf);fh="Was heißt das auf Deutsch?";bl="DEUTSCH";bw=kcEsc(v.de);}
+  else if(c.k==="forms"){fl="FORMEN";fw=kcEsc(v.inf)+" <small>("+kcEsc(v.de)+")</small>";fh="Simple Past und 3. Form?";bl="SIMPLE PAST · 3. FORM";bw=kcEsc(v.past)+" – "+kcEsc(v.pp);bh=ilPat(v);}
+  else{fl="DEUTSCH → ENGLISCH";fw=kcEsc(v.de);fh="Alle drei Formen?";bl="ALLE DREI FORMEN";bw=kcEsc(v.inf)+" – "+kcEsc(v.past)+" – "+kcEsc(v.pp);bh=ilPat(v);}
+  const small=bw.length>14?' style="font-size:30px"':"";
+  sceneEl.innerHTML=`<div class="flip-wrap"><div class="flip-card" id="flipCard">
+    <div class="face face-front"><div class="card-label">${fl}</div><div class="card-word">${fw}</div><div class="card-example">${fh}</div><div class="hint">Tippen zum Umdrehen 👆</div></div>
+    <div class="face face-back"><div class="card-label">${bl}</div><div class="card-word"${small}>${bw}</div>${bh?`<div class="card-example">${bh}</div>`:""}<div class="hint">Tippen zum Zurückdrehen 👆</div></div></div></div>
+    <div style="text-align:center;margin:6px 0">${say}</div>
+    <div class="flash-actions"><button class="btn btn-again" id="icAg">🔁 Nochmal üben</button><button class="btn btn-know" id="icKn">✅ Weiß ich!</button></div>`;
+  const card=document.getElementById("flipCard");card.addEventListener("click",()=>card.classList.toggle("flipped"));
+  document.getElementById("icSay").onclick=e=>{e.stopPropagation();ilSay(v);};
+  const r=IC.res[v.inf]=IC.res[v.inf]||{ok:true};
+  document.getElementById("icKn").onclick=e=>{e.stopPropagation();IC.q.shift();IC.done++;kcXP(1);icCard();};
+  document.getElementById("icAg").onclick=e=>{e.stopPropagation();r.ok=false;c.again=true;IC.q.shift();IC.q.splice(Math.min(IC.q.length,3),0,c);icCard();};}
+function icEnd(){
+  const vs=IC.pk,n=vs.filter(v=>IC.res[v.inf].ok).length;
+  vs.forEach(v=>{ilRec(v,IC.res[v.inf].ok);kcStat(KC_ITEMUNIT.get(v),IC.res[v.inf].ok);});kcXP(n*2);saveProgress();progressFill.style.width="100%";
+  const rows=vs.map(v=>`<div class="wt-ans"><b>${IC.res[v.inf].ok?"✅":"🔁"} ${kcEsc(v.inf)}</b> <small>(${kcEsc(v.de)})</small><div class="wt-model">${kcEsc(v.inf)} – ${kcEsc(v.past)} – ${kcEsc(v.pp)}</div></div>`).join("");
+  sceneEl.innerHTML=`<div class="done"><div class="done-emoji">${n===vs.length?"🏆":"⚡"}</div><h2>${n} von ${vs.length} Verben gleich gewusst</h2><p>${n===vs.length?"Super! Die nächsten Verben warten schon.":"Die Verben mit 🔁 kommen in der nächsten Runde zuerst wieder dran."}</p>
+    <div class="test-setup il" style="text-align:left">${rows}</div>
+    <div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-again" id="kcHomeB">← Übersicht</button><button class="btn btn-know" id="icAgain">Nächste Verben ▶</button></div></div>`;
+  window.scrollTo(0,0);document.getElementById("kcHomeB").onclick=kcShowHome;document.getElementById("icAgain").onclick=icBegin;}
+
 /* ---------------- Init ---------------- */
 (async function init(){
   await loadProgress();
@@ -3516,7 +3560,7 @@ function ilResult(){
 .lp-en{height:34px;border-radius:10px;border:none;background:var(--sand-deep);color:var(--sea-deep);font-size:16px;margin-left:auto}</style>
 <script>window.LP_CONF={"key": "lernplan-englisch", "prefix": "E", "btnTarget": ".topbar .seg", "btnInsert": "before", "btnClass": "lp-en", "multi": "Am schnellsten mit einem Test, in dem alle diese Pakete ausgewählt sind.", "final": "Vokabel-Test mit allen Paketen, dann der Grammatik-Test mit allen Themen und eine Geschichte in der Schreibwerkstatt.", "units": [{"id": "v0", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 1–15", "sub": "jeans … true", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v1", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 16–30", "sub": "would like … view", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v2", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 31–45", "sub": "Spain … seal", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v3", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 46–60", "sub": "to change … cave", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v4", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 61–75", "sub": "spooky … egg", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v5", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 76–90", "sub": "to milk … cucumber", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v6", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 91–105", "sub": "pepper … pasta", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v7", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 106–120", "sub": "cola … mango", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v8", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 121–135", "sub": "cookie … to sail", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v9", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 136–145", "sub": "world … pier", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "g0", "group": "Grammatik (simple past)", "icon": "⚡", "name": "Verben 1–40", "sub": "Grammatik → Verben, Pakete 1–10 bis 31–40", "learn": "Grammatik → Verben, die vier Pakete nacheinander.", "rep": "Grammatik-Duell oder Verben noch einmal."}, {"id": "g1", "group": "Grammatik (simple past)", "icon": "⚡", "name": "Verben 41–77", "sub": "Grammatik → Verben, Pakete 41–50 bis 71–77", "learn": "Grammatik → Verben, die vier Pakete nacheinander.", "rep": "Grammatik-Duell oder Verben noch einmal."}, {"id": "g2", "group": "Grammatik (simple past)", "icon": "🧩", "name": "Lücken", "sub": "didn't, wasn't, weren't, was, were", "learn": "Grammatik → Lücken, alle Pakete.", "rep": "Grammatik → Lücken oder Grammatik-Test."}, {"id": "g3", "group": "Grammatik (simple past)", "icon": "❓", "name": "Fragen", "sub": "did, was, were, Fragewörter", "learn": "Grammatik → Fragen, alle Pakete.", "rep": "Grammatik → Fragen oder Grammatik-Test."}, {"id": "g4", "group": "Grammatik (simple past)", "icon": "🔎", "name": "Fehler finden im Simple Past", "sub": "-ed, didn't + Infinitiv, Did …?, Signalwörter", "learn": "Grammatik → 🕵️ Detektiv, alle Pakete. Dazu das Merkblatt „Simple Past“.", "rep": "Grammatik → Detektiv oder Grammatik-Test mit „Detektiv“."}, {"id": "g5", "group": "Schreibwerkstatt", "icon": "✍️", "name": "Schreibwerkstatt", "sub": "My Superhero's Craziest Day", "learn": "Grammatik → ✍️ Schreibwerkstatt: Geschichte schreiben und prüfen lassen.", "rep": "Schreibwerkstatt noch einmal mit einer neuen Geschichte."}, {"id": "g6", "group": "Grammatik (simple past)", "icon": "✅", "name": "Regelmäßige Verben", "sub": "-ed, -d, -ied, Verdopplung; regelmäßig oder unregelmäßig?", "learn": "Grammatik → 🔀 Regelmäßig oder unregelmäßig? (erst die Erklärung lesen), dann ✅ Verben (regelmäßig).", "rep": "✅ Verben (regelmäßig) oder 🔀 Regelmäßig oder unregelmäßig?"}], "testName": "Test", "tests": {"Vokabeln": "Vokabel-Test", "Grammatik (simple past)": "Grammatik-Test", "Schreibwerkstatt": "Schreibwerkstatt"}, "est": {"learn": 15, "rep": 5, "test": 10, "final": 25, "write": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.23.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.24.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -3526,21 +3570,21 @@ function ilResult(){
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.23.0"></script>
+<script src="../js/lernplan.js?v=7.24.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:420px){.lp-en{min-width:36px!important;padding:0 5px!important}.topbar{gap:6px!important}.section-btn{padding:6px 8px!important}}</style>
 
 <style>@media (max-width:420px){.lp-en{min-width:36px!important;padding:0 5px!important}.topbar{gap:6px!important}.section-btn{padding:6px 7px!important}.topbar .brand{font-size:13px!important}}</style>
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.23.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.24.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.23.0"></script>
+<script src="../js/nutzer.js?v=7.24.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}.home-btn.lp-en{min-width:36px;padding:0 6px}@media (max-width:420px){.topbar .brand{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.23.0"></script>
+<script src="../js/home-btn.js?v=7.24.0"></script>
 <!-- ===== /Start ===== -->
 <script>
 window.lzGo=function(kind,ids){
@@ -3572,8 +3616,8 @@ document.addEventListener("click",e=>{const s=e.target.closest("[data-lzsel]");i
 window.addEventListener("storage",()=>lzBar&&lzBar());
 if(window.lzToday)lzBar();
 </script>
-<script src="../js/arena-btn.js?v=7.23.0"></script>
+<script src="../js/arena-btn.js?v=7.24.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Unit 5/6",f:"englisch-unit5-6.html",d:"Vokabeln S. 257–261, Grammatik S. 194–199, Arbeitsblätter"},{t:"Simple Past",f:"englisch-simple-past.html",d:"Merkblatt und Schreibaufgabe (Superhelden)"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.23.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.24.0"></script>
 </body>
 </html>
