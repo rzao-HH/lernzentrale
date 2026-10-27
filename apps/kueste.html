@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.22.0"></script>
+<script src="../js/app-core.js?v=7.22.1"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="E";window.__DATAKEY="unit6-progress";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="lp-en";</script>
-<script src="../js/nutzer-init.js?v=7.22.0"></script>
+<script src="../js/nutzer-init.js?v=7.22.1"></script>
 
 <meta charset="UTF-8">
 <meta name="color-scheme" content="light">
@@ -868,7 +868,7 @@
 .ri-rule{font-weight:800;margin-bottom:4px}
 .ri-p{background:var(--white);border:2px solid #d5e3e0;border-radius:14px;padding:10px 12px;margin-top:10px;line-height:1.55;color:var(--ink);text-align:left}
 @media (max-width:420px){.ri .ri-cols{grid-template-columns:1fr}}
-.ze-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 14px}
+.ze-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 14px}
 .ze-t{border:2px solid var(--sea-deep);border-radius:14px;padding:8px 6px;background:var(--white);text-align:center;font-size:12.5px;line-height:1.3}
 .ze-t b{display:block;font-family:'Baloo 2',sans-serif;font-size:14px;color:var(--sea-deep)}
 .ze-t span{display:block;font-weight:800;color:var(--coral)}
@@ -885,11 +885,11 @@
 .ze-card.sm{font-size:13.5px;padding:7px 9px;margin-top:6px;width:100%}
 .ze-card.ok{background:#d9f2e3;border-color:#1f7a3d}
 .ze-card.bad{background:#fbe0da;border-color:var(--coral)}
-.ze-bks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ze-bks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .ze-bk{border:3px dashed var(--sea);border-radius:14px;padding:8px;min-height:110px;background:var(--sand-deep);cursor:pointer}
 .ze-bk b{display:block;font-family:'Baloo 2',sans-serif;color:var(--sea-deep);font-size:14px}
 .ze-bk small{display:block;color:var(--coral);font-weight:800;font-size:12px}
-@media (max-width:560px){.ze-bks{grid-template-columns:1fr}.ze-bk{min-height:0}.ze-strip{gap:5px}.ze-t{font-size:11px}.ze-t b{font-size:12px}}
+@media (max-width:560px){.ze-bk{min-height:0}}
 </style>
 <style>
 /* ===== Küsten-Crew: Startseite ===== */
@@ -2887,7 +2887,7 @@ const KC_MS=[
   {g:"Üben",id:"gaps",ic:"🧩",t:"Lückensätze",d:"was, were, didn't und Simple-Past-Formen einsetzen.",need:"g2"},
   {g:"Üben",id:"questions",ic:"❓",t:"Fragewörter",d:"Where, When, Who … oder Did, Was, Were?",need:"g3"},
   {g:"Üben",id:"detect",ic:"🕵️",t:"Fehler-Detektiv",d:"Ist der Satz richtig? Finde die Fehler.",need:"g4"},
-  {g:"Üben",id:"zeiten",ic:"⏱️",t:"Zeiten-Werkstatt",d:"Simple Present, Present Progressive oder Simple Past? Zeit erkennen, Signalwörter finden, Sätze umbauen und sortieren."},
+  {g:"Üben",id:"zeiten",ic:"⏱️",t:"Zeiten-Werkstatt",d:"Simple Present oder Simple Past? Zeit erkennen, Signalwörter finden, Sätze umbauen und sortieren."},
   {g:"Üben",id:"hear",ic:"🔊",t:"Hör-Kapitän",d:"Das iPad spricht britisches Englisch – welches Wort hörst du?",need:"v"},
   {g:"Erleben",id:"cafe",ic:"☕",t:"Café in Brighton",d:"Bestellen, mit Pfund bezahlen, Wechselgeld prüfen – wie im Urlaub."},
   {g:"Erleben",id:"verhoer",ic:"🔎",t:"Verhör im Hafen",d:"Stell Fragen im Simple Past, sammle Hinweise und finde den Täter."},
@@ -3329,39 +3329,38 @@ function nxResult(){
   window.scrollTo(0,0);
   document.getElementById("kcHomeB").onclick=kcShowHome;document.getElementById("kcAgainB").onclick=()=>nxStart((NX.v+1)%NX_VARS.length);}
 
-/* ---------- ⏱️ Zeiten-Werkstatt: Simple Present · Present Progressive · Simple Past ---------- */
+/* ---------- ⏱️ Zeiten-Werkstatt: Simple Present · Simple Past (so wie in den Lernzetteln) ---------- */
 const ZE_T={
  SP:{n:"Simple Present",k:"immer / regelmäßig",r:"Gewohnheit oder Regel – Signalwörter: every day, always, usually, on Mondays … Das Verb steht in der Grundform, bei he/she/it mit -s."},
- PP:{n:"Present Progressive",k:"gerade jetzt",r:"Es passiert genau jetzt – Signalwörter: now, at the moment, right now, Look! Listen! Form: am/is/are + Verb mit -ing."},
- PA:{n:"Simple Past",k:"schon vorbei",r:"Es ist vorbei – Signalwörter: yesterday, last week, two days ago … Verb + -ed oder die unregelmäßige Form (went, ate, drew …)."}};
-/* je Zeile: Simple Present, Present Progressive, Simple Past – [Satz, Signalwort] */
+ PA:{n:"Simple Past",k:"schon vorbei",r:"Eine abgeschlossene Handlung in der Vergangenheit – Signalwörter: yesterday, last week, two days ago … Verb + -ed oder die unregelmäßige Form (went, ate, drew …)."}};
+/* je Zeile: Simple Present, Simple Past – [Satz, Signalwort] */
 const ZE_ROWS=[
- [["Tom plays football every day.","every day"],["Tom is playing football now.","now"],["Tom played football yesterday.","yesterday"]],
- [["My mum cooks dinner every evening.","every evening"],["My mum is cooking dinner at the moment.","at the moment"],["My mum cooked dinner last night.","last night"]],
- [["We watch TV on Saturdays.","on Saturdays"],["We are watching TV right now.","right now"],["We watched TV last Saturday.","last Saturday"]],
- [["She walks to school every morning.","every morning"],["She is walking to school now.","now"],["She walked to school yesterday.","yesterday"]],
- [["The kids play in the park on Sundays.","on Sundays"],["The kids are playing in the park at the moment.","at the moment"],["The kids played in the park last Sunday.","last Sunday"]],
- [["I clean my room every week.","every week"],["I am cleaning my room right now.","right now"],["I cleaned my room two days ago.","ago"]],
- [["Anna draws a picture every day.","every day"],["Anna is drawing a picture now.","now"],["Anna drew a picture yesterday.","yesterday"]],
- [["My dad drinks coffee every morning.","every morning"],["My dad is drinking coffee at the moment.","at the moment"],["My dad drank coffee yesterday morning.","yesterday"]],
- [["They eat pizza on Fridays.","on Fridays"],["They are eating pizza right now.","right now"],["They ate pizza last Friday.","last Friday"]],
- [["He writes a letter every month.","every month"],["He is writing a letter now.","now"],["He wrote a letter last week.","last week"]],
- [["The dog runs in the garden every day.","every day"],["The dog is running in the garden at the moment.","at the moment"],["The dog ran in the garden yesterday.","yesterday"]],
- [["I visit my grandma every summer.","every summer"],["I am visiting my grandma now.","now"],["I visited my grandma last summer.","last summer"]],
- [["Ben rides his bike to school every day.","every day"],["Ben is riding his bike right now.","right now"],["Ben rode his bike to school yesterday.","yesterday"]],
- [["We learn English on Mondays.","on Mondays"],["We are learning English at the moment.","at the moment"],["We learned English last Monday.","last Monday"]],
- [["The girls sing in the choir every week.","every week"],["The girls are singing in the choir now.","now"],["The girls sang in the choir last week.","last week"]],
- [["My sister reads a book every night.","every night"],["My sister is reading a book right now.","right now"],["My sister read a book last night.","last night"]],
- [["The birds fly south every autumn.","every autumn"],["The birds are flying south now.","now"],["The birds flew south last autumn.","last autumn"]],
- [["I do my homework after school.","after school"],["I am doing my homework at the moment.","at the moment"],["I did my homework yesterday.","yesterday"]],
- [["Mr Smith teaches us maths every Tuesday.","every Tuesday"],["Mr Smith is teaching us maths now.","now"],["Mr Smith taught us maths last Tuesday.","last Tuesday"]],
- [["The bus stops here every hour.","every hour"],["The bus is stopping here now.","now"],["The bus stopped here an hour ago.","ago"]],
- [["Lena makes a cake on her birthday.","on her birthday"],["Lena is making a cake right now.","right now"],["Lena made a cake last week.","last week"]],
- [["We swim in the lake every summer.","every summer"],["We are swimming in the lake now.","now"],["We swam in the lake last summer.","last summer"]],
- [["Jack takes photos every day.","every day"],["Jack is taking photos at the moment.","at the moment"],["Jack took photos yesterday.","yesterday"]],
- [["The shop opens at nine every day.","every day"],["The shop is opening right now.","right now"],["The shop opened at nine yesterday.","yesterday"]]];
-const ZE_X=[["Look! The baby is sleeping.","PP","Look"],["Listen! Someone is singing.","PP","Listen"],["Mia usually walks to school.","SP","usually"],["Tom always helps his mum.","SP","always"],["We went to London two years ago.","PA","ago"],["They never eat meat.","SP","never"],["Where is Dad? He is washing the car.","PP","is washing"]];
-const ZE_K=["SP","PP","PA"];
+ [["Tom plays football every day.","every day"],["Tom played football yesterday.","yesterday"]],
+ [["My mum cooks dinner every evening.","every evening"],["My mum cooked dinner last night.","last night"]],
+ [["We watch TV on Saturdays.","on Saturdays"],["We watched TV last Saturday.","last Saturday"]],
+ [["She walks to school every morning.","every morning"],["She walked to school yesterday.","yesterday"]],
+ [["The kids play in the park on Sundays.","on Sundays"],["The kids played in the park last Sunday.","last Sunday"]],
+ [["I clean my room every week.","every week"],["I cleaned my room two days ago.","ago"]],
+ [["Anna draws a picture every day.","every day"],["Anna drew a picture yesterday.","yesterday"]],
+ [["My dad drinks coffee every morning.","every morning"],["My dad drank coffee yesterday morning.","yesterday"]],
+ [["They eat pizza on Fridays.","on Fridays"],["They ate pizza last Friday.","last Friday"]],
+ [["He writes a letter every month.","every month"],["He wrote a letter last week.","last week"]],
+ [["The dog runs in the garden every day.","every day"],["The dog ran in the garden yesterday.","yesterday"]],
+ [["I visit my grandma every summer.","every summer"],["I visited my grandma last summer.","last summer"]],
+ [["Ben rides his bike to school every day.","every day"],["Ben rode his bike to school yesterday.","yesterday"]],
+ [["We learn English on Mondays.","on Mondays"],["We learned English last Monday.","last Monday"]],
+ [["The girls sing in the choir every week.","every week"],["The girls sang in the choir last week.","last week"]],
+ [["My sister reads a book every night.","every night"],["My sister read a book last night.","last night"]],
+ [["The birds fly south every autumn.","every autumn"],["The birds flew south last autumn.","last autumn"]],
+ [["I do my homework after school.","after school"],["I did my homework yesterday.","yesterday"]],
+ [["Mr Smith teaches us maths every Tuesday.","every Tuesday"],["Mr Smith taught us maths last Tuesday.","last Tuesday"]],
+ [["The bus stops here every hour.","every hour"],["The bus stopped here an hour ago.","ago"]],
+ [["Lena makes a cake on her birthday.","on her birthday"],["Lena made a cake last week.","last week"]],
+ [["We swim in the lake every summer.","every summer"],["We swam in the lake last summer.","last summer"]],
+ [["Jack takes photos every day.","every day"],["Jack took photos yesterday.","yesterday"]],
+ [["The shop opens at nine every day.","every day"],["The shop opened at nine yesterday.","yesterday"]]];
+const ZE_X=[["Mia usually walks to school.","SP","usually"],["Tom always helps his mum.","SP","always"],["They never eat meat.","SP","never"],["We went to London two years ago.","PA","ago"],["She was at home last night.","PA","last night"],["They had a great time last summer.","PA","last summer"]];
+const ZE_K=["SP","PA"];
 const ZE_ALL=ZE_ROWS.flatMap((r,ri)=>r.map((x,k)=>({s:x[0],t:ZE_K[k],sig:x[1],r:ri}))).concat(ZE_X.map(x=>({s:x[0],t:x[1],sig:x[2],r:-1})));
 function zeNorm(s){return String(s||"").toLowerCase().replace(/[’‘`´]/g,"'").replace(/\blearnt\b/g,"learned").replace(/[.?!,;:]+/g," ").replace(/\s+/g," ").trim();}
 function zeClean(w){return w.replace(/[.!?,;:]/g,"").toLowerCase();}
@@ -3369,19 +3368,19 @@ let ZE=null;
 function zeMenu(){ZE=null;kcProg(0,1,"⏱️");
   const B=(k,ic,t,d)=>`<button type="button" class="btn btn-know" data-ze="${k}" style="text-align:left"><span style="font-size:22px">${ic}</span> <b>${t}</b><br><small style="font-weight:700;opacity:.9">${d}</small></button>`;
   sceneEl.innerHTML=`<div class="test-setup ze"><div class="setup-title">⏱️ Zeiten-Werkstatt</div>
-    <p class="vh-p">Wann passiert etwas? Drei Zeiten erkennst du am besten an den <b>Signalwörtern</b>.</p>
-    <div class="ze-strip">${["PA","PP","SP"].map(t=>`<div class="ze-t"><b>${ZE_T[t].n}</b><span>${ZE_T[t].k}</span><small>${{PA:"yesterday, last week, ago<br>played · went",PP:"now, at the moment<br>is playing",SP:"every day, always, on Mondays<br>plays"}[t]}</small></div>`).join("")}</div>
+    <p class="vh-p">Wann passiert etwas? Die beiden Zeiten erkennst du am besten an den <b>Signalwörtern</b>.</p>
+    <div class="ze-strip">${["PA","SP"].map(t=>`<div class="ze-t"><b>${ZE_T[t].n}</b><span>${ZE_T[t].k}</span><small>${{PA:"yesterday, last week, two days ago<br>played · went",SP:"every day, always, on Mondays<br>plays"}[t]}</small></div>`).join("")}</div>
     <div class="ze-menu">
       ${B("erk","🔍","Zeit erkennen","Satz lesen und die Zeitform wählen")}
       ${B("det","🕵️","Zeit-Detektiv","Signalwort antippen, dann die Zeit bestimmen")}
       ${B("um","🔄","Satz umbauen","Denselben Satz in eine andere Zeit schreiben")}
-      ${B("sort","🗂️","Sätze sortieren","9 Sätze in die richtige Zeit-Box legen")}
+      ${B("sort","🗂️","Sätze sortieren","10 Sätze in die richtige Zeit-Box legen")}
     </div></div>`;
   sceneEl.querySelectorAll("[data-ze]").forEach(b=>b.onclick=()=>zeRound(b.dataset.ze));}
 function zeRound(k){
   if(k==="sort")return zeSort();
   let list;
-  if(k==="um"){list=shuffle(ZE_ROWS.map((_,i)=>i)).slice(0,10).map(r=>{const a=ZE_K[Math.floor(Math.random()*3)];let b;do{b=ZE_K[Math.floor(Math.random()*3)];}while(b===a);return {r,a,b};});}
+  if(k==="um"){list=shuffle(ZE_ROWS.map((_,i)=>i)).slice(0,10).map(r=>{const a=ZE_K[Math.floor(Math.random()*ZE_K.length)],b=ZE_K.find(x=>x!==a);return {r,a,b};});}
   else list=shuffle(ZE_ALL).slice(0,10);
   ZE={k,list,i:0,ok:0};zeNext();}
 function zeNext(){
@@ -3414,11 +3413,11 @@ function zeUm(){const q=ZE.list[ZE.i],A=ZE_ROWS[q.r][ZE_K.indexOf(q.a)],B=ZE_ROW
   i.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go();}};document.getElementById("zeC").onclick=go;}
 function zeSort(){
   const rows=shuffle(ZE_ROWS.map((_,i)=>i)),cards=[];
-  ZE_K.forEach((t,k)=>rows.slice(k*3,k*3+3).forEach(r=>{const x=ZE_ROWS[r][k];cards.push({s:x[0],t,sig:x[1],at:null});}));
+  ZE_K.forEach((t,k)=>rows.slice(k*5,k*5+5).forEach(r=>{const x=ZE_ROWS[r][k];cards.push({s:x[0],t,sig:x[1],at:null});}));
   ZE={k:"sort",cards:shuffle(cards),sel:-1,done:false};zeSortDraw();}
 function zeSortDraw(){const C=ZE.cards,placed=C.filter(c=>c.at).length,all=placed===C.length;kcProg(placed,C.length,"🗂️");
   const pool=C.map((c,i)=>c.at?"":`<button type="button" class="ze-card${ZE.sel===i?" on":""}" data-c="${i}">${kcEsc(c.s)}</button>`).join("");
-  const bk=["PA","PP","SP"].map(t=>`<div class="ze-bk" data-b="${t}"><b>${ZE_T[t].n}</b><small>${ZE_T[t].k}</small>${C.map((c,i)=>c.at===t?`<button type="button" class="ze-card sm${ZE.done?(c.t===t?" ok":" bad"):""}" data-p="${i}">${kcEsc(c.s)}</button>`:"").join("")}</div>`).join("");
+  const bk=["PA","SP"].map(t=>`<div class="ze-bk" data-b="${t}"><b>${ZE_T[t].n}</b><small>${ZE_T[t].k}</small>${C.map((c,i)=>c.at===t?`<button type="button" class="ze-card sm${ZE.done?(c.t===t?" ok":" bad"):""}" data-p="${i}">${kcEsc(c.s)}</button>`:"").join("")}</div>`).join("");
   const ok=C.filter(c=>c.at===c.t).length;
   const res=ZE.done?`<div class="test-feedback ${ok===C.length?"correct":"wrong"}">${ok} von ${C.length} richtig${ok===C.length?" 🏆":""}</div>${C.filter(c=>c.at!==c.t).map(c=>`<div class="wt-ans"><b>${kcEsc(c.s)}</b><div class="wt-model"><small>Richtig</small>${ZE_T[c.t].n} – Signalwort: ${kcEsc(c.sig)}</div></div>`).join("")}<div style="display:flex;gap:10px;margin-top:12px"><button class="btn btn-again" id="zeM">⏱️ Menü</button><button class="btn btn-know" id="zeAg">Nochmal</button></div>`:"";
   sceneEl.innerHTML=`<div class="test-setup ze"><div class="quiz-label">SÄTZE SORTIEREN</div><p class="vh-p">${ZE.done?"So hast du sortiert:":"Tippe einen Satz an und dann die Zeit-Box, in die er gehört."}</p>${pool?`<div class="ze-pool">${pool}</div>`:""}<div class="ze-bks">${bk}</div>
@@ -3443,7 +3442,7 @@ function zeSortDraw(){const C=ZE.cards,placed=C.filter(c=>c.at).length,all=place
 .lp-en{height:34px;border-radius:10px;border:none;background:var(--sand-deep);color:var(--sea-deep);font-size:16px;margin-left:auto}</style>
 <script>window.LP_CONF={"key": "lernplan-englisch", "prefix": "E", "btnTarget": ".topbar .seg", "btnInsert": "before", "btnClass": "lp-en", "multi": "Am schnellsten mit einem Test, in dem alle diese Pakete ausgewählt sind.", "final": "Vokabel-Test mit allen Paketen, dann der Grammatik-Test mit allen Themen und eine Geschichte in der Schreibwerkstatt.", "units": [{"id": "v0", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 1–15", "sub": "jeans … true", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v1", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 16–30", "sub": "would like … view", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v2", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 31–45", "sub": "Spain … seal", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v3", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 46–60", "sub": "to change … cave", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v4", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 61–75", "sub": "spooky … egg", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v5", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 76–90", "sub": "to milk … cucumber", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v6", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 91–105", "sub": "pepper … pasta", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v7", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 106–120", "sub": "cola … mango", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v8", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 121–135", "sub": "cookie … to sail", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v9", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 136–145", "sub": "world … pier", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "g0", "group": "Grammatik (simple past)", "icon": "⚡", "name": "Verben 1–40", "sub": "Grammatik → Verben, Pakete 1–10 bis 31–40", "learn": "Grammatik → Verben, die vier Pakete nacheinander.", "rep": "Grammatik-Duell oder Verben noch einmal."}, {"id": "g1", "group": "Grammatik (simple past)", "icon": "⚡", "name": "Verben 41–77", "sub": "Grammatik → Verben, Pakete 41–50 bis 71–77", "learn": "Grammatik → Verben, die vier Pakete nacheinander.", "rep": "Grammatik-Duell oder Verben noch einmal."}, {"id": "g2", "group": "Grammatik (simple past)", "icon": "🧩", "name": "Lücken", "sub": "didn't, wasn't, weren't, was, were", "learn": "Grammatik → Lücken, alle Pakete.", "rep": "Grammatik → Lücken oder Grammatik-Test."}, {"id": "g3", "group": "Grammatik (simple past)", "icon": "❓", "name": "Fragen", "sub": "did, was, were, Fragewörter", "learn": "Grammatik → Fragen, alle Pakete.", "rep": "Grammatik → Fragen oder Grammatik-Test."}, {"id": "g4", "group": "Grammatik (simple past)", "icon": "🕵️", "name": "Simple-Past-Detektiv", "sub": "-ed, didn't + Infinitiv, Did …?, Signalwörter", "learn": "Grammatik → 🕵️ Detektiv, alle Pakete. Dazu das Merkblatt „Simple Past“.", "rep": "Grammatik → Detektiv oder Grammatik-Test mit „Detektiv“."}, {"id": "g5", "group": "Schreibwerkstatt", "icon": "✍️", "name": "Schreibwerkstatt", "sub": "My Superhero's Craziest Day", "learn": "Grammatik → ✍️ Schreibwerkstatt: Geschichte schreiben und prüfen lassen.", "rep": "Schreibwerkstatt noch einmal mit einer neuen Geschichte."}, {"id": "g6", "group": "Grammatik (simple past)", "icon": "✅", "name": "Regelmäßige Verben", "sub": "-ed, -d, -ied, Verdopplung; regelmäßig oder unregelmäßig?", "learn": "Grammatik → 🔀 Regelmäßig oder unregelmäßig? (erst die Erklärung lesen), dann ✅ Verben (regelmäßig).", "rep": "✅ Verben (regelmäßig) oder 🔀 Regelmäßig oder unregelmäßig?"}], "testName": "Test", "tests": {"Vokabeln": "Vokabel-Test", "Grammatik (simple past)": "Grammatik-Test", "Schreibwerkstatt": "Schreibwerkstatt"}, "est": {"learn": 15, "rep": 5, "test": 10, "final": 25, "write": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.22.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.22.1">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -3453,21 +3452,21 @@ function zeSortDraw(){const C=ZE.cards,placed=C.filter(c=>c.at).length,all=place
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.22.0"></script>
+<script src="../js/lernplan.js?v=7.22.1"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:420px){.lp-en{min-width:36px!important;padding:0 5px!important}.topbar{gap:6px!important}.section-btn{padding:6px 8px!important}}</style>
 
 <style>@media (max-width:420px){.lp-en{min-width:36px!important;padding:0 5px!important}.topbar{gap:6px!important}.section-btn{padding:6px 7px!important}.topbar .brand{font-size:13px!important}}</style>
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.22.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.22.1">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.22.0"></script>
+<script src="../js/nutzer.js?v=7.22.1"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}.home-btn.lp-en{min-width:36px;padding:0 6px}@media (max-width:420px){.topbar .brand{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.22.0"></script>
+<script src="../js/home-btn.js?v=7.22.1"></script>
 <!-- ===== /Start ===== -->
 <script>
 window.lzGo=function(kind,ids){
@@ -3499,8 +3498,8 @@ document.addEventListener("click",e=>{const s=e.target.closest("[data-lzsel]");i
 window.addEventListener("storage",()=>lzBar&&lzBar());
 if(window.lzToday)lzBar();
 </script>
-<script src="../js/arena-btn.js?v=7.22.0"></script>
+<script src="../js/arena-btn.js?v=7.22.1"></script>
 <script>window.__LZ_ZETTEL=[{t:"Unit 5/6",f:"englisch-unit5-6.html",d:"Vokabeln S. 257–261, Grammatik S. 194–199, Arbeitsblätter"},{t:"Simple Past",f:"englisch-simple-past.html",d:"Merkblatt und Schreibaufgabe (Superhelden)"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.22.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.22.1"></script>
 </body>
 </html>

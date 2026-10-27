@@ -37,10 +37,10 @@ async def main():
       # Sortieren: alle richtig
       await f.evaluate("zeMenu()"); await f.click('[data-ze="sort"]')
       await p.screenshot(path=OUTDIR+f'zeiten-sort-{w}.png')
-      for _ in range(9):
+      for _ in range(10):
         await f.evaluate("""()=>{const i=ZE.cards.findIndex(c=>!c.at);document.querySelector('[data-c="'+i+'"]').click();}""")
         await f.evaluate("""()=>{const i=ZE.cards.findIndex(c=>!c.at&&ZE.sel===ZE.cards.indexOf(c));const c=ZE.cards[ZE.sel];document.querySelector('[data-b="'+c.t+'"]').click();}""")
-      await f.click('#zeC'); t=await f.inner_text('#scene'); assert '9 von 9 richtig' in t,t[:200]
+      await f.click('#zeC'); t=await f.inner_text('#scene'); assert '10 von 10 richtig' in t,t[:200]
       await p.screenshot(path=OUTDIR+f'zeiten-sort-done-{w}.png')
       print(w,'ok xp',await f.evaluate("progress.xp"),'errors',errs); assert not errs
     await br.close()
