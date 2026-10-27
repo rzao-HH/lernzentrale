@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.23.0","27.10.2026",["📚 Küsten-Crew: Neue Lern-Mission „Unregelmäßige Verben lernen“ (unter Lernen) für beide Listen 1–77 – in 5er-Portionen: 1. Ansehen (mit Anhören und Muster wie „2. und 3. Form gleich“), 2. Mit Hilfe üben (Auswahl), 3. Ohne Hilfe schreiben","🔁 Verben, die nicht gewusst wurden, kommen in der nächsten Runde zuerst wieder; die Anzeige zeigt, wie viele Verben schon gelernt sind"]],
  ["7.22.4","27.10.2026",["🛠️ Küsten-Crew: Die Karte „Simple-Past-Detektiv“ heißt jetzt „🔎 Fehler finden im Simple Past“, damit sie nicht mit der Übung „🕵️ Fehler-Detektiv“ verwechselt wird (auch im Lernplan und auf der Startseite)"]],
  ["7.22.3","27.10.2026",["🛠️ Arena (Deutsch-Duelle): Bei Konjunktions-Aufgaben (z. B. „sodass“, „obwohl“) steht jetzt „Welches Wort ist die Konjunktion …?“ – vorher stand immer die Frage nach dem gebeugten Verb"]],
  ["7.22.2","27.10.2026",["🛠️ Detektiv-Büro, Blitz-Ermittlung: Bei „Tippe die Konjunktion an“ (und den anderen Antippen-Aufgaben) steht jetzt die passende Frage – vorher stand immer „Tippe ein gebeugtes Verb an“"]],
