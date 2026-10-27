@@ -20,6 +20,22 @@ async def main():
       print(names); assert len(names)==8 and '71–77' in names[7] and '1–10' in names[0]
       await f.evaluate("kcSetSel(['i0']);kcShowHome()")
       assert await f.evaluate("ilVerbs().map(v=>v.inf).sort().join()")=='cut,draw,drink,forget,freeze,let,put,say,send,sing'
+      # Karten + Quiz mit Verben-Paketen
+      await f.evaluate("kcSetSel(['i0']);kcShowHome()")
+      assert await f.evaluate("!document.querySelector('[data-ms=flash]').classList.contains('off')"), 'Karten aktiv'
+      await f.click('[data-ms="flash"]'); await p.wait_for_timeout(300)
+      assert await f.evaluate("deck.length")==10
+      t=await f.inner_text('#scene'); print(t[:80].replace('\n',' '))
+      await f.click('#flipCard'); await p.screenshot(path=OUTDIR+f'karten-verb-{w}.png')
+      b=await f.inner_text('.face-back'); assert 'Simple Past:' in b and '3. Form:' in b, b
+      await f.evaluate("kcShowHome()")
+      await f.evaluate("kcSetSel(['v0','i0']);kcShowHome()")
+      await f.click('[data-ms="flash"]'); await p.wait_for_timeout(300)
+      assert await f.evaluate("deck.length")==await f.evaluate("PACKAGES[0].length+10")
+      await f.evaluate("kcShowHome()")
+      await f.evaluate("kcSetSel(['i0']);kcShowHome()")
+      await f.click('[data-ms="quiz-rev"]'); await p.wait_for_timeout(300)
+      assert await f.evaluate("deck.length")==10
       await f.evaluate("kcSetSel(['i0','i1']);kcShowHome()")
       await p.screenshot(path=OUTDIR+f'karten-home-{w}.png')
       await f.click('[data-ms="irrcards"]'); await p.wait_for_timeout(200)

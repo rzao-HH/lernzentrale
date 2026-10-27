@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.25.0","27.10.2026",["🃏 Küsten-Crew: „Karten“, „Quiz Englisch → Deutsch“ und „Quiz Deutsch → Englisch“ gehen jetzt auch mit den unregelmäßigen Verben: vorne das Verb, hinten die deutsche Bedeutung und darunter Simple Past und 3. Form. Man kann Vokabel- und Verben-Pakete auch mischen"]],
  ["7.24.1","27.10.2026",["⚡ Küsten-Crew: Das erste Verben-Paket enthält jetzt die wichtigsten Verben: cut, draw, drink, forget, freeze, let, put, say, send, sing"]],
  ["7.24.0","27.10.2026",["⚡ Küsten-Crew: Die unregelmäßigen Verben sind jetzt in 10er-Paketen (1–10, 11–20 … 71–77) wie bei den Vokabeln – mit eigenem Fortschritt. Alte Auswahlen (1–40 / 41–77) und der Lernplan funktionieren weiter","🗂️ Neue Lern-Mission „Verben-Karten“ (unter Lernen): Karte umdrehen – Englisch → Deutsch, die Formen (Simple Past, 3. Form) und für bekannte Verben Deutsch → alle drei Formen. „Nochmal üben“ bringt die Karte gleich wieder"]],
  ["7.23.0","27.10.2026",["📚 Küsten-Crew: Neue Lern-Mission „Unregelmäßige Verben lernen“ (unter Lernen) für beide Listen 1–77 – in 5er-Portionen: 1. Ansehen (mit Anhören und Muster wie „2. und 3. Form gleich“), 2. Mit Hilfe üben (Auswahl), 3. Ohne Hilfe schreiben","🔁 Verben, die nicht gewusst wurden, kommen in der nächsten Runde zuerst wieder; die Anzeige zeigt, wie viele Verben schon gelernt sind"]],
