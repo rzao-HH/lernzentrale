@@ -18,6 +18,8 @@ async def main():
       assert await f.evaluate("ilVerbs().length")==7
       names=await f.evaluate("[...document.querySelectorAll('[data-pk^=i]')].map(b=>b.querySelector('b').textContent)")
       print(names); assert len(names)==8 and '71–77' in names[7] and '1–10' in names[0]
+      await f.evaluate("kcSetSel(['i0']);kcShowHome()")
+      assert await f.evaluate("ilVerbs().map(v=>v.inf).sort().join()")=='cut,draw,drink,forget,freeze,let,put,say,send,sing'
       await f.evaluate("kcSetSel(['i0','i1']);kcShowHome()")
       await p.screenshot(path=OUTDIR+f'karten-home-{w}.png')
       await f.click('[data-ms="irrcards"]'); await p.wait_for_timeout(200)
