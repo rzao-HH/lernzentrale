@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.22.2","27.10.2026",["🛠️ Detektiv-Büro, Blitz-Ermittlung: Bei „Tippe die Konjunktion an“ (und den anderen Antippen-Aufgaben) steht jetzt die passende Frage – vorher stand immer „Tippe ein gebeugtes Verb an“"]],
  ["7.22.1","27.10.2026",["⏱️ Zeiten-Werkstatt: Jetzt nur noch Simple Present und Simple Past – genau der Stoff aus den Lernzetteln (Present Progressive ist raus). Beim Sortieren sind es 10 Sätze in 2 Boxen"]],
  ["7.22.0","26.10.2026",["🎬 Küsten-Crew: Neues Erklärvideo „Zeitreise mit Krabbi“ (unter Lernen) – Simple Present und Simple Past kurz erklärt, mit Untertiteln, Soundeffekten, Langsam-Knopf und kleinem Quiz. Öffnet in einem neuen Tab"]],
  ["7.21.0","26.10.2026",["⏱️ Küsten-Crew: Neue Übung „Zeiten-Werkstatt“ (unter Üben) – Simple Present, Present Progressive und Simple Past an Signalwörtern erkennen","🔍 Zeit erkennen: Satz lesen, Zeit wählen – mit Erklärung und Signalwort","🕵️ Zeit-Detektiv: erst das Signalwort antippen, dann die Zeit bestimmen","🔄 Satz umbauen: denselben Satz in eine andere Zeit schreiben","🗂️ Sätze sortieren: 9 Sätze in die richtige Zeit-Box legen"]],
