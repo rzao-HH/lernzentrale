@@ -36,7 +36,7 @@ async def main():
       assert await f.evaluate("progress.irr['%s'].b"%v0)==0
       # Verbformen nutzt nur gewählte Pakete
       await f.evaluate("kcSetSel(['i1']);kcShowHome()")
-      assert await f.evaluate("kcPool('verbs').every(v=>VERBS.indexOf(v)>=10&&VERBS.indexOf(v)<20)")
+      assert await f.evaluate("kcPool('verbs').every(v=>VK.indexOf(v)>=10&&VK.indexOf(v)<20)")
       print(w,'ok errors',errs); assert not errs
     await br.close()
 asyncio.run(main())
