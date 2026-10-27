@@ -77,7 +77,7 @@ function loadApp(k){
       else if(k==="D")v=JSON.parse(JSON.stringify({I:w.__lzArena.I.filter(i=>i.t==="mc"&&i.o.length<=5||i.t==="comma"||i.t==="tap"),sel:w.__lzArena.sel()}));
     }catch(e){v=null;}fin(v);},250);
     setTimeout(()=>fin(null),8000);
-    f.src=APPURL[k]+"?v=7.22.2";document.body.appendChild(f);});
+    f.src=APPURL[k]+"?v=7.22.3";document.body.appendChild(f);});
 }
 const DEG=[{n:"Nullwinkel",f:a=>a===0},{n:"spitzer Winkel",f:a=>a>0&&a<90},{n:"rechter Winkel",f:a=>a===90},{n:"stumpfer Winkel",f:a=>a>90&&a<180},{n:"gestreckter Winkel",f:a=>a===180},{n:"überstumpfer Winkel",f:a=>a>180&&a<360},{n:"Vollwinkel",f:a=>a===360}];
 function qW(sel){
@@ -111,7 +111,8 @@ function qD(d){if(!d||!d.I)return null;let I=d.I.filter(i=>!d.sel||!d.sel.length
   return()=>{const i=pick(I);
     if(i.t==="mc")return{k:"D",q:i.q||"Welche Antwort passt?",s:i.s,o:shuf(i.o),a:i.a};
     if(i.t==="tap"){const W=i.s.split(" ").map(w=>({w:w.replace(/\*/g,"").replace(/[.,!?;:“”]+$/,""),h:w.includes("*")}));const hit=pick(W.filter(x=>x.h)),oth=shuf(W.filter(x=>!x.h&&x.w.length>2)).slice(0,3).map(x=>x.w);
-      return{k:"D",q:"Welches Wort ist ein gebeugtes Verb?",s:i.s.replace(/\*/g,""),o:shuf([hit.w,...[...new Set(oth)].filter(x=>x!==hit.w)]),a:hit.w};}
+      const tq=/Konjunktion/.test(i.q||"")?"Welches Wort ist die Konjunktion, die die Teilsätze verbindet?":(!i.q||/gebeugt/.test(i.q))?"Welches Wort ist ein gebeugtes Verb?":i.q;
+      return{k:"D",q:tq,s:i.s.replace(/\*/g,""),o:shuf([hit.w,...[...new Set(oth)].filter(x=>x!==hit.w)]),a:hit.w};}
     const toks=i.s.split(" ").map(t=>{let c=0;if(/\(,\)$/.test(t)){c=2;t=t.replace(/\(,\)$/,"");}else if(/,$/.test(t)){c=1;t=t.slice(0,-1);}return{w:t,c};});
     const gaps=toks.map((x,j)=>j).filter(j=>j<toks.length-1&&toks[j].c!==2),yes=gaps.filter(j=>toks[j].c===1),no=gaps.filter(j=>toks[j].c===0);
     const g=(Math.random()<.5&&yes.length)||!no.length?pick(yes):pick(no);
