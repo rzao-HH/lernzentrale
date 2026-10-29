@@ -28,9 +28,9 @@ async def main():
     f=fr(p,'detektiv.html'); sel=await f.evaluate("JSON.parse(localStorage.getItem('detektivbuero-v1')).sel"); print('sel nach Sprung',sel); assert sel==['p2'],sel
     # ---------- Detektiv: Kacheln
     tiles=await f.evaluate("[...document.querySelectorAll('.pack')].map(b=>b.querySelector('.ls-tile')?b.querySelector('.ls-tile').innerText.replace(/\\n/g,' '):'-')"); print('tiles',tiles)
-    assert 'kannst du schon' in tiles[0] and '⭐ 1' in tiles[0],tiles[0]
-    assert 'Bonus' in tiles[1] and '⭐ 6' in tiles[1],tiles[1]
-    assert 'neu' in tiles[2] and '⭐ 5' in tiles[2],tiles[2]
+    assert 'kannst du schon' in tiles[0] and 'Wenig Punkte' in tiles[0] and 'wieder voll in 3 Tagen' in tiles[0],tiles[0]
+    assert 'Bonus' in tiles[1] and '+20 %' in tiles[1] and 'Spur wird kalt' in tiles[1],tiles[1]
+    assert 'neu' in tiles[2] and 'Volle Punkte' in tiles[2],tiles[2]
     assert 'genug' in tiles[3],tiles[3]
     assert 'Spürnase' in tiles[0]
     await p.screenshot(path=OUTDIR+'ls-detektiv-kacheln.png')
@@ -57,7 +57,7 @@ async def main():
             await f.click('#nx')
     x1=(await J(f,'detektivbuero-v1'))['xp']; print('Antworten',n,'richtig',ok,'Punkte',x1-x0)
     assert n>=4 and x1-x0==ok,'sitzende Akte muss 1 Punkt pro richtige Antwort geben'
-    if ok: assert await f.query_selector('#lsHint'),'Hinweis fehlt'; ht=await f.inner_text('#lsHint'); print('Hinweis:',ht.replace('\n',' ')); assert 'mehr Punkte' in ht or 'Morgen' in ht
+    if ok: assert await f.query_selector('#lsHint'),'Hinweis fehlt'; ht=await f.inner_text('#lsHint'); print('Hinweis:',ht.replace('\n',' ')); assert 'Bonus-Punkte' in ht or 'volle Punkte' in ht or 'Morgen' in ht
     await p.screenshot(path=OUTDIR+'ls-hinweis.png')
     # Runde gewertet (≥4 Antworten): Runde heute +1, Stufe nicht höher (nicht fällig)
     await f.evaluate("LS.endRound();LS.flush()"); ls=(await J(f,'detektivbuero-v1'))['ls']; print('p1',ls['p1'])
@@ -80,7 +80,7 @@ async def main():
     await p.screenshot(path=OUTDIR+'ls-kueste.png')
     # ---------- Winkel + Wasser: Kacheln mit Motto
     await p.evaluate("lzHome()"); await p.wait_for_timeout(500); await p.evaluate("location.hash='#W'"); await p.wait_for_timeout(3000)
-    f=fr(p,'winkel.html'); wt=await f.inner_text('.pack[data-p="p2"] .ls-tile'); print('Winkel p2',wt.replace('\n',' ')); assert 'Energie' in wt and 'fällig' in wt and '⭐ 10' in wt
+    f=fr(p,'winkel.html'); wt=await f.inner_text('.pack[data-p="p2"] .ls-tile'); print('Winkel p2',wt.replace('\n',' ')); assert 'Energie' in wt and 'fällig' in wt and 'Volle Punkte' in wt and 'jetzt üben' in wt
     await p.screenshot(path=OUTDIR+'ls-winkel.png')
     await p.evaluate("lzHome()"); await p.wait_for_timeout(500); await p.evaluate("location.hash='#Z'"); await p.wait_for_timeout(3000)
     f=fr(p,'wasser.html'); zt=await f.inner_text('.pack[data-p="p1"] .ls-tile'); print('Wasser p1',zt.replace('\n',' ')); assert 'Zauberkraft' in zt and 'neu' in zt

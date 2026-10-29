@@ -18,7 +18,7 @@ async def main():
     w=(await J(f,'winkelakademie-v1'))['ls']; print('W',{k:(v['s'] if isinstance(v,dict) else 'start') for k,v in w.items()})
     assert w['p1']['s']==3 and w['p2']['s']==3 and w['p3']['s']==1 and w['p4']['s']==3 and w['p5']['s']==3 and 'p6' not in w and w['_start']
     t1=await f.inner_text('.pack[data-p="p1"] .ls-tile'); t6=await f.inner_text('.pack[data-p="p6"] .ls-tile'); print(t1.replace('\n',' '),'|',t6.replace('\n',' '))
-    assert 'kannst du schon' in t1 and '⭐ 2' in t1 and 'neu' in t6
+    assert 'kannst du schon' in t1 and 'Wenig Punkte' in t1 and 'neu' in t6
     assert (await J(f,'winkelakademie-v1'))['xp']==900,'Punkte unverändert'
     await p.screenshot(path=OUTDIR+'ls-start-winkel.png')
     # zweites Öffnen: nichts wird erneut übernommen
