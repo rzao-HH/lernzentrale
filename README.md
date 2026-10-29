@@ -41,6 +41,7 @@ Jedes Lernpaket hat eine Stufe 0–5, gespeichert im App-Stand der Person (`ls`,
 - **Punkte:** Stufe 0–1 voll · Stufe 2+ und Intervall läuft noch (1/2/4/8/16 Tage) 15 %, mindestens 1 · fällig voll · ab doppeltem Intervall +20 % · ab der 3. Runde am selben Tag 15 %. Tests mit Note: Durchschnitt der Pakete im Test. Lernziel-Bonus (+50) unverändert.
 - **Vergabe:** `addXP(n, pakete)` (Winkel, Wasser, Detektiv) bzw. `kcXP(n, pakete)` (Küsten-Crew) geben die tatsächlich vergebenen Punkte zurück. Antworten zählen über `recordStat`/`kcStat` bzw. `LS.answer`. Küsten-Übungen ohne Paket: `KC_MP` (Café → Vokabelpakete mit den Café-Wörtern, Verhör → g3, Zeiten-Werkstatt → g4, Schreibwerkstatt → g5, Nachschreibtest → g2/g3/g4/g6); Forscherlabor-Stationen der Wasser-Zauberschule: `TK_P`.
 - **Anzeige:** `LS.tile(paket)` auf jeder Paket-Kachel, Hinweis-Banner bei wenig Punkten, „⭐ Heute lohnt sich besonders“ auf der Startseite (`lohntHTML` in `js/start.js`).
+- **Startwert (einmalig, Merker `_start`):** Pakete ohne Stufe übernehmen beim ersten Öffnen eine Stufe aus dem bisherigen Fortschritt (`seed` je App + Testnoten aus `lz-ergebnisse`): Lernziel/≥ 80 % Treffer (ab 10 Antworten)/Note 1–2 → 3, ≥ 60 %/Note 3 → 2, geübt → 1; Intervall läuft ab dem Übernahmetag. „Lernplan zurücksetzen“ setzt `_start`, damit nichts erneut übernommen wird.
 - **Nachjustieren:** nur `window.LS_CONF` oben in `js/lernstand.js` ändern.
 
 ## Konten

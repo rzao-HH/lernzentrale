@@ -16,7 +16,11 @@ window.LS_CONF={
   RUNDE_MAX_ANTWORTEN:25,          /* danach wird die Runde automatisch gewertet (z. B. sehr lange Zeitrunden) */
   STUFE_HOCH_AB:0.8,               /* ab 80 % richtig: Stufe +1 … */
   HOCH_NUR_WENN_FAELLIG:true,      /* … aber nur, wenn das Paket fällig war (sonst könnte man an einem Tag auf Stufe 5) */
-  STUFE_RUNTER_UNTER:0.5           /* unter 50 % richtig: Stufe −1 */
+  STUFE_RUNTER_UNTER:0.5,          /* unter 50 % richtig: Stufe −1 */
+  /* Einmaliger Startwert aus dem bisherigen Fortschritt (gilt als ab dem Übernahmetag geübt) */
+  START_STUFE_GUT:3,               /* Lernziel erreicht, ≥ 80 % Treffer oder Testnote 1–2 */
+  START_STUFE_MITTEL:2,            /* ≥ 60 % Treffer oder Testnote 3 */
+  START_MIN_ANTWORTEN:10           /* so viele Antworten braucht eine Trefferquote, damit sie zählt */
 };
 (function(){
 const C=()=>window.LS_CONF,DAY=864e5;
@@ -81,10 +85,25 @@ function unit(id){return A.units.find(u=>u.id===id);}
 LS.init=function(cfg){A=cfg;buf={};pend={};hinted=false;css();
   /* Paketnamen für die Startseite merken (nur auf diesem Gerät) */
   try{localStorage.setItem("ls-units-"+cfg.app,JSON.stringify(cfg.units.map(u=>({id:u.id,icon:u.icon,name:u.name}))));}catch(e){}
-  LS.checkPick();
+  seed();LS.checkPick();
   addEventListener("pagehide",()=>{LS.endRound();flush();});
   document.addEventListener("visibilitychange",()=>{if(document.hidden){LS.endRound();flush();}});
 };
+/* Einmalig: Stufe aus dem bisherigen Fortschritt übernehmen, damit Bekanntes nicht als „neu“ gilt.
+   A.seed(id) → {n: Antworten, hit: Treffer, done: Lernziel erreicht, g: beste Testnote der App}; dazu Testnoten aus lz-ergebnisse.
+   Pakete ohne bisherigen Fortschritt bleiben „neu“. Merker _start im Speicher, damit es nur einmal passiert. */
+function startStage(x,g){const K=C(),q=x&&x.n>=K.START_MIN_ANTWORTEN?x.hit/x.n:-1;
+  if((x&&x.done)||q>=0.8||(g&&g<=2))return K.START_STUFE_GUT;
+  if(q>=0.6||g===3)return K.START_STUFE_MITTEL;
+  if((x&&x.n>0)||g)return 1;return 0;}
+function seed(){if(!A||!A.seed)return;const o=store();if(o._start)return;const now=Date.now();let R=[];
+  try{const u=(window.__NUTZER&&window.__NUTZER.cur)||"u1";R=JSON.parse(localStorage.getItem("lz-ergebnisse")||"[]").filter(r=>r&&r.a===A.app&&(r.u||"u1")===u&&+r.g);}catch(e){}
+  const norm=A.norm||(a=>a);
+  A.units.forEach(un=>{const id=un.id;if(o[id])return;let x=null;try{x=A.seed(id);}catch(e){}
+    const gs=R.filter(r=>norm(r.units||[]).includes(id)).map(r=>+r.g);if(x&&x.g)gs.push(+x.g);
+    const s=startStage(x,gs.length?Math.min(...gs):0);if(s>0)o[id]={s,t:now,d:"",r:0};});
+  o._start=now;try{A.save();}catch(e){}}
+LS.startStage=startStage;
 /* Sprung von der Startseite („Heute lohnt sich besonders“): Paket auswählen */
 LS.checkPick=function(){if(!A)return;try{const k="ls-pick-"+A.app,p=sessionStorage.getItem(k);if(p){sessionStorage.removeItem(k);setTimeout(()=>{try{A.pick&&A.pick(p);}catch(e){}},50);}}catch(e){}};
 LS.factor=function(ids){ids=[].concat(ids||[]).filter(known);if(!ids.length)return 1;return ids.reduce((a,id)=>a+st(id).f,0)/ids.length;};
