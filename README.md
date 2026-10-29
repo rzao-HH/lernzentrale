@@ -5,6 +5,13 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 - **Adresse:** https://rzao-hh.github.io/lernzentrale/ (GitHub Pages, Branch `main`, Ordner `/`)
 - **Offline:** `sw.js` speichert alle Dateien; nach einem Besuch mit Internet läuft alles auch ohne Netz.
 
+## Ablauf: erst Vorschau, dann freigeben
+Neue Versionen gehen **nicht direkt** auf die echte App. Ablauf für alle Chats:
+1. Änderungen im Zweig `entwicklung` machen (von `main` abzweigen), Tests laufen lassen.
+2. Vorschau bauen und **nur den Ordner `vorschau/`** auf `main` hochladen: `python3 tools/vorschau.py entwicklung` → https://rzao-hh.github.io/lernzentrale/vorschau/ (rotes Schild „🧪 Vorschau“).
+3. Roya testet (mit einer Person „Test“ ohne Benutzernamen – die Vorschau nutzt denselben Gerätespeicher wie die echte App).
+4. Erst nach ihrem „freigeben“: `entwicklung` in `main` übernehmen → echte App aktualisiert.
+
 ## Aufbau
 | Pfad | Inhalt |
 |---|---|
@@ -22,6 +29,8 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 | `apps/*.html` | Die vier Apps |
 | `js/app-core.js`, `js/nutzer-init.js`, `js/nutzer.js`, `js/lernplan.js`, `js/home-btn.js`, `js/arena-btn.js`, `css/nutzer.css`, `css/lernplan.css` | Gemeinsame Bausteine aller Apps |
 | `sw.js` | Service Worker (Offline) |
+| `vorschau/` | Testversion vor der Freigabe – automatisch erzeugt mit `tools/vorschau.py`, nicht von Hand ändern |
+| `tools/vorschau.py` | baut die Vorschau aus einem Git-Stand |
 | `tests/` | Automatische Browser-Tests (`python tests/run_all.py`) |
 | `nachtest/` | PDFs zum Nachschreibtest Simple Past (Küsten-Crew): `Nachschreibtest_Simple_Past_V0…V7.pdf` (V0 = Aufgaben vom Original-Zettel) (Test) und `…_Loesung.pdf` (Lösung, Bewertung, Notenschlüssel). Die Aufgaben stehen in `apps/kueste.html` (`NX_VARS`), die PDFs müssen bei Änderungen dort neu erzeugt werden |
 | `videos/` | Erklärvideos als eigenständige Seiten (kein Teil der App): `zeitreise-krabbi.html` (Simple Present und Simple Past, mit Untertiteln und Ton). Verlinkt über die Mission „🎬 Erklärvideo“ in der Küsten-Crew (`KC_MS`, öffnet in neuem Tab); wird beim ersten Ansehen automatisch für offline zwischengespeichert |

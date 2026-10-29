@@ -1,0 +1,2 @@
+/* 🏠-Knopf in der Kopfleiste jeder App (Klasse passend zur App: window.__NU_CLASS) */
+(function(){var t=document.getElementById("nuBtn");if(!t)return;var a=document.createElement("a");a.className=(window.__NU_CLASS||"icon-btn")+" home-btn";a.href="#";a.onclick=function(e){e.preventDefault();try{parent.lzHome&&parent.lzHome();}catch(_){}};a.rel="noopener";a.setAttribute("aria-label","Zur Startseite");a.title="Startseite";a.textContent="🏠";t.parentNode.insertBefore(a,t);})();
