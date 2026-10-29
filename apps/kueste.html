@@ -3611,7 +3611,9 @@ function icEnd(){
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
-<style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}.home-btn.lp-en{min-width:36px;padding:0 6px}@media (max-width:420px){.topbar .brand{display:none!important}}</style>
+<style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}.home-btn.lp-en{min-width:36px;padding:0 6px}@media (max-width:420px){.topbar .brand{display:none!important}}
+/* sehr schmale Handys (360 px): Kopfleiste ohne seitliches Scrollen */
+@media (max-width:370px){.lp-en,.home-btn.lp-en{min-width:32px!important;padding:0 3px!important}.topbar{gap:4px!important}}</style>
 <script src="../js/home-btn.js?v=7.26.0"></script>
 <!-- ===== /Start ===== -->
 <script>
