@@ -1,6 +1,7 @@
 /* ===================== 🆕 Was ist neu? ===================== */
 (function(){
 const NEWS=[
+ ["7.26.5","29.10.2026",["🐚 Küsten-Crew: Unregelmäßige Verben stehen auf den Karten Englisch → Deutsch und im Quiz jetzt mit „to“ (to light, to keep) wie in der Vokabelliste. Die Formen bleiben wie auf dem Arbeitsblatt Station 5 ohne „to“ (light – lit – lit)"]],
  ["7.26.4","29.10.2026",["🐚 Küsten-Crew: Unregelmäßige Verben, die mit „Karten“, Quiz, Duell oder Rennen geübt werden, zählen jetzt auch für den Fortschrittsbalken ihres Verben-Pakets (vorher nur Verbformen, Verben-Karten und Lern-Mission)","⭐ Verben-Pakete, die schon mit den Karten geübt wurden, gelten nicht mehr als „neu“: Die Stufe wird einmal aus den gewussten Verben übernommen (bestehende Stufen bleiben)"]],
  ["7.26.3","29.10.2026",["⭐ Paket-Kacheln noch einfacher: nur noch eine Zeile, z. B. „💰 Volle Punkte – noch üben“, „🪙 Wenig Punkte – kannst du schon! Wieder voll in 4 Tagen“ oder „🎁 Bonus +20 % – lange nicht geübt“ – ohne zusätzliche Punkte-Reihe","🛠️ Ein Paket, das schon sitzt, bleibt bei wenig Punkten, bis es wieder fällig ist – auch wenn es heute schon mehrmals geübt wurde („morgen wieder voll“ gibt es nur bei Paketen, die noch gelernt werden)"]],
  ["7.26.2","29.10.2026",["⭐ Paket-Kacheln verständlicher: statt einer Punktzahl steht jetzt „💰 Volle Punkte“, „🪙 Wenig Punkte – kannst du schon!“ oder „🎁 Bonus: +20 % Punkte“ (jede Übung bringt unterschiedlich viel, darum ohne Zahl). Darunter die Stufe als Punkte ●●●○○ – sie werden blasser, je näher das Paket wieder fällig ist"]],
