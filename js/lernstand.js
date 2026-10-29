@@ -101,13 +101,14 @@ function startStage(x,g){const K=C(),q=x&&x.n>=K.START_MIN_ANTWORTEN?x.hit/x.n:-
   if((x&&x.done)||q>=0.8||(g&&g<=2))return K.START_STUFE_GUT;
   if(q>=0.6||g===3)return K.START_STUFE_MITTEL;
   if((x&&x.n>0)||g)return 1;return 0;}
-function seed(){if(!A||!A.seed)return;const o=store();if(o._start)return;const now=Date.now();let R=[];
+const SEED_V=2;/* 2: Verben-Pakete auch aus Karten und Lern-Mission */
+function seed(){if(!A||!A.seed)return;const o=store();if((o._sv||(o._start?1:0))>=SEED_V)return;const now=Date.now();let R=[];
   try{const u=(window.__NUTZER&&window.__NUTZER.cur)||"u1";R=JSON.parse(localStorage.getItem("lz-ergebnisse")||"[]").filter(r=>r&&r.a===A.app&&(r.u||"u1")===u&&+r.g);}catch(e){}
   const norm=A.norm||(a=>a);
   A.units.forEach(un=>{const id=un.id;if(o[id])return;let x=null;try{x=A.seed(id);}catch(e){}
     const gs=R.filter(r=>norm(r.units||[]).includes(id)).map(r=>+r.g);if(x&&x.g)gs.push(+x.g);
     const s=startStage(x,gs.length?Math.min(...gs):0);if(s>0)o[id]={s,t:now,d:"",r:0};});
-  o._start=now;try{A.save();}catch(e){}}
+  o._start=o._start||now;o._sv=SEED_V;try{A.save();}catch(e){}}
 LS.startStage=startStage;
 /* Sprung von der Startseite („Heute lohnt sich besonders“): Paket auswählen */
 LS.checkPick=function(){if(!A)return;try{const k="ls-pick-"+A.app,p=sessionStorage.getItem(k);if(p){sessionStorage.removeItem(k);setTimeout(()=>{try{A.pick&&A.pick(p);}catch(e){}},50);}}catch(e){}};

@@ -6,7 +6,8 @@ SEED=acct('Robin')+"""if(!localStorage.getItem('seeded')){localStorage.setItem('
 localStorage.setItem('winkelakademie-v1',JSON.stringify({xp:900,sel:['p1'],sound:false,stats:{p1:{h:Array(20).fill(1),done:true},p2:{h:[1,1,1,1,1,1,1,1,1,1,1,1,0,0],done:false},p3:{h:[1,0,0],done:false}},grades:{'p4+p5':2}}));
 localStorage.setItem('detektivbuero-v1',JSON.stringify({xp:300,sel:['p1'],sound:false,stats:{p3:[1,1,1,1,1,1,1,1,0,0,0,0]},bk:{},grades:{}}));
 localStorage.setItem('lz-ergebnisse',JSON.stringify([{a:'D',u:'u1',units:['p4'],g:2,k:'',d:'x',ts:N-5e8},{a:'E',u:'u1',units:['g0'],g:3,k:'',d:'x',ts:N-5e8}]));
-const P0={};localStorage.setItem('unit6-progress',JSON.stringify({xp:200,_sel:['v0'],_mute:true,_st:{g2:Array(18).fill(1)}}));}"""
+const P0={};const VI=['cut','draw','drink','forget','freeze','let','put','say','send','sing'],pr={xp:200,_sel:['v0'],_mute:true,_st:{g2:Array(18).fill(1)},irr:{},_ls:{_start:N-1e8}};VI.forEach((v,i)=>{pr[v]=i<9?2:0;});
+localStorage.setItem('unit6-progress',JSON.stringify(pr));}"""
 J=lambda f,k:f.evaluate("k=>JSON.parse(localStorage.getItem(k)||'null')",k)
 def fr(p,name): return [x for x in p.frames if x!=p.main_frame and x.url.split('?')[0].endswith(name)][-1]
 async def main():
@@ -29,11 +30,20 @@ async def main():
     d=(await J(f,'detektivbuero-v1'))['ls']; print('D',d); assert d['p3']['s']==2 and d['p4']['s']==3 and 'p1' not in d
     await p.evaluate("lzHome()"); await p.wait_for_timeout(400); await p.evaluate("location.hash='#E'"); await p.wait_for_timeout(3000); f=fr(p,'kueste.html')
     e=(await J(f,'unit6-progress'))['_ls']; print('E',{k:(v['s'] if isinstance(v,dict) else 'start') for k,v in e.items()})
-    assert e['g2']['s']==2 or e['g2']['s']==3; assert e['i0']['s']==2 and e['i3']['s']==2 and 'i4' not in e and 'v0' not in e
+    assert e['g2']['s']==2 or e['g2']['s']==3; assert e['i0']['s']==3,'mit Karten geübte Verben 1–10 → kannst du schon'
+    assert e['i1']['s']==2 and e['i3']['s']==2 and 'i4' not in e and 'v0' not in e
+    # „Karten“ mit Verben zählen jetzt für den Fortschrittsbalken des Verben-Pakets
+    await f.evaluate("kcSetSel(['i5']);kcStart('flash')"); await p.wait_for_timeout(400)
+    for k in range(10):
+        b=await f.query_selector('#btnKnow')
+        if not b: break
+        await b.click(); await p.wait_for_timeout(80)
+    await f.evaluate("kcShowHome()"); await p.wait_for_timeout(300)
+    st=(await J(f,'unit6-progress')).get('_st',{}).get('i5',[]); print('i5 Treffer',st); assert len(st)>=8 and all(st)
     # Lernplan zurücksetzen (Detektiv) → keine erneute Übernahme aus alten Testnoten
     await p.evaluate("lzHome()"); await p.wait_for_timeout(400); await p.evaluate("location.hash='#D'"); await p.wait_for_timeout(2500); f=fr(p,'detektiv.html')
     await f.evaluate("lzResetProgress()"); await f.evaluate("location.reload()"); await p.wait_for_timeout(2500); f=fr(p,'detektiv.html')
-    d=(await J(f,'detektivbuero-v1'))['ls']; print('D nach Reset',d); assert list(d)==['_start']
+    d=(await J(f,'detektivbuero-v1'))['ls']; print('D nach Reset',d); assert set(d)<={'_start','_sv'},d
     print('errors',errs); assert not errs,errs
     await br.close()
 asyncio.run(main())

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.26.3"></script>
-<script src="../js/lernstand.js?v=7.26.3"></script>
+<script src="../js/app-core.js?v=7.26.4"></script>
+<script src="../js/lernstand.js?v=7.26.4"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="E";window.__DATAKEY="unit6-progress";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="lp-en";</script>
-<script src="../js/nutzer-init.js?v=7.26.3"></script>
+<script src="../js/nutzer-init.js?v=7.26.4"></script>
 
 <meta charset="UTF-8">
 <meta name="color-scheme" content="light">
@@ -1566,7 +1566,7 @@ async function saveProgress(){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }catch(e){}
 }
 /* „Lernplan zurücksetzen“: gelernte Wörter und Treffer löschen; Punkte (xp), Paket-Auswahl und Ton bleiben */
-window.lzResetProgress=function(){const k={};["xp","_sel","_mute"].forEach(x=>{if(x in progress)k[x]=progress[x];});k._ls={_start:Date.now()};progress=k;try{localStorage.setItem(STORAGE_KEY,JSON.stringify(progress));}catch(e){}};
+window.lzResetProgress=function(){const k={};["xp","_sel","_mute"].forEach(x=>{if(x in progress)k[x]=progress[x];});k._ls={_start:Date.now(),_sv:999};progress=k;try{localStorage.setItem(STORAGE_KEY,JSON.stringify(progress));}catch(e){}};
 
 function updateProgressBar(){
   const total = deck.length;
@@ -1624,13 +1624,13 @@ function renderFlash(){
 
   document.getElementById("btnKnow").addEventListener("click", (e)=>{
     e.stopPropagation();
-    progress[w.en] = (progress[w.en]||0) + 1;kcAns(kcUW(w),true);
+    progress[w.en] = (progress[w.en]||0) + 1;kcHit(w,true);
     saveProgress(); kcXP(2,[kcUW(w)]);
     idx++; updateProgressBar(); render();
   });
   document.getElementById("btnAgain").addEventListener("click", (e)=>{
     e.stopPropagation();
-    deck.push(w);kcAns(kcUW(w),false);
+    deck.push(w);kcHit(w,false);
     idx++; updateProgressBar(); render();
   });
 }
@@ -1669,9 +1669,9 @@ function handleAnswer(btn, chosen, correct, w){
 
   if(chosen === correct){
     btn.classList.add("correct");
-    progress[w.en] = (progress[w.en]||0) + 1; kcAns(kcUW(w),true);kcXP(5,[kcUW(w)]);
+    progress[w.en] = (progress[w.en]||0) + 1; kcHit(w,true);kcXP(5,[kcUW(w)]);
   } else {
-    btn.classList.add("wrong");kcSfx(false);kcAns(kcUW(w),false);
+    btn.classList.add("wrong");kcSfx(false);kcHit(w,false);
     allBtns.forEach(b=>{ if(b.textContent === correct) b.classList.add("correct"); });
     deck.push(w);
   }
@@ -1815,7 +1815,7 @@ function checkTestAnswer(given, entry){
   const input = document.getElementById("testInput");
   const btnCheck = document.getElementById("btnCheck");
   if(input.disabled) return;
-  const correct = isAnswerCorrect(given, solution);kcAns(kcUW(w),correct);
+  const correct = isAnswerCorrect(given, solution);kcHit(w,correct);
   if(correct){
     testCorrect++;
     progress[w.en] = (progress[w.en]||0) + 1; kcXP(4,[kcUW(w)]);
@@ -1969,13 +1969,13 @@ function duelAnswer(btn, correct, correctText, timeout){
     const dmg = 12 + speedBonus + Math.min(duelCombo*2, 10);
     duelVaderHp = Math.max(0, duelVaderHp - dmg);
     document.getElementById("hpVader").style.width = duelVaderHp + "%";
-    progress[duelWord.en] = (progress[duelWord.en]||0) + 1; kcAns(kcUW(duelWord),true);kcXP(5,[kcUW(duelWord)]);
+    progress[duelWord.en] = (progress[duelWord.en]||0) + 1; kcHit(duelWord,true);kcXP(5,[kcUW(duelWord)]);
     saveProgress();
     flash.textContent = speedBonus ? "⚡ Blitzschneller Block! −" + dmg : "🗡️ Treffer! −" + dmg;
     flash.style.color = "#1B7A72";
   } else {
     if(btn) btn.classList.add("wrong");
-    duelCombo = 0;kcAns(kcUW(duelWord),false);
+    duelCombo = 0;kcHit(duelWord,false);
     duelPlayerHp = Math.max(0, duelPlayerHp - 18);
     document.getElementById("hpPlayer").style.width = duelPlayerHp + "%";
     document.getElementById("duelCard").classList.add("shake");
@@ -2062,13 +2062,13 @@ function renderFalcon(){
 function checkFalcon(given){
   const fb = document.getElementById("falconFeedback");
   if(isAnswerCorrect(given, falconWord.de)){
-    progress[falconWord.en] = (progress[falconWord.en]||0) + 1; kcAns(kcUW(falconWord),true);kcXP(5,[kcUW(falconWord)]);
+    progress[falconWord.en] = (progress[falconWord.en]||0) + 1; kcHit(falconWord,true);kcXP(5,[kcUW(falconWord)]);
     saveProgress();
     falconDone++;
     fb.innerHTML = `<div class="test-feedback correct">✅ ${FALCON_PARTS[falconDone-1]} repariert!</div>`;
     setTimeout(renderFalcon, 900);
   } else {
-    falconTries++;if(falconTries===1)kcAns(kcUW(falconWord),false);
+    falconTries++;if(falconTries===1)kcHit(falconWord,false);
     if(falconTries >= 2){
       fb.innerHTML = `<div class="test-feedback wrong">Richtig wäre: ${falconWord.de} – schau es dir an, dann weiter.</div>`;
       document.getElementById("btnFalconCheck").textContent = "Weiter →";
@@ -2786,7 +2786,7 @@ function renderRaceQ(){
     const ok = isAnswerCorrect(input.value, solution);
     input.disabled = true;
     document.getElementById("raceCheck").disabled = true;
-    kcAns(kcUW(w),ok);if(ok){
+    kcHit(w,ok);if(ok){
       raceScore++;
       progress[w.en] = (progress[w.en]||0) + 1; kcXP(5,[kcUW(w)]);
       saveProgress();
@@ -2891,6 +2891,9 @@ let KC_CUR=null;
 function kcCtxMapped(){const f=KC_MP[KC_CUR];const r=typeof f==="function"?f():f;return r&&r.length?r:null;}
 function kcCtx(){return kcCtxMapped()||kcSel();}
 function kcAns(u,ok){if(u&&window.LS)LS.answer(u,ok);}
+/* Antwort zu einem Wort: Verben zählen auch für den Fortschrittsbalken ihres Verben-Pakets (Treffer der letzten 20 Aufgaben),
+   Vokabeln haben ihren eigenen Balken („Wörter sicher“) */
+function kcHit(w,ok){const u=kcUW(w);if(!u)return;if(/^i\d/.test(u))kcStat(u,ok);else kcAns(u,ok);}
 function kcAnsCtx(ok){(kcCtxMapped()||[]).forEach(u=>kcAns(u,ok));}
 /* Punkte vergeben – nach Lernstand der Pakete. ids: Pakete der Aufgabe; raw: ohne Lernstand. Gibt die vergebenen Punkte zurück. */
 function kcXP(n,ids,raw){ids=(ids||[]).filter(Boolean);if(!raw&&window.LS&&n>0)n=LS.pts(n,ids.length?ids:kcCtx());
@@ -3237,7 +3240,7 @@ function hkQ(){
     <div id="hkF"></div><div class="next-wrap" id="hkN"></div></div>`;
   document.getElementById("hkP").onclick=()=>hkSay(say);document.getElementById("hkS").onclick=()=>hkSay(say,true);
   setTimeout(()=>hkSay(say),250);
-  const fin=ok=>{kcAns(kcUW(w),ok);if(ok){HK.ok++;kcXP(5,[kcUW(w)]);progress[w.en]=(progress[w.en]||0)+1;saveProgress();}
+  const fin=ok=>{kcHit(w,ok);if(ok){HK.ok++;kcXP(5,[kcUW(w)]);progress[w.en]=(progress[w.en]||0)+1;saveProgress();}
     document.getElementById("hkF").innerHTML=`<div class="test-feedback ${ok?"correct":"wrong"}">${ok?"✅ ":"❌ "}<b>${w.en}</b> = ${w.de}</div>`;kcNext("hkN",null,()=>{HK.i++;hkQ();});};
   if(type){const i=document.getElementById("hkI");const go=()=>{if(i.disabled)return;i.disabled=true;document.getElementById("hkC").disabled=true;fin(isAnswerCorrect(i.value,say)||isAnswerCorrect(i.value,w.en));};
     i.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go();}};document.getElementById("hkC").onclick=go;}
@@ -3580,7 +3583,11 @@ function icEnd(){
     get:()=>(progress._ls=progress._ls||{}),save:saveProgress,norm:kcNorm,
     seed:id=>{if(id[0]==="v"){const i=+id.slice(1),P=PACKAGES[i];if(!P)return null;const m=packageMastery(i),tried=P.some(w=>(progress[w.en]||0)>0);
         return{n:tried?m.total:0,hit:m.known,done:m.total>0&&m.known>=0.8*m.total};}
-      const a=(progress._st||{})[id]||[];return{n:a.length,hit:a.reduce((x,y)=>x+y,0),done:a.length>=16&&a.reduce((x,y)=>x+y,0)>=16};},
+      const a=(progress._st||{})[id]||[],x={n:a.length,hit:a.reduce((p,q)=>p+q,0),done:a.length>=16&&a.reduce((p,q)=>p+q,0)>=16};
+      if(/^i\d/.test(id)){const k=+id.slice(1),vs=VK.slice(k*10,k*10+10),R=progress.irr||{};
+        const seen=vs.filter(v=>(progress[v.inf]||0)>0||R[v.inf]).length,sure=vs.filter(v=>(progress[v.inf]||0)>=2||(R[v.inf]&&R[v.inf].b>0)).length;
+        if(seen&&x.n<vs.length){x.n=vs.length;x.hit=sure;x.done=x.done||sure>=0.8*vs.length;}}
+      return x;},
     pick:id=>{if(id==="g5"){kcShowHome();return;}window.lzSelect&&lzSelect(id,"rep");},meter:{icon:"⛵",name:"Segelwind",fade:"Wind flaut ab"}});
   kcShowHome();
 })();
@@ -3591,7 +3598,7 @@ function icEnd(){
 .lp-en{height:34px;border-radius:10px;border:none;background:var(--sand-deep);color:var(--sea-deep);font-size:16px;margin-left:auto}</style>
 <script>window.LP_CONF={"key": "lernplan-englisch", "prefix": "E", "btnTarget": ".topbar .seg", "btnInsert": "before", "btnClass": "lp-en", "multi": "Am schnellsten mit einem Test, in dem alle diese Pakete ausgewählt sind.", "final": "Vokabel-Test mit allen Paketen, dann der Grammatik-Test mit allen Themen und eine Geschichte in der Schreibwerkstatt.", "units": [{"id": "v0", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 1–15", "sub": "jeans … true", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v1", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 16–30", "sub": "would like … view", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v2", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 31–45", "sub": "Spain … seal", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v3", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 46–60", "sub": "to change … cave", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v4", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 61–75", "sub": "spooky … egg", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v5", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 76–90", "sub": "to milk … cucumber", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v6", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 91–105", "sub": "pepper … pasta", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v7", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 106–120", "sub": "cola … mango", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v8", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 121–135", "sub": "cookie … to sail", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v9", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 136–145", "sub": "world … pier", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "g0", "group": "Grammatik (simple past)", "icon": "⚡", "name": "Verben 1–40", "sub": "Grammatik → Verben, Pakete 1–10 bis 31–40", "learn": "Grammatik → Verben, die vier Pakete nacheinander.", "rep": "Grammatik-Duell oder Verben noch einmal."}, {"id": "g1", "group": "Grammatik (simple past)", "icon": "⚡", "name": "Verben 41–77", "sub": "Grammatik → Verben, Pakete 41–50 bis 71–77", "learn": "Grammatik → Verben, die vier Pakete nacheinander.", "rep": "Grammatik-Duell oder Verben noch einmal."}, {"id": "g2", "group": "Grammatik (simple past)", "icon": "🧩", "name": "Lücken", "sub": "didn't, wasn't, weren't, was, were", "learn": "Grammatik → Lücken, alle Pakete.", "rep": "Grammatik → Lücken oder Grammatik-Test."}, {"id": "g3", "group": "Grammatik (simple past)", "icon": "❓", "name": "Fragen", "sub": "did, was, were, Fragewörter", "learn": "Grammatik → Fragen, alle Pakete.", "rep": "Grammatik → Fragen oder Grammatik-Test."}, {"id": "g4", "group": "Grammatik (simple past)", "icon": "🔎", "name": "Fehler finden im Simple Past", "sub": "-ed, didn't + Infinitiv, Did …?, Signalwörter", "learn": "Grammatik → 🕵️ Detektiv, alle Pakete. Dazu das Merkblatt „Simple Past“.", "rep": "Grammatik → Detektiv oder Grammatik-Test mit „Detektiv“."}, {"id": "g5", "group": "Schreibwerkstatt", "icon": "✍️", "name": "Schreibwerkstatt", "sub": "My Superhero's Craziest Day", "learn": "Grammatik → ✍️ Schreibwerkstatt: Geschichte schreiben und prüfen lassen.", "rep": "Schreibwerkstatt noch einmal mit einer neuen Geschichte."}, {"id": "g6", "group": "Grammatik (simple past)", "icon": "✅", "name": "Regelmäßige Verben", "sub": "-ed, -d, -ied, Verdopplung; regelmäßig oder unregelmäßig?", "learn": "Grammatik → 🔀 Regelmäßig oder unregelmäßig? (erst die Erklärung lesen), dann ✅ Verben (regelmäßig).", "rep": "✅ Verben (regelmäßig) oder 🔀 Regelmäßig oder unregelmäßig?"}], "testName": "Test", "tests": {"Vokabeln": "Vokabel-Test", "Grammatik (simple past)": "Grammatik-Test", "Schreibwerkstatt": "Schreibwerkstatt"}, "est": {"learn": 15, "rep": 5, "test": 10, "final": 25, "write": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.26.3">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.26.4">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -3601,23 +3608,23 @@ function icEnd(){
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.26.3"></script>
+<script src="../js/lernplan.js?v=7.26.4"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:420px){.lp-en{min-width:36px!important;padding:0 5px!important}.topbar{gap:6px!important}.section-btn{padding:6px 8px!important}}</style>
 
 <style>@media (max-width:420px){.lp-en{min-width:36px!important;padding:0 5px!important}.topbar{gap:6px!important}.section-btn{padding:6px 7px!important}.topbar .brand{font-size:13px!important}}</style>
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.26.3">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.26.4">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.26.3"></script>
+<script src="../js/nutzer.js?v=7.26.4"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}.home-btn.lp-en{min-width:36px;padding:0 6px}@media (max-width:420px){.topbar .brand{display:none!important}}
 /* sehr schmale Handys (360 px): Kopfleiste ohne seitliches Scrollen */
 @media (max-width:370px){.lp-en,.home-btn.lp-en{min-width:32px!important;padding:0 3px!important}.topbar{gap:4px!important}}</style>
-<script src="../js/home-btn.js?v=7.26.3"></script>
+<script src="../js/home-btn.js?v=7.26.4"></script>
 <!-- ===== /Start ===== -->
 <script>
 window.lzGo=function(kind,ids){
@@ -3649,8 +3656,8 @@ document.addEventListener("click",e=>{const s=e.target.closest("[data-lzsel]");i
 window.addEventListener("storage",()=>lzBar&&lzBar());
 if(window.lzToday)lzBar();
 </script>
-<script src="../js/arena-btn.js?v=7.26.3"></script>
+<script src="../js/arena-btn.js?v=7.26.4"></script>
 <script>window.__LZ_ZETTEL=[{t:"Unit 5/6",f:"englisch-unit5-6.html",d:"Vokabeln S. 257–261, Grammatik S. 194–199, Arbeitsblätter"},{t:"Simple Past",f:"englisch-simple-past.html",d:"Merkblatt und Schreibaufgabe (Superhelden)"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.26.3"></script>
+<script src="../js/lernzettel-btn.js?v=7.26.4"></script>
 </body>
 </html>
