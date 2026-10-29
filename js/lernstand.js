@@ -38,7 +38,10 @@ function status(rec,now){
   const today=rec.d===dkey(now)?(rec.r|0):0;
   const charge=s===0?0:Math.round(100*(s/(I.length-1))*Math.max(0,Math.min(1,1-el/Math.max(1,iv))));
   let kind,f;
-  if(today>=K.TAGESDECKEL_AB_RUNDE-1){kind="genug";f=K.FAKTOR_TAGESDECKEL;}
+  /* Ein sitzendes Paket bleibt „sitzt“ (wenig Punkte bis zur Fälligkeit), auch wenn es heute schon oft geübt wurde.
+     Der Tagesdeckel („heute genug geübt“) betrifft nur Pakete, die noch gelernt werden oder fällig sind. */
+  if(s>=2&&el<iv){kind="sitzt";f=K.FAKTOR_KANN_SCHON;}
+  else if(today>=K.TAGESDECKEL_AB_RUNDE-1){kind="genug";f=K.FAKTOR_TAGESDECKEL;}
   else if(s<=1&&!(s>=1&&el>=K.UEBERFAELLIG_AB*iv)){kind="ueben";f=1;}
   else if(s>=2&&el<iv){kind="sitzt";f=K.FAKTOR_KANN_SCHON;}
   else if(s>=1&&el>=K.UEBERFAELLIG_AB*iv){kind="bonus";f=1+K.BONUS_UEBERFAELLIG;}
@@ -61,19 +64,15 @@ function applyRound(rec,ok,n,now){
   return r;
 }
 
-/* Was die Kachel sagt – ohne Punktzahl, weil jede Übung anders viel bringt (Karten 2, Quiz 5, Test nach Note …) */
+/* Was die Kachel sagt – eine Zeile, ohne Punktzahl (jede Übung bringt unterschiedlich viel: Karten 2, Quiz 5, Test nach Note …) */
 const TXT={
   neu:()=>`💰 Volle Punkte – neu`,
   ueben:()=>`💰 Volle Punkte – noch üben`,
   faellig:()=>`💰 Volle Punkte – wieder fällig`,
-  bonus:()=>`🎁 Bonus: +${Math.round(C().BONUS_UEBERFAELLIG*100)} % Punkte`,
-  sitzt:()=>`🪙 Wenig Punkte – kannst du schon!`,
-  genug:()=>`🪙 Wenig Punkte – für heute genug geübt`
+  bonus:()=>`🎁 Bonus +${Math.round(C().BONUS_UEBERFAELLIG*100)} % – lange nicht geübt`,
+  sitzt:s=>`🪙 Wenig Punkte – kannst du schon! Wieder voll ${s.left<=1?"morgen":"in "+s.left+" Tagen"}`,
+  genug:()=>`🪙 Wenig Punkte – heute genug geübt. Morgen wieder voll`
 };
-/* Zusatz hinter den Stufen-Punkten (fade: Motto-Wort fürs Nachlassen, z. B. „flaut ab“) */
-function meterTxt(s,fade){const left=s.left<=1?"morgen":"in "+s.left+" Tagen";
-  return{neu:"noch nicht geübt",ueben:"Stufe "+s.s+" von 5",faellig:fade+" – jetzt üben!",bonus:fade+" – jetzt üben!",
-    sitzt:"wieder voll "+left,genug:"morgen wieder voll"}[s.kind];}
 
 /* ---------- Anbindung an eine App ----------
    LS.init({app:"W", units:[{id,icon,name}], base:10, get:()=>obj, save:()=>{}, pick:id=>{}, meter:{icon,name,full,empty}, cur:()=>[ids]}) */
@@ -128,12 +127,8 @@ LS.best=function(exclude){if(!A)return null;flush();exclude=[].concat(exclude||[
   L.sort((a,b)=>RANK[a.st.kind]-RANK[b.st.kind]||(a.st.played===b.st.played?0:a.st.played?-1:1)||a.st.s-b.st.s);return L[0]||null;};
 
 /* Anzeige auf der Paket-Kachel (innerhalb eines <button>, daher nur <span>) */
-LS.tile=function(id){if(!A||!known(id))return"";flush();const s=st(id),m=A.meter||{icon:"⚡",name:"Energie",fade:"lässt nach"};
-  /* Stufen-Punkte ●●●○○; gefüllte Punkte werden blasser, je näher die Fälligkeit rückt */
-  const op=(0.35+0.65*s.fresh).toFixed(2),pips=[1,2,3,4,5].map(i=>`<i class="${i<=s.s?"on":""}"${i<=s.s?` style="opacity:${op}"`:""}></i>`).join("");
-  return `<span class="ls-tile ls-${s.kind}"><span class="ls-txt">${esc(TXT[s.kind](s))}</span>`+
-    `<span class="ls-row"><span class="ls-m">${m.icon} ${esc(m.name)}</span><span class="ls-pips" role="img" aria-label="Stufe ${s.s} von 5">${pips}</span><span class="ls-mt">${esc(meterTxt(s,m.fade||"lässt nach"))}</span></span></span>`;};
-
+LS.tile=function(id){if(!A||!known(id))return"";flush();const s=st(id);
+  return `<span class="ls-tile ls-${s.kind}"><span class="ls-txt">${esc(TXT[s.kind](s))}</span></span>`;};
 /* Kurzer, freundlicher Hinweis, wenn es wenig Punkte gibt – mit Sprung zum lohnenderen Paket */
 LS.hint=function(ids){if(!A)return;const s=st([].concat(ids)[0]),b=LS.best(ids);let el=document.getElementById("lsHint");
   if(!el){el=document.createElement("div");el.id="lsHint";el.setAttribute("role","status");document.body.appendChild(el);}
@@ -151,14 +146,7 @@ LS.lohnt=function(list,base){/* list: [{app, units, store}] → [{app,u,st,p}] *
 
 function css(){if(document.getElementById("lsCss"))return;const s=document.createElement("style");s.id="lsCss";s.textContent=`
 .ls-tile{display:flex;flex-direction:column;gap:4px;margin-top:8px;padding:7px 9px;border-radius:12px;background:rgba(255,209,102,.16);border:1px solid rgba(214,158,20,.35);font-size:12.5px;line-height:1.25;text-align:left}
-.ls-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ls-txt{font-weight:800;font-size:14px}
-.ls-pips{display:inline-flex;gap:4px;align-items:center}
-.ls-pips i{width:11px;height:11px;border-radius:50%;border:2px solid rgba(120,120,120,.55);box-sizing:border-box}
-.ls-pips i.on{background:#e8a317;border-color:#e8a317}
-.ls-bonus .ls-pips i.on,.ls-faellig .ls-pips i.on{background:#e8a317}
-.ls-m{font-weight:700;white-space:nowrap;opacity:.85}
-.ls-mt{font-size:11.5px;opacity:.8;white-space:nowrap}
 .ls-sitzt,.ls-genug{background:rgba(128,128,128,.10);border-color:rgba(128,128,128,.3)}
 .ls-bonus{background:rgba(124,255,107,.18);border-color:rgba(40,160,60,.45)}
 #lsHint{position:fixed;left:50%;top:calc(68px + env(safe-area-inset-top,0px));transform:translate(-50%,calc(-100% - 90px));z-index:9998;width:min(560px,calc(100vw - 24px));
