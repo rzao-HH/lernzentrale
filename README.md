@@ -7,10 +7,10 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 
 ## Ablauf: erst Vorschau, dann freigeben
 Neue Versionen gehen **nicht direkt** auf die echte App. Ablauf für alle Chats:
-1. Änderungen im Zweig `entwicklung` machen (von `main` abzweigen), Tests laufen lassen.
+1. Änderungen im Zweig `entwicklung` machen (von `main` abzweigen) und **die ganze Testsuite** laufen lassen (`python3 tests/run_all.py`) – vor jeder Vorschau, nicht erst vor der Freigabe.
 2. Vorschau bauen und **nur den Ordner `vorschau/`** auf `main` hochladen: `python3 tools/vorschau.py entwicklung` → https://rzao-hh.github.io/lernzentrale/vorschau/ (rotes Schild „🧪 Vorschau“).
 3. Roya testet (mit einer Person „Test“ ohne Benutzernamen – die Vorschau nutzt denselben Gerätespeicher wie die echte App).
-4. Erst nach ihrem „freigeben“: `entwicklung` in `main` übernehmen → echte App aktualisiert.
+4. Erst nach ihrem „freigeben“: `entwicklung` in `main` übernehmen → echte App aktualisiert (kein erneuter Testlauf nötig, der Stand ist derselbe wie in der Vorschau).
 
 ## Aufbau
 | Pfad | Inhalt |
