@@ -323,6 +323,17 @@ function rankHTML(){
   return `<section class="rank" aria-label="Rangliste"><h2>🏆 Rangliste</h2>${tabs}<table><thead><tr><th class="m"></th><th class="n">Name</th>${RKA.map(a=>`<th title="${esc(APPS.find(x=>x.k===a[0]).name)}">${a[3]}</th>`).join("")}<th>Gesamt</th><th title="Arena-Punkte">⚔️</th></tr></thead><tbody>${tr}</tbody></table><p>Punkte aus 📐 Winkel-Akademie, 🪄 Wasser-Zauberschule, 🐚 Küsten-Crew und 🕵️ Detektiv-Büro. Grün = Bestwert in der App. ⚔️ = Arena-Punkte aus Duellen (zählen nicht zur Gesamtsumme).${note}</p></section>`;
 }
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-rk]");if(!b)return;RK_TAB=b.dataset.rk;RK_USER_SET=true;const el=document.getElementById("rank");if(el)el.innerHTML=rankHTML();});
+/* „Heute lohnt sich besonders“: Pakete, die wieder fällig, lange nicht geübt oder noch wackelig sind (js/lernstand.js) */
+function lohntHTML(){
+  if(!window.LS)return"";const uid=NU&&NU.cur||"u1";
+  const list=RKA.map(([k,b,r])=>{const o=J(uid==="u1"?b:b+("@"+uid).repeat(r),null)||{};
+    return{app:k,units:J("ls-units-"+k,null)||CONF[k].units,store:(k==="E"?o._ls:o.ls)||{},base:k==="E"||k==="D"?5:10};});
+  const any=list.some(a=>Object.keys(a.store).length),L=LS.lohnt(list).slice(0,6),ic=k=>(APPS.find(a=>a.k===k)||{}).icon||"";
+  const lab={bonus:"lange nicht geübt – Bonus!",faellig:"wieder fällig",ueben:"noch wackelig"};
+  const body=L.length?`<div class="lohnt-l">${L.map(x=>`<button type="button" class="lohnt-i lk-${x.st.kind}" data-lohnt="${x.app}|${esc(x.u.id)}"><span class="lohnt-a">${ic(x.app)}</span><span class="lohnt-n"><b>${esc((x.u.icon||"")+" "+x.u.name)}</b><small>${lab[x.st.kind]}</small></span><span class="lohnt-p">⭐ ${x.p}</span></button>`).join("")}</div>`
+    :`<p class="lohnt-e">${any?"Gerade ist nichts fällig – alles sitzt! Neue Pakete bringen volle Punkte.":"Sobald du übst, steht hier, wo es gerade die meisten Punkte gibt: Pakete, die wieder fällig oder noch wackelig sind."}</p>`;
+  return `<section class="lohnt" aria-label="Heute lohnt sich besonders"><h2>⭐ Heute lohnt sich besonders</h2>${body}</section>`;
+}
 function render(){
   try{setTimeout(()=>{window.lzCloudStat&&lzCloudStat();window.lzAccAuto&&lzAccAuto();},0);}catch(e){}
   loadAll();document.body.classList.toggle("compact",!!UI().compact);const cb=document.getElementById("cmp");cb.textContent=UI().compact?"Alles zeigen":"Nur heute";cb.setAttribute("aria-pressed",!!UI().compact);
@@ -342,6 +353,7 @@ function render(){
   else if(!open.length)t=`<b>Für heute alles erledigt.</b> Noch höchstens ${maxLeft} ${maxLeft===1?"Lerntag":"Lerntage"}.`;
   else t=`<b>Heute dran:</b> ${open.map(a=>esc(a.name)).join(", ")}. Noch höchstens ${maxLeft} ${maxLeft===1?"Lerntag":"Lerntage"}.`;
   document.getElementById("sum").innerHTML=t;
+  try{const lo=document.getElementById("lohnt");if(lo)lo.innerHTML=lohntHTML();}catch(e){}
 }
 document.addEventListener("click",e=>{
   if(e.target.closest("[data-rest]")){UI().rest=!UI().rest;save();render();return;}
@@ -359,6 +371,8 @@ document.addEventListener("click",e=>{
   const dp=e.target.closest("[data-delp]"); if(dp){const u=NU.list.find(x=>x.id===dp.dataset.delp);
     if(u&&confirm(u.acc?u.name+" auf diesem Gerät abmelden? Die Punkte bleiben unter dem Benutzernamen gespeichert.":u.name+" löschen? Fortschritt, Punkte und Noten dieser Person gehen in allen Apps verloren.")){try{localStorage.removeItem("lz-linked@"+u.id);}catch(_){}NU.del=[...(NU.del||[]),u.id];NU.list=NU.list.filter(x=>x!==u);save();lzPurge(u.id);renderWho();}return;}
   const o=e.target.closest("[data-open]"); if(o){st(o.dataset.open).last=Date.now();save();lzPushed=true;setTimeout(()=>showApp(o.dataset.open),0);return;}
+  const lh=e.target.closest("[data-lohnt]"); if(lh){const [k,id]=lh.dataset.lohnt.split("|");try{sessionStorage.setItem("ls-pick-"+k,id);}catch(_){}st(k).last=Date.now();save();lzPushed=true;
+    setTimeout(()=>{showApp(k);setTimeout(()=>{try{const w=FR[k]&&FR[k].contentWindow;if(w&&w.LS&&w.LS.checkPick)w.LS.checkPick();}catch(_){}},400);},0);return;}
   const pl=e.target.closest("[data-plan]"); if(pl){const k=pl.dataset.plan;st(k).last=Date.now();save();showApp(k,true);return;}
   const dn=e.target.closest("[data-done]"); if(dn){const s=st(dn.dataset.done);
     if(s.doneDate===today()){s.count=Math.max(0,s.count-1);s.doneDate="";delete dlog(dn.dataset.done,s.count+1).end;}else{s.count=Math.min(s.n,s.count+1);s.doneDate=today();dlog(dn.dataset.done,s.count).end=Date.now();}

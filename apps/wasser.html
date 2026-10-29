@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.25.0"></script>
+<script src="../js/app-core.js?v=7.26.0"></script>
+<script src="../js/lernstand.js?v=7.26.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="Z";window.__DATAKEY="wasserzauberschule-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.25.0"></script>
+<script src="../js/nutzer-init.js?v=7.26.0"></script>
 
 <meta charset="utf-8">
 <meta name="color-scheme" content="light">
@@ -412,7 +413,7 @@ let S=JSON.parse(JSON.stringify(DEF));
 try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 /* „Lernplan zurücksetzen“: Lernfortschritt löschen; Punkte (xp), Haus, Rekorde und Einstellungen bleiben. rst blendet ältere Testergebnisse aus */
-window.lzResetProgress=function(){Object.assign(S,{stats:{},grades:{},wgrades:{},bk:{},werk:{},mixm:{},rst:Date.now()});save();};
+window.lzResetProgress=function(){Object.assign(S,{stats:{},grades:{},wgrades:{},bk:{},werk:{},mixm:{},ls:{},rst:Date.now()});save();};
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
@@ -648,11 +649,15 @@ function renderHeader(){
 }
 $('#soundBtn').onclick=()=>{S.sound=!S.sound;save();renderHeader();};
 $('#brand').onclick=()=>home();
-function addXP(n){
-  if(!n)return;
+/* Punkte vergeben – nach Lernstand der Pakete (js/lernstand.js). ids: Pakete der Aufgabe; raw: ohne Lernstand (z. B. Lernziel-Bonus).
+   Gibt die tatsächlich vergebenen Punkte zurück. */
+function addXP(n,ids,raw){
+  if(!n)return 0;
+  if(!raw&&window.LS)n=LS.pts(n,ids||S.sel);
   const b=rankIdx(S.xp);S.xp+=n;save();renderHeader();
   const a=rankIdx(S.xp);
   if(a>b)setTimeout(()=>{toast(`${RANKS[a].i} Neuer Rang: ${RANKS[a].n}!`);confetti();sfx('rank');},250);
+  return n;
 }
 function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2800);}
 function confetti(){
@@ -670,11 +675,11 @@ function packSum(id){const s=S.stats[id];return s?s.h.reduce((a,b)=>a+b,0):0;}
 function recordStat(pid,ok){
   if(!pid)return;
   const s=S.stats[pid]||(S.stats[pid]={h:[],done:false});
-  s.h.push(ok?1:0);if(s.h.length>20)s.h.shift();
+  s.h.push(ok?1:0);if(s.h.length>20)s.h.shift();if(window.LS)LS.answer(pid,ok);
   if(!s.done&&packSum(pid)>=16){
     s.done=true;save();
     setTimeout(()=>{toast(`🏅 Lernziel erreicht: Paket ${packById(pid).nr} · ${packById(pid).name}`);confetti();sfx('rank');},400);
-    addXP(50);
+    addXP(50,null,true);
   }
   save();
 }
@@ -851,28 +856,28 @@ function answer(v,btn){
   if(it.t==='ana')$('#slots').classList.add(ok?'ok':'bad');
   if(it.t==='tr')$('#dg').innerHTML=transSVG(it.ar,it.ans.join(' / '));
   if(G.mode==='duel'){if(ok)G.score++;const pp=$('#pprog');if(pp)pp.firstChild.nodeValue=`${G.score} Punkte · `;G.i++;G.to=setTimeout(nextItem,ok?350:1100);return;}
-  const xp=ok?10:0;if(xp){G.xp+=xp;addXP(xp);}
+  let xp=ok?10:0;if(xp){xp=addXP(xp,[it.p]);G.xp+=xp;}
   let right='';
   if(!ok){right=it.t==='tf'?`Die Aussage ist ${it.ans?'wahr':'falsch'}. `:`Richtig ist: <b>${esc(Array.isArray(it.ans)?it.ans.join(' oder '):it.ans)}</b>. `;}
-  $('#fb').innerHTML=`<div class="fbox ${ok?'ok':'bad'}"><div>${ok?pick(PRAISE)+' ':'Leider nicht. '}${right}${esc(it.ex||'')}</div>${xp?`<div class="xpgain">+${xp} Punkte</div>`:''}<button class="big go" id="weiter">${G.i+1>=G.total?'Auswertung ansehen':'Weiter'}</button></div>`;
+  $('#fb').innerHTML=`<div class="fbox ${ok?'ok':'bad'}"><div>${ok?pick(PRAISE)+' ':'Leider nicht. '}${right}${esc(it.ex||'')}</div>${xp?`<div class="xpgain">+${xp} Punkt${xp===1?"":"e"}</div>`:''}<button class="big go" id="weiter">${G.i+1>=G.total?'Auswertung ansehen':'Weiter'}</button></div>`;
   $('#weiter').onclick=()=>{G.i++;nextItem();};
   $('#fb').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function finishItems(){
   if(G.finished)return;
   const m=G.mode,k=combo();
-  stopAll();
+  stopAll();if(window.LS)LS.endRound();
   if(m==='duel'){
     const old=S.high[k]||0,rec=G.score>old;if(rec){S.high[k]=G.score;save();}
-    const xp=G.score*5;addXP(xp);
+    const xp=addXP(G.score*5,[...new Set(G.log.map(l=>l.it&&l.it.p).filter(Boolean))]);
     if(rec&&G.score>0)confetti();
-    return showResult(m,`<div class="rbig">${G.score}</div><p>richtige Antworten in 60 Sekunden</p><p>${rec&&G.score>0?'🏆 Neuer Rekord!':'Rekord: '+old}</p>${xp?`<div class="xpgain">+${xp} Punkte</div>`:''}`);
+    return showResult(m,`<div class="rbig">${G.score}</div><p>richtige Antworten in 60 Sekunden</p><p>${rec&&G.score>0?'🏆 Neuer Rekord!':'Rekord: '+old}</p>${xp?`<div class="xpgain">+${xp} Punkt${xp===1?"":"e"}</div>`:''}`);
   }
   const n=G.log.length,c=G.log.filter(l=>l.ok).length;
   if(m==='test'){
     const pct=c/n*100,note=noteFor(pct);lzRec("Z",S.sel,note);
     if(!S.grades[k]||note<S.grades[k]){S.grades[k]=note;save();}
-    const xp=[0,100,80,60,40,20,10][note];addXP(xp);
+    const xp=addXP([0,100,80,60,40,20,10][note],S.sel);
     if(note<=2)confetti();
     const rv=G.log.map((l,i)=>{
       const it=l.it;const q=it.pic?'Teilchenmodell erkennen':it.t==='tr'?it.q.replace(/<[^>]+>/g,' ').replace(/\s+/g,' '):it.q;
@@ -880,10 +885,10 @@ function finishItems(){
       const corr=it.t==='tf'?(it.ans?'wahr':'falsch'):Array.isArray(it.ans)?it.ans.join(' / '):it.ans;
       return`<li class="${l.ok?'ok':'bad'}"><span>${l.ok?'✓':'✗'}</span><div>${i+1}. ${esc(q)}<br><small>Deine Antwort: ${esc(given)}${l.ok?'':' · richtig: '+esc(corr)}</small></div></li>`;
     }).join('');
-    return showResult(m,`<div class="note n${note}">Note ${note}</div><p>${NOTE_TXT[note]} · ${c} von ${n} richtig (${Math.round(pct)} %)</p>${window.lzEval?lzEval(S.sel,note):''}<div class="xpgain">+${xp} Punkte</div><ul class="review">${rv}</ul>`);
+    return showResult(m,`<div class="note n${note}">Note ${note}</div><p>${NOTE_TXT[note]} · ${c} von ${n} richtig (${Math.round(pct)} %)</p>${window.lzEval?lzEval(S.sel,note):''}<div class="xpgain">+${xp} Punkt${xp===1?"":"e"}</div><ul class="review">${rv}</ul>`);
   }
   if(c/n>=.9)confetti();
-  showResult(m,`${stars(c/n)}<div class="rbig">${c} / ${n}</div><p>richtig</p>${G.xp?`<div class="xpgain">+${G.xp} Punkte</div>`:''}`);
+  showResult(m,`${stars(c/n)}<div class="rbig">${c} / ${n}</div><p>richtig</p>${G.xp?`<div class="xpgain">+${G.xp} Punkt${G.xp===1?"":"e"}</div>`:''}`);
 }
 
 /* ---------- Zauberbuch ---------- */
@@ -927,8 +932,8 @@ function book(sel,view){
       p.innerHTML=bar+`<button class="fc bkcard${G.flip?' flip':''}" id="bkc" aria-label="Karte umdrehen"><div class="fci"><div class="fcf">${sel.length>1?`<span class="bktag">${PI[pid].icon} ${PI[pid].name}</span>`:''}${esc(f)}<small>Tippen zum Umdrehen 👆</small></div><div class="fcb"><span>${esc(b)}</span>${src?`<small class="fsrc">📄 ${esc(src)}</small>`:''}</div></div></button>
       <div class="bkbtns"><button class="btn-s bkno" id="bkno">🔁 Nochmal üben</button><button class="big go bkyes" id="bkyes">✅ Weiß ich!</button></div>`;
       $('#bkc').onclick=()=>{G.flip=!G.flip;$('#bkc').classList.toggle('flip',G.flip);};
-      $('#bkno').onclick=()=>{S.bk[key(pid,i)]=0;save();G.deck.push(G.deck.shift());G.flip=false;sfx('bad');draw();};
-      $('#bkyes').onclick=()=>{S.bk[key(pid,i)]=(S.bk[key(pid,i)]||0)+1;save();G.deck.shift();G.known++;G.flip=false;addXP(2);sfx('ok');draw();};
+      $('#bkno').onclick=()=>{S.bk[key(pid,i)]=0;if(window.LS)LS.answer(pid,false);save();G.deck.push(G.deck.shift());G.flip=false;sfx('bad');draw();};
+      $('#bkyes').onclick=()=>{S.bk[key(pid,i)]=(S.bk[key(pid,i)]||0)+1;save();G.deck.shift();G.known++;G.flip=false;if(window.LS)LS.answer(pid,true);addXP(2,[pid]);sfx('ok');draw();};
     };
     draw();
   }
@@ -1087,7 +1092,7 @@ function wSelf(){
 function wResult(){
   stopAll();G.phase='done';
   const max=G.qs.reduce((s,q)=>s+q.k.length,0),pts=G.res.reduce((s,r)=>s+r.p.reduce((a,b)=>a+(b||0),0),0),pct=pts/max*100,note=noteFor(pct);
-  const xp=[0,100,80,60,40,20,10][note];addXP(xp);if(note<=2)confetti();
+  const xp=addXP([0,100,80,60,40,20,10][note],S.sel);if(note<=2)confetti();
   if(window.lzRec)lzRec('Z',S.sel.slice(),note,'write');S.wgrades=S.wgrades||{};{const wk=combo();if(!S.wgrades[wk]||note<S.wgrades[wk]){S.wgrades[wk]=note;save();}}
   const fmtP=x=>String(x).replace('.',',');
   const sym=v=>v===1?'<span class="wk ok">✓</span>':v===.5?'<span class="wk half">½</span>':'<span class="wk bad">✗</span>';
@@ -1095,7 +1100,7 @@ function wResult(){
     <div class="note n${note}">Note ${note}</div><p>${NOTE_TXT[note]} · ${fmtP(pts)} von ${max} Punkten (${Math.round(pct)} %)</p>
     <div class="wby">${G.by==='ki'?'🤖 Korrigiert von der KI (Claude)':'✍️ Selbst korrigiert'}</div>
     ${G.overall?`<div class="wover"><small>Rückmeldung</small>${esc(G.overall)}</div>`:''}
-    <div class="xpgain">+${xp} Punkte</div>
+    <div class="xpgain">+${xp} Punkt${xp===1?"":"e"}</div>
     ${window.lzEval?lzEval(S.sel.slice(),note,'write'):''}
     <div class="wlist">${G.qs.map((q,i)=>{const r=G.res[i],sp=r.p.reduce((a,b)=>a+(b||0),0);return`<div class="wans"><div class="wmeta">Aufgabe ${i+1} · ${fmtP(sp)} von ${q.k.length} Punkten</div><b>${esc(q.q)}</b>
       <div class="wmine"><small>Deine Antwort</small>${G.a[i].trim()?esc(G.a[i]):'<i>(leer)</i>'}</div>
@@ -1174,7 +1179,7 @@ function thQ(){
   const finish=v=>{
     if(G.done)return;G.done=true;
     let ok;if(q.k==='m'){ok=v.length===q.ans.length&&v.every(x=>q.ans.includes(x));}else ok=v===q.ans;
-    G.score+=ok?1:0;G.log.push(ok);recordStat('p1',ok);sfx(ok?'ok':'bad');if(ok)addXP(5);
+    G.score+=ok?1:0;G.log.push(ok);recordStat('p1',ok);sfx(ok?'ok':'bad');if(ok)addXP(5,['p1']);
     let ex='';
     if(q.k==='z'){const s=q.s;ex=s.z?`${s.n} ist im ganzen Bereich des Diagramms ${s.z}.`:`${s.n} ${s.m!=null?`schmilzt bei ${s.m} °C`:''}${s.b!=null?` und siedet bei ${s.b} °C`:''}. Bei ${q.t} °C ist es deshalb ${q.ans}.`;}
     if(q.k==='m'){const miss=q.ans.filter(n=>!v.includes(n)),wrong=v.filter(n=>!q.ans.includes(n));ex=`Bei ${q.t} °C ${q.ans.length===1?'ist':'sind'} ${q.ans.join(', ')} ${q.z}.`+(miss.length?` <b>! Vergessen:</b> ${miss.join(', ')}.`:'')+(wrong.length?` <b>✗ Falsch gewählt:</b> ${wrong.join(', ')}.`:'');}
@@ -1319,8 +1324,8 @@ function mxTask(){const T=G.tasks[G.ti],c=$('#card');c.classList.add('wide');G.p
       $('#mxgo').scrollIntoView({behavior:'smooth',block:'center'});});
     $('#mxw').scrollIntoView({behavior:'smooth',block:'nearest'});});
 }
-function mxTaskEnd(T){const c=$('#card'),ok1=G.pick===T.a,ok2=G.why===T.wa;G.score+=(ok1?1:0)+(ok2?1:0);recordStat(T.s.bath<=4||T.s.dye<=4?'p4':'p3',ok1&&ok2);
-  sfx(ok1&&ok2?'ok':'bad');if(ok1)addXP(4);if(ok2)addXP(4);
+function mxTaskEnd(T){const c=$('#card'),ok1=G.pick===T.a,ok2=G.why===T.wa,mp=T.s.bath<=4||T.s.dye<=4?'p4':'p3';G.score+=(ok1?1:0)+(ok2?1:0);recordStat(mp,ok1&&ok2);
+  sfx(ok1&&ok2?'ok':'bad');if(ok1)addXP(4,[mp]);if(ok2)addXP(4,[mp]);
   c.querySelectorAll('#mxo .opt').forEach(b=>{if(+b.dataset.i===T.a)b.classList.add('right');else if(b.classList.contains('chosen'))b.classList.add('wrong');});
   c.querySelectorAll('[data-w]').forEach(b=>{if(+b.dataset.w===T.wa)b.classList.add('right');else if(b.classList.contains('chosen'))b.classList.add('wrong');});
   const st=G.sim.stats();
@@ -1426,6 +1431,8 @@ const TK_H={
 };
 const TK_H2={"heat:h_boil": ["Sieden heißt kochen. Wie heiß muss das Wasser werden?", "Wasser siedet bei 100 °C. Stell die Heizplatte auf mindestens 100 °C.", "Lösung: Heizplatte auf 100 °C oder mehr stellen und warten, bis Blasen aufsteigen."], "heat:h_evap": ["Beim Kochen verdampft Wasser. Was passiert mit dem Wasserstand?", "Lass das Wasser bei über 100 °C lange kochen, bis nur noch die Hälfte übrig ist.", "Lösung: Heizplatte auf 120 °C und warten, bis der Wasserstand auf die Hälfte gesunken ist."], "heat:h_freeze": ["Eis entsteht nur unter 0 °C.", "Stell die Kühlung unter 0 °C und beobachte, wo das Eis zuerst entsteht.", "Lösung: Regler auf −15 °C stellen und prüfen, sobald erstes Eis entstanden ist."], "heat:h_solid": ["Für einen ganzen Eisblock musst du lange genug kühlen.", "Stell die Kühlung unter 0 °C und warte, bis alles gefroren ist. Vergleiche dann die Höhe.", "Lösung: −15 °C einstellen und warten, bis das ganze Wasser zu Eis geworden ist."], "heat:h_melt": ["Zum Schmelzen brauchst du zuerst einen ganz gefrorenen Block.", "Erst ganz einfrieren (−15 °C), dann die Platte über 0 °C stellen und warten, bis alles wieder flüssig ist.", "Lösung: −15 °C, bis alles gefroren ist, dann „🌡️ Auf 20 °C stellen“ und warten, bis kein Eis mehr da ist."], "road:r_fill": ["Wie kommt Wasser in den Riss?", "Bei Regen (über 0 °C) läuft Wasser in den Riss.", "Lösung: Temperatur über 0 °C und auf „🌧️ Regen“ tippen, eventuell zweimal."], "road:r_freeze": ["Was passiert mit Wasser unter 0 °C?", "Erst Regen, dann die Temperatur unter 0 °C stellen. Beobachte den Asphalt.", "Lösung: „🌧️ Regen“, dann Regler auf −15 °C und warten, bis alles gefroren ist."], "road:r_thaw": ["Tauen heißt: Das Eis wird wieder flüssig. Wie warm muss es sein?", "Erst Regen und Frost, dann die Temperatur über 0 °C stellen.", "Lösung: Regen → −15 °C → warten → Regler auf 15 °C und warten, bis das Eis weg ist."], "road:r_cycle": ["Eine Runde ist: Regen, Frost, Tauen. Du brauchst drei davon.", "Wiederhole Regen → Frost → Tauen dreimal. Oben im Bild wird gezählt.", "Lösung: Dreimal nacheinander Regen, −15 °C bis gefroren, 15 °C bis getaut."], "road:r_hole": ["Wann bricht der Asphalt ein? Wenn darunter ein leerer Hohlraum ist und ein Auto kommt.", "Mach mehrere Runden Regen, Frost, Tauen, damit der Hohlraum groß wird. Dann bei Tauwetter das Auto fahren lassen.", "Lösung: Zwei bis drei Runden Regen, Frost, Tauen, dann bei über 0 °C „🚗 Auto fährt drüber“."], "field:f_wet": ["Wie kommt Wasser in die Erde?", "Bei über 0 °C auf „🌧️ Regen“ tippen.", "Lösung: Regler über 0 °C stellen und auf „🌧️ Regen“ tippen."], "field:f_freeze": ["Damit Wasser im Boden gefriert, muss erst Wasser drin sein.", "Erst Regen, dann die Temperatur unter 0 °C stellen.", "Lösung: „🌧️ Regen“, dann −15 °C und warten."], "field:f_loose": ["Einmal Frost reicht nicht. Wiederhole Regen und Frost.", "Jede Runde Regen → Frost → Tauen sprengt die Klumpen weiter auseinander.", "Lösung: Mehrmals Regen, −15 °C, 15 °C, bis der Boden mindestens 80 % locker ist."], "field:f_sow": ["Säen klappt nur auf lockerem Boden und im Frühling.", "Mach den Boden mit Frostrunden locker (80 %), dann über 5 °C stellen und säen.", "Lösung: Mehrmals Regen, Frost, Tauen, dann Regler auf 15 °C und „🌾 Im Frühling säen“."], "bottle:b_burst": ["Wann wird es für die Flasche eng?", "Randvoll und Deckel zu: Das Eis hat keinen Platz.", "Lösung: Füllhöhe 100 %, „🔒 Deckel zu“, „❄️ Ins Gefrierfach“ und warten."], "bottle:b_safe": ["Eis braucht mehr Platz. Wo bekommt es den?", "Fülle die Flasche nicht ganz voll oder lass den Deckel offen.", "Lösung: Füllhöhe etwa 80 %, Deckel zu, ins Gefrierfach und warten, bis alles gefroren ist."], "bottle:b_open": ["Was passiert, wenn oben kein Deckel ist?", "Randvoll, aber Deckel offen: Das Eis wächst nach oben heraus.", "Lösung: Füllhöhe 100 %, „🔓 Deckel offen“, ins Gefrierfach und warten."]};Object.assign(TK_H,TK_H2);
 const TK_COVER='<div class="lbcover"><div>🙈 <b>Das Bild ist verdeckt.</b><br><small>Stell alles so ein, wie du denkst, und tippe dann auf „Prüfen“.</small></div></div>';
+/* Forscherlabor-Stationen → passendes Lernpaket (für Punkte nach Lernstand) */
+const TK_P={glas:'p2',strasse:'p3',acker:'p3',flasche:'p3',mix:'p3'};
 function tkNew(scope,list,isDone,setDone,state){G.tk={scope,list,isDone,setDone,state,task:null,sat:new Set(),cur:new Set()};}
 function tkSat(k){const T=G.tk;if(!T)return;T.cur.add(k);if(T.task&&!T.task.solved)T.sat.add(k);}
 function tkStart(k){const T=G.tk;if(!T)return;T.task={id:k,fails:0,hide:true,solved:false,msg:'',cls:'',pre:T.cur.has(k)};T.sat=new Set();tkHide();tkDraw();const b=$('#tktask');if(b&&innerWidth<760)b.scrollIntoView({behavior:'smooth',block:'nearest'});}
@@ -1433,8 +1440,8 @@ function tkHide(){const t=G.tk&&G.tk.task,h=!!(t&&t.hide&&!t.solved);document.qu
 function tkTouch(){const t=G.tk&&G.tk.task;if(t&&!t.solved&&!t.hide){t.hide=true;tkHide();}}
 function tkBind(el){if(!el)return;el.addEventListener('input',tkTouch);el.addEventListener('click',e=>{if(e.target.closest('button'))tkTouch();});}
 function tkCheck(){const T=G.tk,t=T&&T.task;if(!t||t.solved)return;t.hide=false;tkHide();const id=t.id;
-  if(T.sat.has(id)){t.solved=true;T.setDone(id);const xp=Math.max(5,15-4*t.fails);addXP(xp);sfx('ok');
-    t.msg=`✅ Richtig gelöst${t.fails?` nach ${t.fails} ${t.fails===1?'Fehlversuch':'Fehlversuchen'}`:' beim ersten Versuch'}! +${xp} Punkte`;t.cls='ok';
+  if(T.sat.has(id)){t.solved=true;T.setDone(id);const tp=TK_P[T.scope]||'p3';if(window.LS)LS.answer(tp,t.fails===0);const xp=addXP(Math.max(5,15-4*t.fails),[tp]);sfx('ok');
+    t.msg=`✅ Richtig gelöst${t.fails?` nach ${t.fails} ${t.fails===1?'Fehlversuch':'Fehlversuchen'}`:' beim ersten Versuch'}! +${xp} Punkt${xp===1?"":"e"}`;t.cls='ok';
     if(T.list.every(m=>T.isDone(m[0])))setTimeout(()=>{toast('🔮 Alle Aufträge dieser Station erfüllt!');confetti();sfx('rank');},900);}
   else{t.fails++;sfx('bad');const H=TK_H[T.scope+':'+id]||[],h=H[Math.min(t.fails,H.length)-1]||'';let st='';try{st=T.state?T.state():'';}catch(e){}
     t.msg=`❌ ${t.fails}. Fehlversuch.${st?' Beobachtung: '+st:''}${h?'<br>💡 '+h:''}`;t.cls='bad';}
@@ -1717,8 +1724,8 @@ function lbState(id){const T=G.T,k=G.task,st=stOf(T);
 function lbHide(){const h=!!(G.task&&G.task.hide),st=$('#labstage');if(st)st.classList.toggle('lbhid',h);document.querySelectorAll('#sname,.dens').forEach(e=>e.classList.toggle('lbveil',h));}
 function lbStart(id){G.task={id,hide:true,fails:0,frozen:G.T<0,boiled:G.T>=100,melted:false,cond:false,msg:'',cls:''};lbHide();drawMis();const b=$('#lbtask');if(b)b.scrollIntoView({behavior:'smooth',block:'nearest'});}
 function lbCheck(){const k=G.task;if(!k)return;const x=G.mis.find(m=>m.id===k.id);k.hide=false;lbHide();
-  if(lbOk(k.id)){G.done[k.id]=true;const xp=Math.max(3,10-3*k.fails);addXP(xp);recordStat(x.p,k.fails===0);sfx('ok');
-    k.msg=`✅ Richtig gelöst${k.fails?` nach ${k.fails} ${k.fails===1?'Fehlversuch':'Fehlversuchen'}`:' beim ersten Versuch'}! +${xp} Punkte`;k.cls='ok';k.solved=true;
+  if(lbOk(k.id)){G.done[k.id]=true;recordStat(x.p,k.fails===0);const xp=addXP(Math.max(3,10-3*k.fails),[x.p]);sfx('ok');
+    k.msg=`✅ Richtig gelöst${k.fails?` nach ${k.fails} ${k.fails===1?'Fehlversuch':'Fehlversuchen'}`:' beim ersten Versuch'}! +${xp} Punkt${xp===1?"":"e"}`;k.cls='ok';k.solved=true;
     if(G.mis.every(y=>G.done[y.id]))setTimeout(()=>{toast('🔮 Alle Aufträge erfüllt!');confetti();sfx('rank');},900);}
   else{k.fails++;sfx('bad');if(k.fails===3)recordStat(x.p,false);const h=LB_H[k.id][Math.min(k.fails,3)-1];
     k.msg=`❌ ${k.fails}. Fehlversuch. ${lbState(k.id)}<br>💡 ${h}`;k.cls='bad';}
@@ -1864,13 +1871,13 @@ function checkLake(){
   G.checked=true;
   G.lakeScore=G.SL.filter(s=>{const ch=G.chips.find(x=>x.id===G.place[s.id]);return ch&&ch.v===s.v;}).length;
   const ok=G.lakeScore>=8;sfx(ok?'ok':'bad');recordStat('p4',ok);
-  const xp=G.lakeScore*3;addXP(xp);G.xp=xp;
+  const xp=addXP(G.lakeScore*3,['p4']);G.xp=xp;
   if(G.lakeScore===9)confetti();
   drawLake();
 }
 function showLakeFb(){
   const n=G.lakeScore;
-  $('#fb').innerHTML=`<div class="fbox ${n===9?'ok':n>=6?'half':'bad'}"><div>${n} von 9 Feldern richtig. ${n===9?pick(PRAISE):'Die roten Felder stimmen noch nicht.'}<br>Im Sommer ist es oben am wärmsten (20 °C) und nach unten wird es kälter. Im Winter liegt oben das Eis mit 0 °C, darunter wird es wärmer: 1 °C, 2 °C, 3 °C. Am Boden hat das Wasser immer 4 °C – dort ist es am schwersten.</div><div class="xpgain">+${G.xp} Punkte</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="big go" id="again2">Nochmal</button><button class="big sec" id="home2">Zur Eingangshalle</button></div></div>`;
+  $('#fb').innerHTML=`<div class="fbox ${n===9?'ok':n>=6?'half':'bad'}"><div>${n} von 9 Feldern richtig. ${n===9?pick(PRAISE):'Die roten Felder stimmen noch nicht.'}<br>Im Sommer ist es oben am wärmsten (20 °C) und nach unten wird es kälter. Im Winter liegt oben das Eis mit 0 °C, darunter wird es wärmer: 1 °C, 2 °C, 3 °C. Am Boden hat das Wasser immer 4 °C – dort ist es am schwersten.</div><div class="xpgain">+${G.xp} Punkt${G.xp===1?"":"e"}</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="big go" id="again2">Nochmal</button><button class="big sec" id="home2">Zur Eingangshalle</button></div></div>`;
   $('#again2').onclick=lake;$('#home2').onclick=home;
 }
 
@@ -1902,11 +1909,11 @@ function drawTable(){
     G.checked=true;let right=0;
     TABLE_ROWS.forEach(([l,key],i)=>STATES.forEach(st=>{if(!!G.v[i+'|'+st]===key.includes(st))right++;}));
     G.right=right;const pct=right/24;sfx(pct>=.8?'ok':'bad');recordStat('p1',pct>=.8);
-    G.xp=Math.round(pct*30);addXP(G.xp);if(right===24)confetti();
+    G.xp=addXP(Math.round(pct*30),['p1']);if(right===24)confetti();
     drawTable();
   };
   if(G.checked){
-    $('#fb').innerHTML=`<div class="fbox ${G.right===24?'ok':G.right>=18?'half':'bad'}"><div>${G.right} von 24 Feldern richtig. Grün = richtig angekreuzt, rot = falsch angekreuzt, gelber Kreis = fehlt.<br><b>Fest:</b> regelmäßig angeordnet in festen Abständen, schwingen am Platz. <b>Flüssig:</b> dicht nebeneinander, ungeordnet, bewegen sich frei, berühren sich noch. Im Eis liegen die Teilchen also etwas weiter auseinander als im flüssigen Wasser: Deshalb ist Eis leichter und schwimmt. <b>Gasförmig:</b> ungeordnet, frei, schnell, viel Abstand.</div><div class="xpgain">+${G.xp} Punkte</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="big go" id="again2">Nochmal</button><button class="big sec" id="home2">Zur Eingangshalle</button></div></div>`;
+    $('#fb').innerHTML=`<div class="fbox ${G.right===24?'ok':G.right>=18?'half':'bad'}"><div>${G.right} von 24 Feldern richtig. Grün = richtig angekreuzt, rot = falsch angekreuzt, gelber Kreis = fehlt.<br><b>Fest:</b> regelmäßig angeordnet in festen Abständen, schwingen am Platz. <b>Flüssig:</b> dicht nebeneinander, ungeordnet, bewegen sich frei, berühren sich noch. Im Eis liegen die Teilchen also etwas weiter auseinander als im flüssigen Wasser: Deshalb ist Eis leichter und schwimmt. <b>Gasförmig:</b> ungeordnet, frei, schnell, viel Abstand.</div><div class="xpgain">+${G.xp} Punkt${G.xp===1?"":"e"}</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="big go" id="again2">Nochmal</button><button class="big sec" id="home2">Zur Eingangshalle</button></div></div>`;
     $('#again2').onclick=table;$('#home2').onclick=home;
   }
 }
@@ -1941,11 +1948,11 @@ function drawGaps(){
   if(chk)chk.onclick=()=>{
     G.checked=true;G.right=G.answers.filter((a,i)=>G.fill[i]&&bw(G.fill[i])===a).length;
     const pct=G.right/G.answers.length;sfx(pct>=.8?'ok':'bad');G.T.p.filter(p=>S.sel.includes(p)).forEach(p=>recordStat(p,pct>=.8));
-    G.xp=G.right*3;addXP(G.xp);if(pct===1)confetti();drawGaps();
+    G.xp=addXP(G.right*3,G.T.p.filter(p=>S.sel.includes(p)));if(pct===1)confetti();drawGaps();
   };
   if(G.checked){
     const wrong=G.answers.map((a,i)=>G.fill[i]&&bw(G.fill[i])===a?null:`Lücke ${i+1}: ${a}`).filter(Boolean);
-    $('#fb').innerHTML=`<div class="fbox ${wrong.length===0?'ok':wrong.length<=2?'half':'bad'}"><div>${G.right} von ${G.answers.length} Lücken richtig. ${wrong.length?'Richtig wäre: '+esc(wrong.join(' · ')):pick(PRAISE)}</div><div class="xpgain">+${G.xp} Punkte</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="big go" id="again2">Nächster Text</button><button class="big sec" id="home2">Zur Eingangshalle</button></div></div>`;
+    $('#fb').innerHTML=`<div class="fbox ${wrong.length===0?'ok':wrong.length<=2?'half':'bad'}"><div>${G.right} von ${G.answers.length} Lücken richtig. ${wrong.length?'Richtig wäre: '+esc(wrong.join(' · ')):pick(PRAISE)}</div><div class="xpgain">+${G.xp} Punkt${G.xp===1?"":"e"}</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="big go" id="again2">Nächster Text</button><button class="big sec" id="home2">Zur Eingangshalle</button></div></div>`;
     $('#again2').onclick=gaps;$('#home2').onclick=home;
   }
 }
@@ -1962,8 +1969,8 @@ function drawProto(){
   <div class="pbtns">${G.btns.filter(b=>!G.done.includes(b)).map(b=>`<button class="opt" data-b="${b}" style="text-align:center">${b}</button>`).join('')}</div><div id="fb"></div>`;
   c.querySelectorAll('.pbtns .opt').forEach(b=>b.onclick=()=>{
     if(b.dataset.b===PROTO[G.done.length]){G.done.push(b.dataset.b);sfx('ok');
-      if(G.done.length===PROTO.length){const sc=Math.max(0,1-G.miss/6);recordStat('p5',G.miss<=1);G.xp=Math.round(sc*30);addXP(G.xp);if(G.miss===0)confetti();drawProto();
-        $('#fb').innerHTML=`<div class="fbox ${G.miss===0?'ok':G.miss<=2?'half':'bad'}"><div>${G.miss===0?'Fehlerfrei! ':''}Fertig mit ${G.miss} Fehlversuch${G.miss===1?'':'en'}. Merke: Erst fragen und vermuten, dann Material bereitlegen und durchführen, dann beobachten – und in der Auswertung erklären.</div><div class="xpgain">+${G.xp} Punkte</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="big go" id="again2">Nochmal</button><button class="big sec" id="home2">Zur Eingangshalle</button></div></div>`;
+      if(G.done.length===PROTO.length){const sc=Math.max(0,1-G.miss/6);recordStat('p5',G.miss<=1);G.xp=addXP(Math.round(sc*30),['p5']);if(G.miss===0)confetti();drawProto();
+        $('#fb').innerHTML=`<div class="fbox ${G.miss===0?'ok':G.miss<=2?'half':'bad'}"><div>${G.miss===0?'Fehlerfrei! ':''}Fertig mit ${G.miss} Fehlversuch${G.miss===1?'':'en'}. Merke: Erst fragen und vermuten, dann Material bereitlegen und durchführen, dann beobachten – und in der Auswertung erklären.</div><div class="xpgain">+${G.xp} Punkt${G.xp===1?"":"e"}</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="big go" id="again2">Nochmal</button><button class="big sec" id="home2">Zur Eingangshalle</button></div></div>`;
         $('#again2').onclick=proto;$('#home2').onclick=home;return;}
       drawProto();}
     else{G.miss++;sfx('bad');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake','bad');setTimeout(()=>b.classList.remove('bad'),500);}
@@ -1977,7 +1984,7 @@ function pkGrades(pid){const u=(window.__NUTZER&&window.__NUTZER.cur)||'u1';let 
   Object.entries(S.wgrades||{}).forEach(([k,g])=>{if(k.split('+').includes(pid)&&(w===null||g<w))w=+g;});return{t,w};}
 function pkBadge(ic,lab,g){return g?`<span class="pkg ok n${g}">${ic} ${lab}: <b>Note ${g}</b></span>`:`<span class="pkg">${ic} ${lab}: noch offen</span>`;}
 function home(){
-  stopAll();G=null;
+  stopAll();G=null;if(window.LS)LS.endRound();
   const k=combo();
   const houseSec=`<h2>${S.house?'Dein Haus':'Wähle dein Haus'}</h2>${S.house?'':'<p class="sub">Jede richtige Antwort bringt deinem Haus Punkte.</p>'}
   <div class="houses">${Object.entries(HOUSES).map(([id,h])=>`<button class="house ${S.house===id?'on':''}" data-h="${id}" style="--hc:${h.c}"><span class="hi">${h.i}</span><b>${h.n}</b><span>${h.d}</span></button>`).join('')}</div>`;
@@ -1986,7 +1993,7 @@ function home(){
     return`<button class="pack ${on?'on':''}" data-p="${p.id}" aria-pressed="${on}"><div class="ptop"><span class="picon">${p.icon}</span><span class="pname"><small>Paket ${p.nr}</small>${p.name}</span><span class="check">${on?'✓':''}</span></div>
     <div class="pgoal"><b>Lernziel:</b> ${p.goal}</div>${p.src?`<small class="psrc">📄 ${p.src}</small>`:''}<div class="pbar"><i style="width:${done?100:Math.min(100,sum/16*100)}%"></i></div>
     <small class="pst">${done?'🏅 Lernziel erreicht':`Fortschritt: ${sum} von 16 Treffern (aus den letzten 20 Aufgaben)`}</small>
-    ${(()=>{const g=pkGrades(p.id);return`<div class="pkgs">${pkBadge('🏆','Abschlusstest',g.t)}${pkBadge('✍️','Schreibtest',g.w)}</div>`;})()}</button>`;
+    ${(()=>{const g=pkGrades(p.id);return`<div class="pkgs">${pkBadge('🏆','Abschlusstest',g.t)}${pkBadge('✍️','Schreibtest',g.w)}</div>`;})()}${window.LS?LS.tile(p.id):''}</button>`;
   }).join('');
   const tile=m=>{const M=MODES[m],a=avail(m);return`<button class="mode ${m==='test'||m==='write'?'feature':''}${isHl(m)?' hl':''}" data-m="${m}" ${a?'':'disabled'}><span class="mi">${M.i}</span><b>${M.t}</b><span>${M.d}</span><span class="tags">${m==='book'?'<i>alle Pakete</i>':M.p.length===5?'<i>alle Pakete</i>':M.p.map(p=>`<i>Paket ${packById(p).nr}</i>`).join('')}</span></button>`;};
   const grp=(g,title)=>`<div class="mgroup">${title}</div><div class="modes">${Object.keys(MODES).filter(m=>MODES[m].g===g).map(tile).join('')}</div>`;
@@ -2131,6 +2138,8 @@ const CQ={
 };
 const CSRC={"Die drei Aggregatzustände": "Lernzettel S. 1, 3 und 5", "Welcher Zustand bei welcher Temperatur?": "Lernzettel S. 2 (Texte A–C) und S. 3", "Teilchen im Eis": "Lernzettel S. 2 (Text C) und S. 1", "Teilchen im flüssigen Wasser": "Lernzettel S. 2 (Text A) und S. 5 (Tabelle)", "Teilchen im Wasserdampf": "Lernzettel S. 2 (Text B) und S. 5 (Tabelle)", "Dampfdruck": "Lernzettel S. 2 (Text B)", "Schmelzen": "Lernzettel S. 5 und S. 3", "Erstarren": "Lernzettel S. 5 und S. 3", "Verdampfen": "Lernzettel S. 5 und S. 4", "Verdunsten": "Lernzettel S. 4 (Buch S. 117)", "Kondensieren": "Lernzettel S. 5 und S. 4", "Sublimieren": "Lernzettel S. 6 (Buch S. 118) und S. 7/8", "Resublimieren": "Lernzettel S. 6 (Buch S. 118) und S. 7/8", "Warum schwimmt Eis?": "Lernzettel S. 1 und S. 9", "Wasser dehnt sich beim Gefrieren aus": "Lernzettel S. 1 und S. 9", "Frostsprengung": "Lernzettel S. 10 und S. 1", "Ackerboden": "Lernzettel S. 10 und S. 13", "Warmes Wasser": "Lernzettel S. 9", "Schmelzendes Eis": "Lernzettel S. 9", "Anomalie": "Lernzettel S. 11 und S. 10", "Die Regel – und die Ausnahme": "Lernzettel S. 11", "4 °C": "Lernzettel S. 11 und S. 2 (Text A)", "Der See im Sommer": "Lernzettel S. 12/13", "Der See im Winter": "Lernzettel S. 12/13", "Fische im Winter": "Lernzettel S. 12/13 und S. 1", "Versuchsprotokoll": "Lernzettel S. 14", "Vermutung": "Lernzettel S. 14", "Beobachtung und Auswertung": "Lernzettel S. 14", "Dreimal messen": "Lernzettel S. 14", "Versuch: warm in kalt": "Lernzettel S. 14 und S. 9", "Modellversuch Tinte": "Lernzettel S. 10 (Buch S. 130) und S. 9", "Schmelztemperatur": "Lernzettel S. 3 (Buch S. 116)", "Siedetemperatur": "Lernzettel S. 4 (Buch S. 117)", "Wasser – ein besonderer Stoff": "Lernzettel S. 3 (Buch S. 116)", "Kann man Wasserdampf sehen?": "Lernzettel S. 3 (Buch S. 116)", "Andere Stoffe bei 20 °C (Buch S. 117, M1)": "Lernzettel S. 4 (Buch S. 117, M1)", "Zinn, Kerzenwachs, Kupfer (M1)": "Lernzettel S. 4 (Buch S. 117, M1)", "Übergänge überspringen": "Lernzettel S. 6 (Buch S. 118)", "Die Pfütze verschwindet im Frost": "Lernzettel S. 6 (Buch S. 118)", "Raureif und Eisblumen": "Lernzettel S. 6 (Buch S. 118)", "Der Iod-Versuch": "Lernzettel S. 6 (Buch S. 118)", "Bleigießen": "Lernzettel S. 4 (Buch S. 117)", "Wie schnell verdunstet Wasser?": "Lernzettel S. 4 (Buch S. 117)"};
 Object.values(CARDS).forEach(arr=>arr.forEach(c=>{const r=CQ[c[0]],src=CSRC[c[0]];if(src)c[2]=src;if(r){c[0]=r[0];if(r[1])c[1]=r[1];}}));
+if(window.LS)LS.init({app:'Z',base:10,units:PACKS.map(p=>({id:p.id,icon:p.icon,name:p.name})),get:()=>(S.ls=S.ls||{}),save,
+  pick:id=>lzSelect(id,'rep'),meter:{icon:'🪄',name:'Zauberkraft'}});
 applyHouse();renderHeader();home();
 })();
 </script>
@@ -2139,7 +2148,7 @@ applyHouse();renderHeader();home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--teal);--lp-on:#fff;--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-wasser", "prefix": "Z", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🧊", "name": "Die drei Zustände", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p2", "icon": "🔄", "name": "Verwandlungen", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p3", "icon": "🧪", "name": "Eis schwimmt", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p4", "icon": "🏞️", "name": "Das Geheimnis des Sees", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p5", "icon": "🔬", "name": "Forschen wie Profis", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20, "write": 15}, "write": true};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.25.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.26.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -2149,22 +2158,22 @@ applyHouse();renderHeader();home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.25.0"></script>
+<script src="../js/lernplan.js?v=7.26.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.25.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.26.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.25.0"></script>
+<script src="../js/nutzer.js?v=7.26.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank .rt,#rank>div{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.25.0"></script>
+<script src="../js/home-btn.js?v=7.26.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.25.0"></script>
+<script src="../js/arena-btn.js?v=7.26.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"NWT: Wasser",f:"nwt-wasser.html",d:"Aggregatzustände, Übergänge, Eis, See im Winter, Versuchsprotokoll"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.25.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.26.0"></script>
 </body>
 </html>

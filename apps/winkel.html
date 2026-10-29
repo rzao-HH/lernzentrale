@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.25.0"></script>
+<script src="../js/app-core.js?v=7.26.0"></script>
+<script src="../js/lernstand.js?v=7.26.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="W";window.__DATAKEY="winkelakademie-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.25.0"></script>
+<script src="../js/nutzer-init.js?v=7.26.0"></script>
 
 <meta charset="utf-8">
 <meta name="color-scheme" content="light">
@@ -413,10 +414,14 @@ function renderHeader(){
 $('#soundBtn').onclick=()=>{S.sound=!S.sound;save();renderHeader();};
 $('#brand').onclick=()=>home();
 
-function addXP(n){
+/* Punkte vergeben – nach Lernstand der Pakete (js/lernstand.js). ids: Pakete der Aufgabe; raw: ohne Lernstand (z. B. Lernziel-Bonus).
+   Gibt die tatsächlich vergebenen Punkte zurück. */
+function addXP(n,ids,raw){
+  if(!raw&&window.LS)n=LS.pts(n,ids||S.sel);
   const before=rankIdx(S.xp);S.xp+=n;save();renderHeader();
   const after=rankIdx(S.xp);
   if(after>before){setTimeout(()=>{toast(`${RANKS[after].i} Neuer Rang: ${RANKS[after].n}!`);confetti();sfx('rank');},250);}
+  return n;
 }
 function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2800);}
 function confetti(){
@@ -435,11 +440,11 @@ function confetti(){
 function packSum(id){const s=S.stats[id];return s?s.h.reduce((a,b)=>a+b,0):0;}
 function recordStat(pid,ok){
   const s=S.stats[pid]||(S.stats[pid]={h:[],done:false});
-  s.h.push(ok?1:0); if(s.h.length>20)s.h.shift();
+  s.h.push(ok?1:0); if(s.h.length>20)s.h.shift();if(window.LS)LS.answer(pid,ok);
   if(!s.done&&packSum(pid)>=16){
     s.done=true; save();
     setTimeout(()=>{toast(`🏅 Lernziel erreicht: Paket ${packById(pid).nr} · ${packById(pid).name}`);confetti();sfx('rank');},400);
-    addXP(50);
+    addXP(50,null,true);
   }
   save();
 }
@@ -1407,13 +1412,13 @@ function answer(val){
     const gp=$('#gprog');if(gp)gp.firstChild.nodeValue=`${G.score} Punkte · `;
     G.to=setTimeout(next,r.correct?350:1200);return;
   }
-  const xp=q.kind==='estimate'?Math.round(r.score*3)*4:r.score===1?10:r.score>0?5:0;
-  if(xp){G.xp+=xp;addXP(xp);}
+  let xp=q.kind==='estimate'?Math.round(r.score*3)*4:r.score===1?10:r.score>0?5:0;
+  if(xp){xp=addXP(xp,[q.pack]);G.xp+=xp;}
   G.revealed=true;
   if(q.kind==='task')redraw();else if(q.kind==='draw')revealDraw();else if(q.kind==='konstr'){kDraw();kPanel();}else if(q.kind!=='degree')renderAngle(q,{reveal:true});
   $('#panel').classList.add('answered');
   const fb=$('#fb');
-  fb.innerHTML=`<div class="fbox ${r.correct?'ok':r.score>0?'half':'bad'}"><div>${r.msg}</div>${xp?`<div class="xpgain sm">+${xp} Punkte</div>`:''}<button class="big go" id="weiter">${G.i+1>=G.total?'Auswertung ▶':'Weiter ▶'}</button></div>`;
+  fb.innerHTML=`<div class="fbox ${r.correct?'ok':r.score>0?'half':'bad'}"><div>${r.msg}</div>${xp?`<div class="xpgain sm">+${xp} Punkt${xp===1?"":"e"}</div>`:''}<button class="big go" id="weiter">${G.i+1>=G.total?'Auswertung ▶':'Weiter ▶'}</button></div>`;
   $('#weiter').onclick=()=>{G.i++;next();};
   fb.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
@@ -1421,18 +1426,18 @@ function noteFor(p){return p>=92?1:p>=81?2:p>=67?3:p>=50?4:p>=30?5:6;}
 function fmt(n){return(Math.round(n*100)/100).toLocaleString('de-DE');}
 function finish(){
   if(G.finished)return;
-  stopAll();G.finished=true;
+  stopAll();G.finished=true;if(window.LS)LS.endRound();
   const m=G.mode,k=combo();let body='';
   if(m==='time'){
     const old=S.high[k]||0,rec=G.score>old;
     if(rec){S.high[k]=G.score;save();}
-    const xp=G.score*5;if(xp)addXP(xp);
-    body=`<div class="rbig">${G.score}</div><p>richtige Antworten in 60 Sekunden</p><p>${rec&&G.score>0?'🏆 Neuer Rekord!':'Rekord: '+old}</p>${xp?`<div class="xpgain">+${xp} Punkte</div>`:''}`;
+    let xp=G.score*5;if(xp)xp=addXP(xp,[...new Set(G.log.map(l=>l.q.pack))]);
+    body=`<div class="rbig">${G.score}</div><p>richtige Antworten in 60 Sekunden</p><p>${rec&&G.score>0?'🏆 Neuer Rekord!':'Rekord: '+old}</p>${xp?`<div class="xpgain">+${xp} Punkt${xp===1?"":"e"}</div>`:''}`;
     if(rec&&G.score>0)confetti();
   }else if(m==='test'){
     const max=G.log.length,pts=G.log.reduce((a,l)=>a+l.r.score,0),pct=pts/max*100,n=noteFor(pct);lzRec("W",S.sel,n);
     if(!S.grades[k]||n<S.grades[k]){S.grades[k]=n;save();}
-    const xp=[0,100,80,60,40,20,10][n];addXP(xp);
+    const xp=addXP([0,100,80,60,40,20,10][n],S.sel);
     const rv=G.log.map((l,i)=>{
       const q=l.q,r=l.r,T=q.kind==='task'?null:typeOf(q.deg);let t;
       if(q.kind==='task')t=`${q.short}: ${taskAnsText(q,l.val)}${r.score===1?'':` (richtig: ${taskRightText(q)})`}`;
@@ -1444,12 +1449,12 @@ function finish(){
       const c=r.score===1?'ok':r.score>0?'half':'bad';
       return`<li class="${c}"><span>${r.score===1?'✓':r.score>0?'½':'✗'}</span>${i+1}. ${t}</li>`;
     }).join('');
-    body=`<div class="note n${n}">Note ${n}</div><p>${NOTE_TXT[n]} · ${fmt(pts)} von ${max} Punkten (${Math.round(pct)} %)</p>${window.lzEval?lzEval(S.sel,n):''}<div class="xpgain">+${xp} Punkte</div><ul class="review">${rv}</ul>`;
+    body=`<div class="note n${n}">Note ${n}</div><p>${NOTE_TXT[n]} · ${fmt(pts)} von ${max} Punkten (${Math.round(pct)} %)</p>${window.lzEval?lzEval(S.sel,n):''}<div class="xpgain">+${xp} Punkt${xp===1?"":"e"}</div><ul class="review">${rv}</ul>`;
     if(n<=2)confetti();
   }else{
     const c=G.log.filter(l=>l.r.correct).length,pct=c/G.log.length;
     const st=pct>=.9?3:pct>=.7?2:pct>=.5?1:0;
-    body=`<div class="rstars">${'★'.repeat(st)}${'☆'.repeat(3-st)}</div><div class="rbig">${c} / ${G.log.length}</div><p>${m==='estimate'?'gut geschätzt (höchstens 10° daneben)':m==='draw'?'genau gezeichnet (höchstens 5° daneben)':'richtig'}</p>${G.xp?`<div class="xpgain">+${G.xp} Punkte</div>`:''}`;
+    body=`<div class="rstars">${'★'.repeat(st)}${'☆'.repeat(3-st)}</div><div class="rbig">${c} / ${G.log.length}</div><p>${m==='estimate'?'gut geschätzt (höchstens 10° daneben)':m==='draw'?'genau gezeichnet (höchstens 5° daneben)':'richtig'}</p>${G.xp?`<div class="xpgain">+${G.xp} Punkt${G.xp===1?"":"e"}</div>`:''}`;
     if(st===3)confetti();
   }
   app.innerHTML=`<div class="result"><div class="rcard"><div class="rtitle">${MODES[m].icon} ${MODES[m].title}</div>${body}<div class="rbtns"><button class="big go" id="again">Nochmal</button><button class="big sec" id="tohome">Zur Basis</button></div></div></div>`;
@@ -1733,7 +1738,7 @@ const LEARN2=`
 /* Basis */
 function home(){
   vlLeave();
-  stopAll();G=null;
+  stopAll();G=null;if(window.LS)LS.endRound();
   const k=combo();
   const packCard=p=>{
     const on=S.sel.includes(p.id),s=S.stats[p.id],sum=packSum(p.id),done=s&&s.done;
@@ -1741,7 +1746,7 @@ function home(){
       <div class="ptop"><span class="picon">${p.icon}</span><span class="pname"><small>Paket ${p.nr}</small>${p.name}</span><span class="check">${on?'✓':''}</span></div>
       <div class="pgoal"><b>Lernziel:</b> ${p.goal}</div>${p.src?`<small class="psrc">📄 ${p.src}</small>`:''}
       <div class="pbar"><i style="width:${done?100:Math.min(100,sum/16*100)}%"></i></div>
-      <small class="pst">${done?'🏅 Lernziel erreicht':`Fortschritt: ${sum} von 16 Treffern (aus den letzten 20 Aufgaben)`}</small></button>`;
+      <small class="pst">${done?'🏅 Lernziel erreicht':`Fortschritt: ${sum} von 16 Treffern (aus den letzten 20 Aufgaben)`}</small>${window.LS?LS.tile(p.id):''}</button>`;
   };
   const packs=`<p class="pgrp">📐 Winkelarten &amp; Messen</p><div class="packs">${PACKS.filter(p=>!p.task).map(packCard).join('')}</div><p class="pgrp">🧭 Karte, Kompass &amp; Zeichnen</p><div class="packs">${PACKS.filter(p=>p.task).map(packCard).join('')}</div>`;
   const dis=!S.sel.length,sa=selA(),st=selT();
@@ -1778,6 +1783,8 @@ window.lzRehome=()=>{if(document.querySelector('.packs')&&!document.querySelecto
 /* „Diese Pakete wählen“ aus dem Lernplan: wählt nur die Pakete aus und markiert unten den passenden Modus – springt nicht mehr hin */
 window.lzSelect=(ids,mt)=>{S.sel=ids.split(',');LZ_IDS=S.sel.slice();LZ_HL=mt||'test';save();const y=app.scrollTop;home();app.scrollTop=y;};
 window.lzSelActive=(ids,mt)=>LZ_HL===mt&&lzSame(LZ_IDS,ids.split(','))&&lzSame(S.sel,LZ_IDS);
+if(window.LS)LS.init({app:'W',base:10,units:PACKS.map(p=>({id:p.id,icon:p.icon,name:p.name})),get:()=>(S.ls=S.ls||{}),save,
+  pick:id=>lzSelect(id,'rep'),meter:{icon:'⚡',name:'Energie'}});
 renderHeader();
 home();
 })();
@@ -1787,7 +1794,7 @@ home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--accent);--lp-on:#fff;--lp-font:inherit;--lp-display:inherit;}</style>
 <script>window.LP_CONF={"key": "lernplan-winkel", "prefix": "W", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🛰️", "name": "Spitz & Recht", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p2", "icon": "🚀", "name": "Stumpf & Gestreckt", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p3", "icon": "🪐", "name": "Überstumpf", "learn": "Erst „Wissen“ lesen, dann Messen, Winkelart erkennen und Winkel konstruieren.", "rep": "Winkel konstruieren, Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p4", "icon": "🌌", "name": "Null, Voll & Grenzfälle", "learn": "Erst „Wissen“ lesen, dann Messen und Winkelart erkennen.", "rep": "Schätzen, Gradzahl einordnen oder Zeitrunde."}, {"id": "p5", "icon": "🧭", "name": "Kompass & Kurs", "learn": "Erst „Wissen“ (Kompass und Kurs) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p6", "icon": "🏷️", "name": "Winkel benennen", "learn": "Erst „Wissen“ (Teile des Winkels) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p7", "icon": "🧮", "name": "Winkel berechnen", "learn": "Erst „Wissen“ (Winkel berechnen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}, {"id": "p8", "icon": "📏", "name": "Senkrechte & Parallelen", "learn": "Erst „Wissen“ (Senkrechte und Parallelen) lesen, dann Aufgaben-Mission.", "rep": "Aufgaben-Mission."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.25.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.26.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -1797,24 +1804,24 @@ home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.25.0"></script>
+<script src="../js/lernplan.js?v=7.26.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:440px){.brand{font-size:0!important}.brand svg{width:30px;height:30px}}</style>
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.25.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.26.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.25.0"></script>
+<script src="../js/nutzer.js?v=7.26.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){.rt{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.25.0"></script>
+<script src="../js/home-btn.js?v=7.26.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.25.0"></script>
+<script src="../js/arena-btn.js?v=7.26.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Mathe: Winkel",f:"mathe-winkel.html",d:"Kompass, Winkelarten, Messen, Zeichnen, Berechnen, Geodreieck, Test"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.25.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.26.0"></script>
 </body>
 </html>

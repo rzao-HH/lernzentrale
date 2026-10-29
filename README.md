@@ -17,6 +17,7 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 | `js/groups.js` | Lerngruppen: anlegen, teilen, beitreten |
 | `js/arena.js` | Arena: Tauziehen, Power-ups, Geister-Duell, Glücksrad (online-Anzeige und Live-Züge über die Datenbank der Lerngruppe, Abfrage alle 1–3 s) |
 | `js/news.js` | „Was ist neu?“ |
+| `js/lernstand.js` | Punkte nach Lernstand (Stufe 0–5 je Paket, verteilte Wiederholung) – alle Werte zentral in `LS_CONF` |
 | `js/lernzettel-btn.js` | 📄-Knopf in der Kopfleiste: öffnet die Lernzettel der App (Liste je App in `window.__LZ_ZETTEL`) |
 | `apps/*.html` | Die vier Apps |
 | `js/app-core.js`, `js/nutzer-init.js`, `js/nutzer.js`, `js/lernplan.js`, `js/home-btn.js`, `js/arena-btn.js`, `css/nutzer.css`, `css/lernplan.css` | Gemeinsame Bausteine aller Apps |
@@ -33,6 +34,14 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 Auf dem Gerät liegt alles im localStorage derselben Adresse. Schlüssel u. a. `nutzer-alle`, `lz-ergebnisse`, `lernplan-*@<person>` (Lernplan pro Person), `lzp-*`, App-Stände (`winkelakademie-v1`, `wasserzauberschule-v1`, `unit6-progress`, `detektivbuero-v1`), `lz-groups@…`, `lz-arena-…`.
 
 **Winkel-Akademie, Auswertung:** In `winkelakademie-v1` liegen zusätzlich `vl` (Verlauf je `<Paket>|<Aufgabenart>`, Antworten aus dem Abschlusstest zusätzlich unter `<Paket>|<Aufgabenart>|T`: Versuche `n`, Treffer `ok`, Zeit `ms`/`mn`, letzte 10 Ergebnisse `h`, Fehlerarten `err`, Tageswerte `d` = {Datum: [Aufgaben, richtig]} für 60 Tage, in der Aufgaben-Mission je Aufgabenart `sub`), `ab` (je Übung: gestartet `s`, vorzeitig beendet `a`, davon direkt nach einem Fehler `w`), `self` (Gefühl je Checklisten-Zeile: 1 gut · 2 geht so · 3 schwierig) und `note` (freie Frage des Kindes). Angezeigt in der Checkliste („Ergebnisse & Tipp“, „Übersicht für Eltern“); Empfehlungen entstehen ohne KI aus diesen Zahlen. Sie wandern über den normalen Abgleich mit (`app:W`).
+
+## Punkte nach Lernstand (`js/lernstand.js`)
+Jedes Lernpaket hat eine Stufe 0–5, gespeichert im App-Stand der Person (`ls`, Küsten-Crew `_ls`) als `{s: Stufe, t: letzte wertende Runde, d: Tag, r: Runden an diesem Tag}` – wandert mit `app:W|Z|E|D` mit.
+- **Runde:** mindestens 4 Antworten zu einem Paket; gewertet am Rundenende (Ergebnis, Übersicht, App verlassen). ≥ 80 % richtig → Stufe +1 (nur wenn fällig), < 50 % → Stufe −1.
+- **Punkte:** Stufe 0–1 voll · Stufe 2+ und Intervall läuft noch (1/2/4/8/16 Tage) 15 %, mindestens 1 · fällig voll · ab doppeltem Intervall +20 % · ab der 3. Runde am selben Tag 15 %. Tests mit Note: Durchschnitt der Pakete im Test. Lernziel-Bonus (+50) unverändert.
+- **Vergabe:** `addXP(n, pakete)` (Winkel, Wasser, Detektiv) bzw. `kcXP(n, pakete)` (Küsten-Crew) geben die tatsächlich vergebenen Punkte zurück. Antworten zählen über `recordStat`/`kcStat` bzw. `LS.answer`. Küsten-Übungen ohne Paket: `KC_MP` (Café → Vokabelpakete mit den Café-Wörtern, Verhör → g3, Zeiten-Werkstatt → g4, Schreibwerkstatt → g5, Nachschreibtest → g2/g3/g4/g6); Forscherlabor-Stationen der Wasser-Zauberschule: `TK_P`.
+- **Anzeige:** `LS.tile(paket)` auf jeder Paket-Kachel, Hinweis-Banner bei wenig Punkten, „⭐ Heute lohnt sich besonders“ auf der Startseite (`lohntHTML` in `js/start.js`).
+- **Nachjustieren:** nur `window.LS_CONF` oben in `js/lernstand.js` ändern.
 
 ## Konten
 Jede Person meldet sich mit einem Benutzernamen an (überall eindeutig, Groß-/Kleinschreibung egal, noch ohne Passwort). In `nutzer-alle` steht er als `acc`.

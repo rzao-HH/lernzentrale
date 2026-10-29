@@ -249,3 +249,13 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
 .acc-es{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
 .acc-es button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--soft);font-size:22px;cursor:pointer;padding:0}
 .acc-es button.on{border:2px solid var(--W);background:var(--card)}
+/* ⭐ Heute lohnt sich besonders (Punkte nach Lernstand) */
+.lohnt{margin:0 0 18px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.lohnt h2{margin:0 0 8px;font-family:var(--display);font-size:1.15rem}
+.lohnt-l{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.lohnt-i{display:flex;align-items:center;gap:10px;min-height:52px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--soft);color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.lohnt-i.lk-bonus{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,var(--card))}
+.lohnt-a{font-size:1.3rem;flex:none}
+.lohnt-n{flex:1;min-width:0;line-height:1.2}.lohnt-n b{display:block;overflow:hidden;text-overflow:ellipsis}.lohnt-n small{color:var(--muted);font-weight:700}
+.lohnt-p{flex:none;font-weight:800;white-space:nowrap}
+.lohnt-e{margin:0;color:var(--muted);font-size:.95rem}

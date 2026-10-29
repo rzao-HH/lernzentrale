@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.25.0"></script>
+<script src="../js/app-core.js?v=7.26.0"></script>
+<script src="../js/lernstand.js?v=7.26.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="E";window.__DATAKEY="unit6-progress";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="lp-en";</script>
-<script src="../js/nutzer-init.js?v=7.25.0"></script>
+<script src="../js/nutzer-init.js?v=7.26.0"></script>
 
 <meta charset="UTF-8">
 <meta name="color-scheme" content="light">
@@ -1623,13 +1624,13 @@ function renderFlash(){
 
   document.getElementById("btnKnow").addEventListener("click", (e)=>{
     e.stopPropagation();
-    progress[w.en] = (progress[w.en]||0) + 1;
-    saveProgress(); kcXP(2);
+    progress[w.en] = (progress[w.en]||0) + 1;kcAns(kcUW(w),true);
+    saveProgress(); kcXP(2,[kcUW(w)]);
     idx++; updateProgressBar(); render();
   });
   document.getElementById("btnAgain").addEventListener("click", (e)=>{
     e.stopPropagation();
-    deck.push(w);
+    deck.push(w);kcAns(kcUW(w),false);
     idx++; updateProgressBar(); render();
   });
 }
@@ -1668,9 +1669,9 @@ function handleAnswer(btn, chosen, correct, w){
 
   if(chosen === correct){
     btn.classList.add("correct");
-    progress[w.en] = (progress[w.en]||0) + 1; kcXP(5);
+    progress[w.en] = (progress[w.en]||0) + 1; kcAns(kcUW(w),true);kcXP(5,[kcUW(w)]);
   } else {
-    btn.classList.add("wrong");kcSfx(false);
+    btn.classList.add("wrong");kcSfx(false);kcAns(kcUW(w),false);
     allBtns.forEach(b=>{ if(b.textContent === correct) b.classList.add("correct"); });
     deck.push(w);
   }
@@ -1814,10 +1815,10 @@ function checkTestAnswer(given, entry){
   const input = document.getElementById("testInput");
   const btnCheck = document.getElementById("btnCheck");
   if(input.disabled) return;
-  const correct = isAnswerCorrect(given, solution);
+  const correct = isAnswerCorrect(given, solution);kcAns(kcUW(w),correct);
   if(correct){
     testCorrect++;
-    progress[w.en] = (progress[w.en]||0) + 1; kcXP(4);
+    progress[w.en] = (progress[w.en]||0) + 1; kcXP(4,[kcUW(w)]);
     saveProgress();
   }
   testAnswers.push({
@@ -1968,13 +1969,13 @@ function duelAnswer(btn, correct, correctText, timeout){
     const dmg = 12 + speedBonus + Math.min(duelCombo*2, 10);
     duelVaderHp = Math.max(0, duelVaderHp - dmg);
     document.getElementById("hpVader").style.width = duelVaderHp + "%";
-    progress[duelWord.en] = (progress[duelWord.en]||0) + 1; kcXP(5);
+    progress[duelWord.en] = (progress[duelWord.en]||0) + 1; kcAns(kcUW(duelWord),true);kcXP(5,[kcUW(duelWord)]);
     saveProgress();
     flash.textContent = speedBonus ? "⚡ Blitzschneller Block! −" + dmg : "🗡️ Treffer! −" + dmg;
     flash.style.color = "#1B7A72";
   } else {
     if(btn) btn.classList.add("wrong");
-    duelCombo = 0;
+    duelCombo = 0;kcAns(kcUW(duelWord),false);
     duelPlayerHp = Math.max(0, duelPlayerHp - 18);
     document.getElementById("hpPlayer").style.width = duelPlayerHp + "%";
     document.getElementById("duelCard").classList.add("shake");
@@ -2061,13 +2062,13 @@ function renderFalcon(){
 function checkFalcon(given){
   const fb = document.getElementById("falconFeedback");
   if(isAnswerCorrect(given, falconWord.de)){
-    progress[falconWord.en] = (progress[falconWord.en]||0) + 1; kcXP(5);
+    progress[falconWord.en] = (progress[falconWord.en]||0) + 1; kcAns(kcUW(falconWord),true);kcXP(5,[kcUW(falconWord)]);
     saveProgress();
     falconDone++;
     fb.innerHTML = `<div class="test-feedback correct">✅ ${FALCON_PARTS[falconDone-1]} repariert!</div>`;
     setTimeout(renderFalcon, 900);
   } else {
-    falconTries++;
+    falconTries++;if(falconTries===1)kcAns(kcUW(falconWord),false);
     if(falconTries >= 2){
       fb.innerHTML = `<div class="test-feedback wrong">Richtig wäre: ${falconWord.de} – schau es dir an, dann weiter.</div>`;
       document.getElementById("btnFalconCheck").textContent = "Weiter →";
@@ -2271,7 +2272,7 @@ function stSelf(au,err){
 function escHtml(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function stResult(au,v,fb,by){
   const pts=au.a1+au.a2+v.g+v.s+v.i,max=16,pct=Math.round(pts/max*100),grade=gradeFromPercent(pct),info=GRADE_INFO[grade];
-  if(window.lzRec)lzRec("E",["g5"],grade);kcXP([0,100,80,60,40,20,10][grade]||0);
+  if(window.lzRec)lzRec("E",["g5"],grade);kcXP([0,100,80,60,40,20,10][grade]||0,["g5"]);
   const f=x=>String(x).replace('.',',');
   const rows=[["Mindestens 6 Sätze",au.a1,2],["Alle 8 Pflichtverben im Simple Past",au.a2,4],["Simple Past richtig verwendet",v.g,4],["Rechtschreibung und Satzbau",v.s,3],["Inhalt und Ideen",v.i,3]];
   sceneEl.innerHTML=`<div class="done st">
@@ -2414,7 +2415,7 @@ function gFinishItem(correct, solution, inputs){
   const check = document.getElementById("gCheck");
   if(check) check.disabled = true;
   if(correct) gCorrect++; else {gWrong.push(solution);kcSfx(false);}
-  kcStat(KC_ITEMUNIT.get(gDeck[gIdx]),correct); if(correct) kcXP(gIsTest?4:5);
+  kcStat(KC_ITEMUNIT.get(gDeck[gIdx]),correct); if(correct) kcXP(gIsTest?4:5,[KC_ITEMUNIT.get(gDeck[gIdx])]);
 
   document.getElementById("gFeedback").innerHTML =
     `<div class="test-feedback ${correct?'correct':'wrong'}">
@@ -2558,8 +2559,9 @@ function gdAnswer(btn, correct, correctText, timeout){
     if(b.textContent === correctText) b.classList.add("correct");
   });
   const flash = document.getElementById("gdFlash");
+  kcAns(KC_ITEMUNIT.get(gdItem),!!correct);
   if(correct){
-    kcXP(5);
+    kcXP(5,[KC_ITEMUNIT.get(gdItem)]);
     gdCombo++; gdBest = Math.max(gdBest, gdCombo);
     const bonus = (performance.now()-gdStart) < DUEL_TIME/2 ? 5 : 0;
     const dmg = 12 + bonus + Math.min(gdCombo*2, 10);
@@ -2784,9 +2786,9 @@ function renderRaceQ(){
     const ok = isAnswerCorrect(input.value, solution);
     input.disabled = true;
     document.getElementById("raceCheck").disabled = true;
-    if(ok){
+    kcAns(kcUW(w),ok);if(ok){
       raceScore++;
-      progress[w.en] = (progress[w.en]||0) + 1; kcXP(5);
+      progress[w.en] = (progress[w.en]||0) + 1; kcXP(5,[kcUW(w)]);
       saveProgress();
     }
     raceMarks[raceIdx] = ok;
@@ -2876,11 +2878,27 @@ function kcVSel(){return kcSel().filter(x=>x[0]==="v").map(x=>+x.slice(1)).filte
 /* Karten/Quiz: gewählte Vokabelpakete + gewählte Verben-Pakete (Verb vorne, Bedeutung hinten, darunter die Formen) */
 function kcVerbCards(){return ilVerbs().map(v=>({en:v.inf,de:v.de,ex:"",vb:"Simple Past: "+v.past+" · 3. Form: "+v.pp}));}
 function kcWords(){const v=kcVSel(),vb=kcVerbCards(),w=v.length?v.flatMap(i=>PACKAGES[i]):(vb.length?[]:WORDS);return w.concat(vb);}
-function kcXP(n){progress.xp=Math.max(0,(+progress.xp||0)+n);saveProgress();kcRankDraw();if(n>0&&n<=5)kcSfx(true);}
+/* ===== Punkte nach Lernstand (js/lernstand.js): zu welchem Paket gehört eine Aufgabe? ===== */
+const KC_WUNIT=new Map(),KC_VUNIT=new Map();
+PACKAGES.forEach((p,i)=>p.forEach(w=>{if(!KC_WUNIT.has(w.en))KC_WUNIT.set(w.en,"v"+i);}));
+VK.forEach((v,i)=>KC_VUNIT.set(v.inf,"i"+Math.floor(i/10)));
+function kcUW(w){if(!w)return null;return KC_ITEMUNIT.get(w)||(w.vb?KC_VUNIT.get(w.en):null)||KC_WUNIT.get(w.en)||KC_VUNIT.get(w.inf||w.en)||null;}
+/* Übungen ohne eigenes Paket → inhaltlich passendes Paket (sonst die Auswahl). Das Café nutzt Wörter aus mehreren Paketen:
+   es zählt für die Punkte mit, hebt aber keine Stufe (kcAnsCtx nur bei Verhör und Zeiten-Werkstatt) */
+const KC_MP={cafe:()=>[...new Set(CAFE_MENU.map(m=>KC_WUNIT.get(m.n)||KC_WUNIT.get(m.en)).filter(Boolean))],
+  verhoer:["g3"],zeiten:["g4"],story:["g5"],nach:["g2","g3","g4","g6"]};
+let KC_CUR=null;
+function kcCtxMapped(){const f=KC_MP[KC_CUR];const r=typeof f==="function"?f():f;return r&&r.length?r:null;}
+function kcCtx(){return kcCtxMapped()||kcSel();}
+function kcAns(u,ok){if(u&&window.LS)LS.answer(u,ok);}
+function kcAnsCtx(ok){(kcCtxMapped()||[]).forEach(u=>kcAns(u,ok));}
+/* Punkte vergeben – nach Lernstand der Pakete. ids: Pakete der Aufgabe; raw: ohne Lernstand. Gibt die vergebenen Punkte zurück. */
+function kcXP(n,ids,raw){ids=(ids||[]).filter(Boolean);if(!raw&&window.LS&&n>0)n=LS.pts(n,ids.length?ids:kcCtx());
+  progress.xp=Math.max(0,(+progress.xp||0)+n);saveProgress();kcRankDraw();if(n>0&&n<=5)kcSfx(true);return n;}
 function kcSfx(ok){if(progress._mute)return;try{const C=kcSfx.c||(kcSfx.c=new (window.AudioContext||window.webkitAudioContext)());const t=C.currentTime;
   (ok?[[660,0],[990,.09]]:[[220,0],[165,.12]]).forEach(([f,d])=>{const o=C.createOscillator(),g=C.createGain();o.type=ok?"sine":"triangle";o.frequency.value=f;g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.18,t+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d+.22);o.connect(g);g.connect(C.destination);o.start(t+d);o.stop(t+d+.25);});}catch(e){}}
 function kcSndDraw(){const b=document.getElementById("kcSnd");if(b)b.textContent=progress._mute?"🔇":"🔊";}
-function kcStat(u,ok){if(!u)return;const S=progress._st=progress._st||{};const a=S[u]=S[u]||[];a.push(ok?1:0);if(a.length>20)a.shift();saveProgress();}
+function kcStat(u,ok){if(!u)return;kcAns(u,ok);const S=progress._st=progress._st||{};const a=S[u]=S[u]||[];a.push(ok?1:0);if(a.length>20)a.shift();saveProgress();}
 function kcRank(){const x=+progress.xp||0;let r=KC_RANKS[0],n=null;KC_RANKS.forEach((k,i)=>{if(x>=k[0]){r=k;n=KC_RANKS[i+1]||null;}});return{x,r,n};}
 function kcRankDraw(){const el=document.getElementById("kcRank");if(!el)return;const {x,r,n}=kcRank();
   el.innerHTML=`<b>${r[2]} ${r[1]}</b><span>${x.toLocaleString("de-DE")} Punkte${n?" · nächster Rang bei "+n[0].toLocaleString("de-DE"):""}</span>`;}
@@ -2928,12 +2946,12 @@ function kcHomeHTML(){
     return `<button type="button" class="kc-pk${on?" on":""}" data-pk="${id}" aria-pressed="${on}"><span class="kc-ck">${on?"✓":""}</span>
       <small>Paket ${i+1} · Vokabeln ${a}–${b}</small><b>${kcEsc(p.slice(0,3).map(w=>w.en).join(", "))} …</b>
       <span class="kc-goal"><em>Lernziel:</em> Ich kann diese ${p.length} Wörter auf Englisch und Deutsch.</span>${KC_VSRC[i]?`<span class="kc-fx">📄 ${KC_VSRC[i]}</span>`:""}
-      <span class="kc-bar"><i style="width:${m.pct}%"></i></span><span class="kc-fx">Fortschritt: ${m.known} von ${m.total} Wörtern sicher</span></button>`;}).join("");
+      <span class="kc-bar"><i style="width:${m.pct}%"></i></span><span class="kc-fx">Fortschritt: ${m.known} von ${m.total} Wörtern sicher</span>${window.LS?LS.tile(id):""}</button>`;}).join("");
   const gCards=KC_GORDER.map(id=>{const g=KC_G[id],on=sel.includes(id),a=st[id]||[],hit=a.reduce((x,y)=>x+y,0);
     return `<button type="button" class="kc-pk${on?" on":""}" data-pk="${id}" aria-pressed="${on}"><span class="kc-ck">${on?"✓":""}</span>
       <small>${g.verbs?"Unregelmäßige Verben":"Grammatik"}</small><b>${g.ic} ${kcEsc(g.name)}</b>
       <span class="kc-goal"><em>Lernziel:</em> ${kcEsc(g.goal)}</span>${KC_GSRC[id]?`<span class="kc-fx">📄 ${KC_GSRC[id]}</span>`:""}
-      <span class="kc-bar"><i style="width:${Math.round(hit/20*100)}%"></i></span><span class="kc-fx">Fortschritt: ${hit} von 20 Treffern (aus den letzten 20 Aufgaben)</span></button>`;}).join("");
+      <span class="kc-bar"><i style="width:${Math.round(hit/20*100)}%"></i></span><span class="kc-fx">Fortschritt: ${hit} von 20 Treffern (aus den letzten 20 Aufgaben)</span>${window.LS?LS.tile(id):""}</button>`;}).join("");
   const hlIds=kcHlIds(LZ_HL);
   const groups=["Lernen","Üben","Erleben","Spiele","Prüfen"].map(G=>`<div class="kc-mg">${G}</div><div class="kc-ms-grid">${KC_MS.filter(m=>m.g===G).map(m=>{const ok=kcNeedOk(m);
     return `<button type="button" class="kc-ms${ok?"":" off"}${m.prf?" prf":""}${hlIds.includes(m.id)?" hl":""}" data-ms="${m.id}"${ok?"":` aria-disabled="true" title="Dafür ${kcEsc(kcNeedTxt(m))} wählen"`}><span class="kc-mi">${m.ic}</span><span><b>${kcEsc(m.t)}</b><small>${kcEsc(m.d)}</small></span></button>`;}).join("")}</div>`).join("");
@@ -2947,7 +2965,7 @@ function kcHomeHTML(){
   <h2 class="kc-h"><span class="kc-num">2</span> Mission starten</h2>${groups}<div id="kcToast" class="kc-toast" role="status"></div>`;
 }
 function kcShowHome(){
-  kcInMission=false;kcGramActive=false;try{speechSynthesis.cancel();}catch(e){}
+  kcInMission=false;kcGramActive=false;if(window.LS)LS.endRound();try{speechSynthesis.cancel();}catch(e){}
   try{clearInterval(raceTickId);}catch(e){}try{clearDuelTimers();}catch(e){}try{gdClear();}catch(e){}
   document.body.classList.add("kc-home");kcSndDraw();
   const h=document.getElementById("kcHome");h.innerHTML=kcHomeHTML();kcRankDraw();if(window.lzBar)lzBar();
@@ -2958,6 +2976,7 @@ function kcToast(t){const el=document.getElementById("kcToast");if(!el)return;el
 function kcStart(id){
   const m=KC_MS.find(x=>x.id===id);if(!m)return;
   if(!kcNeedOk(m)){kcToast("Wähle dafür oben "+kcNeedTxt(m)+".");return;}
+  if(window.LS)LS.endRound();KC_CUR=id;
   window.__riSkip=false;kcGramActive=false;
   if(id==="video"){if(navigator.onLine===false){kcToast("Zum Ansehen brauchst du Internet.");return;}window.open("../videos/zeitreise-krabbi.html","_blank","noopener");return;}
   const X={cafe:cafeStart,verhoer:vhStart,map:mapStart,hear:hkStart,write:wtStart,nach:()=>nxStart(0),zeiten:zeMenu,irrlern:ilStart,irrcards:icStart};
@@ -3142,7 +3161,7 @@ function vhAsk(si){
   const qa=s.qa[k];
   sceneEl.innerHTML=`<div class="test-setup vh"><div class="vh-who"><span class="vh-e big">${s.e}</span><div><b>${s.n}</b><small>${s.job}</small></div></div>
     <div class="quiz-label">WELCHE FRAGE IST RICHTIG?</div><div class="quiz-options" id="vhO"></div><div id="vhA"></div><div class="next-wrap" id="vhN"></div></div>`;
-  kcMC(document.getElementById("vhO"),qa.q,qa.q[0],ok=>{VH.n++;if(ok){VH.ok++;kcXP(5);}asked.push(k);
+  kcMC(document.getElementById("vhO"),qa.q,qa.q[0],ok=>{VH.n++;kcAnsCtx(ok);if(ok){VH.ok++;kcXP(5);}asked.push(k);
     document.getElementById("vhA").innerHTML=`${ok?"":`<div class="test-feedback wrong">❌ Richtig: „${qa.q[0]}“ – nach did kommt die Grundform, bei be heißt es was/were.</div>`}
       <div class="cf-say"><span class="cf-av">${s.e}</span><div class="cf-bub">${qa.a}<details><summary>🇩🇪</summary>${qa.de}</details></div></div>`;
     kcNext("vhN",asked.length<s.qa.length?"Nächste Frage →":"Zurück zu den Verdächtigen",()=>asked.length<s.qa.length?vhAsk(si):vhRoom());});}
@@ -3150,7 +3169,7 @@ function vhQuiz(){
   const q=VH.c.quiz[VH.qi];
   if(!q){vhAccuse();return;}
   sceneEl.innerHTML=`<div class="test-setup vh"><div class="setup-title">📓 Hast du gut zugehört?</div><div class="g-prompt"><div class="g-sentence">${q.q}</div></div><div class="quiz-options" id="vhO"></div><div class="next-wrap" id="vhN"></div></div>`;
-  kcMC(document.getElementById("vhO"),q.o,q.o[q.a],ok=>{VH.n++;if(ok){VH.ok++;kcXP(5);}kcNext("vhN",null,()=>{VH.qi++;vhQuiz();});});}
+  kcMC(document.getElementById("vhO"),q.o,q.o[q.a],ok=>{VH.n++;kcAnsCtx(ok);if(ok){VH.ok++;kcXP(5);}kcNext("vhN",null,()=>{VH.qi++;vhQuiz();});});}
 function vhAccuse(){
   sceneEl.innerHTML=`<div class="test-setup vh"><div class="setup-title">🕵️ Wer war es?</div><div class="vh-sus">${VH.c.sus.map((s,i)=>`<button type="button" class="vh-card" data-t="${i}"><span class="vh-e">${s.e}</span><b>${s.n}</b></button>`).join("")}</div><div id="vhR"></div></div>`;
   sceneEl.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{const ok=+b.dataset.t===VH.c.thief;VH.n++;if(ok){VH.ok++;kcXP(20);}
@@ -3179,13 +3198,13 @@ function mapDraw(){
   const tgt=MP.route[MP.i];MP.say=MP.say||kcRnd(MAP_TPL).replace("{x}",tgt.en);
   sceneEl.innerHTML=`<div class="test-setup mp"><div class="cf-say"><span class="cf-av">🦜</span><div class="cf-bub">${MP.say}</div></div><p class="vh-p">Tippe auf der Karte an, wohin du gehen sollst.</p>${mapSvg(true)}<div id="mpFb"></div></div>`;
   sceneEl.querySelectorAll("[data-pl]").forEach(b=>b.onclick=()=>{const p=MAP_PL.find(x=>x.id===b.dataset.pl);
-    if(p===tgt){MP.n++;if(!MP.miss){MP.ok++;kcXP(5);}MP.miss=false;MP.pos=p;MP.say=null;MP.st=0;mapTask();}
+    if(p===tgt){MP.n++;if(!MP.miss){MP.ok++;kcXP(5,[KC_WUNIT.get(tgt.en)]);}MP.miss=false;MP.pos=p;MP.say=null;MP.st=0;mapTask();}
     else{MP.miss=true;document.getElementById("mpFb").innerHTML=`<div class="test-feedback wrong">Das ist ${p.e} ${p.de} = <b>${p.en}</b>. Gesucht ist <b>${tgt.en}</b>.</div>`;}});}
 function mapTask(){
   if(MP.st>=2){MP.found.push(MP.pos.id);MP.i++;mapDraw();return;}
   const t=MP.tasks[MP.ti++%MP.tasks.length];MP.st++;
   const head=`<div class="mp-head">${MP.pos.e} <b>${MP.pos.de}</b> · Rätsel ${MP.st} von 2</div>`;
-  const fin=ok=>{MP.n++;if(ok){MP.ok++;kcXP(5);}kcNext("mpN",null,mapTask);};
+  const fin=ok=>{const u=kcUW(t.w);kcAns(u,ok);MP.n++;if(ok){MP.ok++;kcXP(5,[u]);}kcNext("mpN",null,mapTask);};
   if(t.k==="mc"){const w=t.w,opts=[w.de,...shuffle(WORDS.filter(x=>x!==w&&x.de!==w.de)).slice(0,3).map(x=>x.de)];
     sceneEl.innerHTML=`<div class="test-setup mp">${head}<div class="quiz-question"><div class="quiz-label">WAS BEDEUTET DAS?</div><div class="quiz-word">${w.en}</div></div><div class="quiz-options" id="mpO"></div><div class="next-wrap" id="mpN"></div></div>`;
     kcMC(document.getElementById("mpO"),opts,w.de,ok=>fin(ok));return;}
@@ -3218,7 +3237,7 @@ function hkQ(){
     <div id="hkF"></div><div class="next-wrap" id="hkN"></div></div>`;
   document.getElementById("hkP").onclick=()=>hkSay(say);document.getElementById("hkS").onclick=()=>hkSay(say,true);
   setTimeout(()=>hkSay(say),250);
-  const fin=ok=>{if(ok){HK.ok++;kcXP(5);progress[w.en]=(progress[w.en]||0)+1;saveProgress();}
+  const fin=ok=>{kcAns(kcUW(w),ok);if(ok){HK.ok++;kcXP(5,[kcUW(w)]);progress[w.en]=(progress[w.en]||0)+1;saveProgress();}
     document.getElementById("hkF").innerHTML=`<div class="test-feedback ${ok?"correct":"wrong"}">${ok?"✅ ":"❌ "}<b>${w.en}</b> = ${w.de}</div>`;kcNext("hkN",null,()=>{HK.i++;hkQ();});};
   if(type){const i=document.getElementById("hkI");const go=()=>{if(i.disabled)return;i.disabled=true;document.getElementById("hkC").disabled=true;fin(isAnswerCorrect(i.value,say)||isAnswerCorrect(i.value,w.en));};
     i.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go();}};document.getElementById("hkC").onclick=go;}
@@ -3288,7 +3307,7 @@ function wtSelf(){
 function wtResult(){
   const max=WT.qs.reduce((s,q)=>s+q.k.length,0),pts=WT.res.reduce((s,r)=>s+r.reduce((a,b)=>a+(b||0),0),0),pct=Math.round(pts/max*100),grade=gradeFromPercent(pct),info=GRADE_INFO[grade];
   const units=[...new Set(WT.qs.flatMap(q=>q.u).filter(kcHas))];
-  kcXP([0,100,80,60,40,20,10][grade]||0);if(window.lzRec)lzRec("E",units,grade,"write");
+  kcXP([0,100,80,60,40,20,10][grade]||0,kcNorm(units));if(window.lzRec)lzRec("E",units,grade,"write");
   progressFill.style.width="100%";const f=x=>String(x).replace(".",",");
   sceneEl.innerHTML=`<div class="done"><div class="done-emoji">${info.emoji}</div><h2>✍️ Schreibtest</h2><div class="test-grade">Note ${grade}</div><p>${f(pts)} von ${max} Punkten (${pct} %)</p>
     ${window.lzEval?lzEval(units,grade,"write"):""}
@@ -3337,7 +3356,7 @@ function nxPage(){const S=NX.sec[NX.s],last=NX.s===NX.sec.length-1;kcProg(NX.s,N
 function nxResult(){
   const per=NX.sec.map((S,si)=>S.items.map((it,i)=>nxOk(NX.a[si][i],it.sol)));
   const pts=per.flat().filter(Boolean).length,max=30,pct=Math.round(pts/max*100),grade=gradeFromPercent(pct),info=GRADE_INFO[grade];
-  kcXP([0,100,80,60,40,20,10][grade]||0);if(window.lzRec)lzRec("E",[],grade,"nachtest");
+  kcXP([0,100,80,60,40,20,10][grade]||0,KC_MP.nach);if(window.lzRec)lzRec("E",[],grade,"nachtest");
   progressFill.style.width="100%";
   const wrong=NX.sec.map((S,si)=>S.items.map((it,i)=>per[si][i]?"":`<div class="wt-ans"><b>${it.n}.</b> ${kcEsc(it.pre)}${it.post?" … "+kcEsc(it.post):""}<div class="wt-mine"><small>Deine Antwort</small>${NX.a[si][i].trim()?kcEsc(NX.a[si][i]):"<i>(leer)</i>"}</div><div class="wt-model"><small>Richtig</small>${kcEsc(it.sol)}</div></div>`).join("")).join("");
   sceneEl.innerHTML=`<div class="done"><div class="done-emoji">${info.emoji}</div><h2>📄 Nachschreibtest · Variante ${NX.v}</h2><div class="test-grade">Note ${grade}</div><p>${pts} von ${max} Punkten (${pct} %)</p>
@@ -3410,7 +3429,7 @@ function zeTenseBtns(el,correct,onDone){el.innerHTML="";ZE_K.slice().reverse().f
 function zeFb(ok,it){return `<div class="test-feedback ${ok?"correct":"wrong"}">${ok?"✅ Richtig!":"❌ Das ist "+ZE_T[it.t].n+"."}<br><small>Signalwort: <b>${kcEsc(it.sig)}</b><br>${ZE_T[it.t].r}</small></div>`;}
 function zeErk(){const it=ZE.list[ZE.i];kcProg(ZE.i,ZE.list.length,"⏱️");
   sceneEl.innerHTML=`<div class="test-setup ze"><div class="quiz-label">WELCHE ZEIT IST DAS?</div><div class="g-prompt"><div class="g-sentence">${kcEsc(it.s)}</div></div><div class="quiz-options" id="zeO"></div><div id="zeF"></div><div class="next-wrap" id="zeN"></div></div>`;
-  zeTenseBtns(document.getElementById("zeO"),it.t,ok=>{if(ok){ZE.ok++;kcXP(3);}document.getElementById("zeF").innerHTML=zeFb(ok,it);kcNext("zeN",null,()=>{ZE.i++;zeNext();});});}
+  zeTenseBtns(document.getElementById("zeO"),it.t,ok=>{kcAnsCtx(ok);if(ok){ZE.ok++;kcXP(3);}document.getElementById("zeF").innerHTML=zeFb(ok,it);kcNext("zeN",null,()=>{ZE.i++;zeNext();});});}
 function zeDet(){const it=ZE.list[ZE.i];kcProg(ZE.i,ZE.list.length,"⏱️");const W=it.s.split(" "),sel=new Set();
   sceneEl.innerHTML=`<div class="test-setup ze"><div class="quiz-label">SCHRITT 1 · TIPPE DAS SIGNALWORT (OFT MEHRERE WÖRTER)</div><div class="g-prompt"><div class="g-sentence" id="zeW">${W.map((w,i)=>`<button type="button" class="ze-w" data-i="${i}">${kcEsc(w)}</button>`).join("")}</div></div>
     <button class="btn btn-know" id="zeC" style="width:100%" disabled>Prüfen</button><div id="zeF"></div><div class="quiz-options" id="zeO"></div><div id="zeF2"></div><div class="next-wrap" id="zeN"></div></div>`;
@@ -3420,13 +3439,13 @@ function zeDet(){const it=ZE.list[ZE.i];kcProg(ZE.i,ZE.list.length,"⏱️");con
     btns.forEach((b,i)=>{b.disabled=true;const isSig=it.sig.split(" ").map(zeClean).includes(zeClean(W[i]));b.classList.remove("on");if(sel.has(i))b.classList.add(isSig?"ok":"bad");else if(isSig)b.classList.add("miss");});
     document.getElementById("zeC").style.display="none";if(!ok1)kcSfx(false);
     document.getElementById("zeF").innerHTML=`<div class="test-feedback ${ok1?"correct":"wrong"}">${ok1?"✅ Signalwort gefunden!":"❌ Das Signalwort ist: <b>"+kcEsc(it.sig)+"</b>"}</div><div class="quiz-label" style="margin-top:12px">SCHRITT 2 · WELCHE ZEIT IST DAS?</div>`;
-    zeTenseBtns(document.getElementById("zeO"),it.t,ok2=>{const ok=ok1&&ok2;if(ok){ZE.ok++;kcXP(4);}document.getElementById("zeF2").innerHTML=`<div class="test-feedback ${ok2?"correct":"wrong"}">${ok2?"✅ Richtig: ":"❌ Das ist "}${ZE_T[it.t].n}.<br><small>${ZE_T[it.t].r}</small></div>`;kcNext("zeN",null,()=>{ZE.i++;zeNext();});});};}
+    zeTenseBtns(document.getElementById("zeO"),it.t,ok2=>{const ok=ok1&&ok2;kcAnsCtx(ok);if(ok){ZE.ok++;kcXP(4);}document.getElementById("zeF2").innerHTML=`<div class="test-feedback ${ok2?"correct":"wrong"}">${ok2?"✅ Richtig: ":"❌ Das ist "}${ZE_T[it.t].n}.<br><small>${ZE_T[it.t].r}</small></div>`;kcNext("zeN",null,()=>{ZE.i++;zeNext();});});};}
 function zeUm(){const q=ZE.list[ZE.i],A=ZE_ROWS[q.r][ZE_K.indexOf(q.a)],B=ZE_ROWS[q.r][ZE_K.indexOf(q.b)];kcProg(ZE.i,ZE.list.length,"⏱️");
   sceneEl.innerHTML=`<div class="test-setup ze"><div class="quiz-label">SATZ UMBAUEN</div><div class="g-prompt"><div class="g-sentence">${kcEsc(A[0])}</div><div class="vh-p" style="margin-top:6px">(${ZE_T[q.a].n})</div></div>
     <p class="vh-p">Schreibe den Satz im <b>${ZE_T[q.b].n}</b> (${ZE_T[q.b].k}). Passendes Signalwort: <b>${kcEsc(B[1])}</b></p>
     <input class="test-input" id="zeI" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" placeholder="Dein Satz …"><button class="btn btn-know" id="zeC" style="width:100%;margin-top:10px">Prüfen</button><div id="zeF"></div><div class="next-wrap" id="zeN"></div></div>`;
   const i=document.getElementById("zeI");setTimeout(()=>i.focus(),60);
-  const go=()=>{if(i.disabled||!i.value.trim())return;i.disabled=true;document.getElementById("zeC").style.display="none";const ok=zeNorm(i.value)===zeNorm(B[0]);if(ok){ZE.ok++;kcXP(4);}else kcSfx(false);
+  const go=()=>{if(i.disabled||!i.value.trim())return;i.disabled=true;document.getElementById("zeC").style.display="none";const ok=zeNorm(i.value)===zeNorm(B[0]);kcAnsCtx(ok);if(ok){ZE.ok++;kcXP(4);}else kcSfx(false);
     document.getElementById("zeF").innerHTML=`<div class="test-feedback ${ok?"correct":"wrong"}">${ok?"✅ Richtig!":"❌ Richtig wäre: <b>"+kcEsc(B[0])+"</b>"}<br><small>${ZE_T[q.b].r}</small></div>`;kcNext("zeN",null,()=>{ZE.i++;zeNext();});};
   i.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go();}};document.getElementById("zeC").onclick=go;}
 function zeSort(){
@@ -3491,7 +3510,7 @@ function ilHelp(){
   sceneEl.innerHTML=`<div class="test-setup il"><div class="quiz-label">SCHRITT 2 VON 3 · MIT HILFE · ${IL.i+1} / ${IL.items.length}</div><div class="g-prompt"><div class="g-sentence">${kcEsc(v.inf)} <small>(${kcEsc(v.de)})</small></div></div>
     <p class="vh-p"><b>${it.k==="past"?"Simple Past":"3. Form"}</b> – welche Form ist richtig?</p><div class="quiz-options" id="ilO"></div><div id="ilF"></div><div class="next-wrap" id="ilN"></div></div>`;
   const corr=it.k==="past"?v.past:v.pp;
-  kcMC(document.getElementById("ilO"),ilOpts(v,it.k),corr,ok=>{if(ok)kcXP(1);
+  kcMC(document.getElementById("ilO"),ilOpts(v,it.k),corr,ok=>{kcAns(KC_ITEMUNIT.get(v),ok);if(ok)kcXP(1,[KC_ITEMUNIT.get(v)]);
     document.getElementById("ilF").innerHTML=`<div class="test-feedback ${ok?"correct":"wrong"}">${ok?"✅ Richtig!":"❌ Richtig ist: <b>"+kcEsc(corr)+"</b>"}<br><small>${kcEsc(v.inf)} – ${kcEsc(v.past)} – ${kcEsc(v.pp)}</small></div>`;
     kcNext("ilN",null,()=>{IL.i++;ilHelp();});});}
 function ilTypeP(){kcProg(2,3,"📚");
@@ -3501,7 +3520,7 @@ function ilTypeP(){kcProg(2,3,"📚");
 function ilResult(){
   const got=IL.pk.map(()=>({past:"",pp:""}));sceneEl.querySelectorAll(".il-in").forEach(i=>{got[+i.dataset.v][i.dataset.k]=i.value;});
   const res=IL.pk.map((v,i)=>{const a=isAnswerCorrect(got[i].past,v.past),b=isAnswerCorrect(got[i].pp,v.pp);return{v,a,b,ok:a&&b,g:got[i]};});
-  res.forEach(r=>ilRec(r.v,r.ok));const n=res.filter(r=>r.ok).length;kcXP(n*3);saveProgress();progressFill.style.width="100%";
+  res.forEach(r=>{ilRec(r.v,r.ok);kcAns(KC_ITEMUNIT.get(r.v),r.ok);});const n=res.filter(r=>r.ok).length;kcXP(n*3,res.map(r=>KC_ITEMUNIT.get(r.v)));saveProgress();progressFill.style.width="100%";
   if(n<res.length)kcSfx(false);
   const rows=res.map(r=>`<div class="wt-ans"><b>${r.ok?"✅":"❌"} ${kcEsc(r.v.inf)}</b> <small>(${kcEsc(r.v.de)})</small><div class="wt-model"><small>Richtig</small>${kcEsc(r.v.inf)} – ${kcEsc(r.v.past)} – ${kcEsc(r.v.pp)}</div>${r.ok?"":`<div class="wt-mine"><small>Du hast geschrieben</small>${kcEsc(r.g.past||"–")} / ${kcEsc(r.g.pp||"–")}</div>`}</div>`).join("");
   sceneEl.innerHTML=`<div class="done"><div class="done-emoji">${n===res.length?"🏆":n>=3?"⚡":"🌊"}</div><h2>${n} von ${res.length} Verben gewusst</h2><p>${n===res.length?"Super! Die nächsten 5 warten schon.":"Die Verben mit ❌ kommen in der nächsten Runde zuerst wieder dran."}</p>
@@ -3539,11 +3558,11 @@ function icCard(){
   const card=document.getElementById("flipCard");card.addEventListener("click",()=>card.classList.toggle("flipped"));
   document.getElementById("icSay").onclick=e=>{e.stopPropagation();ilSay(v);};
   const r=IC.res[v.inf]=IC.res[v.inf]||{ok:true};
-  document.getElementById("icKn").onclick=e=>{e.stopPropagation();IC.q.shift();IC.done++;kcXP(1);icCard();};
+  document.getElementById("icKn").onclick=e=>{e.stopPropagation();IC.q.shift();IC.done++;kcXP(1,[KC_ITEMUNIT.get(v)]);icCard();};
   document.getElementById("icAg").onclick=e=>{e.stopPropagation();r.ok=false;c.again=true;IC.q.shift();IC.q.splice(Math.min(IC.q.length,3),0,c);icCard();};}
 function icEnd(){
   const vs=IC.pk,n=vs.filter(v=>IC.res[v.inf].ok).length;
-  vs.forEach(v=>{ilRec(v,IC.res[v.inf].ok);kcStat(KC_ITEMUNIT.get(v),IC.res[v.inf].ok);});kcXP(n*2);saveProgress();progressFill.style.width="100%";
+  vs.forEach(v=>{ilRec(v,IC.res[v.inf].ok);kcStat(KC_ITEMUNIT.get(v),IC.res[v.inf].ok);});kcXP(n*2,vs.map(v=>KC_ITEMUNIT.get(v)));saveProgress();progressFill.style.width="100%";
   const rows=vs.map(v=>`<div class="wt-ans"><b>${IC.res[v.inf].ok?"✅":"🔁"} ${kcEsc(v.inf)}</b> <small>(${kcEsc(v.de)})</small><div class="wt-model">${kcEsc(v.inf)} – ${kcEsc(v.past)} – ${kcEsc(v.pp)}</div></div>`).join("");
   sceneEl.innerHTML=`<div class="done"><div class="done-emoji">${n===vs.length?"🏆":"⚡"}</div><h2>${n} von ${vs.length} Verben gleich gewusst</h2><p>${n===vs.length?"Super! Die nächsten Verben warten schon.":"Die Verben mit 🔁 kommen in der nächsten Runde zuerst wieder dran."}</p>
     <div class="test-setup il" style="text-align:left">${rows}</div>
@@ -3555,6 +3574,11 @@ function icEnd(){
   await loadProgress();
   buildModeSelect();
   buildPackSelect();
+  if(window.LS)LS.init({app:"E",base:5,
+    units:PACKAGES.map((p,i)=>({id:"v"+i,icon:"📚",name:"Vokabeln "+(i*PKG_SIZE+1)+"–"+(i*PKG_SIZE+p.length)}))
+      .concat(KC_GORDER.map(id=>({id,icon:KC_G[id].ic,name:KC_G[id].name})),[{id:"g5",icon:"✍️",name:"Schreibwerkstatt"}]),
+    get:()=>(progress._ls=progress._ls||{}),save:saveProgress,
+    pick:id=>{if(id==="g5"){kcShowHome();return;}window.lzSelect&&lzSelect(id,"rep");},meter:{icon:"⛵",name:"Segelwind"}});
   kcShowHome();
 })();
 </script>
@@ -3564,7 +3588,7 @@ function icEnd(){
 .lp-en{height:34px;border-radius:10px;border:none;background:var(--sand-deep);color:var(--sea-deep);font-size:16px;margin-left:auto}</style>
 <script>window.LP_CONF={"key": "lernplan-englisch", "prefix": "E", "btnTarget": ".topbar .seg", "btnInsert": "before", "btnClass": "lp-en", "multi": "Am schnellsten mit einem Test, in dem alle diese Pakete ausgewählt sind.", "final": "Vokabel-Test mit allen Paketen, dann der Grammatik-Test mit allen Themen und eine Geschichte in der Schreibwerkstatt.", "units": [{"id": "v0", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 1–15", "sub": "jeans … true", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v1", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 16–30", "sub": "would like … view", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v2", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 31–45", "sub": "Spain … seal", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v3", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 46–60", "sub": "to change … cave", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v4", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 61–75", "sub": "spooky … egg", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v5", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 76–90", "sub": "to milk … cucumber", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v6", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 91–105", "sub": "pepper … pasta", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v7", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 106–120", "sub": "cola … mango", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v8", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 121–135", "sub": "cookie … to sail", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "v9", "group": "Vokabeln", "icon": "📚", "name": "Vokabeln 136–145", "sub": "world … pier", "learn": "Karten, dann Quiz EN→DE. Paket antippen, dann die Mission starten.", "rep": "Quiz DE→EN oder Test mit diesem Paket."}, {"id": "g0", "group": "Grammatik (simple past)", "icon": "⚡", "name": "Verben 1–40", "sub": "Grammatik → Verben, Pakete 1–10 bis 31–40", "learn": "Grammatik → Verben, die vier Pakete nacheinander.", "rep": "Grammatik-Duell oder Verben noch einmal."}, {"id": "g1", "group": "Grammatik (simple past)", "icon": "⚡", "name": "Verben 41–77", "sub": "Grammatik → Verben, Pakete 41–50 bis 71–77", "learn": "Grammatik → Verben, die vier Pakete nacheinander.", "rep": "Grammatik-Duell oder Verben noch einmal."}, {"id": "g2", "group": "Grammatik (simple past)", "icon": "🧩", "name": "Lücken", "sub": "didn't, wasn't, weren't, was, were", "learn": "Grammatik → Lücken, alle Pakete.", "rep": "Grammatik → Lücken oder Grammatik-Test."}, {"id": "g3", "group": "Grammatik (simple past)", "icon": "❓", "name": "Fragen", "sub": "did, was, were, Fragewörter", "learn": "Grammatik → Fragen, alle Pakete.", "rep": "Grammatik → Fragen oder Grammatik-Test."}, {"id": "g4", "group": "Grammatik (simple past)", "icon": "🔎", "name": "Fehler finden im Simple Past", "sub": "-ed, didn't + Infinitiv, Did …?, Signalwörter", "learn": "Grammatik → 🕵️ Detektiv, alle Pakete. Dazu das Merkblatt „Simple Past“.", "rep": "Grammatik → Detektiv oder Grammatik-Test mit „Detektiv“."}, {"id": "g5", "group": "Schreibwerkstatt", "icon": "✍️", "name": "Schreibwerkstatt", "sub": "My Superhero's Craziest Day", "learn": "Grammatik → ✍️ Schreibwerkstatt: Geschichte schreiben und prüfen lassen.", "rep": "Schreibwerkstatt noch einmal mit einer neuen Geschichte."}, {"id": "g6", "group": "Grammatik (simple past)", "icon": "✅", "name": "Regelmäßige Verben", "sub": "-ed, -d, -ied, Verdopplung; regelmäßig oder unregelmäßig?", "learn": "Grammatik → 🔀 Regelmäßig oder unregelmäßig? (erst die Erklärung lesen), dann ✅ Verben (regelmäßig).", "rep": "✅ Verben (regelmäßig) oder 🔀 Regelmäßig oder unregelmäßig?"}], "testName": "Test", "tests": {"Vokabeln": "Vokabel-Test", "Grammatik (simple past)": "Grammatik-Test", "Schreibwerkstatt": "Schreibwerkstatt"}, "est": {"learn": 15, "rep": 5, "test": 10, "final": 25, "write": 20}};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.25.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.26.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -3574,21 +3598,21 @@ function icEnd(){
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.25.0"></script>
+<script src="../js/lernplan.js?v=7.26.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <style>@media (max-width:420px){.lp-en{min-width:36px!important;padding:0 5px!important}.topbar{gap:6px!important}.section-btn{padding:6px 8px!important}}</style>
 
 <style>@media (max-width:420px){.lp-en{min-width:36px!important;padding:0 5px!important}.topbar{gap:6px!important}.section-btn{padding:6px 7px!important}.topbar .brand{font-size:13px!important}}</style>
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.25.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.26.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.25.0"></script>
+<script src="../js/nutzer.js?v=7.26.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}.home-btn.lp-en{min-width:36px;padding:0 6px}@media (max-width:420px){.topbar .brand{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.25.0"></script>
+<script src="../js/home-btn.js?v=7.26.0"></script>
 <!-- ===== /Start ===== -->
 <script>
 window.lzGo=function(kind,ids){
@@ -3620,8 +3644,8 @@ document.addEventListener("click",e=>{const s=e.target.closest("[data-lzsel]");i
 window.addEventListener("storage",()=>lzBar&&lzBar());
 if(window.lzToday)lzBar();
 </script>
-<script src="../js/arena-btn.js?v=7.25.0"></script>
+<script src="../js/arena-btn.js?v=7.26.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"Unit 5/6",f:"englisch-unit5-6.html",d:"Vokabeln S. 257–261, Grammatik S. 194–199, Arbeitsblätter"},{t:"Simple Past",f:"englisch-simple-past.html",d:"Merkblatt und Schreibaufgabe (Superhelden)"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.25.0"></script>
+<script src="../js/lernzettel-btn.js?v=7.26.0"></script>
 </body>
 </html>
