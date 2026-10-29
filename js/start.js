@@ -329,8 +329,8 @@ function lohntHTML(){
   const list=RKA.map(([k,b,r])=>{const o=J(uid==="u1"?b:b+("@"+uid).repeat(r),null)||{};
     return{app:k,units:J("ls-units-"+k,null)||CONF[k].units,store:(k==="E"?o._ls:o.ls)||{},base:k==="E"||k==="D"?5:10};});
   const any=list.some(a=>Object.keys(a.store).some(k=>k[0]!=="_")),L=LS.lohnt(list).slice(0,6),ic=k=>(APPS.find(a=>a.k===k)||{}).icon||"";
-  const lab={bonus:"lange nicht geübt – Bonus!",faellig:"wieder fällig",ueben:"noch wackelig"};
-  const body=L.length?`<div class="lohnt-l">${L.map(x=>`<button type="button" class="lohnt-i lk-${x.st.kind}" data-lohnt="${x.app}|${esc(x.u.id)}"><span class="lohnt-a">${ic(x.app)}</span><span class="lohnt-n"><b>${esc((x.u.icon||"")+" "+x.u.name)}</b><small>${lab[x.st.kind]}</small></span><span class="lohnt-p">⭐ ${x.p}</span></button>`).join("")}</div>`
+  const lab={bonus:"🎁 Bonus – lange nicht geübt",faellig:"💰 Volle Punkte – wieder fällig",ueben:"💰 Volle Punkte – noch wackelig"};
+  const body=L.length?`<div class="lohnt-l">${L.map(x=>`<button type="button" class="lohnt-i lk-${x.st.kind}" data-lohnt="${x.app}|${esc(x.u.id)}"><span class="lohnt-a">${ic(x.app)}</span><span class="lohnt-n"><b>${esc((x.u.icon||"")+" "+x.u.name)}</b><small>${lab[x.st.kind]}</small></span></button>`).join("")}</div>`
     :`<p class="lohnt-e">${any?"Gerade ist nichts fällig – alles sitzt! Neue Pakete bringen volle Punkte.":"Sobald du übst, steht hier, wo es gerade die meisten Punkte gibt: Pakete, die wieder fällig oder noch wackelig sind."}</p>`;
   return `<section class="lohnt" aria-label="Heute lohnt sich besonders"><h2>⭐ Heute lohnt sich besonders</h2>${body}</section>`;
 }

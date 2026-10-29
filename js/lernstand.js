@@ -38,12 +38,16 @@ function status(rec,now){
   const today=rec.d===dkey(now)?(rec.r|0):0;
   const charge=s===0?0:Math.round(100*(s/(I.length-1))*Math.max(0,Math.min(1,1-el/Math.max(1,iv))));
   let kind,f;
-  if(today>=K.TAGESDECKEL_AB_RUNDE-1){kind="genug";f=K.FAKTOR_TAGESDECKEL;}
+  /* Ein sitzendes Paket bleibt „sitzt“ (wenig Punkte bis zur Fälligkeit), auch wenn es heute schon oft geübt wurde.
+     Der Tagesdeckel („heute genug geübt“) betrifft nur Pakete, die noch gelernt werden oder fällig sind. */
+  if(s>=2&&el<iv){kind="sitzt";f=K.FAKTOR_KANN_SCHON;}
+  else if(today>=K.TAGESDECKEL_AB_RUNDE-1){kind="genug";f=K.FAKTOR_TAGESDECKEL;}
   else if(s<=1&&!(s>=1&&el>=K.UEBERFAELLIG_AB*iv)){kind="ueben";f=1;}
   else if(s>=2&&el<iv){kind="sitzt";f=K.FAKTOR_KANN_SCHON;}
   else if(s>=1&&el>=K.UEBERFAELLIG_AB*iv){kind="bonus";f=1+K.BONUS_UEBERFAELLIG;}
   else{kind="faellig";f=1;}
-  return{kind,s,f,charge,left:Math.max(0,iv-el),el,today,played:true,due:s===0||el>=iv};
+  const fresh=s===0?0:Math.max(0,Math.min(1,1-el/Math.max(1,iv)));
+  return{kind,s,f,charge,fresh,left:Math.max(0,iv-el),el,today,played:true,due:s===0||el>=iv};
 }
 function points(base,factor){if(!(base>0))return base||0;return Math.max(C().MIN_PUNKTE,Math.round(base*factor));}
 
@@ -60,13 +64,14 @@ function applyRound(rec,ok,n,now){
   return r;
 }
 
+/* Was die Kachel sagt – eine Zeile, ohne Punktzahl (jede Übung bringt unterschiedlich viel: Karten 2, Quiz 5, Test nach Note …) */
 const TXT={
-  neu:p=>`neu – volle Punkte`,
-  ueben:p=>`noch üben – volle Punkte`,
-  faellig:p=>`wieder fällig – volle Punkte`,
-  bonus:p=>`lange nicht geübt – Bonus!`,
-  sitzt:(p,st)=>`kannst du schon · wieder voll ${st.left<=1?"morgen":"in "+st.left+" Tagen"}`,
-  genug:p=>`für heute genug geübt · morgen wieder mehr`
+  neu:()=>`💰 Volle Punkte – neu`,
+  ueben:()=>`💰 Volle Punkte – noch üben`,
+  faellig:()=>`💰 Volle Punkte – wieder fällig`,
+  bonus:()=>`🎁 Bonus +${Math.round(C().BONUS_UEBERFAELLIG*100)} % – lange nicht geübt`,
+  sitzt:s=>`🪙 Wenig Punkte – kannst du schon! Wieder voll ${s.left<=1?"morgen":"in "+s.left+" Tagen"}`,
+  genug:()=>`🪙 Wenig Punkte – heute genug geübt. Morgen wieder voll`
 };
 
 /* ---------- Anbindung an eine App ----------
@@ -96,13 +101,14 @@ function startStage(x,g){const K=C(),q=x&&x.n>=K.START_MIN_ANTWORTEN?x.hit/x.n:-
   if((x&&x.done)||q>=0.8||(g&&g<=2))return K.START_STUFE_GUT;
   if(q>=0.6||g===3)return K.START_STUFE_MITTEL;
   if((x&&x.n>0)||g)return 1;return 0;}
-function seed(){if(!A||!A.seed)return;const o=store();if(o._start)return;const now=Date.now();let R=[];
+const SEED_V=2;/* 2: Verben-Pakete auch aus Karten und Lern-Mission */
+function seed(){if(!A||!A.seed)return;const o=store();if((o._sv||(o._start?1:0))>=SEED_V)return;const now=Date.now();let R=[];
   try{const u=(window.__NUTZER&&window.__NUTZER.cur)||"u1";R=JSON.parse(localStorage.getItem("lz-ergebnisse")||"[]").filter(r=>r&&r.a===A.app&&(r.u||"u1")===u&&+r.g);}catch(e){}
   const norm=A.norm||(a=>a);
   A.units.forEach(un=>{const id=un.id;if(o[id])return;let x=null;try{x=A.seed(id);}catch(e){}
     const gs=R.filter(r=>norm(r.units||[]).includes(id)).map(r=>+r.g);if(x&&x.g)gs.push(+x.g);
     const s=startStage(x,gs.length?Math.min(...gs):0);if(s>0)o[id]={s,t:now,d:"",r:0};});
-  o._start=now;try{A.save();}catch(e){}}
+  o._start=o._start||now;o._sv=SEED_V;try{A.save();}catch(e){}}
 LS.startStage=startStage;
 /* Sprung von der Startseite („Heute lohnt sich besonders“): Paket auswählen */
 LS.checkPick=function(){if(!A)return;try{const k="ls-pick-"+A.app,p=sessionStorage.getItem(k);if(p){sessionStorage.removeItem(k);setTimeout(()=>{try{A.pick&&A.pick(p);}catch(e){}},50);}}catch(e){}};
@@ -122,16 +128,13 @@ LS.best=function(exclude){if(!A)return null;flush();exclude=[].concat(exclude||[
   L.sort((a,b)=>RANK[a.st.kind]-RANK[b.st.kind]||(a.st.played===b.st.played?0:a.st.played?-1:1)||a.st.s-b.st.s);return L[0]||null;};
 
 /* Anzeige auf der Paket-Kachel (innerhalb eines <button>, daher nur <span>) */
-LS.tile=function(id){if(!A||!known(id))return"";flush();const s=st(id),p=points(A.base,s.f),m=A.meter||{icon:"⚡",name:"Energie"};
-  const low=s.f<1,meterTxt=s.kind==="neu"?"noch nicht aufgeladen":s.charge<=0?"verblasst – jetzt aufladen!":s.charge+" %";
-  return `<span class="ls-tile ls-${s.kind}" title="${esc(TXT[s.kind](p,s))}"><span class="ls-row"><span class="ls-pts">⭐ ${p}</span><span class="ls-txt">${esc(TXT[s.kind](p,s))}</span></span>`+
-    `<span class="ls-row"><span class="ls-m">${m.icon} ${esc(m.name)}</span><span class="ls-bar" aria-hidden="true"><i style="width:${s.charge}%"></i></span><span class="ls-mt">${esc(meterTxt)}</span></span></span>`;};
-
+LS.tile=function(id){if(!A||!known(id))return"";flush();const s=st(id);
+  return `<span class="ls-tile ls-${s.kind}"><span class="ls-txt">${esc(TXT[s.kind](s))}</span></span>`;};
 /* Kurzer, freundlicher Hinweis, wenn es wenig Punkte gibt – mit Sprung zum lohnenderen Paket */
 LS.hint=function(ids){if(!A)return;const s=st([].concat(ids)[0]),b=LS.best(ids);let el=document.getElementById("lsHint");
   if(!el){el=document.createElement("div");el.id="lsHint";el.setAttribute("role","status");document.body.appendChild(el);}
   const head=s.kind==="genug"?"Für heute hast du das schon richtig viel geübt! 💪":"Das kannst du schon super! 🌟";
-  el.innerHTML=`<div><b>${head}</b> ${b?`Hier gibt's gerade mehr Punkte: <b>${esc(b.u.icon+" "+b.u.name)}</b> (⭐ ${points(A.base,b.st.f)})`:"Morgen gibt's hier wieder mehr Punkte."}</div>`+
+  el.innerHTML=`<div><b>${head}</b> ${b?`Hier gibt's gerade ${b.st.kind==="bonus"?"Bonus-Punkte":"volle Punkte"}: <b>${esc(b.u.icon+" "+b.u.name)}</b>`:"Morgen gibt's hier wieder mehr Punkte."}</div>`+
     `<div class="ls-hb">${b&&A.pick?`<button type="button" data-lsgo="${esc(b.u.id)}">👉 Dorthin</button>`:""}<button type="button" data-lsx="1">Weiter üben</button></div>`;
   el.classList.add("on");clearTimeout(LS.hint.t);LS.hint.t=setTimeout(()=>el.classList.remove("on"),7000);
   el.onclick=e=>{const g=e.target.closest("[data-lsgo]");if(g){el.classList.remove("on");LS.endRound();try{A.pick(g.dataset.lsgo);}catch(_){}}else if(e.target.closest("[data-lsx]"))el.classList.remove("on");};};
@@ -144,15 +147,8 @@ LS.lohnt=function(list,base){/* list: [{app, units, store}] → [{app,u,st,p}] *
 
 function css(){if(document.getElementById("lsCss"))return;const s=document.createElement("style");s.id="lsCss";s.textContent=`
 .ls-tile{display:flex;flex-direction:column;gap:4px;margin-top:8px;padding:7px 9px;border-radius:12px;background:rgba(255,209,102,.16);border:1px solid rgba(214,158,20,.35);font-size:12.5px;line-height:1.25;text-align:left}
-.ls-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.ls-pts{font-weight:800;font-size:15px;white-space:nowrap}
-.ls-txt{font-weight:700;opacity:.9}
-.ls-m{font-weight:700;white-space:nowrap;opacity:.85}
-.ls-bar{flex:1 1 60px;min-width:60px;height:8px;border-radius:99px;background:rgba(128,128,128,.25);overflow:hidden}
-.ls-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ffd166,#7cff6b)}
-.ls-mt{font-size:11.5px;opacity:.8;white-space:nowrap}
+.ls-txt{font-weight:800;font-size:14px}
 .ls-sitzt,.ls-genug{background:rgba(128,128,128,.10);border-color:rgba(128,128,128,.3)}
-.ls-sitzt .ls-pts,.ls-genug .ls-pts{opacity:.7}
 .ls-bonus{background:rgba(124,255,107,.18);border-color:rgba(40,160,60,.45)}
 #lsHint{position:fixed;left:50%;top:calc(68px + env(safe-area-inset-top,0px));transform:translate(-50%,calc(-100% - 90px));z-index:9998;width:min(560px,calc(100vw - 24px));
   background:#fffaf0;color:#2b2b2b;border:2px solid #f0b43c;border-radius:16px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.25);font:600 15px/1.35 system-ui,sans-serif;transition:transform .35s ease}

@@ -66,7 +66,7 @@ async def main():
     z=await J(f,'wasserzauberschule-v1'); print('Z',z)
     assert z['xp']==300 and z['house']=='h1' and z['high']=={'p1':50}
     assert z['stats']=={} and z['grades']=={} and z['wgrades']=={} and z['bk']=={} and z['werk']=={} and z['mixm']=={} and z['rst']>OLD
-    e=await J(f,'unit6-progress'); print('E',e); assert {k:v for k,v in e.items() if k!='_ls'}=={'xp':210,'_sel':['v1'],'_mute':True} and list(e.get('_ls',{}))==['_start'],e
+    e=await J(f,'unit6-progress'); print('E',e); assert {k:v for k,v in e.items() if k!='_ls'}=={'xp':210,'_sel':['v1'],'_mute':True} and set(e.get('_ls',{}))<={'_start','_sv'},e
     d=await J(f,'detektivbuero-v1'); print('D',d)
     assert d['xp']==120 and d['seen']=={'a':1} and d['high']=={'x':5} and d['stats']=={} and d['grades']=={} and d['bk']=={}
     # Wasser: Paket-Noten aus alten Testergebnissen nicht mehr angezeigt
