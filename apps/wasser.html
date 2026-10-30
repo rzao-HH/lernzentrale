@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.26.5"></script>
-<script src="../js/lernstand.js?v=7.26.5"></script>
+<script src="../js/app-core.js?v=7.27.0"></script>
+<script src="../js/lernstand.js?v=7.27.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="Z";window.__DATAKEY="wasserzauberschule-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.26.5"></script>
+<script src="../js/nutzer-init.js?v=7.27.0"></script>
 
 <meta charset="utf-8">
 <meta name="color-scheme" content="light">
@@ -432,9 +432,10 @@ const PACKS=[
   {id:'p2',src:"Buch S. 117–118",nr:2,icon:'🔄',name:'Verwandlungen',goal:'Ich benenne Schmelzen, Erstarren, Verdampfen, Verdunsten, Kondensieren, Sublimieren und Resublimieren und erkenne sie im Alltag.'},
   {id:'p3',src:"Info S. 43 und S. 47",nr:3,icon:'🧪',name:'Eis schwimmt',goal:'Ich erkläre, warum Eis leichter ist als Wasser, warum sich Wasser beim Gefrieren ausdehnt und warum warmes Wasser nach oben steigt.'},
   {id:'p4',src:"AB Besonderheit des Wassers",nr:4,icon:'🏞️',name:'Das Geheimnis des Sees',goal:'Ich erkläre die Anomalie: Bei 4 °C ist Wasser am schwersten. Darum friert ein See von oben zu und die Fische überleben.'},
-  {id:'p5',src:"AB Das Gewicht des Wassers",nr:5,icon:'🔬',name:'Forschen wie Profis',goal:'Ich kenne den Aufbau eines Versuchsprotokolls und kann die Versuche zum Gewicht des Wassers erklären.'}
+  {id:'p5',src:"AB Das Gewicht des Wassers",nr:5,icon:'🔬',name:'Forschen wie Profis',goal:'Ich kenne den Aufbau eines Versuchsprotokolls und kann die Versuche zum Gewicht des Wassers erklären.'},
+  {id:'p6',nr:6,icon:'🌦️',name:'Der Wasserkreislauf',goal:'Ich erkläre den Wasserkreislauf mit Verdunstung, Kondensation, Niederschlag, Versickerung und Abfluss und weiß, dass die Sonne ihn antreibt.'}
 ];
-const ALL=['p1','p2','p3','p4','p5'];
+const ALL=['p1','p2','p3','p4','p5','p6'];
 const packById=id=>PACKS.find(p=>p.id===id);
 const MODES={
   book:{i:'📖',t:'Zauberbuch',d:'Lernkarten wie beim Vokabeln lernen: umdrehen, dann „Weiß ich!“ oder „Nochmal üben“.',p:ALL,g:'learn'},
@@ -742,7 +743,7 @@ function mkTR(){
   const s=pick(SITS);return{t:'tr',p:'p2',ar:s.ar,q:s.s+'<br><small style="display:inline;font-size:16px;color:var(--muted)">Welcher Übergang ist das?</small>',ans:s.a,ex:ARROWS[s.ar].ex,showHi:false};
 }
 function mkANA(x){return{t:'ana',p:x.p,q:x.c,ans:x.w};}
-function mcPool(){const a=selPool(MC).map(mkMC);if(S.sel.includes('p1'))for(let i=0;i<3;i++)a.push(mkPic());return a;}
+function mcPool(){const a=selPool(MC).map(mkMC);if(S.sel.includes('p1'))for(let i=0;i<3;i++)a.push(mkPic());if(S.sel.includes('p6'))for(let i=0;i<3;i++)a.push(mkKR());return a;}
 function genItems(m){
   if(m==='quiz')return sample(mcPool(),10);
   if(m==='tf')return sample(selPool(TF),10).map(mkTF);
@@ -767,6 +768,8 @@ function startMode(m){
   if(m==='werk')return werk();
   if(m==='gaps')return gaps();
   if(m==='proto')return proto();
+  if(m==='kreislab')return kreisLab();
+  if(m==='cycle')return cycle();
   if(m==='write')return writeTest();
   G={mode:m,i:0,log:[],xp:0,score:0,finished:false,locked:false};
   if(m==='duel'){G.items=[];G.total=Infinity;shell(m,'<div class="timebar" id="timebar"></div>');G.end=Date.now()+60000;G.timer=setInterval(tick,100);}
@@ -880,7 +883,7 @@ function finishItems(){
     const xp=addXP([0,100,80,60,40,20,10][note],S.sel);
     if(note<=2)confetti();
     const rv=G.log.map((l,i)=>{
-      const it=l.it;const q=it.pic?'Teilchenmodell erkennen':it.t==='tr'?it.q.replace(/<[^>]+>/g,' ').replace(/\s+/g,' '):it.q;
+      const it=l.it;const q=it.pic?(it.rq||'Teilchenmodell erkennen'):it.t==='tr'?it.q.replace(/<[^>]+>/g,' ').replace(/\s+/g,' '):it.q;
       const given=it.t==='tf'?(l.v?'wahr':'falsch'):l.v;
       const corr=it.t==='tf'?(it.ans?'wahr':'falsch'):Array.isArray(it.ans)?it.ans.join(' / '):it.ans;
       return`<li class="${l.ok?'ok':'bad'}"><span>${l.ok?'✓':'✗'}</span><div>${i+1}. ${esc(q)}<br><small>Deine Antwort: ${esc(given)}${l.ok?'':' · richtig: '+esc(corr)}</small></div></li>`;
@@ -1385,14 +1388,14 @@ const WK_ST={
  flasche:{i:'🧴',t:'Flasche im Gefrierfach',d:'Was passiert mit Flaschen voller Wasser bei Frost?',m:[['burst','Bring eine randvolle, geschlossene Plastikflasche zum Platzen.'],['safe','Friere Wasser ein, ohne dass die Flasche kaputtgeht.'],['dome','Zeig, dass Eis aus einem randvollen Becher herauswächst.'],['fridge','Stell eine volle Flasche in den Kühlschrank: Friert sie?'],['glass','Probier aus, warum man keine vollen Glasflaschen einfriert.']]}
 };
 function werk(){G={mode:'werk',finished:false,raf:0};shell('werk');wkMenu();}
-function wkMenu(){stopAll();G.finished=false;G.tk=null;S.werk=S.werk||{};const c=$('#card');c.classList.remove('wide');const done=(k,m)=>S.werk[k+':'+m];
+function wkMenu(only){stopAll();G.finished=false;G.tk=null;S.werk=S.werk||{};if(only!==undefined)G.wkOnly=only;only=G.wkOnly;const c=$('#card');c.classList.remove('wide');const done=(k,m)=>S.werk[k+':'+m];
   const nMix=MX_MISS.filter(m=>(S.mixm||{})[m[0]]).length;
-  c.innerHTML=`<div class="q">Forscherlabor: Probier es selbst aus!</div><p class="mxp">Wähle eine Station. Jede Station hat Forscher-Aufträge, die Lupe zeigt dir, was die Teilchen machen.</p>
+  c.innerHTML=only?`<div class="q">🌦️ Wasserkreislauf-Labor</div><p class="mxp">Zwei Stationen: die große Landschaft mit Meer, Wolken und Berg – und der Mini-Wasserkreislauf im Glas wie im echten Versuch.</p>${only.map(k=>[k,WK_ST[k]]).map(([k,s])=>`<button class="mxbig" data-st="${k}"><span>${s.i}</span><b>${s.t}</b><small>${s.d} ${s.m.filter(m=>done(k,m[0])).length} von ${s.m.length} Aufträgen geschafft.</small></button>`).join('')}`:`<div class="q">Forscherlabor: Probier es selbst aus!</div><p class="mxp">Wähle eine Station. Jede Station hat Forscher-Aufträge, die Lupe zeigt dir, was die Teilchen machen.</p>
   ${Object.entries(WK_ST).map(([k,s])=>`<button class="mxbig" data-st="${k}"><span>${s.i}</span><b>${s.t}</b><small>${s.d} ${s.m.filter(m=>done(k,m[0])).length} von ${s.m.length} Aufträgen geschafft.</small></button>`).join('')}
   <button class="mxbig" id="wkmix"><span>🧪</span><b>Mischen: Eiswürfel und Farbwasser</b><small>Temperaturen einstellen und schauen, was steigt und sinkt. ${nMix} von ${MX_MISS.length} Aufträgen geschafft.</small></button>
   <button class="mxbig" id="wkpred"><span>🔮</span><b>Versuchsreihe: Vorhersagen</b><small>10 Versuche zum Steigen und Sinken. Erst vorhersagen, dann zuschauen.</small></button>`;
-  $('#wkpred').onclick=()=>{G.tasks=MX_TASKS.slice();G.ti=0;G.score=0;mxTask();};
-  c.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>wkRun(b.dataset.st));$('#wkmix').onclick=()=>{G.mode='werk';S.mixm=S.mixm||{};mxFree();};}
+  if(!only)$('#wkpred').onclick=()=>{G.tasks=MX_TASKS.slice();G.ti=0;G.score=0;mxTask();};
+  c.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>wkRun(b.dataset.st));if(!only)$('#wkmix').onclick=()=>{G.mode='werk';S.mixm=S.mixm||{};mxFree();};}
 function wkLupe(){return`<div class="mxlupe"><div class="mxlt">🔍 Lupe: 12 Teilchen als Wasser und als Eis</div><div class="mxlr">
   <div class="mxl"><svg viewBox="0 0 60 60" width="60" height="60"><rect x="1" y="1" width="58" height="58" rx="8" fill="none" stroke="currentColor" stroke-opacity=".4"/><g fill="currentColor" fill-opacity=".75">${[[10,12],[22,9],[34,13],[47,10],[12,25],[26,23],[39,27],[50,24],[9,39],[23,37],[36,41],[49,38]].map(([x,y])=>`<circle cx="${x}" cy="${y+6}" r="5"/>`).join('')}</g></svg><small>Wasser<br>ungeordnet, dicht</small></div>
   <div class="mxl"><svg viewBox="0 0 66 66" width="66" height="66"><rect x="1" y="1" width="64" height="64" rx="8" fill="none" stroke="currentColor" stroke-opacity=".4"/><g stroke="currentColor" stroke-opacity=".35">${[0,1,2].map(i=>`<line x1="11" y1="${14+i*19}" x2="58" y2="${14+i*19}"/>`).join('')}${[0,1,2,3].map(j=>`<line x1="${11+j*15.5}" y1="14" x2="${11+j*15.5}" y2="52"/>`).join('')}</g><g fill="currentColor" fill-opacity=".75">${[0,1,2].map(i=>[0,1,2,3].map(j=>`<circle cx="${11+j*15.5}" cy="${14+i*19}" r="5"/>`).join('')).join('')}</g></svg><small>Eis<br>Kristallgitter, mehr Platz</small></div></div>
@@ -1464,7 +1467,7 @@ function wkRun(key){stopAll();G.finished=false;const ST=WK_ST[key],c=$('#card');
   c.innerHTML=`<div class="wktop"><button class="wkback" id="wkback">◀ Alle Stationen</button><div class="q">${ST.i} ${ST.t}</div></div><div class="wkgrid"><div class="wkL"><div class="wkstage"><canvas class="mxcv wkcv" id="wkcv"></canvas>${TK_COVER}</div><div class="wkinfo tkveil" id="wkinfo"></div></div>
    <div class="wkR"><div class="lbtask" id="tktask" style="display:none"></div><div class="mxctl" id="wkctl">${W.ctl()}</div>${W.lupe?W.lupe():''}
    <div class="tkmis" id="tkmis"></div></div></div>`;
-  $('#wkback').onclick=wkMenu;
+  $('#wkback').onclick=()=>wkMenu();
   tkNew(key,ST.m,k=>!!S.werk[key+':'+k],k=>{S.werk[key+':'+k]=1;save();},()=>W.info());tkDraw();tkBind($('#wkctl'));
   const cv=$('#wkcv'),ctx=cv.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1);
   const size=()=>{cv.width=cv.clientWidth*dpr;cv.height=cv.clientHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);W.W=cv.clientWidth;W.H=cv.clientHeight;};size();
@@ -1995,7 +1998,7 @@ function home(){
     <small class="pst">${done?'🏅 Lernziel erreicht':`Fortschritt: ${sum} von 16 Treffern (aus den letzten 20 Aufgaben)`}</small>
     ${(()=>{const g=pkGrades(p.id);return`<div class="pkgs">${pkBadge('🏆','Abschlusstest',g.t)}${pkBadge('✍️','Schreibtest',g.w)}</div>`;})()}${window.LS?LS.tile(p.id):''}</button>`;
   }).join('');
-  const tile=m=>{const M=MODES[m],a=avail(m);return`<button class="mode ${m==='test'||m==='write'?'feature':''}${isHl(m)?' hl':''}" data-m="${m}" ${a?'':'disabled'}><span class="mi">${M.i}</span><b>${M.t}</b><span>${M.d}</span><span class="tags">${m==='book'?'<i>alle Pakete</i>':M.p.length===5?'<i>alle Pakete</i>':M.p.map(p=>`<i>Paket ${packById(p).nr}</i>`).join('')}</span></button>`;};
+  const tile=m=>{const M=MODES[m],a=avail(m);return`<button class="mode ${m==='test'||m==='write'?'feature':''}${isHl(m)?' hl':''}" data-m="${m}" ${a?'':'disabled'}><span class="mi">${M.i}</span><b>${M.t}</b><span>${M.d}</span><span class="tags">${m==='book'?'<i>alle Pakete</i>':M.p.length===ALL.length?'<i>alle Pakete</i>':M.p.map(p=>`<i>Paket ${packById(p).nr}</i>`).join('')}</span></button>`;};
   const grp=(g,title)=>`<div class="mgroup">${title}</div><div class="modes">${Object.keys(MODES).filter(m=>MODES[m].g===g).map(tile).join('')}</div>`;
   app.innerHTML=`<div class="home">
   <section class="hero"><div><h1>Wasser-Zauberschule</h1><p>Eis, Wasser und Dampf verwandeln sich ineinander – wie durch Zauberei. Lerne die Regeln dahinter und sammle Punkte für dein Haus.</p></div>
@@ -2028,6 +2031,257 @@ window.lzRehome=()=>{if(document.querySelector('.packs')&&!document.querySelecto
 /* „Diese Pakete wählen“ aus dem Lernplan: wählt nur die Pakete aus und markiert unten den passenden Modus – springt nicht mehr hin */
 window.lzSelect=(ids,mt)=>{S.sel=ids.split(',');LZ_IDS=S.sel.slice();LZ_HL=mt||'test';save();const y=app.scrollTop;home();app.scrollTop=y;};
 window.lzSelActive=(ids,mt)=>LZ_HL===mt&&lzSame(LZ_IDS,ids.split(','))&&lzSame(S.sel,LZ_IDS);
+/* ===== Paket 6: Der Wasserkreislauf =====
+   Noch ohne Lernzettel der Schule – Inhalte nach typischem Stoff Klasse 5/6 (Hamburger Rahmenplan NWT „Wasserkreisläufe“, „Wettererscheinungen“),
+   Zahlen: USGS (Wasser der Erde), Bayerisches Landesamt für Umwelt (Wohin geht der Regen?). Begriffe passend zu Paket 2 (Verdunsten, Kondensieren, Resublimieren). */
+CARDS.p6=[
+ ['Der Wasserkreislauf','Wasser ist ständig unterwegs, zum Beispiel: Meer → Luft → Wolke → Niederschlag → Flüsse und Grundwasser → zurück ins Meer. Manches Wasser nimmt eine Abkürzung: Regen fällt direkt ins Meer oder verdunstet gleich wieder über dem Land. Insgesamt geht kein Wasser verloren.'],
+ ['Der Motor des Kreislaufs','Die Sonne. Ihre Wärme lässt Wasser verdunsten. Die Erdanziehung (Schwerkraft) holt Regen, Schnee und Flüsse wieder nach unten.'],
+ ['Verdunstung','Die Sonne erwärmt Meere, Seen, Flüsse und den Boden. Wasser wird zu unsichtbarem Wasserdampf – flüssig → gasförmig, schon unter 100 °C.'],
+ ['Transpiration','Auch Pflanzen geben Wasser ab: Über winzige Öffnungen in ihren Blättern gelangt Wasserdampf in die Luft.'],
+ ['Warme Luft steigt auf','Warme, feuchte Luft ist leichter und steigt nach oben. Je höher, desto kälter ist es. Auch an Bergen wird die Luft nach oben geschoben.'],
+ ['Kondensation','Der aufgestiegene Wasserdampf kühlt ab und wird wieder flüssig – gasförmig → flüssig. Es entstehen winzige Tröpfchen an Staubteilchen in der Luft.'],
+ ['Woraus besteht eine Wolke?','Aus Milliarden winziger Wassertröpfchen oder Eiskristallen, die in der Luft schweben. Wasserdampf selbst ist unsichtbar.'],
+ ['Niederschlag','Die Tröpfchen stoßen zusammen und werden größer. Sind sie zu schwer, fallen sie herunter: als Regen, Schnee, Graupel oder Hagel.'],
+ ['Regen oder Schnee?','Ist es in der Wolke und auf dem Weg nach unten kälter als 0 °C, fällt Schnee aus Eiskristallen. Ist es unten wärmer, schmilzt er unterwegs zu Regen.'],
+ ['Graupel','Weiche, weiße Eiskörnchen, kleiner als 5 mm. Sie entstehen, wenn an Schneeflocken winzige Tröpfchen anfrieren.'],
+ ['Hagel','Harte Eiskörner, mindestens 5 mm groß. In Gewitterwolken tragen starke Aufwinde die Tropfen immer wieder nach oben, wo sie gefrieren.'],
+ ['Versickerung','Ein Teil des Regens sickert in den Boden. Der Boden filtert das Wasser. Tief unten sammelt es sich als Grundwasser.'],
+ ['Grundwasser und Quelle','Grundwasser fließt langsam unter der Erde. An einer Quelle tritt es wieder an die Oberfläche und fließt als Bach weiter.'],
+ ['Oberflächenabfluss','Regen, der nicht versickert, fließt über den Boden in Bäche und Flüsse – und schließlich zurück ins Meer.'],
+ ['Warum Hochwasser in der Stadt?','Asphalt und Beton lassen kaum Wasser versickern (man sagt: Flächen sind versiegelt). Bei starkem Regen fließt alles auf einmal ab – Kanäle und Bäche laufen über.'],
+ ['Wohin geht der Regen?','Beispiel Bayern: Pro Jahr fallen knapp 1000 Liter auf jeden Quadratmeter. Mehr als die Hälfte verdunstet wieder, je etwa ein Fünftel wird zu Grundwasser oder fließt direkt ab.','Bayerisches Landesamt für Umwelt'],
+ ['Salzwasser und Süßwasser','Etwa 97 % des Wassers auf der Erde ist Salzwasser im Meer. Nur knapp 3 % ist Süßwasser – davon steckt mehr als zwei Drittel im Eis und knapp ein Drittel im Grundwasser.','USGS'],
+ ['Warum ist Regen nicht salzig?','Beim Verdunsten wird nur das Wasser gasförmig. Das Salz bleibt im Meer zurück. Darum ist Regen Süßwasser.'],
+ ['Tau','In klaren Nächten kühlen Boden und Gräser stark ab. Wasserdampf aus der Luft kondensiert an ihnen zu Tröpfchen – morgens ist die Wiese nass.'],
+ ['Nebel','Eine Wolke direkt am Boden: winzige Wassertröpfchen in kühler Luft.'],
+ ['Reif','Bei Frost wird Wasserdampf direkt zu Eis, ohne vorher flüssig zu werden (Resublimieren). Gräser sehen dann weiß gezuckert aus.'],
+ ['Versuch: Mini-Wasserkreislauf','Warmes Wasser in eine Schüssel, Frischhaltefolie darüber, Eiswürfel auf die Folie. Unter der Folie bilden sich Tropfen, die wie Regen zurückfallen.','Versuch zum Nachmachen'],
+ ['Was steht im Mini-Wasserkreislauf wofür?','Warmes Wasser = Meer (Verdunstung) · kalte Folie mit Eis = kalte Luft hoch oben (Kondensation) · fallende Tropfen = Niederschlag.','Versuch zum Nachmachen'],
+ ['Versuch: Zwei Gläser','Zwei Gläser gleich hoch mit Wasser füllen, eins abdecken, beide an einen warmen Ort stellen. Nach einigen Tagen ist im offenen Glas weniger Wasser: Es ist verdunstet.','Versuch zum Nachmachen'],
+ ['Versuch: Kaltes Glas','Ein Glas aus dem Kühlschrank (oder ein Glas mit Eiswasser) beschlägt an der Luft. Der unsichtbare Wasserdampf aus der Luft kondensiert am kalten Glas zu Tröpfchen.','Versuch zum Nachmachen']
+];
+MC.push(
+ {p:'p6',q:'Was treibt den Wasserkreislauf an?',a:['Die Sonne','Der Mond','Die Fische im Meer','Die Wolken selbst'],ex:'Die Wärme der Sonne lässt Wasser verdunsten. Ohne Sonne gäbe es keine Verdunstung, keine Wolken und keinen Regen.'},
+ {p:'p6',q:'Die Sonne erwärmt das Meer und Wasser wird zu Wasserdampf. Wie heißt das?',a:['Verdunstung','Kondensation','Versickerung','Niederschlag'],ex:'Verdunsten: flüssig → gasförmig, schon unter 100 °C.'},
+ {p:'p6',q:'Was passiert mit Wasserdampf, der aufsteigt und abkühlt?',a:['Er kondensiert zu winzigen Tröpfchen','Er wird zu Salz','Er verschwindet für immer','Er wird immer wärmer'],ex:'Oben ist es kälter. Der Dampf wird wieder flüssig – es entsteht eine Wolke.'},
+ {p:'p6',q:'Woraus besteht eine Wolke?',a:['Aus winzigen Wassertröpfchen oder Eiskristallen','Aus unsichtbarem Wasserdampf','Aus Rauch','Aus Staub'],ex:'Wasserdampf kann man nicht sehen. Sichtbar sind erst die kondensierten Tröpfchen.'},
+ {p:'p6',q:'Wann fällt Regen aus einer Wolke?',a:['Wenn die Tropfen zu groß und schwer werden','Wenn die Sonne scheint','Wenn die Wolke sich erwärmt','Wenn es windstill ist'],ex:'Die winzigen Tröpfchen wachsen zusammen. Sind sie zu schwer, fallen sie.'},
+ {p:'p6',q:'Wie nennt man alles Wasser, das aus Wolken fällt?',a:['Niederschlag','Grundwasser','Abfluss','Tau'],ex:'Regen, Schnee, Graupel und Hagel sind Niederschlag.'},
+ {p:'p6',q:'Regen sickert in den Boden. Wo sammelt er sich?',a:['Im Grundwasser','In der Wolke','In der Luft','Im Meeressalz'],ex:'Der Boden filtert das Wasser, tief unten sammelt es sich als Grundwasser.'},
+ {p:'p6',q:'Wo kommt Grundwasser wieder an die Oberfläche?',a:['An einer Quelle','In einer Wolke','Auf dem Asphalt','Im Gefrierfach'],ex:'An einer Quelle tritt Grundwasser aus und fließt als Bach weiter.'},
+ {p:'p6',q:'Warum gibt es in Städten bei Starkregen schneller Hochwasser?',a:['Asphalt und Beton lassen kaum Wasser versickern','In Städten regnet es immer mehr','Häuser ziehen Wolken an','In der Stadt verdunstet mehr Wasser'],ex:'Versiegelte Flächen: Das Wasser fließt sofort ab, Kanäle und Bäche laufen über.'},
+ {p:'p6',q:'Wie viel des Wassers auf der Erde ist Salzwasser?',a:['Etwa 97 %','Etwa 50 %','Etwa 3 %','Etwa 10 %'],ex:'Nur knapp 3 % ist Süßwasser – und davon ist das meiste als Eis gebunden.'},
+ {p:'p6',q:'Warum ist Regen nicht salzig, obwohl viel Wasser aus dem Meer kommt?',a:['Das Salz bleibt beim Verdunsten im Meer','Die Wolken filtern das Salz heraus','Der Wind bläst das Salz weg','Regen kommt nur aus Seen'],ex:'Nur das Wasser wird gasförmig, das Salz verdunstet nicht mit.'},
+ {p:'p6',q:'Morgens ist die Wiese nass, obwohl es nicht geregnet hat. Was ist das?',a:['Tau','Hagel','Grundwasser','Schnee'],ex:'Nachts kühlen die Gräser ab. Wasserdampf aus der Luft kondensiert an ihnen.'},
+ {p:'p6',q:'Wann fällt Schnee statt Regen?',a:['Wenn es in der Wolke und darunter kälter als 0 °C ist','Wenn die Sonne stark scheint','Wenn es sehr windig ist','Wenn die Wolke über dem Meer ist'],ex:'In kalten Wolken entstehen Eiskristalle. Ist es unten wärmer, schmelzen sie zu Regen.'},
+ {p:'p6',q:'Auch Pflanzen geben über ihre Blätter Wasserdampf ab. Wie heißt das?',a:['Transpiration','Kondensation','Versickerung','Resublimieren'],ex:'Transpiration gehört auch zur Verdunstung im Wasserkreislauf.'},
+ {p:'p6',q:'Im Versuch „Mini-Wasserkreislauf“ liegen Eiswürfel auf der Folie. Wofür stehen sie?',a:['Für die kalte Luft hoch oben','Für das Meer','Für die Sonne','Für das Grundwasser'],ex:'An der kalten Folie kondensiert der Dampf – wie hoch oben in der kalten Luft.'},
+ {p:'p6',q:'Was passiert im Wasserkreislauf mit der gesamten Wassermenge der Erde?',a:['Sie bleibt gleich – Wasser geht nicht verloren','Sie wird jedes Jahr kleiner','Sie wird durch Regen größer','Sie verschwindet im Grundwasser'],ex:'Das Wasser wechselt nur seinen Ort und seinen Zustand.'}
+);
+TF.push(
+ {p:'p6',s:'Wolken bestehen aus Wasserdampf.',t:false,ex:'Wasserdampf ist unsichtbar. Wolken bestehen aus winzigen Tröpfchen oder Eiskristallen.'},
+ {p:'p6',s:'Die Sonne ist der Motor des Wasserkreislaufs.',t:true,ex:'Ihre Wärme lässt Wasser verdunsten.'},
+ {p:'p6',s:'Wasser verdunstet nur bei 100 °C.',t:false,ex:'Verdunsten geht auch unter 100 °C – zum Beispiel trocknet eine Pfütze in der Sonne.'},
+ {p:'p6',s:'Aufsteigende feuchte Luft kühlt ab.',t:true,ex:'Je höher, desto kälter. Dann kondensiert der Wasserdampf.'},
+ {p:'p6',s:'Regen ist salzig, weil er aus dem Meer kommt.',t:false,ex:'Das Salz bleibt beim Verdunsten im Meer zurück.'},
+ {p:'p6',s:'Auf Asphalt versickert viel Regenwasser.',t:false,ex:'Asphalt ist versiegelt: Das Wasser fließt ab.'},
+ {p:'p6',s:'Grundwasser kann an einer Quelle wieder austreten.',t:true,ex:'Dort beginnt oft ein Bach.'},
+ {p:'p6',s:'Hagelkörner bestehen aus Eis.',t:true,ex:'Sie sind mindestens 5 mm groß.'},
+ {p:'p6',s:'Im Wasserkreislauf geht Wasser verloren.',t:false,ex:'Es wechselt nur Ort und Zustand.'},
+ {p:'p6',s:'Pflanzen geben über ihre Blätter Wasserdampf ab.',t:true,ex:'Das nennt man Transpiration.'},
+ {p:'p6',s:'Tau entsteht, wenn Wasserdampf an kalten Gräsern kondensiert.',t:true,ex:'Darum ist die Wiese morgens nass.'},
+ {p:'p6',s:'Der größte Teil des Süßwassers steckt in Flüssen und Seen.',t:false,ex:'Mehr als zwei Drittel stecken im Eis, knapp ein Drittel im Grundwasser.'},
+ {p:'p6',s:'Nebel ist eine Wolke direkt am Boden.',t:true,ex:'Auch Nebel besteht aus winzigen Tröpfchen.'},
+ {p:'p6',s:'Wind kann Wolken vom Meer übers Land tragen.',t:true,ex:'So regnet es auch weit weg vom Meer.'}
+);
+ANA.push(
+ {p:'p6',c:'Die Sonne erwärmt Wasser, es wird zu Wasserdampf.',w:'VERDUNSTUNG'},
+ {p:'p6',c:'Wasserdampf kühlt ab und wird wieder flüssig.',w:'KONDENSATION'},
+ {p:'p6',c:'Sammelbegriff für Regen, Schnee und Hagel.',w:'NIEDERSCHLAG'},
+ {p:'p6',c:'Wasser, das sich unter der Erde sammelt.',w:'GRUNDWASSER'},
+ {p:'p6',c:'Hier kommt Grundwasser wieder an die Oberfläche.',w:'QUELLE'},
+ {p:'p6',c:'Der Motor des Wasserkreislaufs.',w:'SONNE'},
+ {p:'p6',c:'Regenwasser sinkt in den Boden.',w:'VERSICKERUNG'}
+);
+GAPTEXTS.push({p:['p6'],t:'Die Reise des Wassers',parts:['Die ',['Sonne'],' erwärmt das Wasser im Meer. Es ',['verdunstet'],' und steigt als unsichtbarer ',['Wasserdampf'],' auf. Oben ist die Luft ',['kälter'],'. Der Dampf ',['kondensiert'],' zu winzigen Tröpfchen – eine ',['Wolke'],' entsteht. Werden die Tropfen zu schwer, fallen sie als ',['Niederschlag'],' herunter. Viel Wasser verdunstet bald wieder. Ein Teil ',['versickert'],' im Boden und wird zu ',['Grundwasser'],'. Ein anderer Teil fließt über Flüsse zurück ins ',['Meer'],'.'],extra:['wärmer','schmilzt']});
+MODES.gaps.p.push('p6');
+WQ.push(
+ {p:'p6',q:'Beschreibe den Wasserkreislauf. Verwende die Fachbegriffe Verdunstung, Kondensation und Niederschlag.',k:['die Sonne erwärmt Wasser, es verdunstet (wird zu Wasserdampf)','der Dampf steigt auf, kühlt ab und kondensiert zu Tröpfchen – Wolken entstehen','die Tropfen werden schwer und fallen als Niederschlag (Regen, Schnee …)','das Wasser fließt über Flüsse oder das Grundwasser zurück ins Meer'],a:'Die Sonne erwärmt das Wasser im Meer, in Seen und Flüssen. Es verdunstet und steigt als unsichtbarer Wasserdampf auf. Oben ist es kälter: Der Dampf kühlt ab und kondensiert zu winzigen Tröpfchen, es entstehen Wolken. Werden die Tropfen zu schwer, fallen sie als Niederschlag, zum Beispiel als Regen oder Schnee. Das Wasser versickert ins Grundwasser oder fließt über Bäche und Flüsse zurück ins Meer.'},
+ {p:'p6',q:'Warum nennt man die Sonne den „Motor“ des Wasserkreislaufs?',k:['die Sonne liefert Wärme (Energie)','dadurch verdunstet Wasser','ohne Sonne: keine Verdunstung, keine Wolken, kein Regen'],a:'Die Sonne liefert die Wärme, durch die Wasser verdunstet. Ohne Sonne würde kein Wasser verdunsten, es gäbe keine Wolken und keinen Regen – der Kreislauf würde stehen bleiben.'},
+ {p:'p6',q:'Was passiert mit Regen, der auf eine Wiese fällt? Was ist in der Stadt anders?',k:['auf der Wiese versickert viel Wasser im Boden','es sammelt sich als Grundwasser','in der Stadt sind Flächen versiegelt (Asphalt, Beton)','dort fließt das Wasser schnell ab – Gefahr von Hochwasser'],a:'Auf einer Wiese versickert ein großer Teil des Regens im Boden und wird zu Grundwasser. In der Stadt ist der Boden mit Asphalt und Beton versiegelt. Dort kann kaum Wasser versickern, es fließt schnell in Kanäle und Bäche ab. Bei Starkregen kann es deshalb leichter Hochwasser geben.'},
+ {p:'p6',q:'Eine Wolke besteht nicht aus Wasserdampf. Woraus dann? Erkläre, wie sie entsteht.',k:['Wasserdampf ist unsichtbar','eine Wolke besteht aus winzigen Wassertröpfchen (oder Eiskristallen)','sie entstehen, wenn aufsteigender Dampf abkühlt und kondensiert'],a:'Wasserdampf ist unsichtbar. Eine Wolke besteht aus winzigen Wassertröpfchen oder Eiskristallen. Sie entstehen, wenn feuchte Luft aufsteigt und abkühlt: Der Wasserdampf kondensiert zu Tröpfchen.'},
+ {p:'p6',q:'Versuch „Mini-Wasserkreislauf“: Beschreibe Durchführung und Beobachtung. Was stellt welches Teil im echten Wasserkreislauf dar?',k:['warmes Wasser in eine Schüssel, Folie darüber, Eiswürfel auf die Folie','Beobachtung: unter der Folie bilden sich Tropfen, die herunterfallen','warmes Wasser = Meer (Verdunstung), kalte Folie = kalte Luft oben (Kondensation), Tropfen = Niederschlag'],a:'Man gießt warmes Wasser in eine Schüssel, spannt Frischhaltefolie darüber und legt Eiswürfel auf die Folie. Unter der Folie bilden sich Tropfen, die größer werden und zurück ins Wasser fallen. Das warme Wasser stellt das Meer dar, aus dem Wasser verdunstet. Die kalte Folie steht für die kalte Luft hoch oben, an der der Dampf kondensiert. Die fallenden Tropfen sind der Niederschlag.'},
+ {p:'p6',q:'Viel Wasser verdunstet aus dem Meer. Warum ist Regenwasser trotzdem nicht salzig?',k:['beim Verdunsten wird nur das Wasser gasförmig','das Salz bleibt im Meer zurück','deshalb ist Regen Süßwasser'],a:'Beim Verdunsten wird nur das Wasser zu Wasserdampf. Das Salz verdunstet nicht mit und bleibt im Meer zurück. Deshalb ist Regen Süßwasser.'}
+);
+/* Bild-Aufgaben: markierten Vorgang im Wasserkreislauf benennen */
+const KR_STEPS=[['Verdunstung','Wasser wird durch die Wärme der Sonne zu Wasserdampf und steigt auf.'],['Kondensation','Der Dampf kühlt oben ab und wird zu winzigen Tröpfchen – die Wolke entsteht.'],['Niederschlag','Die Tropfen werden schwer und fallen als Regen oder Schnee.'],['Versickerung','Regen sinkt in den Boden und wird zu Grundwasser.'],['Abfluss','Wasser fließt im Fluss zurück ins Meer.']];
+function krSVG(k){const A=[['M58 132 C50 118 66 104 58 90 C50 78 62 70 58 62','58,52 50,66 66,66'],['M92 70 Q118 58 142 50','150,47 136,42 140,57'],['M192 70 L200 116','201,126 193,112 207,111'],['M214 146 L214 172','214,182 207,169 221,169'],['M246 154 Q190 160 136 152','126,150 140,144 138,159']];
+  return`<svg viewBox="0 0 320 200" width="320" height="200" role="img" aria-label="Wasserkreislauf mit markiertem Vorgang" style="max-width:100%;height:auto">
+  <rect width="320" height="200" fill="#dff0ff"/><circle cx="28" cy="26" r="15" fill="#ffd34d"/>
+  <path d="M0 140 H124 V200 H0Z" fill="#4f9fe0"/><text x="10" y="192" font-size="11" fill="#fff" font-family="system-ui">Meer</text>
+  <path d="M124 140 H200 L262 58 L320 120 V200 H124Z" fill="#9bc97a"/><path d="M246 79 L262 58 L279 80 Q262 74 246 79Z" fill="#fff"/>
+  <rect x="124" y="168" width="196" height="20" fill="#7cc0f0" opacity=".55"/><text x="236" y="182" font-size="10" fill="#1b4d7a" font-family="system-ui">Grundwasser</text>
+  <path d="M250 148 Q190 158 124 150" stroke="#3d86d6" stroke-width="5" fill="none"/>
+  <g fill="#fff" stroke="#c6d6e6"><ellipse cx="170" cy="48" rx="30" ry="15"/><ellipse cx="196" cy="44" rx="22" ry="14"/><ellipse cx="150" cy="52" rx="18" ry="11"/></g>
+  ${A.map((a,i)=>{const on=i===k;return`<path d="${a[0]}" stroke="${on?'#ff7a00':'#8a9bb0'}" stroke-width="${on?5:2.5}" fill="none" stroke-linecap="round"${on?'':' stroke-dasharray="5 4"'}/><polygon points="${a[1]}" fill="${on?'#ff7a00':'#8a9bb0'}"/>`;}).join('')}
+  </svg>`;}
+function mkKR(){const k=rnd(0,KR_STEPS.length-1);return{t:'mc',p:'p6',q:'Wie heißt der <b>orange</b> markierte Vorgang im Wasserkreislauf?',pic:krSVG(k),rq:'Vorgang im Wasserkreislauf erkennen',opts:shuffle(KR_STEPS.map(s=>s[0])),ans:KR_STEPS[k][0],ex:KR_STEPS[k][1]};}
+/* Kreislauf-Puzzle: Schritte in die richtige Reihenfolge bringen */
+const KR_SEQ=[
+ {t:'Vom Meer bis zum Regen',s:['Die Sonne erwärmt das Meer','Wasser verdunstet','Der Wasserdampf steigt auf und kühlt ab','Der Dampf kondensiert: Eine Wolke entsteht','Die Tropfen werden schwer: Es regnet','Das Wasser fließt im Fluss zurück ins Meer']},
+ {t:'Vom Regen zur Quelle',s:['Es regnet auf eine Wiese','Das Wasser versickert und wird vom Boden gefiltert','Es sammelt sich als Grundwasser','Das Grundwasser fließt langsam unter der Erde','An einer Quelle tritt es wieder aus','Ein Bach fließt in den Fluss']},
+ {t:'Schnee im Gebirge',s:['Wind trägt eine Wolke zum Berg','Die Luft steigt am Berg auf und kühlt ab','Es ist kälter als 0 °C: Es schneit','Im Winter bleibt der Schnee liegen','Im Frühling schmilzt der Schnee','Schmelzwasser fließt ins Tal']}
+];
+function cycle(){const prev=G&&G.mode==='cycle'?G.T:null,pool=KR_SEQ.filter(x=>x!==prev);
+  G={mode:'cycle',finished:false,T:pick(pool),done:[],miss:0};G.btns=shuffle(G.T.s);shell('cycle');$('#pprog').textContent=G.T.t;drawCycle();}
+function drawCycle(){const c=$('#card'),S6=G.T.s;
+  c.innerHTML=`<div class="q">Tippe die Schritte in der richtigen Reihenfolge an.<small style="display:block;margin-top:4px">${esc(G.T.t)}</small></div>
+  <ol class="plist">${G.done.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>
+  <div class="pbtns">${G.btns.filter(b=>!G.done.includes(b)).map(b=>`<button class="opt" data-b="${esc(b)}" style="text-align:center">${esc(b)}</button>`).join('')}</div><div id="fb"></div>`;
+  c.querySelectorAll('.pbtns .opt').forEach(b=>b.onclick=()=>{
+    if(b.dataset.b===S6[G.done.length]){G.done.push(b.dataset.b);sfx('ok');
+      if(G.done.length===S6.length){recordStat('p6',G.miss<=1);G.xp=addXP(Math.round(Math.max(0,1-G.miss/6)*30),['p6']);if(G.miss===0)confetti();drawCycle();
+        $('#fb').innerHTML=`<div class="fbox ${G.miss===0?'ok':G.miss<=2?'half':'bad'}"><div>${G.miss===0?'Fehlerfrei! ':''}Fertig mit ${G.miss} Fehlversuch${G.miss===1?'':'en'}. Der Wasserkreislauf hat keinen Anfang und kein Ende – das Wasser kommt immer wieder an.</div><div class="xpgain">+${G.xp} Punkt${G.xp===1?'':'e'}</div><div style="display:flex;gap:10px;justify-content:center;margin-top:10px"><button class="big go" id="again2">Noch ein Puzzle</button><button class="big sec" id="home2">Übersicht</button></div></div>`;
+        $('#again2').onclick=cycle;$('#home2').onclick=home;return;}
+      drawCycle();}
+    else{G.miss++;sfx('bad');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake','bad');setTimeout(()=>b.classList.remove('bad'),500);}});}
+/* Eigene Übungen und Labor für Paket 6 */
+MODES.kreislab={i:'🌦️',t:'Wasserkreislauf-Labor',d:'Sonne, Wind, Wolken, Regen und Grundwasser selbst steuern – und ein Mini-Wasserkreislauf im Glas.',p:['p6'],g:'learn'};
+MODES.cycle={i:'🔁',t:'Kreislauf-Puzzle',d:'Bring die Schritte des Wasserkreislaufs in die richtige Reihenfolge.',p:['p6'],g:'play'};
+function kreisLab(){G={mode:'werk',finished:false,raf:0};shell('kreislab');wkMenu(['kreis','miniglas']);}
+/* für die automatischen Tests */
+window.__Z6={cards:()=>CARDS.p6.length,pics:()=>mcPool().filter(x=>x.pic).map(x=>[x.ans,x.opts.length]),seq:()=>G&&G.T&&G.T.s,wq:()=>WQ.filter(q=>q.p==='p6').length,home:()=>home(),start:m=>startMode(m)};
+
+/* ===== Forscherlabor-Stationen zum Wasserkreislauf ===== */
+TK_P.kreis='p6';TK_P.miniglas='p6';
+WK_ST.kreis={i:'🌦️',t:'Wasserkreislauf: Meer, Wolken, Berg',d:'Sonne, Jahreszeit, Boden und Wind einstellen und zusehen, wohin das Wasser wandert.',m:[
+ ['evap','Lass Wasser aus dem Meer verdunsten.'],['cloud','Lass eine dicke Wolke entstehen.'],['rain','Lass es auf dem Land regnen.'],['snow','Lass auf dem Berg Schnee liegen bleiben.'],
+ ['ground','Fülle das Grundwasser so weit auf, dass die Quelle sprudelt.'],['flood','Zeig, warum es in der Stadt schneller Hochwasser gibt.'],['nosun','Finde heraus, was passiert, wenn die Sonne nicht scheint.'],['loop','Schließe den Kreislauf: Bring 150 Tropfen über den Fluss zurück ins Meer.']]};
+WK_ST.miniglas={i:'🥣',t:'Mini-Wasserkreislauf im Glas',d:'Schüssel mit Wasser, Folie und Eiswürfeln – wie im echten Versuch.',m:[
+ ['drops','Lass unter der Folie Tropfen entstehen.'],['rain','Lass es in der Schüssel regnen.'],['fast','Lass es so schnell wie möglich regnen (in weniger als 15 Sekunden).'],['cold','Zeig, dass kaltes Wasser kaum verdunstet.'],['open','Zeig, wohin das Wasser ohne Folie verschwindet.']]};
+Object.assign(TK_H,{
+ 'kreis:evap':['Was braucht Wasser, damit es verdunstet?','Die Sonne liefert die Wärme. Stell den Regler „Sonne“ nach oben.','Lösung: Sonne auf „stark“ stellen und ein paar Sekunden warten, bis Wasserdampf aufsteigt.'],
+ 'kreis:cloud':['Woraus entsteht eine Wolke?','Der Wasserdampf muss aufsteigen und oben abkühlen. Dafür muss erst viel Wasser verdunsten.','Lösung: Sonne auf „stark“ und warten, bis die Wolke groß ist.'],
+ 'kreis:rain':['Die Wolke entsteht über dem Meer. Wie kommt sie übers Land?','Der Wind trägt Wolken zum Berg. Dort steigt die Luft auf und es regnet. Im Winter würde es schneien.','Lösung: Sonne stark, ☀️ Sommer, „🌬️ Wind zum Berg“ einschalten und warten, bis es über dem Land regnet.'],
+ 'kreis:snow':['Wann fällt Schnee statt Regen?','Es muss kälter als 0 °C sein – und die Wolke muss über dem Land sein.','Lösung: Sonne stark, ❄️ Winter, Wind zum Berg einschalten und warten, bis der Berg weiß wird.'],
+ 'kreis:ground':['Wo versickert Regen gut – auf der Wiese oder auf Asphalt?','Lass es lange auf die Wiese regnen. Das Wasser versickert und füllt das Grundwasser, bis die Quelle sprudelt.','Lösung: 🌳 Wiese & Wald, Sommer, Sonne stark, Wind zum Berg – und warten, bis die Quelle am Berg sprudelt.'],
+ 'kreis:flood':['Was passiert mit Regen auf Asphalt?','In der Stadt kann kaum Wasser versickern: Es fließt sofort in den Fluss. Lass es kräftig regnen.','Lösung: 🏙️ Stadt, Sommer, Sonne stark, Wind zum Berg und warten, bis der Fluss über die Ufer tritt.'],
+ 'kreis:nosun':['Was macht die Sonne im Wasserkreislauf?','Stell die Sonne ganz aus und beobachte eine Weile: Gibt es noch Verdunstung und neue Wolken?','Lösung: Sonne auf „aus“ und etwa 10 Sekunden warten, bis keine Wolke mehr da ist.'],
+ 'kreis:loop':['Wie kommt Wasser zurück ins Meer?','Regen auf dem Land fließt über den Fluss ins Meer. Lass es lange genug regnen.','Lösung: Sonne stark, Sommer, Wind zum Berg und warten, bis der Zähler „zurück im Meer“ 150 zeigt.'],
+ 'miniglas:drops':['Wo soll der Wasserdampf hängen bleiben?','Mit Folie über der Schüssel kann der Dampf nicht entweichen. Warmes Wasser verdunstet schneller.','Lösung: Warmes Wasser, Folie drauf, „▶ Start“ und warten, bis Tropfen unter der Folie hängen.'],
+ 'miniglas:rain':['Wann fallen Tropfen herunter?','Die Tropfen müssen erst groß und schwer werden. Eiswürfel kühlen die Folie, dann kondensiert mehr Dampf.','Lösung: Warmes oder heißes Wasser, Folie drauf, Eiswürfel drauf, „▶ Start“ und warten, bis es dreimal regnet.'],
+ 'miniglas:fast':['Was beschleunigt Verdunsten und Kondensieren?','Je wärmer das Wasser, desto mehr verdunstet. Je kälter die Folie, desto mehr kondensiert.','Lösung: 🔥 heißes Wasser 70 °C, Folie drauf, Eiswürfel drauf, „▶ Start“.'],
+ 'miniglas:cold':['Wie hängt Verdunsten von der Wärme ab?','Nimm kaltes Wasser, Folie und Eis wie sonst – und beobachte, wie wenig passiert.','Lösung: 🧊 kaltes Wasser 10 °C, Folie drauf, Eiswürfel drauf, „▶ Start“ und 15 Sekunden warten.'],
+ 'miniglas:open':['Was passiert mit dem Dampf, wenn nichts ihn aufhält?','Ohne Folie steigt der Dampf in die Luft und das Wasser in der Schüssel wird weniger.','Lösung: Folie ab, warmes Wasser, „▶ Start“ und warten, bis der Wasserstand sinkt.']
+});
+WK.kreis=()=>{const W={sun:50,cold:false,city:false,wind:false,t:0,noSunT:0};
+ const reset=()=>Object.assign(W,{sea:900,vap:0,cloud:0,cx:.22,snow:0,gw:60,river:40,back:0,rainNow:0,snowNow:0,landRain:0,vp:[],dr:[],t:0,noSunT:0});reset();
+ W.ctl=()=>`<label>☀️ Sonne: <b id="wksl">mittel</b><input type="range" id="wkss" min="0" max="100" value="50"></label>
+  <div class="mxchips" id="wkso"><button data-s="0">aus</button><button data-s="25">schwach</button><button data-s="50" class="on">mittel</button><button data-s="100">stark</button></div>
+  <div class="mxchips" id="wkse"><button data-c="0" class="on">☀️ Sommer 18 °C</button><button data-c="1">❄️ Winter −6 °C</button></div>
+  <div class="mxchips" id="wksb"><button data-b="0" class="on">🌳 Wiese &amp; Wald</button><button data-b="1">🏙️ Stadt (Asphalt)</button></div>
+  <div class="mxchips"><button id="wkwind">🌬️ Wind zum Berg: aus</button></div>
+  <div class="mxbtns"><button class="big sec" id="wknew">⟲ Neu</button></div>`;
+ W.lupe=()=>`<div class="mxlupe"><div class="mxlt">📊 Wo ist das Wasser? (1000 Tropfen)</div><div class="mxlc" id="wkbal"></div></div>`;
+ W.bind=c=>{const lab=v=>v===0?'aus':v<=25?'schwach':v<=60?'mittel':'stark';
+  const sync=()=>{$('#wkss').value=W.sun;$('#wksl').textContent=lab(W.sun);c.querySelectorAll('[data-s]').forEach(b=>b.classList.toggle('on',+b.dataset.s===W.sun));
+   c.querySelectorAll('[data-c]').forEach(b=>b.classList.toggle('on',+b.dataset.c===+W.cold));c.querySelectorAll('[data-b]').forEach(b=>b.classList.toggle('on',+b.dataset.b===+W.city));
+   $('#wkwind').textContent='🌬️ Wind zum Berg: '+(W.wind?'an':'aus');$('#wkwind').classList.toggle('on',W.wind);};
+  $('#wkss').oninput=e=>{W.sun=+e.target.value;sync();};c.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{W.sun=+b.dataset.s;sync();});
+  c.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{W.cold=b.dataset.c==='1';sync();});c.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{W.city=b.dataset.b==='1';sync();});
+  $('#wkwind').onclick=()=>{W.wind=!W.wind;sync();};$('#wknew').onclick=()=>{reset();sync();};sync();};
+ W.step=dt=>{W.t+=dt;const s=W.sun/100,land=W.cx>.42;
+  const ev=Math.min(W.sea,s*(W.cold?9:14)*dt);W.sea-=ev;W.vap+=ev;                                  /* Verdunstung aus dem Meer */
+  const tr=W.cold||W.city||W.gw<20?0:Math.min(W.gw-20,s*2*dt);W.gw-=tr;W.vap+=tr;               /* Transpiration der Pflanzen */
+  const co=W.vap*.55*dt;W.vap-=co;W.cloud+=co;                                           /* Kondensation in der Höhe */
+  W.cx+=((W.wind?.84:.22)-W.cx)*.35*dt;
+  let pr=0;if(W.cloud>55)pr=Math.min(W.cloud,(W.cloud-40)*(land&&W.cx>.7?.85:.45)*dt);   /* Niederschlag, am Berg stärker */
+  else if(W.vap<1&&W.cloud>0)pr=Math.min(W.cloud,Math.max(.3,W.cloud*.3)*dt);          /* ohne Nachschub regnet die Wolke aus und löst sich auf */
+  W.cloud-=pr;
+  W.rainNow=0;W.snowNow=0;
+  if(pr>0){if(!land)W.sea+=pr;else if(W.cold){W.snow+=pr;W.snowNow=pr/dt;}
+   else{const inf=W.city?.12:.7;W.gw+=pr*inf;W.river+=pr*(1-inf);W.rainNow=pr/dt;W.landRain+=pr;}
+   if(!land||!W.cold)W.rainNow=W.rainNow||(pr/dt);}
+  if(!W.cold&&W.snow>0){const m=Math.min(W.snow,9*dt);W.snow-=m;W.river+=m;}               /* Schneeschmelze */
+  const sp=Math.min(W.gw,(W.gw>150?Math.min(3,.5+(W.gw-150)*.1):W.gw*.004)*dt+(W.gw>400?(W.gw-400)*dt:0));W.gw-=sp;W.river+=sp; /* Quelle, Boden voll → Überlauf */
+  const out=W.river*.1*dt;W.river-=out;W.sea+=out;W.back+=out;                          /* Fluss ins Meer */
+  W.noSunT=W.sun===0?W.noSunT+dt:0;
+  if(ev>0&&Math.random()<s*1.2)W.vp.push({x:.03+Math.random()*.3,y:.72,v:.08+Math.random()*.06});
+  W.vp.forEach(p=>p.y-=p.v*dt*1.6);W.vp=W.vp.filter(p=>p.y>.24);
+  if(pr>0)for(let i=0;i<3;i++)W.dr.push({x:W.cx+(Math.random()-.5)*.16,y:.27,snow:land&&W.cold});
+  W.dr.forEach(d=>d.y+=(d.snow?.25:.9)*dt);W.dr=W.dr.filter(d=>d.y<.72);};
+ const groundY=(x)=>{/* Höhe der Landschaft (0..1 von oben) */if(x<.38)return .72;if(x<.6)return .72;if(x<.82)return .72-(x-.6)/.22*.42;return .30+(x-.82)/.18*.22;};
+ W.draw=ctx=>{const w=W.W,h=W.H,s=W.sun/100;ctx.clearRect(0,0,w,h);
+  const g=ctx.createLinearGradient(0,0,0,h*.72);g.addColorStop(0,W.cold?`rgb(${150+60*s},${175+50*s},${205+40*s})`:`rgb(${120+90*s},${170+60*s},${230+20*s})`);g.addColorStop(1,'#eef6ff');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+  if(W.sun>0){ctx.fillStyle=`rgba(255,205,60,${.35+.65*s})`;ctx.beginPath();ctx.arc(w*.07,h*.1,10+16*s,0,7);ctx.fill();}
+  else{ctx.fillStyle='#9aa7b5';ctx.font='bold 12px system-ui';ctx.textAlign='left';ctx.fillText('Sonne aus',w*.02,h*.1);}
+  /* Meer */ctx.fillStyle='#3f8fd8';ctx.fillRect(0,h*.72,w*.38,h*.28);
+  /* Land und Berg */ctx.fillStyle=W.city?'#b9b9b9':'#8fc46b';ctx.beginPath();ctx.moveTo(w*.38,h);ctx.lineTo(w*.38,h*.72);
+  for(let x=.38;x<=1.001;x+=.02)ctx.lineTo(w*x,h*groundY(x));ctx.lineTo(w,h);ctx.closePath();ctx.fill();
+  ctx.fillStyle=W.cold?'#c9d6c2':'#7a9a5a';ctx.beginPath();ctx.moveTo(w*.6,h*.72);for(let x=.6;x<=1.001;x+=.02)ctx.lineTo(w*x,h*groundY(x));ctx.lineTo(w,h*.72);ctx.closePath();ctx.fill();
+  if(W.snow>1){const k=Math.min(1,W.snow/60);ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(w*(.82-.1*k),h*(groundY(.82-.1*k)));ctx.lineTo(w*.82,h*.30);ctx.lineTo(w*(.82+.08*k),h*groundY(.82+.08*k));ctx.closePath();ctx.fill();}
+  /* Stadt oder Wiese */if(W.city){ctx.fillStyle='#7b8794';[[.42,.1],[.47,.14],[.52,.08],[.56,.12]].forEach(([x,hh])=>ctx.fillRect(w*x,h*(.72-hh),w*.035,h*hh));ctx.fillStyle='#555';ctx.fillRect(w*.38,h*.715,w*.22,3);}
+  else{[[.44,.06],[.5,.08],[.55,.05],[.66,.05]].forEach(([x,hh])=>{const y=groundY(x);ctx.fillStyle='#6b4a2b';ctx.fillRect(w*x-2,h*(y-hh*.5),4,h*hh*.5);ctx.fillStyle='#3f8a3a';ctx.beginPath();ctx.arc(w*x,h*(y-hh*.6),h*hh*.45,0,7);ctx.fill();});}
+  /* Grundwasser */const gl=Math.min(1,W.gw/220);ctx.fillStyle='rgba(80,150,230,.45)';ctx.fillRect(w*.38,h*(.97-.18*gl),w*.62,h*.18*gl);
+  ctx.fillStyle='#1b4d7a';ctx.font='11px system-ui';ctx.textAlign='left';ctx.fillText('Grundwasser',w*.40,h*.985);
+  /* Quelle am Fuß des Berges */if(W.gw>150){ctx.fillStyle='#2f7fd0';ctx.beginPath();ctx.arc(w*.645,h*groundY(.645),6,0,7);ctx.fill();ctx.font='bold 11px system-ui';ctx.fillText('Quelle',w*.655,h*(groundY(.645)-.015));}
+  /* Fluss vom Berg ins Meer */const rw=2+Math.min(14,W.river/9);ctx.strokeStyle='#2f7fd0';ctx.lineWidth=rw;ctx.lineJoin='round';ctx.lineCap='round';ctx.beginPath();ctx.moveTo(w*.7,h*groundY(.7));ctx.lineTo(w*.6,h*.722);ctx.lineTo(w*.38,h*.722);ctx.stroke();ctx.lineCap='butt';
+  if(W.river>100){ctx.fillStyle='rgba(47,127,208,.45)';ctx.fillRect(w*.38,h*.69,w*.3,h*.04);ctx.fillStyle='#c0392b';ctx.font='bold 12px system-ui';ctx.fillText('⚠️ Hochwasser!',w*.42,h*.66);}
+  /* Wasserdampf */ctx.fillStyle='rgba(255,255,255,.75)';W.vp.forEach(p=>{ctx.beginPath();ctx.arc(w*p.x,h*p.y,2,0,7);ctx.fill();});
+  /* Wolke */if(W.cloud>3){const r=Math.min(1,W.cloud/120),cx=w*W.cx,cy=h*.2;ctx.fillStyle=W.cloud>55?'#d9dee5':'#fff';[[0,0,1],[-.6,.15,.7],[.6,.12,.75],[.25,-.25,.7]].forEach(([dx,dy,k])=>{ctx.beginPath();ctx.arc(cx+dx*w*.07*(.5+r),cy+dy*h*.08*(.5+r),w*.045*(.5+r)*k,0,7);ctx.fill();});}
+  /* Regen/Schnee */W.dr.forEach(d=>{if(d.snow){ctx.fillStyle='#fff';ctx.font='12px system-ui';ctx.fillText('❄',w*d.x,h*d.y);}else{ctx.strokeStyle='#3f7fd0';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(w*d.x,h*d.y);ctx.lineTo(w*d.x-2,h*d.y+8);ctx.stroke();}});
+  ctx.fillStyle='#222';ctx.font='bold 13px system-ui,sans-serif';ctx.textAlign='left';ctx.fillText(`🌡️ ${W.cold?'−6':'18'} °C · zurück im Meer: ${Math.round(W.back)} Tropfen`,8,h*.97>h-6?h-6:h*.97);
+  const bal=$('#wkbal');if(bal&&(W.t*4|0)!==W._bt){W._bt=W.t*4|0;const f=x=>Math.round(x);bal.innerHTML=`🌊 Meer ${f(W.sea)} · 💨 Dampf ${f(W.vap)} · ☁️ Wolke ${f(W.cloud)} · ❄️ Schnee ${f(W.snow)} · 🏞️ Fluss ${f(W.river)} · 🪨 Grundwasser ${f(W.gw)}<br><b>Gesamt: ${f(W.sea+W.vap+W.cloud+W.snow+W.river+W.gw)} – es geht kein Tropfen verloren.</b>`;}};
+ W.info=()=>{const t=[];const s=W.sun;
+  if(s===0)t.push(W.noSunT>3?'🌑 Ohne Sonne verdunstet kaum noch Wasser: Es entstehen keine neuen Wolken, der Regen hört auf. Die Sonne ist der Motor des Kreislaufs.':'🌑 Die Sonne ist aus. Beobachte, was jetzt passiert …');
+  else t.push(`☀️ Die Sonne erwärmt das Meer: Wasser <b>verdunstet</b> und steigt als unsichtbarer Wasserdampf auf${s>=60?' – viel, weil die Sonne stark scheint':''}.`);
+  if(W.cloud>3)t.push(`☁️ Oben ist es kälter: Der Dampf <b>kondensiert</b> zu winzigen Tröpfchen – eine Wolke ${W.cloud>55?'ist dick und schwer':'wächst'}.`);
+  if(W.cloud>55&&W.cx<=.42)t.push('🌧️ Die Wolke regnet über dem Meer ab. Ohne Wind kommt sie nicht übers Land.');
+  if(W.rainNow>0&&W.cx>.42&&!W.cold)t.push(`🌧️ <b>Niederschlag</b>: Es regnet auf ${W.city?'die Stadt. Asphalt lässt kaum Wasser durch – fast alles <b>fließt ab</b> in den Fluss':'Wiese und Wald. Viel Wasser <b>versickert</b> und füllt das Grundwasser'}.${W.cx>.7?' Am Berg wird die Luft hochgeschoben: Dort regnet es besonders viel.':''}`);
+  if(W.snowNow>0)t.push('❄️ Es ist kälter als 0 °C: Es schneit. Der Schnee bleibt am Berg liegen.');
+  if(!W.cold&&W.snow>1)t.push('🌷 Es ist warm: Der Schnee schmilzt, Schmelzwasser fließt in den Fluss.');
+  if(W.gw>150)t.push('⛲ Das Grundwasser ist hoch: An der Quelle tritt es wieder aus.');
+  if(W.river>100)t.push('⚠️ Der Fluss führt Hochwasser.');
+  return t.join('<br>');};
+ W.check=hit=>{if(W.vap+W.cloud>25&&W.sun>0)hit('evap');if(W.cloud>80)hit('cloud');if(W.rainNow>0&&W.cx>.42&&!W.cold)hit('rain');if(W.snow>15)hit('snow');
+  if(W.gw>150&&!W.city)hit('ground');if(W.city&&W.river>100)hit('flood');if(W.sun===0&&W.noSunT>8&&W.cloud<3&&W.vap<3)hit('nosun');if(W.back>=150)hit('loop');};
+ W.speed=1.6;return W;};
+WK.miniglas=()=>{const W={T:40,foil:true,ice:false,run:false};
+ const reset=()=>Object.assign(W,{run:false,t:0,lvl:100,air:0,drop:0,cond:0,rains:0,first:0,lost:0,vp:[],fall:[]});reset();
+ W.ctl=()=>`<div class="mxchips" id="wkmt"><button data-t="10">🧊 kaltes Wasser 10 °C</button><button data-t="40" class="on">♨️ warmes Wasser 40 °C</button><button data-t="70">🔥 heißes Wasser 70 °C</button></div>
+  <div class="mxchips" id="wkmf"><button data-f="1" class="on">Folie drauf</button><button data-f="0">Folie ab</button></div>
+  <div class="mxchips" id="wkmi"><button data-i="0" class="on">ohne Eis</button><button data-i="1">🧊 Eiswürfel auf die Folie</button></div>
+  <div class="mxbtns"><button class="big go" id="wkgo">▶ Start</button><button class="big sec" id="wknew">⟲ Neu</button></div>`;
+ W.bind=c=>{const sync=()=>{c.querySelectorAll('[data-t]').forEach(b=>b.classList.toggle('on',+b.dataset.t===W.T));c.querySelectorAll('[data-f]').forEach(b=>b.classList.toggle('on',+b.dataset.f===+W.foil));
+   c.querySelectorAll('[data-i]').forEach(b=>{b.classList.toggle('on',+b.dataset.i===+W.ice);b.disabled=!W.foil&&b.dataset.i==='1';});};
+  c.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{W.T=+b.dataset.t;reset();sync();});c.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{W.foil=b.dataset.f==='1';if(!W.foil)W.ice=false;reset();sync();});
+  c.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{W.ice=b.dataset.i==='1';reset();sync();});$('#wkgo').onclick=()=>{reset();W.run=true;};$('#wknew').onclick=()=>{reset();sync();};sync();};
+ W.step=dt=>{if(!W.run)return;W.t+=dt;const ev=Math.pow(W.T/70,2)*2.2*dt;W.lvl-=ev;
+  if(W.foil){W.air+=ev;const co=W.air*(W.ice?.9:.18)*dt;W.air-=co;W.cond+=co;W.drop+=co*(W.ice?1.5:.6);if(W.drop>=10){W.drop=0;W.rains++;if(!W.first)W.first=W.t;W.lvl+=W.cond;W.cond=0;W.fall.push({x:.4+Math.random()*.2,y:.3});}}
+  else W.lost+=ev;
+  if(Math.random()<ev*3)W.vp.push({x:.3+Math.random()*.4,y:.62});W.vp.forEach(p=>p.y-=.12*dt);W.vp=W.vp.filter(p=>W.foil?p.y>.3:p.y>.02);
+  W.fall.forEach(f=>f.y+=.6*dt);W.fall=W.fall.filter(f=>f.y<.62);};
+ W.draw=ctx=>{const w=W.W,h=W.H;ctx.clearRect(0,0,w,h);ctx.fillStyle='#f3f6fb';ctx.fillRect(0,0,w,h);
+  const x0=w*.22,x1=w*.78,top=h*.28,bot=h*.9,lv=bot-(bot-h*.45)*Math.max(0,W.lvl)/100;
+  ctx.fillStyle=W.T>=70?'rgba(240,120,90,.45)':W.T>=40?'rgba(120,170,240,.5)':'rgba(90,140,230,.6)';ctx.beginPath();ctx.moveTo(x0+12,lv);ctx.lineTo(x1-12,lv);ctx.lineTo(x1-30,bot);ctx.lineTo(x0+30,bot);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#5d7fa3';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x0,top);ctx.lineTo(x0+30,bot);ctx.lineTo(x1-30,bot);ctx.lineTo(x1,top);ctx.stroke();
+  if(W.foil){ctx.strokeStyle='rgba(120,150,180,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x0-6,top);ctx.quadraticCurveTo(w/2,top+(W.ice?18:6),x1+6,top);ctx.stroke();
+   if(W.ice){ctx.fillStyle='#dff3ff';ctx.strokeStyle='#9cc9e6';[[-.06,0],[0,-.02],[.06,0]].forEach(([dx,dy])=>{ctx.fillRect(w*(.5+dx)-12,top+dy*h-6,24,18);ctx.strokeRect(w*(.5+dx)-12,top+dy*h-6,24,18);});}
+   const n=Math.round(W.drop);ctx.fillStyle='#3f7fd0';for(let i=0;i<n;i++){const x=x0+20+(i*37)%(x1-x0-40);ctx.beginPath();ctx.arc(x,top+(W.ice?14:6)+3,2+W.drop/4,0,7);ctx.fill();}}
+  ctx.fillStyle='rgba(255,255,255,.95)';ctx.strokeStyle='rgba(150,170,190,.6)';W.vp.forEach(p=>{ctx.beginPath();ctx.arc(w*p.x,h*p.y,2.5,0,7);ctx.fill();ctx.stroke();});
+  ctx.fillStyle='#2f6fc0';W.fall.forEach(f=>{ctx.beginPath();ctx.arc(w*f.x,h*f.y,4,0,7);ctx.fill();});
+  ctx.fillStyle='#222';ctx.font='bold 13px system-ui,sans-serif';ctx.textAlign='left';ctx.fillText(`🌡️ Wasser ${W.T} °C${W.run?` · ${Math.round(W.t)} s`:''} · 🌧️ ${W.rains}× Regen`,8,18);};
+ W.info=()=>{if(!W.run)return'Wähle Wassertemperatur, Folie und Eis. Dann tippe auf „▶ Start“.';const t=[];
+  t.push(W.T>=70?'🔥 Heißes Wasser verdunstet schnell.':W.T>=40?'♨️ Warmes Wasser verdunstet – wie das Meer in der Sonne.':'🧊 Kaltes Wasser verdunstet kaum.');
+  if(!W.foil)t.push(`💨 Ohne Folie entweicht der Wasserdampf in den Raum. Der Wasserstand sinkt${W.lost>1?` (schon ${Math.round(W.lost)} % weniger)`:''}.`);
+  else{t.push(W.ice?'🧊 Die Eiswürfel kühlen die Folie – wie die kalte Luft hoch oben. Dort <b>kondensiert</b> der Dampf zu Tropfen.':'Der Dampf kann nicht entweichen. An der Folie kondensiert er langsam.');
+   if(W.rains)t.push(`🌧️ Die Tropfen wurden schwer und sind ${W.rains}× zurückgefallen – das ist der <b>Niederschlag</b>. Das Wasser bleibt in der Schüssel: ein Kreislauf.`);}
+  return t.join('<br>');};
+ W.check=hit=>{if(W.foil&&W.drop>=3||W.rains>0)hit('drops');if(W.rains>=3)hit('rain');if(W.rains>=3&&W.first&&W.t<15)hit('fast');
+  if(W.T===10&&W.foil&&W.t>=15&&W.rains===0)hit('cold');if(!W.foil&&W.lost>=3)hit('open');};
+ W.speed=1;return W;};
+
 /* ===== Ergänzungen aus dem Buch S. 116–118 ===== */
 CARDS.p1.push(
  ['Schmelztemperatur','Die Temperatur, bei der ein Stoff zwischen fest und flüssig wechselt. Bei Wasser: 0 °C.'],
@@ -2149,7 +2403,7 @@ applyHouse();renderHeader();home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--teal);--lp-on:#fff;--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-wasser", "prefix": "Z", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🧊", "name": "Die drei Zustände", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p2", "icon": "🔄", "name": "Verwandlungen", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p3", "icon": "🧪", "name": "Eis schwimmt", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p4", "icon": "🏞️", "name": "Das Geheimnis des Sees", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p5", "icon": "🔬", "name": "Forschen wie Profis", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20, "write": 15}, "write": true};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.26.5">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.27.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -2159,22 +2413,22 @@ applyHouse();renderHeader();home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.26.5"></script>
+<script src="../js/lernplan.js?v=7.27.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.26.5">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.27.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.26.5"></script>
+<script src="../js/nutzer.js?v=7.27.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank .rt,#rank>div{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.26.5"></script>
+<script src="../js/home-btn.js?v=7.27.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.26.5"></script>
+<script src="../js/arena-btn.js?v=7.27.0"></script>
 <script>window.__LZ_ZETTEL=[{t:"NWT: Wasser",f:"nwt-wasser.html",d:"Aggregatzustände, Übergänge, Eis, See im Winter, Versuchsprotokoll"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.26.5"></script>
+<script src="../js/lernzettel-btn.js?v=7.27.0"></script>
 </body>
 </html>

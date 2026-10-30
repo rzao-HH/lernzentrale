@@ -21,7 +21,7 @@ async def main():
     names=await f.evaluate("[...document.querySelectorAll('.mode')].map(b=>b.innerText.split('\\n').map(x=>x.trim()).filter(Boolean)[1])"); print(names)
     assert names.count('Forscherlabor')==1 and 'Experimentier-Werkstatt' not in names and 'Zauberprüfung' in names and names.count('Abschlusstest')==1,names
     await f.click('[data-m="werk"]'); await p.wait_for_timeout(500)
-    st=await f.evaluate("[...document.querySelectorAll('.mxbig b')].map(b=>b.innerText)"); print(st); assert len(st)==6,st
+    st=await f.evaluate("[...document.querySelectorAll('.mxbig b')].map(b=>b.innerText)"); print(st); assert len(st)==8 and "Mini-Wasserkreislauf im Glas" in st,st
     await f.click('#wkpred'); await p.wait_for_timeout(800); assert await f.query_selector('#card'),'Versuchsreihe'
     await p.screenshot(path=OUTDIR+'z-labor.png')
     print('errors',errs); await br.close()
