@@ -38,7 +38,10 @@ async def main():
     st=(await J(f,'wasserzauberschule-v1'))['stats']['p6']; assert st['h'][-1]==1,st
     # Lückentext für p6
     await f.evaluate("__Z6.home()"); await p.wait_for_timeout(200); await f.click('[data-m="gaps"]'); await p.wait_for_timeout(300)
-    assert 'Die Reise des Wassers' in await f.inner_text('#pprog')
+    gt=await f.inner_text('#pprog'); assert 'Die Reise des Wassers' in gt or 'Unter der Erde' in gt,gt
+    assert await f.evaluate("__Z6.gaps()")==2
+    # Lernzettel S. 15 (Wasserkreislauf) ist auf den Karten verlinkt
+    assert await f.evaluate("__Z6.src()")>=10
     # Labor: Landschaft
     await f.evaluate("__Z6.home()"); await p.wait_for_timeout(200); await f.click('[data-m="kreislab"]'); await p.wait_for_timeout(300)
     menu=await f.evaluate("[...document.querySelectorAll('.mxbig')].map(b=>b.dataset.st)"); print('Stationen',menu); assert menu==['kreis','miniglas']

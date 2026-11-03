@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script src="../js/app-core.js?v=7.27.0"></script>
-<script src="../js/lernstand.js?v=7.27.0"></script>
+<script src="../js/app-core.js?v=7.28.0"></script>
+<script src="../js/lernstand.js?v=7.28.0"></script>
 
 <!-- ===== Nutzer-Kopf ===== -->
 <script>window.__APPK="Z";window.__DATAKEY="wasserzauberschule-v1";window.__NU_TARGET="#lpBtn";window.__NU_CLASS="icon-btn";</script>
-<script src="../js/nutzer-init.js?v=7.27.0"></script>
+<script src="../js/nutzer-init.js?v=7.28.0"></script>
 
 <meta charset="utf-8">
 <meta name="color-scheme" content="light">
@@ -433,7 +433,7 @@ const PACKS=[
   {id:'p3',src:"Info S. 43 und S. 47",nr:3,icon:'🧪',name:'Eis schwimmt',goal:'Ich erkläre, warum Eis leichter ist als Wasser, warum sich Wasser beim Gefrieren ausdehnt und warum warmes Wasser nach oben steigt.'},
   {id:'p4',src:"AB Besonderheit des Wassers",nr:4,icon:'🏞️',name:'Das Geheimnis des Sees',goal:'Ich erkläre die Anomalie: Bei 4 °C ist Wasser am schwersten. Darum friert ein See von oben zu und die Fische überleben.'},
   {id:'p5',src:"AB Das Gewicht des Wassers",nr:5,icon:'🔬',name:'Forschen wie Profis',goal:'Ich kenne den Aufbau eines Versuchsprotokolls und kann die Versuche zum Gewicht des Wassers erklären.'},
-  {id:'p6',nr:6,icon:'🌦️',name:'Der Wasserkreislauf',goal:'Ich erkläre den Wasserkreislauf mit Verdunstung, Kondensation, Niederschlag, Versickerung und Abfluss und weiß, dass die Sonne ihn antreibt.'}
+  {id:'p6',src:"AB Wasserkreislauf (Projekt 2)",nr:6,icon:'🌦️',name:'Der Wasserkreislauf',goal:'Ich erkläre den Wasserkreislauf mit Verdunstung, Kondensation, Niederschlag, Versickerung und Abfluss und weiß, dass die Sonne ihn antreibt.'}
 ];
 const ALL=['p1','p2','p3','p4','p5','p6'];
 const packById=id=>PACKS.find(p=>p.id===id);
@@ -2032,26 +2032,32 @@ window.lzRehome=()=>{if(document.querySelector('.packs')&&!document.querySelecto
 window.lzSelect=(ids,mt)=>{S.sel=ids.split(',');LZ_IDS=S.sel.slice();LZ_HL=mt||'test';save();const y=app.scrollTop;home();app.scrollTop=y;};
 window.lzSelActive=(ids,mt)=>LZ_HL===mt&&lzSame(LZ_IDS,ids.split(','))&&lzSame(S.sel,LZ_IDS);
 /* ===== Paket 6: Der Wasserkreislauf =====
-   Noch ohne Lernzettel der Schule – Inhalte nach typischem Stoff Klasse 5/6 (Hamburger Rahmenplan NWT „Wasserkreisläufe“, „Wettererscheinungen“),
+   Lernzettel S. 15: Infoblatt „Wasserkreislauf“ (Netzwerk Naturwissenschaften, Projekt 2, Nr. 1–8) – Begriffe und Formulierungen von dort.
+   Ergänzt nach typischem Stoff Klasse 5/6 (Hamburger Rahmenplan NWT „Wasserkreisläufe“, „Wettererscheinungen“),
    Zahlen: USGS (Wasser der Erde), Bayerisches Landesamt für Umwelt (Wohin geht der Regen?). Begriffe passend zu Paket 2 (Verdunsten, Kondensieren, Resublimieren). */
 CARDS.p6=[
  ['Der Wasserkreislauf','Wasser ist ständig unterwegs, zum Beispiel: Meer → Luft → Wolke → Niederschlag → Flüsse und Grundwasser → zurück ins Meer. Manches Wasser nimmt eine Abkürzung: Regen fällt direkt ins Meer oder verdunstet gleich wieder über dem Land. Insgesamt geht kein Wasser verloren.'],
  ['Der Motor des Kreislaufs','Die Sonne. Ihre Wärme lässt Wasser verdunsten. Die Erdanziehung (Schwerkraft) holt Regen, Schnee und Flüsse wieder nach unten.'],
- ['Verdunstung','Die Sonne erwärmt Meere, Seen, Flüsse und den Boden. Wasser wird zu unsichtbarem Wasserdampf – flüssig → gasförmig, schon unter 100 °C.'],
+ ['Verdunstung','Die Sonne erwärmt Meere, Seen, Flüsse und den Boden. Wasser wird zu unsichtbarem Wasserdampf und steigt auf – flüssig → gasförmig, schon unter 100 °C.'],
+ ['Luftfeuchtigkeit','Den unsichtbaren Wasserdampf in der Luft kann man nicht sehen. Man spricht aber von Luftfeuchtigkeit.'],
  ['Transpiration','Auch Pflanzen geben Wasser ab: Über winzige Öffnungen in ihren Blättern gelangt Wasserdampf in die Luft.'],
  ['Warme Luft steigt auf','Warme, feuchte Luft ist leichter und steigt nach oben. Je höher, desto kälter ist es. Auch an Bergen wird die Luft nach oben geschoben.'],
  ['Kondensation','Der aufgestiegene Wasserdampf kühlt ab und wird wieder flüssig – gasförmig → flüssig. Es entstehen winzige Tröpfchen an Staubteilchen in der Luft.'],
+ ['Wolkenbildung','Wolken bilden sich durch Zusammenlagerung der winzigen Wasserteilchen. Genauer: Der aufgestiegene Wasserdampf kondensiert zu winzigen Tröpfchen – ganz viele davon zusammen sind eine Wolke.'],
  ['Woraus besteht eine Wolke?','Aus Milliarden winziger Wassertröpfchen oder Eiskristallen, die in der Luft schweben. Wasserdampf selbst ist unsichtbar.'],
- ['Niederschlag','Die Tröpfchen stoßen zusammen und werden größer. Sind sie zu schwer, fallen sie herunter: als Regen, Schnee, Graupel oder Hagel.'],
+ ['Niederschlag','Wenn die Wolken erkalten, kondensiert noch mehr Wasserdampf. Die Tröpfchen stoßen zusammen und werden zu Wassertropfen. Sind sie zu schwer, fallen sie herunter: als Regen, Schnee, Graupel oder Hagel.'],
  ['Regen oder Schnee?','Ist es in der Wolke und auf dem Weg nach unten kälter als 0 °C, fällt Schnee aus Eiskristallen. Ist es unten wärmer, schmilzt er unterwegs zu Regen.'],
  ['Graupel','Weiche, weiße Eiskörnchen, kleiner als 5 mm. Sie entstehen, wenn an Schneeflocken winzige Tröpfchen anfrieren.'],
  ['Hagel','Harte Eiskörner, mindestens 5 mm groß. In Gewitterwolken tragen starke Aufwinde die Tropfen immer wieder nach oben, wo sie gefrieren.'],
- ['Versickerung','Ein Teil des Regens sickert in den Boden. Der Boden filtert das Wasser. Tief unten sammelt es sich als Grundwasser.'],
+ ['Versickerung','Ein Teil des Regens versickert im Boden. Er fließt durch die kleinen Poren zwischen den Bodenteilchen wie durch schmale Röhren – so lange, bis eine Bodenschicht undurchlässig ist. Dabei wird das Wasser gefiltert.'],
+ ['Grundwasser','Über einer wasserundurchlässigen Schicht kann das Wasser nicht tiefer, es bleibt stehen. Bis dahin ist es in der Regel gereinigt worden. Dieses Wasser heißt Grundwasser. Es liefert an vielen Orten Trinkwasser.'],
+ ['Bodenwasser steigt auf','Scheint die Sonne, verdunstet Wasser an der Bodenoberfläche. Weiteres Wasser wird von unten durch die kleinen Poren zwischen den Bodenteilchen nachgezogen. Diese schmalen Röhren heißen Kapillaren.'],
  ['Grundwasser und Quelle','Grundwasser fließt langsam unter der Erde. An einer Quelle tritt es wieder an die Oberfläche und fließt als Bach weiter.'],
  ['Oberflächenabfluss','Regen, der nicht versickert, fließt über den Boden in Bäche und Flüsse – und schließlich zurück ins Meer.'],
+ ['Fließendes Wasser','Das Wasser fließt durch die Bäche vom Gebirge herab und sammelt sich in immer größeren Flüssen. Dabei nimmt es viel Geröll und Sand mit und lagert es woanders wieder ab.'],
  ['Warum Hochwasser in der Stadt?','Asphalt und Beton lassen kaum Wasser versickern (man sagt: Flächen sind versiegelt). Bei starkem Regen fließt alles auf einmal ab – Kanäle und Bäche laufen über.'],
  ['Wohin geht der Regen?','Beispiel Bayern: Pro Jahr fallen knapp 1000 Liter auf jeden Quadratmeter. Mehr als die Hälfte verdunstet wieder, je etwa ein Fünftel wird zu Grundwasser oder fließt direkt ab.','Bayerisches Landesamt für Umwelt'],
- ['Salzwasser und Süßwasser','Etwa 97 % des Wassers auf der Erde ist Salzwasser im Meer. Nur knapp 3 % ist Süßwasser – davon steckt mehr als zwei Drittel im Eis und knapp ein Drittel im Grundwasser.','USGS'],
+ ['Salzwasser und Süßwasser','Das meiste Wasser der Erde ist im Meer und salzig: etwa 97,5 %. Nur etwa 2,5 % ist Süßwasser – davon steckt mehr als zwei Drittel im Eis und knapp ein Drittel im Grundwasser.','USGS'],
  ['Warum ist Regen nicht salzig?','Beim Verdunsten wird nur das Wasser gasförmig. Das Salz bleibt im Meer zurück. Darum ist Regen Süßwasser.'],
  ['Tau','In klaren Nächten kühlen Boden und Gräser stark ab. Wasserdampf aus der Luft kondensiert an ihnen zu Tröpfchen – morgens ist die Wiese nass.'],
  ['Nebel','Eine Wolke direkt am Boden: winzige Wassertröpfchen in kühler Luft.'],
@@ -2071,12 +2077,19 @@ MC.push(
  {p:'p6',q:'Regen sickert in den Boden. Wo sammelt er sich?',a:['Im Grundwasser','In der Wolke','In der Luft','Im Meeressalz'],ex:'Der Boden filtert das Wasser, tief unten sammelt es sich als Grundwasser.'},
  {p:'p6',q:'Wo kommt Grundwasser wieder an die Oberfläche?',a:['An einer Quelle','In einer Wolke','Auf dem Asphalt','Im Gefrierfach'],ex:'An einer Quelle tritt Grundwasser aus und fließt als Bach weiter.'},
  {p:'p6',q:'Warum gibt es in Städten bei Starkregen schneller Hochwasser?',a:['Asphalt und Beton lassen kaum Wasser versickern','In Städten regnet es immer mehr','Häuser ziehen Wolken an','In der Stadt verdunstet mehr Wasser'],ex:'Versiegelte Flächen: Das Wasser fließt sofort ab, Kanäle und Bäche laufen über.'},
- {p:'p6',q:'Wie viel des Wassers auf der Erde ist Salzwasser?',a:['Etwa 97 %','Etwa 50 %','Etwa 3 %','Etwa 10 %'],ex:'Nur knapp 3 % ist Süßwasser – und davon ist das meiste als Eis gebunden.'},
+ {p:'p6',q:'Wie viel des Wassers auf der Erde ist salzig?',a:['Etwa 97,5 %','Etwa 50 %','Etwa 2,5 %','Etwa 10 %'],ex:'Fast alles davon ist im Meer. Nur etwa 2,5 % ist Süßwasser – und davon ist das meiste als Eis gebunden.'},
  {p:'p6',q:'Warum ist Regen nicht salzig, obwohl viel Wasser aus dem Meer kommt?',a:['Das Salz bleibt beim Verdunsten im Meer','Die Wolken filtern das Salz heraus','Der Wind bläst das Salz weg','Regen kommt nur aus Seen'],ex:'Nur das Wasser wird gasförmig, das Salz verdunstet nicht mit.'},
  {p:'p6',q:'Morgens ist die Wiese nass, obwohl es nicht geregnet hat. Was ist das?',a:['Tau','Hagel','Grundwasser','Schnee'],ex:'Nachts kühlen die Gräser ab. Wasserdampf aus der Luft kondensiert an ihnen.'},
  {p:'p6',q:'Wann fällt Schnee statt Regen?',a:['Wenn es in der Wolke und darunter kälter als 0 °C ist','Wenn die Sonne stark scheint','Wenn es sehr windig ist','Wenn die Wolke über dem Meer ist'],ex:'In kalten Wolken entstehen Eiskristalle. Ist es unten wärmer, schmelzen sie zu Regen.'},
  {p:'p6',q:'Auch Pflanzen geben über ihre Blätter Wasserdampf ab. Wie heißt das?',a:['Transpiration','Kondensation','Versickerung','Resublimieren'],ex:'Transpiration gehört auch zur Verdunstung im Wasserkreislauf.'},
  {p:'p6',q:'Im Versuch „Mini-Wasserkreislauf“ liegen Eiswürfel auf der Folie. Wofür stehen sie?',a:['Für die kalte Luft hoch oben','Für das Meer','Für die Sonne','Für das Grundwasser'],ex:'An der kalten Folie kondensiert der Dampf – wie hoch oben in der kalten Luft.'},
+ {p:'p6',q:'Wie nennt man den unsichtbaren Wasserdampf in der Luft?',a:['Luftfeuchtigkeit','Nebel','Niederschlag','Grundwasser'],ex:'Wasserdampf kann man nicht sehen. Man spricht von Luftfeuchtigkeit.'},
+ {p:'p6',q:'Wie bilden sich Wolken?',a:['Winzige Wasserteilchen lagern sich zusammen','Rauch steigt aus Schornsteinen auf','Der Wind bläst Sand in die Luft','Grundwasser steigt in den Himmel'],ex:'Aufsteigender Wasserdampf kondensiert zu winzigen Tröpfchen. Viele davon zusammen ergeben eine Wolke.'},
+ {p:'p6',q:'Durch was fließt Regenwasser beim Versickern?',a:['Durch kleine Poren zwischen den Bodenteilchen','Durch Wasserleitungen','Durch Risse im Asphalt','Durch die Wurzeln der Bäume'],ex:'Die Poren wirken wie schmale Röhren.'},
+ {p:'p6',q:'Bis wohin sickert das Wasser in den Boden?',a:['Bis zu einer wasserundurchlässigen Schicht','Bis zum Erdmittelpunkt','Nur ein paar Zentimeter tief','Gar nicht – Boden lässt kein Wasser durch'],ex:'Über der undurchlässigen Schicht bleibt es stehen: Das ist Grundwasser.'},
+ {p:'p6',q:'Warum liefert Grundwasser an vielen Orten Trinkwasser?',a:['Es wurde auf dem Weg durch den Boden gereinigt','Es ist salzig','Es kommt direkt aus den Wolken','Es ist immer warm'],ex:'Der Boden filtert das Wasser beim Versickern.'},
+ {p:'p6',q:'Wie heißen die schmalen Röhren im Boden, durch die Wasser von unten nachgezogen wird?',a:['Kapillaren','Quellen','Kanäle','Wurzeln'],ex:'Die Poren zwischen den Bodenteilchen bilden schmale Röhren: Kapillaren.'},
+ {p:'p6',q:'Was nehmen Bäche und Flüsse auf dem Weg vom Gebirge mit?',a:['Geröll und Sand','Wasserdampf','Salz aus dem Meer','Wolken'],ex:'Sie lagern Geröll und Sand woanders wieder ab.'},
  {p:'p6',q:'Was passiert im Wasserkreislauf mit der gesamten Wassermenge der Erde?',a:['Sie bleibt gleich – Wasser geht nicht verloren','Sie wird jedes Jahr kleiner','Sie wird durch Regen größer','Sie verschwindet im Grundwasser'],ex:'Das Wasser wechselt nur seinen Ort und seinen Zustand.'}
 );
 TF.push(
@@ -2093,7 +2106,12 @@ TF.push(
  {p:'p6',s:'Tau entsteht, wenn Wasserdampf an kalten Gräsern kondensiert.',t:true,ex:'Darum ist die Wiese morgens nass.'},
  {p:'p6',s:'Der größte Teil des Süßwassers steckt in Flüssen und Seen.',t:false,ex:'Mehr als zwei Drittel stecken im Eis, knapp ein Drittel im Grundwasser.'},
  {p:'p6',s:'Nebel ist eine Wolke direkt am Boden.',t:true,ex:'Auch Nebel besteht aus winzigen Tröpfchen.'},
- {p:'p6',s:'Wind kann Wolken vom Meer übers Land tragen.',t:true,ex:'So regnet es auch weit weg vom Meer.'}
+ {p:'p6',s:'Wind kann Wolken vom Meer übers Land tragen.',t:true,ex:'So regnet es auch weit weg vom Meer.'},
+ {p:'p6',s:'Grundwasser liefert an vielen Orten Trinkwasser.',t:true,ex:'Es wurde beim Versickern durch den Boden gereinigt.'},
+ {p:'p6',s:'Versickerndes Wasser sinkt immer weiter, egal welche Bodenschicht kommt.',t:false,ex:'An einer wasserundurchlässigen Schicht bleibt es stehen – dort sammelt sich Grundwasser.'},
+ {p:'p6',s:'Flüsse nehmen Geröll und Sand mit und lagern sie woanders ab.',t:true,ex:'Das steht auf dem Arbeitsblatt unter „Fließendes Wasser“.'},
+ {p:'p6',s:'Durch Kapillaren im Boden kann Wasser nach oben steigen.',t:true,ex:'Verdunstet Wasser an der Oberfläche, wird Wasser von unten nachgezogen.'},
+ {p:'p6',s:'Den Wasserdampf in der Luft nennt man Luftfeuchtigkeit.',t:true,ex:'Man kann ihn nicht sehen.'}
 );
 ANA.push(
  {p:'p6',c:'Die Sonne erwärmt Wasser, es wird zu Wasserdampf.',w:'VERDUNSTUNG'},
@@ -2102,9 +2120,13 @@ ANA.push(
  {p:'p6',c:'Wasser, das sich unter der Erde sammelt.',w:'GRUNDWASSER'},
  {p:'p6',c:'Hier kommt Grundwasser wieder an die Oberfläche.',w:'QUELLE'},
  {p:'p6',c:'Der Motor des Wasserkreislaufs.',w:'SONNE'},
- {p:'p6',c:'Regenwasser sinkt in den Boden.',w:'VERSICKERUNG'}
+ {p:'p6',c:'Regenwasser sinkt in den Boden.',w:'VERSICKERUNG'},
+ {p:'p6',c:'Schmale Röhren im Boden, durch die Wasser nach oben gezogen wird.',w:'KAPILLAREN'},
+ {p:'p6',c:'Dafür nutzt man an vielen Orten das Grundwasser.',w:'TRINKWASSER'},
+ {p:'p6',c:'Steine, die ein Bach vom Gebirge mitnimmt.',w:'GERÖLL'}
 );
 GAPTEXTS.push({p:['p6'],t:'Die Reise des Wassers',parts:['Die ',['Sonne'],' erwärmt das Wasser im Meer. Es ',['verdunstet'],' und steigt als unsichtbarer ',['Wasserdampf'],' auf. Oben ist die Luft ',['kälter'],'. Der Dampf ',['kondensiert'],' zu winzigen Tröpfchen – eine ',['Wolke'],' entsteht. Werden die Tropfen zu schwer, fallen sie als ',['Niederschlag'],' herunter. Viel Wasser verdunstet bald wieder. Ein Teil ',['versickert'],' im Boden und wird zu ',['Grundwasser'],'. Ein anderer Teil fließt über Flüsse zurück ins ',['Meer'],'.'],extra:['wärmer','schmilzt']});
+GAPTEXTS.push({p:['p6'],t:'Unter der Erde',parts:['Ein Teil des Regens ',['versickert'],' im Boden. Das Wasser fließt durch kleine ',['Poren'],' wie durch schmale Röhren. Über einer ',['undurchlässigen'],' Schicht bleibt es stehen: Das ist ',['Grundwasser'],'. Bis dahin ist es ',['gereinigt'],' worden und liefert an vielen Orten ',['Trinkwasser'],'. Scheint die Sonne, ',['verdunstet'],' Wasser an der Bodenoberfläche. Von unten wird Wasser durch die ',['Kapillaren'],' nachgezogen.'],extra:['salzig','Wolken']});
 MODES.gaps.p.push('p6');
 WQ.push(
  {p:'p6',q:'Beschreibe den Wasserkreislauf. Verwende die Fachbegriffe Verdunstung, Kondensation und Niederschlag.',k:['die Sonne erwärmt Wasser, es verdunstet (wird zu Wasserdampf)','der Dampf steigt auf, kühlt ab und kondensiert zu Tröpfchen – Wolken entstehen','die Tropfen werden schwer und fallen als Niederschlag (Regen, Schnee …)','das Wasser fließt über Flüsse oder das Grundwasser zurück ins Meer'],a:'Die Sonne erwärmt das Wasser im Meer, in Seen und Flüssen. Es verdunstet und steigt als unsichtbarer Wasserdampf auf. Oben ist es kälter: Der Dampf kühlt ab und kondensiert zu winzigen Tröpfchen, es entstehen Wolken. Werden die Tropfen zu schwer, fallen sie als Niederschlag, zum Beispiel als Regen oder Schnee. Das Wasser versickert ins Grundwasser oder fließt über Bäche und Flüsse zurück ins Meer.'},
@@ -2112,10 +2134,13 @@ WQ.push(
  {p:'p6',q:'Was passiert mit Regen, der auf eine Wiese fällt? Was ist in der Stadt anders?',k:['auf der Wiese versickert viel Wasser im Boden','es sammelt sich als Grundwasser','in der Stadt sind Flächen versiegelt (Asphalt, Beton)','dort fließt das Wasser schnell ab – Gefahr von Hochwasser'],a:'Auf einer Wiese versickert ein großer Teil des Regens im Boden und wird zu Grundwasser. In der Stadt ist der Boden mit Asphalt und Beton versiegelt. Dort kann kaum Wasser versickern, es fließt schnell in Kanäle und Bäche ab. Bei Starkregen kann es deshalb leichter Hochwasser geben.'},
  {p:'p6',q:'Eine Wolke besteht nicht aus Wasserdampf. Woraus dann? Erkläre, wie sie entsteht.',k:['Wasserdampf ist unsichtbar','eine Wolke besteht aus winzigen Wassertröpfchen (oder Eiskristallen)','sie entstehen, wenn aufsteigender Dampf abkühlt und kondensiert'],a:'Wasserdampf ist unsichtbar. Eine Wolke besteht aus winzigen Wassertröpfchen oder Eiskristallen. Sie entstehen, wenn feuchte Luft aufsteigt und abkühlt: Der Wasserdampf kondensiert zu Tröpfchen.'},
  {p:'p6',q:'Versuch „Mini-Wasserkreislauf“: Beschreibe Durchführung und Beobachtung. Was stellt welches Teil im echten Wasserkreislauf dar?',k:['warmes Wasser in eine Schüssel, Folie darüber, Eiswürfel auf die Folie','Beobachtung: unter der Folie bilden sich Tropfen, die herunterfallen','warmes Wasser = Meer (Verdunstung), kalte Folie = kalte Luft oben (Kondensation), Tropfen = Niederschlag'],a:'Man gießt warmes Wasser in eine Schüssel, spannt Frischhaltefolie darüber und legt Eiswürfel auf die Folie. Unter der Folie bilden sich Tropfen, die größer werden und zurück ins Wasser fallen. Das warme Wasser stellt das Meer dar, aus dem Wasser verdunstet. Die kalte Folie steht für die kalte Luft hoch oben, an der der Dampf kondensiert. Die fallenden Tropfen sind der Niederschlag.'},
+ {p:'p6',q:'Was passiert mit Regenwasser, das im Boden versickert? Verwende die Begriffe Poren, wasserundurchlässige Schicht und Grundwasser.',k:['das Wasser fließt durch kleine Poren zwischen den Bodenteilchen (wie durch schmale Röhren)','es sinkt, bis eine Bodenschicht wasserundurchlässig ist','darüber bleibt es stehen: Das ist Grundwasser','es ist dabei gereinigt worden und liefert oft Trinkwasser'],a:'Das Regenwasser versickert im Boden. Es fließt durch die kleinen Poren zwischen den Bodenteilchen wie durch schmale Röhren nach unten, bis eine Bodenschicht wasserundurchlässig ist. Über dieser Schicht bleibt es stehen: Das ist Grundwasser. Auf dem Weg durch den Boden ist es gereinigt worden, darum liefert es an vielen Orten Trinkwasser.'},
+ {p:'p6',q:'Wie gelangt Wasser aus dem Boden wieder in die Luft? Erkläre auch, was Kapillaren sind.',k:['die Sonne scheint, Wasser an der Bodenoberfläche verdunstet','weiteres Wasser wird von unten nachgezogen','es steigt durch die kleinen Poren zwischen den Bodenteilchen auf','diese schmalen Röhren heißen Kapillaren'],a:'Wenn die Sonne scheint, verdunstet Wasser an der Bodenoberfläche. Weiteres Wasser wird von unten durch die kleinen Poren zwischen den Bodenteilchen nachgezogen. Die Poren bilden schmale Röhren, die man Kapillaren nennt.'},
+ {p:'p6',q:'Beschreibe den Weg des Wassers vom Gebirge bis ins Meer.',k:['das Wasser fließt durch Bäche vom Gebirge herab','es sammelt sich in immer größeren Flüssen','dabei nimmt es Geröll und Sand mit und lagert es woanders wieder ab','die Flüsse fließen ins Meer'],a:'Das Wasser fließt durch Bäche vom Gebirge herab und sammelt sich in immer größeren Flüssen. Dabei nimmt es viel Geröll und Sand mit und lagert es an anderen Stellen wieder ab. Schließlich fließen die Flüsse ins Meer.'},
  {p:'p6',q:'Viel Wasser verdunstet aus dem Meer. Warum ist Regenwasser trotzdem nicht salzig?',k:['beim Verdunsten wird nur das Wasser gasförmig','das Salz bleibt im Meer zurück','deshalb ist Regen Süßwasser'],a:'Beim Verdunsten wird nur das Wasser zu Wasserdampf. Das Salz verdunstet nicht mit und bleibt im Meer zurück. Deshalb ist Regen Süßwasser.'}
 );
 /* Bild-Aufgaben: markierten Vorgang im Wasserkreislauf benennen */
-const KR_STEPS=[['Verdunstung','Wasser wird durch die Wärme der Sonne zu Wasserdampf und steigt auf.'],['Kondensation','Der Dampf kühlt oben ab und wird zu winzigen Tröpfchen – die Wolke entsteht.'],['Niederschlag','Die Tropfen werden schwer und fallen als Regen oder Schnee.'],['Versickerung','Regen sinkt in den Boden und wird zu Grundwasser.'],['Abfluss','Wasser fließt im Fluss zurück ins Meer.']];
+const KR_STEPS=[['Verdunstung','Wasser wird durch die Wärme der Sonne zu Wasserdampf und steigt auf.'],['Kondensation','Der Dampf kühlt oben ab und wird zu winzigen Tröpfchen – die Wolke entsteht.'],['Niederschlag','Die Tropfen werden schwer und fallen als Regen oder Schnee.'],['Versickerung','Regen sinkt in den Boden und wird zu Grundwasser.'],['Abfluss','Wasser fließt im Fluss zurück ins Meer (auf dem Arbeitsblatt: „Fließendes Wasser“).']];
 function krSVG(k){const A=[['M58 132 C50 118 66 104 58 90 C50 78 62 70 58 62','58,52 50,66 66,66'],['M92 70 Q118 58 142 50','150,47 136,42 140,57'],['M192 70 L200 116','201,126 193,112 207,111'],['M214 146 L214 172','214,182 207,169 221,169'],['M246 154 Q190 160 136 152','126,150 140,144 138,159']];
   return`<svg viewBox="0 0 320 200" width="320" height="200" role="img" aria-label="Wasserkreislauf mit markiertem Vorgang" style="max-width:100%;height:auto">
   <rect width="320" height="200" fill="#dff0ff"/><circle cx="28" cy="26" r="15" fill="#ffd34d"/>
@@ -2131,6 +2156,8 @@ function mkKR(){const k=rnd(0,KR_STEPS.length-1);return{t:'mc',p:'p6',q:'Wie hei
 const KR_SEQ=[
  {t:'Vom Meer bis zum Regen',s:['Die Sonne erwärmt das Meer','Wasser verdunstet','Der Wasserdampf steigt auf und kühlt ab','Der Dampf kondensiert: Eine Wolke entsteht','Die Tropfen werden schwer: Es regnet','Das Wasser fließt im Fluss zurück ins Meer']},
  {t:'Vom Regen zur Quelle',s:['Es regnet auf eine Wiese','Das Wasser versickert und wird vom Boden gefiltert','Es sammelt sich als Grundwasser','Das Grundwasser fließt langsam unter der Erde','An einer Quelle tritt es wieder aus','Ein Bach fließt in den Fluss']},
+ {t:'Vom Regen zum Trinkwasser',s:['Es regnet auf ein Feld','Das Wasser versickert im Boden','Es fließt durch die kleinen Poren nach unten','An einer undurchlässigen Schicht bleibt es stehen','Gereinigtes Grundwasser hat sich gesammelt','Es wird als Trinkwasser hochgepumpt']},
+ {t:'Vom Gebirge ins Meer',s:['Im Gebirge regnet es','Bäche fließen den Berg herab','Sie nehmen Geröll und Sand mit','Die Bäche sammeln sich in einem großen Fluss','Der Fluss lagert Sand ab, wo er langsam fließt','Der Fluss fließt ins Meer']},
  {t:'Schnee im Gebirge',s:['Wind trägt eine Wolke zum Berg','Die Luft steigt am Berg auf und kühlt ab','Es ist kälter als 0 °C: Es schneit','Im Winter bleibt der Schnee liegen','Im Frühling schmilzt der Schnee','Schmelzwasser fließt ins Tal']}
 ];
 function cycle(){const prev=G&&G.mode==='cycle'?G.T:null,pool=KR_SEQ.filter(x=>x!==prev);
@@ -2151,7 +2178,7 @@ MODES.kreislab={i:'🌦️',t:'Wasserkreislauf-Labor',d:'Sonne, Wind, Wolken, Re
 MODES.cycle={i:'🔁',t:'Kreislauf-Puzzle',d:'Bring die Schritte des Wasserkreislaufs in die richtige Reihenfolge.',p:['p6'],g:'play'};
 function kreisLab(){G={mode:'werk',finished:false,raf:0};shell('kreislab');wkMenu(['kreis','miniglas']);}
 /* für die automatischen Tests */
-window.__Z6={cards:()=>CARDS.p6.length,pics:()=>mcPool().filter(x=>x.pic).map(x=>[x.ans,x.opts.length]),seq:()=>G&&G.T&&G.T.s,wq:()=>WQ.filter(q=>q.p==='p6').length,home:()=>home(),start:m=>startMode(m)};
+window.__Z6={cards:()=>CARDS.p6.length,pics:()=>mcPool().filter(x=>x.pic).map(x=>[x.ans,x.opts.length]),seq:()=>G&&G.T&&G.T.s,wq:()=>WQ.filter(q=>q.p==='p6').length,gaps:()=>GAPTEXTS.filter(t=>t.p.includes('p6')).length,src:()=>CARDS.p6.filter(c=>(c[2]||'').includes('Lernzettel S. 15')).length,home:()=>home(),start:m=>startMode(m)};
 
 /* ===== Forscherlabor-Stationen zum Wasserkreislauf ===== */
 TK_P.kreis='p6';TK_P.miniglas='p6';
@@ -2390,7 +2417,7 @@ const CQ={
 'Bleigießen':['Was passiert beim Bleigießen mit dem Blei? Nenne die Übergänge.','Das Blei schmilzt über der Kerzenflamme bei 327 °C (Schmelzen). Im kalten Wasser wird es sofort wieder fest (Erstarren). Blei ist giftig, heute nimmt man einen anderen Stoff.'],
 'Wie schnell verdunstet Wasser?':['Wovon hängt ab, wie schnell Wasser verdunstet?',null]
 };
-const CSRC={"Die drei Aggregatzustände": "Lernzettel S. 1, 3 und 5", "Welcher Zustand bei welcher Temperatur?": "Lernzettel S. 2 (Texte A–C) und S. 3", "Teilchen im Eis": "Lernzettel S. 2 (Text C) und S. 1", "Teilchen im flüssigen Wasser": "Lernzettel S. 2 (Text A) und S. 5 (Tabelle)", "Teilchen im Wasserdampf": "Lernzettel S. 2 (Text B) und S. 5 (Tabelle)", "Dampfdruck": "Lernzettel S. 2 (Text B)", "Schmelzen": "Lernzettel S. 5 und S. 3", "Erstarren": "Lernzettel S. 5 und S. 3", "Verdampfen": "Lernzettel S. 5 und S. 4", "Verdunsten": "Lernzettel S. 4 (Buch S. 117)", "Kondensieren": "Lernzettel S. 5 und S. 4", "Sublimieren": "Lernzettel S. 6 (Buch S. 118) und S. 7/8", "Resublimieren": "Lernzettel S. 6 (Buch S. 118) und S. 7/8", "Warum schwimmt Eis?": "Lernzettel S. 1 und S. 9", "Wasser dehnt sich beim Gefrieren aus": "Lernzettel S. 1 und S. 9", "Frostsprengung": "Lernzettel S. 10 und S. 1", "Ackerboden": "Lernzettel S. 10 und S. 13", "Warmes Wasser": "Lernzettel S. 9", "Schmelzendes Eis": "Lernzettel S. 9", "Anomalie": "Lernzettel S. 11 und S. 10", "Die Regel – und die Ausnahme": "Lernzettel S. 11", "4 °C": "Lernzettel S. 11 und S. 2 (Text A)", "Der See im Sommer": "Lernzettel S. 12/13", "Der See im Winter": "Lernzettel S. 12/13", "Fische im Winter": "Lernzettel S. 12/13 und S. 1", "Versuchsprotokoll": "Lernzettel S. 14", "Vermutung": "Lernzettel S. 14", "Beobachtung und Auswertung": "Lernzettel S. 14", "Dreimal messen": "Lernzettel S. 14", "Versuch: warm in kalt": "Lernzettel S. 14 und S. 9", "Modellversuch Tinte": "Lernzettel S. 10 (Buch S. 130) und S. 9", "Schmelztemperatur": "Lernzettel S. 3 (Buch S. 116)", "Siedetemperatur": "Lernzettel S. 4 (Buch S. 117)", "Wasser – ein besonderer Stoff": "Lernzettel S. 3 (Buch S. 116)", "Kann man Wasserdampf sehen?": "Lernzettel S. 3 (Buch S. 116)", "Andere Stoffe bei 20 °C (Buch S. 117, M1)": "Lernzettel S. 4 (Buch S. 117, M1)", "Zinn, Kerzenwachs, Kupfer (M1)": "Lernzettel S. 4 (Buch S. 117, M1)", "Übergänge überspringen": "Lernzettel S. 6 (Buch S. 118)", "Die Pfütze verschwindet im Frost": "Lernzettel S. 6 (Buch S. 118)", "Raureif und Eisblumen": "Lernzettel S. 6 (Buch S. 118)", "Der Iod-Versuch": "Lernzettel S. 6 (Buch S. 118)", "Bleigießen": "Lernzettel S. 4 (Buch S. 117)", "Wie schnell verdunstet Wasser?": "Lernzettel S. 4 (Buch S. 117)"};
+const CSRC={"Die drei Aggregatzustände": "Lernzettel S. 1, 3 und 5", "Welcher Zustand bei welcher Temperatur?": "Lernzettel S. 2 (Texte A–C) und S. 3", "Teilchen im Eis": "Lernzettel S. 2 (Text C) und S. 1", "Teilchen im flüssigen Wasser": "Lernzettel S. 2 (Text A) und S. 5 (Tabelle)", "Teilchen im Wasserdampf": "Lernzettel S. 2 (Text B) und S. 5 (Tabelle)", "Dampfdruck": "Lernzettel S. 2 (Text B)", "Schmelzen": "Lernzettel S. 5 und S. 3", "Erstarren": "Lernzettel S. 5 und S. 3", "Verdampfen": "Lernzettel S. 5 und S. 4", "Verdunsten": "Lernzettel S. 4 (Buch S. 117)", "Kondensieren": "Lernzettel S. 5 und S. 4", "Sublimieren": "Lernzettel S. 6 (Buch S. 118) und S. 7/8", "Resublimieren": "Lernzettel S. 6 (Buch S. 118) und S. 7/8", "Warum schwimmt Eis?": "Lernzettel S. 1 und S. 9", "Wasser dehnt sich beim Gefrieren aus": "Lernzettel S. 1 und S. 9", "Frostsprengung": "Lernzettel S. 10 und S. 1", "Ackerboden": "Lernzettel S. 10 und S. 13", "Warmes Wasser": "Lernzettel S. 9", "Schmelzendes Eis": "Lernzettel S. 9", "Anomalie": "Lernzettel S. 11 und S. 10", "Die Regel – und die Ausnahme": "Lernzettel S. 11", "4 °C": "Lernzettel S. 11 und S. 2 (Text A)", "Der See im Sommer": "Lernzettel S. 12/13", "Der See im Winter": "Lernzettel S. 12/13", "Fische im Winter": "Lernzettel S. 12/13 und S. 1", "Versuchsprotokoll": "Lernzettel S. 14", "Vermutung": "Lernzettel S. 14", "Beobachtung und Auswertung": "Lernzettel S. 14", "Dreimal messen": "Lernzettel S. 14", "Versuch: warm in kalt": "Lernzettel S. 14 und S. 9", "Modellversuch Tinte": "Lernzettel S. 10 (Buch S. 130) und S. 9", "Schmelztemperatur": "Lernzettel S. 3 (Buch S. 116)", "Siedetemperatur": "Lernzettel S. 4 (Buch S. 117)", "Wasser – ein besonderer Stoff": "Lernzettel S. 3 (Buch S. 116)", "Kann man Wasserdampf sehen?": "Lernzettel S. 3 (Buch S. 116)", "Andere Stoffe bei 20 °C (Buch S. 117, M1)": "Lernzettel S. 4 (Buch S. 117, M1)", "Zinn, Kerzenwachs, Kupfer (M1)": "Lernzettel S. 4 (Buch S. 117, M1)", "Übergänge überspringen": "Lernzettel S. 6 (Buch S. 118)", "Die Pfütze verschwindet im Frost": "Lernzettel S. 6 (Buch S. 118)", "Raureif und Eisblumen": "Lernzettel S. 6 (Buch S. 118)", "Der Iod-Versuch": "Lernzettel S. 6 (Buch S. 118)", "Bleigießen": "Lernzettel S. 4 (Buch S. 117)", "Wie schnell verdunstet Wasser?": "Lernzettel S. 4 (Buch S. 117)", "Der Wasserkreislauf": "Lernzettel S. 15", "Verdunstung": "Lernzettel S. 15 (Nr. 2)", "Luftfeuchtigkeit": "Lernzettel S. 15 (Nr. 2)", "Wolkenbildung": "Lernzettel S. 15 (Nr. 3)", "Kondensation": "Lernzettel S. 15 (Nr. 3 und 4)", "Niederschlag": "Lernzettel S. 15 (Nr. 4)", "Regen oder Schnee?": "Lernzettel S. 15 (Nr. 4)", "Fließendes Wasser": "Lernzettel S. 15 (Nr. 5)", "Versickerung": "Lernzettel S. 15 (Nr. 6)", "Grundwasser": "Lernzettel S. 15 (Nr. 7)", "Bodenwasser steigt auf": "Lernzettel S. 15 (Nr. 8)", "Salzwasser und Süßwasser": "Lernzettel S. 15 (Nr. 1) und USGS"};
 Object.values(CARDS).forEach(arr=>arr.forEach(c=>{const r=CQ[c[0]],src=CSRC[c[0]];if(src)c[2]=src;if(r){c[0]=r[0];if(r[1])c[1]=r[1];}}));
 if(window.LS)LS.init({app:'Z',base:10,units:PACKS.map(p=>({id:p.id,icon:p.icon,name:p.name})),get:()=>(S.ls=S.ls||{}),save,
   seed:id=>{const s=S.stats[id];const g=Object.entries(Object.assign({},S.wgrades||{},S.grades||{})).filter(([k])=>k.split('+').includes(id)).map(([,v])=>+v);return{n:s?s.h.length:0,hit:s?s.h.reduce((a,b)=>a+b,0):0,done:!!(s&&s.done),g:g.length?Math.min(...g):0};},
@@ -2403,7 +2430,7 @@ applyHouse();renderHeader();home();
 <style>:root{--lp-bg:var(--bg);--lp-panel:var(--panel);--lp-line:var(--line);--lp-text:var(--text);--lp-muted:var(--muted);--lp-accent:var(--teal);--lp-on:#fff;--lp-font:var(--body);--lp-display:var(--display);}</style>
 <script>window.LP_CONF={"key": "lernplan-wasser", "prefix": "Z", "btnTarget": "#soundBtn", "btnInsert": "before", "btnClass": "icon-btn", "multi": "Dafür mehrere Pakete gleichzeitig auswählen.", "final": "Abschlusstest mit Note, dabei alle Pakete auswählen.", "units": [{"id": "p1", "icon": "🧊", "name": "Die drei Zustände", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p2", "icon": "🔄", "name": "Verwandlungen", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p3", "icon": "🧪", "name": "Eis schwimmt", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p4", "icon": "🏞️", "name": "Das Geheimnis des Sees", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}, {"id": "p5", "icon": "🔬", "name": "Forschen wie Profis", "learn": "Erst das Zauberbuch lesen, dann die Knobel-Modi.", "rep": "Wahr oder falsch, Abschlusstest oder Blitz-Duell."}], "testName": "Abschlusstest", "est": {"learn": 20, "rep": 5, "test": 10, "final": 20, "write": 15}, "write": true};</script>
 <!-- ===== Lernplan (Modul) ===== -->
-<link rel="stylesheet" href="../css/lernplan.css?v=7.27.0">
+<link rel="stylesheet" href="../css/lernplan.css?v=7.28.0">
 <div id="lp" role="dialog" aria-modal="true" aria-label="Lernplan">
   <div class="lp-head"><h2>🗓️ Lernplan</h2><button class="lp-x" id="lpX" aria-label="Lernplan schließen">✕</button></div>
   <div class="lp-tabs" role="tablist">
@@ -2413,22 +2440,22 @@ applyHouse();renderHeader();home();
   </div>
   <div class="lp-body"><div class="lp-wrap" id="lpBody"></div></div>
 </div>
-<script src="../js/lernplan.js?v=7.27.0"></script>
+<script src="../js/lernplan.js?v=7.28.0"></script>
 <!-- ===== /Lernplan ===== -->
 
 <!-- ===== Nutzer ===== -->
-<link rel="stylesheet" href="../css/nutzer.css?v=7.27.0">
+<link rel="stylesheet" href="../css/nutzer.css?v=7.28.0">
 <div id="nu" role="dialog" aria-modal="true" aria-label="Wer lernt gerade?"><div class="nu-box" id="nuBox"></div></div>
-<script src="../js/nutzer.js?v=7.27.0"></script>
+<script src="../js/nutzer.js?v=7.28.0"></script>
 <!-- ===== /Nutzer ===== -->
 
 <!-- ===== Start ===== -->
 <style>.home-btn{text-decoration:none;display:inline-flex!important;align-items:center;justify-content:center;flex:none;cursor:pointer}@media (max-width:420px){#rank .rt,#rank>div{display:none!important}}</style>
-<script src="../js/home-btn.js?v=7.27.0"></script>
+<script src="../js/home-btn.js?v=7.28.0"></script>
 <!-- ===== /Start ===== -->
 <script>document.addEventListener("click",e=>{const b=e.target.closest("[data-lzsel]");if(b){lzSelect(b.dataset.lzsel,b.dataset.lzm);return;}if(e.target.closest("[data-lzhome]")){try{parent.lzHome&&parent.lzHome();}catch(_){}}});</script>
-<script src="../js/arena-btn.js?v=7.27.0"></script>
-<script>window.__LZ_ZETTEL=[{t:"NWT: Wasser",f:"nwt-wasser.html",d:"Aggregatzustände, Übergänge, Eis, See im Winter, Versuchsprotokoll"}];</script>
-<script src="../js/lernzettel-btn.js?v=7.27.0"></script>
+<script src="../js/arena-btn.js?v=7.28.0"></script>
+<script>window.__LZ_ZETTEL=[{t:"NWT: Wasser",f:"nwt-wasser.html",d:"Aggregatzustände, Übergänge, Eis, See im Winter, Versuchsprotokoll, Wasserkreislauf"}];</script>
+<script src="../js/lernzettel-btn.js?v=7.28.0"></script>
 </body>
 </html>
