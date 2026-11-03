@@ -8,7 +8,7 @@ Fotos der Arbeitsblätter aus dem Unterricht, je Fach als eigenständige HTML-Da
 |---|---|---|---|---|
 | `englisch-unit5-6.html` | 🐚 Englisch | Vokabeln Unit 6 (Buch S. 257–261), Buch S. 130/132, Grammatik simple past G14–G16 (S. 194–199), Arbeitsblätter Station 1 und 5 | 17 | Küsten-Crew: Vokabeln, Verben, Grammatik |
 | `englisch-simple-past.html` | 🐚 Englisch | Merkblatt Simple Past, Creative Writing „My Superhero's Craziest Day“ | 2 | Küsten-Crew: Detektiv, Schreibwerkstatt |
-| `nwt-wasser.html` | 🪄 NWT | Wasser: Aggregatzustände, Übergänge, Eis schwimmt, Anomalie/See im Winter, Versuchsprotokoll. Hinweis auf den Sublimieren-Fehler (Rätsel-Lösung) | 14 | Wasser-Zauberschule: „📄 Lernzettel S. …“ auf den Karten |
+| `nwt-wasser.html` | 🪄 NWT | Wasser: Aggregatzustände, Übergänge, Eis schwimmt, Anomalie/See im Winter, Versuchsprotokoll, Wasserkreislauf (S. 15, Projekt 2). Hinweis auf den Sublimieren-Fehler (Rätsel-Lösung) und zur Wolkenbildung (S. 15) | 15 | Wasser-Zauberschule: „📄 Lernzettel S. …“ auf den Karten |
 | `mathe-winkel.html` | 📐 Mathe | Karte und Kompass – Winkel: Kompass/Kurs, Winkelarten, Geodreieck und Messen, Zeichnen, Berechnen, Übungsheft Geodreieck (Senkrechte/Parallelen), AH S. 16–18, Lösungen zu ml S. 37–42 | 45 | Winkel-Akademie: Paket-Angaben „AH/ml S. …“ |
 | `deutsch-satzbau-zeitformen.html` | 🕵️ Deutsch | Satzbau und Kommas (Nr. 29–41), Heft Zeitformen, Lösungen gesammelt am Ende. Hinweis auf den Fehler auf Blatt Nr. 33 („nebenordnend“) | 23 | Detektiv-Büro: Quelle auf jeder Lernkarte |
 
@@ -18,4 +18,4 @@ Fotos der Arbeitsblätter aus dem Unterricht, je Fach als eigenständige HTML-Da
 - **In der App:** über den 📄-Knopf oben in allen vier Apps (seit 7.4.0, Mathe seit 7.6.0, `js/lernzettel-btn.js`, Liste je App in `window.__LZ_ZETTEL`). Neue Datei → dort eintragen.
 - **Nicht im Offline-Speicher** (`sw.js`): Die Dateien sind zusammen etwa 22 MB groß und würden sonst bei jedem Update mitgeladen. Zum Öffnen braucht man Internet.
 - **Weitergabe:** per Link oder als Datei (Signal). Auf dem Handy im Browser öffnen, nicht in der Vorschau einer App.
-- Stand: 28.09.2026
+- Stand: 03.11.2026
