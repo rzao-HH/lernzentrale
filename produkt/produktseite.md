@@ -9,7 +9,7 @@ Stand: 11.11.2026 · Status je Abschnitt: **beschlossen** oder **Entwurf**
 - **Zielgruppe:** Kinder mit ihren Eltern. Eltern schauen „mit der Brille der Kinder“: Würde das meinem Kind gefallen?
 - **Sprache:** kindgerecht, kurze Sätze, **keine Anrede** (kein „du“, kein „Sie“), damit sich Kinder und Eltern gleich angesprochen fühlen. Beschreiben, was passiert, statt Werbesprüche. Keine gewollt griffigen Formulierungen.
 - **Aufbau:** Jeder Abschnitt hat eine Überschrift, ein bis zwei Sätze und daneben ein Tablet, auf dem die App genau das zeigt. Man soll die Überschrift lesen, den Text überfliegen und schon durchs Zuschauen verstehen, wie es geht.
-- **Vision:** Geplante Funktionen stehen mitten zwischen den vorhandenen, als wären sie Teil der App, mit kleinem Schild **„Kommt bald“**. Das Schild bekommt nur, was es noch gar nicht gibt. Was es schon in einem Fach gibt, gilt als vorhanden.
+- **Vision:** Geplante Funktionen stehen mitten zwischen den vorhandenen, als wären sie Teil der App, mit kleinem Schild **„Kommt bald“**. Das Schild steht **über der Überschrift**, nie mitten im Text, und nur dann, wenn der Kern des Abschnitts noch kommt. Nur in Listen (z. B. „Gut zu wissen“) steht es am einzelnen Punkt. Was es schon in einem Fach gibt, gilt als vorhanden.
 - **Fächer:** nicht auf vier Fächer oder eine Klasse festlegen. Die heutigen Apps sind Beispiele.
 - **Name:** „Lernzentrale“ ist ein Arbeitstitel. Ein neuer Name ist noch offen.
 - **Preis:** offen, stattdessen Hinweis auf den Experimentierstatus.
@@ -21,7 +21,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | # | Abschnitt | Tablet zeigt | Schild | Status |
 |---|---|---|---|---|
 | 1 | Jedes Kind lernt anders. Diese App lernt mit. | die App in Bewegung | | beschlossen |
-| 2 | Gelernt wird, was gerade dran ist | Foto vom Arbeitsblatt → Pakete | Foto: Kommt bald | Entwurf |
+| 2 | Genau der Stoff aus dem Unterricht | Foto der Lernmaterialien → Inhalte der App | Kommt bald | Entwurf |
 | 3 | Der Lernbegleiter | Tipp des Lernbegleiters | Kommt bald | beschlossen |
 | 4 | Ein Thema, viele Wege | Karteikarte → Quiz → Café in Brighton | | Entwurf |
 | 5 | Ausprobieren statt auswendig lernen | Wasserlabor, Geodreieck | | Entwurf |
@@ -38,8 +38,10 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 **Jedes Kind lernt anders. Diese App lernt mit.**
 Die App merkt sich, wie jedes Kind am besten lernt, und passt sich an. Gelernt wird klassisch, aber auch spielerisch, mit Experimenten und Tests, die zur nächsten Arbeit passen. Geübt wird allein oder mit Freunden und Familie.
 
-### 2 · Gelernt wird, was gerade dran ist (Entwurf)
-Ein Foto vom Arbeitsblatt genügt `Kommt bald`. Daraus werden kleine Lernpakete mit den Begriffen und Erklärungen aus dem Unterricht. Jedes Paket ist schnell geschafft.
+### 2 · Genau der Stoff aus dem Unterricht `Kommt bald` (Entwurf)
+Aus Fotos der Lernmaterialien entstehen die Inhalte der App, mit denselben Begriffen und Erklärungen wie in der Schule. Das geht in jedem Fach und jeder Klasse, aufgeteilt in kleine Lernpakete.
+
+Gewichtung: eigener Schulstoff und „jedes Fach, jede Klasse“ zuerst, Pakete nur nebenbei. „Lernmaterialien“ statt Arbeitsblatt oder Buch.
 
 ### 3 · Der Lernbegleiter `Kommt bald` (beschlossen)
 Klappen Aufgaben aus einem Paket öfter nicht, gibt der Lernbegleiter Tipps: noch einmal die Lernkarten ansehen, den Lernzettel lesen oder sich das Thema in der interaktiven Unterrichtsstunde erklären lassen. Auf Wunsch baut er ein neues Modul genau für diese Inhalte.
