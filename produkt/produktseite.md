@@ -27,7 +27,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | 5 | Lernen durch Erfahrung | Zauberkessel → Verhör → Geodreieck | | beschlossen |
 | 6 | Die interaktive Unterrichtsstunde | Lehrerin an der Tafel, Kind meldet sich | Kommt bald | beschlossen |
 | 7 | Bereit für die Arbeit | Lernplan, schneller Test, freier Test mit Musterlösung | | beschlossen |
-| 8 | Mit Freunden, Familie und der ganzen Klasse | Tauziehen-Duell | | Entwurf |
+| 8 | Lerngruppen und Duelle | Tauziehen-Duell, Rangliste der Lerngruppe | | beschlossen |
 | 9 | Punkte für Neues | Paket-Kacheln | | Entwurf |
 | 10 | Eltern sehen, wo ihr Kind steht | Elternübersicht | | Entwurf |
 | 11 | Gut zu wissen | – | | Entwurf |
@@ -64,8 +64,10 @@ Ein Lernplan verteilt die Pakete auf die Tage bis zur Klassenarbeit und baut imm
 
 Papier ist nur eine Möglichkeit für die freien Tests. Die Selbsteinschätzung steht in Abschnitt 10.
 
-### 8 · Mit Freunden, Familie und der ganzen Klasse (Entwurf)
-In Lerngruppen wird live gegeneinander Tauziehen gespielt. Wer gerade keine Zeit hat, tritt später gegen die Aufzeichnung an.
+### 8 · Lerngruppen und Duelle (beschlossen)
+Lerngruppen entstehen mit der Familie, mit Freunden oder mit Mitschülern aus der Klasse. In der Arena geht es dann mit Fragen aus allen Fächern gegeneinander, live beim Tauziehen oder später im Geister-Duell. Jede Lerngruppe hat ihre eigene Rangliste.
+
+Hier der Vergleich in der Gruppe; wie man Punkte verdient, steht in Abschnitt 9. Power-ups und Glücksrad zeigt das Tablet.
 
 ### 9 · Punkte für Neues (Entwurf)
 Am meisten Punkte bringen Aufgaben, die noch nicht sicher sitzen. Was schon gut klappt, bringt erst wieder volle Punkte, wenn es Zeit zum Wiederholen ist.
@@ -91,4 +93,5 @@ Eine Übersicht zeigt, was schon gut klappt und wo Unterstützung hilft, mit kon
 - „Ausprobieren statt auswendig lernen“ (Spruch-Muster „… statt …“, „ausprobieren“ steht schon in Abschnitt 4).
 - „So entsteht ein rundes Bild vom ganzen Thema“ und „Jedes Modul zeigt ihn von einer anderen Seite“ (Abschnitt 4): Es geht um neue Erfahrungen, nicht um Perspektiven.
 - „Jedes Paket endet mit einem Test“ (falsch: Tests gehen über die gewählten Pakete).
+- „Mit Freunden, Familie und der ganzen Klasse“ (lang, klingt nach Klassenmodus) und „Aufzeichnung“ (technisch, in der App heißt es Geister-Duell).
 - „Ein Thema, viele Wege“ (Thema heißt in der App die Spielwelt) und „Viele Wege zum selben Stoff“: leer.
