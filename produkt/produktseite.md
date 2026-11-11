@@ -24,7 +24,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | 2 | Genau der Stoff aus dem Unterricht | Foto der Lernmaterialien → Inhalte der App | Kommt bald | beschlossen |
 | 3 | Der Lernbegleiter | Tipp des Lernbegleiters | Kommt bald | beschlossen |
 | 4 | Lernen, anwenden, ausprobieren | Lernkarte → Spiel → Experiment | | beschlossen |
-| 5 | Ausprobieren statt auswendig lernen | Wasserlabor, Geodreieck | | Entwurf |
+| 5 | Lernen durch Erfahrung | Zauberkessel → Verhör → Geodreieck | | beschlossen |
 | 6 | Die interaktive Unterrichtsstunde | Lehrerin an der Tafel, Kind meldet sich | Kommt bald | beschlossen |
 | 7 | Bereit für die Arbeit | Test mit Note, Probearbeit auf Papier | | Entwurf |
 | 8 | Mit Freunden, Familie und der ganzen Klasse | Tauziehen-Duell | | Entwurf |
@@ -51,8 +51,10 @@ Zum klassischen Lernen mit Lernkarten kommen Spiele und Experimente zum selben S
 
 Kern: klassisches Lernen verbunden mit Spiel und Experiment, derselbe Stoff aus verschiedenen Perspektiven, Lernen durch Erfahrung statt immer gleicher Karten; Schwierigkeitsstufen. Abschnitt 5 bleibt als Schaufenster für die Experimente.
 
-### 5 · Ausprobieren statt auswendig lernen (Entwurf)
-Im Labor wird Wasser zu Eis und zu Dampf, und Wolken regnen über den Bergen ab. Winkel entstehen mit dem Geodreieck auf dem Bildschirm, Schritt für Schritt wie im Heft.
+### 5 · Lernen durch Erfahrung (beschlossen)
+Im Zauberkessel wird Wasser erhitzt und gekühlt, und man sieht, wie sich die Teilchen bewegen. Im Verhör im Hafen werden Verdächtige auf Englisch befragt, und dafür muss die Frage im richtigen Simple Past stehen. In Mathe wird das Geodreieck auf dem Bildschirm angelegt, gedreht und abgelesen, Schritt für Schritt wie im Heft.
+
+Schaufenster für die Experimente, drei Fächer: Tablet zeigt Zauberkessel → Verhör → Geodreieck.
 
 ### 6 · Die interaktive Unterrichtsstunde `Kommt bald` (beschlossen)
 Aus den gewählten Lernpaketen entsteht eine eigene Unterrichtsstunde. Die Lehrerin vermittelt ihre Inhalte im Zusammenhang, mit Sprache, Bildern und Tafel, sodass ein roter Faden entsteht. Aufpassen lohnt sich, denn zwischendurch stellt sie Fragen. Und wer etwas nicht versteht, meldet sich und fragt nach.
@@ -84,4 +86,6 @@ Eine Übersicht zeigt, was schon gut klappt und wo Unterstützung hilft, mit kon
 - „Hilfe genau da, wo es hakt“ und das Wort „hakt“ allgemein: klingt gewollt.
 - Punkte im Abschnitt „Zusammen lernen“: Punkte sind ein eigenes Thema.
 - „Lernkarten, Spiele und Experimente“ (Aufzählung) und „Klassisch und spielerisch“ (zu abstrakt).
+- „Ausprobieren statt auswendig lernen“ (Spruch-Muster „… statt …“, „ausprobieren“ steht schon in Abschnitt 4).
+- „So entsteht ein rundes Bild vom ganzen Thema“ und „Jedes Modul zeigt ihn von einer anderen Seite“ (Abschnitt 4): Es geht um neue Erfahrungen, nicht um Perspektiven.
 - „Ein Thema, viele Wege“ (Thema heißt in der App die Spielwelt) und „Viele Wege zum selben Stoff“: leer.
