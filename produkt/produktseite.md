@@ -124,6 +124,11 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - Einstieg: Winkel zeichnen, Wasserkreislauf, Quiz, Detektiv-Lernkarte. Abschnitt 4: Lernkarte (animiert), Café, Satz-Baumeister. Abschnitt 5: Zauberkessel, Verhör, Geodreieck (alle animiert).
 - **Krabbi taucht immer wieder auf** und macht Passendes: fotografiert (2), läuft quer durchs Bild (4), hält eine Lupe (5), meldet sich (6), hält einen Stift (7), zieht mit einer zweiten Krabbe Tau (8), trägt eine Fahne (9), winkt am Ende.
 - **Impressum und Datenschutz** als eigene Seiten auf dem Canvas, verlinkt im Fuß. Kontakt: lernzentrale@gmx.de (steht auch in Abschnitt 11). Anschrift und Namen stehen nur auf dem Canvas, nicht im Repository.
+- **Erklärvideo** (`produkt/lernzentrale-erklaervideo.mp4`, etwa 95 Sekunden, 1920×1080, ohne Ton), eigenständig versendbar und auf der Seite einbindbar:
+  1. Titel mit Krabbi: „Jedes Kind lernt anders. Diese App lernt mit.“
+  2. Grundgerüst als Ablauf: Lernmaterialien (Arbeitsblatt, Buchseite, Vokabelliste) fliegen in die App (Kommt bald) → kleine Lernpakete → jedes Paket öffnet Module, mehrere Pakete öffnen mehr Module → Schnelltest und Schreibtest mit Musterlösung und Note.
+  3. Abschnitte mit den echten Bewegtbildern: Lernen, anwenden, ausprobieren (Quiz) · Lernen durch Erfahrung (Wasserkreislauf) · Messen wie im Heft (Geodreieck) · Lernbegleiter (Kommt bald) · Unterrichtsstunde (Kommt bald) · Lerngruppen und Duelle (Krabben-Tauziehen) · Bereit für die Arbeit (Lernplan) · Eltern (Beispiel-Übersicht).
+  4. Schluss: Experimentierstatus, lernzentrale@gmx.de.
 - **Vor dem Veröffentlichen erledigen:**
   - Schreibweise von Name und Straße im Impressum prüfen.
   - Schriften selbst hosten (die Datenschutzerklärung sagt „keine Verbindung zu Google“; der Canvas-Entwurf lädt sie noch von Google Fonts).
