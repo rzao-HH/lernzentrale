@@ -28,7 +28,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | 6 | Die interaktive Unterrichtsstunde | Lehrerin an der Tafel, Kind meldet sich | Kommt bald | beschlossen |
 | 7 | Bereit für die Arbeit | Lernplan, schneller Test, freier Test mit Musterlösung | | beschlossen |
 | 8 | Lerngruppen und Duelle | Tauziehen-Duell, Rangliste der Lerngruppe | | beschlossen |
-| 9 | Punkte für Neues | Paket-Kacheln | | Entwurf |
+| 9 | Vom Schiffsjungen zum Admiral | Ränge der Spielwelten, Paket-Kacheln mit Punkten | | beschlossen |
 | 10 | Eltern sehen, wo ihr Kind steht | Elternübersicht | | Entwurf |
 | 11 | Gut zu wissen | – | | Entwurf |
 
@@ -69,8 +69,10 @@ Lerngruppen entstehen mit der Familie, mit Freunden oder mit Mitschülern aus de
 
 Hier der Vergleich in der Gruppe; wie man Punkte verdient, steht in Abschnitt 9. Power-ups und Glücksrad zeigt das Tablet.
 
-### 9 · Punkte für Neues (Entwurf)
-Am meisten Punkte bringen Aufgaben, die noch nicht sicher sitzen. Was schon gut klappt, bringt erst wieder volle Punkte, wenn es Zeit zum Wiederholen ist.
+### 9 · Vom Schiffsjungen zum Admiral (beschlossen)
+Jedes Fach hat seine eigene Spielwelt, mit eigener Sprache, eigenen Spielen und Rängen, etwa vom Praktikanten bis zum Meisterdetektiv. Punkte für den Aufstieg gibt es vor allem für das, was noch nicht sicher sitzt. So zeigen die Punkte ganz nebenbei, was als Nächstes dran ist.
+
+Kern: Motivation, und zwar fürs Richtige. Spielwelten, Ränge und Punkte sind nur Mittel. Die Punkte lenken von selbst auf das, was noch geübt werden muss (Lernbegleiter lenkt mit Tipps, Lernplan mit Terminen). Freie Wahl der Spielwelt vorerst nur in der Feature-Liste. Tablet: Ränge der verschiedenen Spielwelten nacheinander.
 
 ### 10 · Eltern sehen, wo ihr Kind steht (Entwurf)
 Eine Übersicht zeigt, was schon gut klappt und wo Unterstützung hilft, mit konkreten Hinweisen. Dazu kommt die eigene Einschätzung des Kindes nach den Tests, was gut lief und was noch schwer war. Ein Gerät reicht für mehrere Kinder, jedes mit eigenem Lernstand.
@@ -94,4 +96,5 @@ Eine Übersicht zeigt, was schon gut klappt und wo Unterstützung hilft, mit kon
 - „So entsteht ein rundes Bild vom ganzen Thema“ und „Jedes Modul zeigt ihn von einer anderen Seite“ (Abschnitt 4): Es geht um neue Erfahrungen, nicht um Perspektiven.
 - „Jedes Paket endet mit einem Test“ (falsch: Tests gehen über die gewählten Pakete).
 - „Mit Freunden, Familie und der ganzen Klasse“ (lang, klingt nach Klassenmodus) und „Aufzeichnung“ (technisch, in der App heißt es Geister-Duell).
+- „Punkte für Neues“ (ungenau) und „Punkte und Ränge“ (nur das Mittel, nicht das Ziel Motivation); „Motiviert fürs Richtige“ als Überschrift verworfen, Gedanke steckt im Text.
 - „Ein Thema, viele Wege“ (Thema heißt in der App die Spielwelt) und „Viele Wege zum selben Stoff“: leer.
