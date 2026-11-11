@@ -90,6 +90,18 @@ Wöchentlicher Bericht und Belohnungen durch Eltern bleiben vorerst nur Ideen in
 
 Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
 
+## Gestaltung (in Arbeit)
+
+- **Stilvorbilder:** Analyse der anderen Session im Artifact „Stilvorbilder Produktseite“ (StudySmarter, Duolingo, Prodigy, Knowunity, Khanmigo, Photomath).
+- **Krabbi ist der Lernbegleiter** (Krabbe aus dem Erklärvideo `videos/zeitreise-krabbi.html`) und führt durch die Seite.
+- **Tablet-Szenen:** echte Bildschirme der App, als Abfolge; für „Kommt bald“-Abschnitte nachgebaute Szenen, als solche gekennzeichnet.
+- **Mittesten:** E-Mail-Adresse auf der Seite (Adresse noch offen).
+- **Name:** vorerst „Lernzentrale“ als Arbeitstitel, Suche geparkt. Ideen: Lernwerkstatt (sehr verbreitet), Lernnest, Lernhafen, Basislager, Hauptquartier, Meine Lernzentrale.
+- **Zwei Vorschauen zum Vergleich** (Einstieg, Abschnitt 3 und 5):
+  - A „Stilvorbilder“: große runde Schrift, Text und Tablet abwechselnd, Symbole der Spielwelten.
+  - B „Ruhig mit Spielwelt“: ruhiger Grund, zentrierter Einstieg, jeder Abschnitt in der Stimmung seiner Welt, Hintergrund wechselt mit dem Tablet.
+  - Entscheidung offen.
+
 ## Verworfen (damit es nicht wiederkommt)
 
 - Einstiegssätze „Lernen, das sich wie Entdecken anfühlt“, „Aus dem Arbeitsblatt wird ein Spiel“ und ähnliche: zu platt, klingen nach KI.
