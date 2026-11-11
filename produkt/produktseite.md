@@ -102,6 +102,12 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - B „Ruhig mit Spielwelt“: ruhiger Grund, zentrierter Einstieg, jeder Abschnitt in der Stimmung seiner Welt, Hintergrund wechselt mit dem Tablet.
   - **Entschieden: B „Ruhig mit Spielwelt“** (https://claude.ai/artifact/93XsFzdatTbTP3XcRpjABP). Vorschau A: https://claude.ai/artifact/RaLJFaeCzNL1CFHMLhUdxE
 - **Design-Canvas zum Überarbeiten in Claude:** https://claude.ai/artifact/DbJoBTVC8SDXFhGdh44UMS (Ausgangspunkt Stil B). Ergebnisse von dort hier eintragen, bevor die fertige Seite gebaut wird.
+- **Einstieg entschieden: „Einstieg 7 · Lesbare Szenen“** auf dem Design-Canvas. Aufbau:
+  - Text links: Überschrift in zwei Zeilen, die zweite („Diese App lernt mit.“) in der Farbe der gerade gezeigten Welt; Fließtext; Fächer-Knöpfe Mathe · NWT · Englisch · Deutsch plus gestrichelt „und jedes weitere Fach“; Knopf „Lernzentrale öffnen“.
+  - Rechts: drei aufgefächerte Tablets, das mittlere groß und gut lesbar, die seitlichen klein und gekippt (vorige und nächste Welt); Krabbi schaut über das mittlere Tablet.
+  - Wechsel automatisch oder per Klick auf ein Fach; Hintergrundstimmung (Sterne, Blasen, Wellen) und Farbe der zweiten Zeile wechseln mit.
+  - Tablet-Bilder zeigen Szenen, in denen etwas passiert (Geodreieck, Zauberkessel, Lernkarte, Satz-Baumeister), aufgenommen in schmalem Fenster mit doppelter Schärfe, damit die Schrift lesbar ist. Keine Menü-Übersichten.
+  - Verworfen: Einstieg 1–6 (zu klein, zu voll oder Tablets erst nach dem Scrollen sichtbar).
 
 ## Verworfen (damit es nicht wiederkommt)
 
