@@ -131,7 +131,6 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   3. Abschnitte mit den echten Bewegtbildern: Lernen, anwenden, ausprobieren (Quiz) · Lernen durch Erfahrung (Wasserkreislauf) · Messen wie im Heft (Geodreieck) · Lernbegleiter (Kommt bald) · Unterrichtsstunde (Kommt bald) · Lerngruppen und Duelle (Krabben-Tauziehen) · Bereit für die Arbeit (Lernplan) · Eltern (Beispiel-Übersicht).
   4. Schluss: Experimentierstatus, lernzentrale@gmx.de.
 - **Vor dem Veröffentlichen erledigen:**
-  - Schreibweise von Name und Straße im Impressum prüfen.
   - Schriften selbst hosten (die Datenschutzerklärung sagt „keine Verbindung zu Google“; der Canvas-Entwurf lädt sie noch von Google Fonts).
   - Hosting festlegen (Datenschutzerklärung geht von GitHub Pages aus).
   - Die Lern-App braucht eine eigene Datenschutzerklärung (Benutzername, Lernstand, Abgleich über Supabase, Lerngruppen), bevor Familien mittesten.
