@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>Rangliste</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&display=swap">
+<style>
+html,body{margin:0;width:600px;height:800px;overflow:hidden;background:#eef0f7;font-family:Nunito,sans-serif;color:#1c2140}
+.card{position:absolute;left:24px;right:24px;top:40px;background:#fff;border:1px solid #d5d9e8;border-radius:22px;padding:22px 20px;box-sizing:border-box}
+h2{margin:0 0 14px;font-family:Fredoka,sans-serif;font-weight:600;font-size:28px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{border:2px solid #d5d9e8;background:#f3f4fa;border-radius:12px;padding:10px 14px;font-weight:800;font-size:16px}
+.tab.on{background:#3d4fd6;border-color:#3d4fd6;color:#fff}
+.head,.row{display:grid;grid-template-columns:44px 1fr repeat(4,58px) 76px;align-items:center}
+.head{font-size:18px;color:#5a6185;font-weight:800;padding:0 4px 8px;border-bottom:2px solid #eef0f7}
+.head span{text-align:center}.head .n{text-align:left}
+#rows{position:relative;height:430px}
+.row{position:absolute;left:0;right:0;height:62px;padding:0 4px;border-bottom:1px solid #eef0f7;font-size:17px;font-weight:700;box-sizing:border-box}
+.row span{text-align:center}.row .n{text-align:left;font-weight:800;display:flex;align-items:center;gap:8px}
+.row .g{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px}
+.row.me{background:#eef0ff;border-radius:12px}
+.pop{position:absolute;right:8px;top:-14px;background:#1f7a3d;color:#fff;border-radius:999px;padding:4px 10px;font-size:14px;font-weight:800}
+.note{position:absolute;left:24px;right:24px;top:640px;font-size:15px;color:#5a6185;text-align:center}
+#dot{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(255,122,92,.45);border:3px solid #ff7a5c;box-shadow:0 0 0 6px rgba(255,122,92,.18)}
+#krabbi{position:absolute;left:430px;top:660px;width:120px}
+</style></head><body>
+<div class="card">
+  <h2>🏆 Rangliste</h2>
+  <div class="tabs"><div class="tab" id="t0">📱 Dieses Gerät</div><div class="tab on" id="t1">👪 Familie</div><div class="tab" id="t2">🏫 Klasse 6b</div></div>
+  <div class="head"><span></span><span class="n">Name</span><span>📐</span><span>🪄</span><span>🐚</span><span>🕵️</span><span>Gesamt</span></div>
+  <div id="rows"></div>
+</div>
+<div class="note">Beispieldaten</div>
+<svg id="krabbi" viewBox="-6 -20 104 86"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"/><path d="M22 36 Q8 34 8 22"/></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"/><g id="claw"><path d="M58 36 Q72 34 72 22" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="72" cy="17" r="9" fill="#FF7A5C"/><path d="M75 22 L75 -16" stroke="#1c2140" stroke-width="2.5"/><path d="M75 -16 L94 -10 L75 -4Z" fill="#3d4fd6"/></g><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"/><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="16" r="6" fill="#fff"/><circle cx="48" cy="16" r="6" fill="#fff"/><circle cx="33" cy="16" r="2.6" fill="#0A1B27"/><circle cx="49" cy="16" r="2.6" fill="#0A1B27"/><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+<div id="dot"></div>
+<script>
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,ramp=(t,a,l)=>ease(cl((t-a)/l));
+const FAM=[['🦁','Robin',[420,380,430,290],true],['🦉','Roya',[310,260,150,220]],['🐬','Tina',[210,330,140,280]]];
+const KL=[['🦊','Mia',[430,400,480,330]],['🦁','Robin',[420,380,510,290],true],['🐼','Lea',[380,300,460,350]],['🐯','Ben',[360,320,400,300]],['🐸','Noah',[300,280,350,280]],['🐨','Emil',[260,220,280,230]]];
+const R=document.getElementById('rows');
+function draw(list,bonus,popTxt,popA,order){
+  R.innerHTML='';
+  const tot=list.map(r=>r[2].reduce((a,b)=>a+b,0)+(r[3]?bonus:0));
+  list.forEach((r,i)=>{const d=document.createElement('div');d.className='row'+(r[3]?' me':'');
+    const pts=r[2].slice();if(r[3])pts[2]+=bonus;
+    const medal=['🥇','🥈','🥉'][order[i]]||'';
+    d.innerHTML=`<span>${medal}</span><span class="n">${r[0]} ${r[1]}</span>${pts.map(p=>`<span>${Math.round(p)}</span>`).join('')}<span class="g">${Math.round(tot[i])}</span>`+(r[3]&&popA>0?`<div class="pop" style="opacity:${popA}">${popTxt}</div>`:'');
+    d.style.top=(order.pos[i]*66)+'px';R.appendChild(d);});
+}
+window.TOTAL=12500;
+window.render=function(t){
+  // Reiter
+  const tab=t<4300?1:(t<10400?2:1);['t0','t1','t2'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',i===tab));
+  if(tab===1){
+    const b=t<4300?80*ramp(t,1600,1400):80;const pa=t<4300?Math.min(ramp(t,1300,300),1-ramp(t,3600,500)):0;
+    const tots=FAM.map(r=>r[2].reduce((a,c)=>a+c,0)+(r[3]?b:0));const idx=tots.map((v,i)=>i).sort((a,c)=>tots[c]-tots[a]);
+    const pos=[];idx.forEach((k,j)=>pos[k]=j);const o=pos.slice();o.pos=pos;draw(FAM,b,'+80 ⚔️ Duell gewonnen',pa,o);
+  } else {
+    const b=60*ramp(t,5600,1500);const pa=Math.min(ramp(t,5300,300),1-ramp(t,8600,500));
+    const tots=KL.map(r=>r[2].reduce((a,c)=>a+c,0)+(r[3]?b:0));
+    // gleitender Platztausch
+    const base=[0,1,2,3,4,5];const swap=ramp(t,7000,700);
+    const pos=base.slice();if(tots[1]>tots[0]){pos[0]=swap;pos[1]=1-swap;}
+    const ord=[0,1,2,3,4,5].map(i=>{const r=Math.round(pos[i]);return r;});ord.pos=pos;
+    draw(KL,b,'+60 ⚔️ Duell gewonnen',pa,ord);
+  }
+  // Krabbi winkt mit Fahne
+  document.getElementById('claw').setAttribute('transform',`rotate(${Math.sin(t/260)*14} 58 36)`);
+  // Finger
+  const P=[[0,480,720],[3300,480,720],[4100,391,134],[4250,391,134,1],[4500,405,175],[9600,405,175],[10300,262,134],[10450,262,134,1],[10700,280,180],[12500,270,200]];
+  let x=480,y=720,pr=0;for(let i=0;i<P.length-1;i++){const [a,x1,y1,p]=P[i],[b,x2,y2]=P[i+1];if(t>=a&&t<b){const k=ease((t-a)/(b-a));x=x1+(x2-x1)*k;y=y1+(y2-y1)*k;pr=p?1:0;}}
+  const d=document.getElementById('dot');d.style.left=x+'px';d.style.top=y+'px';d.style.transform=pr?'scale(.75)':'';d.style.background=pr?'rgba(255,122,92,.75)':'rgba(255,122,92,.45)';
+};
+render(0);
+</script></body></html>

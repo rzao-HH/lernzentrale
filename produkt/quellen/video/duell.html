@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>Duell</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800;900&display=swap">
+<style>
+:root{--bg:#eef0f7;--card:#fff;--line:#d5d9e8;--text:#1c2140;--muted:#5a6185;--soft:#f3f4fa;--W:#3d4fd6;--E:#d9482a;--ok:#1f7a3d}
+html,body{margin:0;width:600px;height:800px;overflow:hidden;background:var(--bg);font-family:Nunito,sans-serif;color:var(--text)}
+.scr{position:absolute;left:24px;right:24px;top:36px;bottom:110px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px 20px;box-sizing:border-box;display:none}
+.scr.on{display:block}
+h2{margin:0 0 14px;font-family:Fredoka,sans-serif;font-weight:600;font-size:28px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tab{border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:8px 14px;font-weight:800;font-size:16px}
+.tab.on{background:var(--W);border-color:var(--W);color:#fff}
+table{width:100%;border-collapse:collapse;font-size:18px}
+th{font-size:15px;color:var(--muted);font-weight:800;text-align:right;padding:6px 6px}
+th.n,td.n{text-align:left}
+td{padding:12px 6px;border-top:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
+td.n{font-weight:800}td.m{width:28px;text-align:center;padding:0}
+td.t{font-weight:600;font-family:Fredoka,sans-serif;font-size:20px}
+tr.me td{background:var(--soft)}
+.best{color:var(--ok);font-weight:900}
+td.ar{position:relative}
+.pop{position:absolute;right:0;top:-12px;background:var(--ok);color:#fff;border-radius:999px;padding:3px 9px;font-size:14px;font-weight:900}
+.rnote{margin:12px 2px 0;font-size:14px;color:var(--muted);line-height:1.4}
+.go{display:inline-block;margin-top:16px;border-radius:14px;padding:12px 18px;font-weight:900;font-size:18px;background:var(--E);color:#fff}
+.go.sec{background:var(--soft);color:var(--text);border:1px solid var(--line);margin-right:8px}
+/* VS */
+.c{text-align:center}
+.vs{display:flex;align-items:center;justify-content:center;gap:26px;font-size:64px;margin-top:40px}
+.vs span{display:flex;flex-direction:column;align-items:center}.vs b{font-size:20px}.vs i{font-style:normal;font-weight:900;font-size:30px;color:var(--E)}
+.big{font-size:96px;line-height:1.1;margin:24px 0 10px;font-family:Fredoka,sans-serif;font-weight:600}
+.p0{color:var(--muted);font-weight:700;font-size:18px;margin:10px 0}
+/* Spiel */
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;color:var(--muted);font-weight:800;font-size:17px}
+.top b{font-family:Fredoka,sans-serif;font-size:22px;color:var(--text)}
+.x{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--soft);display:flex;align-items:center;justify-content:center}
+.rope{display:flex;align-items:center;gap:8px;margin:8px 0}
+.side{display:flex;flex-direction:column;align-items:center;font-size:36px;min-width:70px}.side b{font-size:15px}
+.track{position:relative;flex:1;height:52px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,rgba(31,122,61,.25),transparent 45%,transparent 55%,rgba(217,72,42,.25));border-radius:26px;padding:0 8px}
+.track:before{content:"";position:absolute;left:8px;right:8px;top:50%;height:5px;margin-top:-2.5px;background:repeating-linear-gradient(90deg,#b08d57 0 8px,#8a6b3c 8px 12px);border-radius:2px}
+.track i{position:relative;width:2px;height:14px;background:var(--line)}.track i.mid{height:34px;width:3px;background:var(--text)}
+.knot{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:34px}
+.pu{display:flex;justify-content:center;gap:8px;min-height:44px;margin:6px 0;align-items:center}
+.pub{border-radius:12px;padding:9px 16px;font-weight:900;background:linear-gradient(90deg,#ffb703,#fb8500);color:#1c1c1c;font-size:17px}
+.st{font-weight:800;color:var(--muted);font-size:16px}.st.on{color:var(--ok)}
+.q{text-align:center;min-height:300px;position:relative}
+.badge{display:inline-block;background:var(--soft);border-radius:999px;padding:5px 12px;font-weight:800;font-size:15px}
+.ql{margin-top:10px;color:var(--muted);font-weight:800;font-size:16px}
+.qs{font-family:Fredoka,sans-serif;font-size:27px;line-height:1.3;margin:8px 0 18px;min-height:72px;display:flex;align-items:center;justify-content:center}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts div{min-height:64px;border-radius:14px;border:2px solid var(--line);background:var(--soft);font-weight:800;font-size:19px;display:flex;align-items:center;justify-content:center;padding:6px 8px}
+.opts div.ok{background:var(--ok);border-color:var(--ok);color:#fff}.opts div.bad{background:var(--E);border-color:var(--E);color:#fff}
+.wheel{font-size:80px;margin-top:60px}
+.res h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:36px;margin:4px 0 10px}
+.res p{font-size:18px;font-weight:700;margin:8px 0}
+.note{position:absolute;left:24px;top:704px;font-size:15px;color:var(--muted)}
+#dot{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(255,122,92,.45);border:3px solid #ff7a5c;box-shadow:0 0 0 6px rgba(255,122,92,.18);z-index:9}
+#krabbi{position:absolute;left:440px;top:690px;width:110px}
+</style></head><body>
+
+<!-- Rangliste -->
+<div class="scr" id="sR">
+  <h2>🏆 Rangliste</h2>
+  <div class="tabs"><div class="tab" id="tD">📱 Dieses Gerät</div><div class="tab on" id="tF">👥 Familie</div><div class="tab" id="tK">👥 Klasse 6b</div></div>
+  <table><thead><tr><th class="m"></th><th class="n">Name</th><th>📐</th><th>🪄</th><th>🐚</th><th>🕵️</th><th>Gesamt</th><th>⚔️</th></tr></thead><tbody id="rb"></tbody></table>
+  <p class="rnote">⚔️ = Arena-Punkte aus Duellen</p>
+  <div><span class="go" id="goB">⚔️ Herausfordern</span></div>
+</div>
+<!-- VS -->
+<div class="scr c" id="sV">
+  <div class="vs"><span>🦁<b>Robin</b></span><i>VS</i><span>🦉<b>Roya</b></span></div>
+  <p class="p0">🎰 Glücksrad – alle Fächer · Einsatz: 50</p>
+  <div class="big" id="vN">3</div>
+  <p class="p0">Zieh das Seil 6 Felder zu dir!<br>Falsche Antworten lassen es zurückrutschen.</p>
+</div>
+<!-- Spiel -->
+<div class="scr" id="sG">
+  <div class="top"><span>⏱️ <b id="gT">120 s</b></span><span>🎰 Glücksrad</span><span class="x">✕</span></div>
+  <div class="rope"><div class="side">🦁<b>Robin</b></div><div class="track"><i></i><i></i><i></i><i></i><i></i><i></i><i class="mid"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="knot" id="kn">🪢</span></div><div class="side">🦉<b>Roya</b></div></div>
+  <div class="pu" id="pu"></div>
+  <div class="q" id="q"></div>
+</div>
+<!-- Ergebnis -->
+<div class="scr c res" id="sE">
+  <div class="big" style="margin-top:50px">🏆</div>
+  <h3>Gewonnen!</h3>
+  <p>Das Seil ist bei dir!</p>
+  <p>Richtige Antworten: <b>Robin 7</b> · <b>Roya 2</b></p>
+  <p class="p0">+60 Arena-Punkte · jetzt 100</p>
+  <div style="margin-top:24px"><span class="go sec" id="clB" style="margin:0">Schließen</span></div>
+</div>
+<div class="note">Beispieldaten</div>
+<svg id="krabbi" viewBox="-6 -20 104 86"><g id="kb"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"/><path d="M22 36 Q8 34 8 22"/></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"/><g id="claw"><path d="M58 36 Q72 34 72 22" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="72" cy="17" r="9" fill="#FF7A5C"/><path d="M75 22 L75 -16" stroke="#1c2140" stroke-width="2.5"/><path d="M75 -16 L94 -10 L75 -4Z" fill="#3d4fd6"/></g><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"/><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="16" r="6" fill="#fff"/><circle cx="48" cy="16" r="6" fill="#fff"/><circle cx="33" cy="16" r="2.6" fill="#0A1B27"/><circle cx="49" cy="16" r="2.6" fill="#0A1B27"/><path id="mo" d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"/></g></svg>
+<div id="dot"></div>
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,ramp=(t,a,l)=>ease(cl((t-a)/l));
+const fmt=n=>Math.round(n).toLocaleString('de-DE');
+// Rangliste: [Emoji, Name, [📐,🪄,🐚,🕵️], ⚔️, ich?]
+const FAM=[['🦁','Robin',[420,380,430,290],40,1],['🐬','Tina',[210,330,140,280],20],['🦉','Roya',[310,260,150,220],50]];
+const KL=[['🦊','Mia',[450,410,520,360],30],['🦁','Robin',[420,380,430,290],40,1],['🐼','Lea',[380,300,460,350],70],['🐯','Ben',[360,320,400,300],0],['🐸','Noah',[300,280,350,280],10]];
+function table(list,arBonus,popA){
+  const rows=list.map(r=>({e:r[0],n:r[1],v:r[2],ar:r[3]+(r[4]?arBonus:0),me:r[4],t:r[2].reduce((a,b)=>a+b,0)})).sort((a,b)=>b.t-a.t);
+  const mx=[0,1,2,3].map(j=>Math.max(...rows.map(r=>r.v[j]))),mxA=Math.max(...rows.map(r=>r.ar));
+  $('rb').innerHTML=rows.map((r,i)=>`<tr class="${r.me?'me':''}"><td class="m">${['🥇','🥈','🥉'][i]||(i+1)+'.'}</td><td class="n">${r.e} ${r.n}</td>${r.v.map((x,j)=>`<td class="${x===mx[j]?'best':''}">${fmt(x)}</td>`).join('')}<td class="t">${fmt(r.t)}</td><td class="ar ${r.ar===mxA?'best':''}">${fmt(r.ar)}${r.me&&popA>0?`<span class="pop" style="opacity:${popA}">+60</span>`:''}</td></tr>`).join('');
+}
+// Fragen (Glücksrad: alle Fächer); a = richtige Antwort, p = getippt
+const QS=[
+ ['📐 Mathe','Winkel','Wie groß ist ein rechter Winkel?',['45°','90°','180°','360°'],1,1],
+ ['🐚 Englisch','Simple Past','I ___ to school yesterday.',['walk','walked','walking','walks'],1,0],
+ ['🪄 NWT','Wasser','Bei wie viel Grad siedet Wasser?',['50 °C','0 °C','100 °C','200 °C'],2,2],
+ ['🕵️ Deutsch','Wortarten','Welches Wort ist ein Verb?',['Haus','laufen','schön','unter'],1,1],
+ ['🪄 NWT','Wasserkreislauf','Wie heißt Wasser als Gas?',['Eis','Regen','Wasserdampf','Nebel'],2,2],
+ ['📐 Mathe','Winkel','Ein stumpfer Winkel ist …',['kleiner als 90°','zwischen 90° und 180°','genau 180°','größer als 180°'],1,1],
+ ['🐚 Englisch','Simple Past','go – Simple Past?',['goed','gone','went','going'],2,2],
+ ['🕵️ Deutsch','Satzglieder','Wer oder was? fragt nach dem …',['Subjekt','Prädikat','Objekt','Adverb'],0,0]];
+// Zeitplan
+const T0=0, TAP_GO=2600, V0=3000, G0=5400;
+const EV=[]; // Ereignisse im Spiel
+let tt=G0, d=0, streak=0, dbl=0;
+const RO={0:1,1:1}; // Roya zieht nach Frage 0 und 1
+QS.forEach((q,i)=>{
+  const ev={i,spin:tt,show:tt+350,tap:tt+1150};const ok=q[4]===q[5];
+  ev.ok=ok;ev.d0=d;
+  if(ok){d+=dbl>0?2:1;if(dbl>0)dbl--;streak++;}else{d-=1;streak=0;}
+  ev.d1=d;ev.dbl=dbl;ev.streak=streak;
+  tt=ev.tap+(ok?650:1300);
+  if(RO[i]){ev.roya=tt-150;d-=1;ev.d2=d;tt+=500;}
+  if(i===4){ev.puShow=ev.tap+80;ev.puTap=tt+500;tt+=1000;dbl=2;ev.dblAfter=2;}
+  ev.dblEnd=dbl;ev.end=tt;EV.push(ev);
+});
+const GEND=tt, E0=GEND+600, TAP_CL=E0+2600, R1=E0+3000, TAP_K=R1+3300, TEND=TAP_K+3600;
+window.TOTAL=TEND;
+let M=null;
+function measure(){
+  const c=el=>{const r=el.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2];};
+  M={};show('sR');table(FAM,0,0);M.go=c($('goB'));M.k=c($('tK'));
+  show('sE');M.cl=c($('clB'));
+  show('sG');drawQ(QS[0],-1);M.o=[...document.querySelectorAll('.opts div')].map(c);
+  $('pu').innerHTML='<span class="pub" id="pb">✖️2 Doppelzug einsetzen</span>';M.pu=c($('pb'));
+}
+function show(id){['sR','sV','sG','sE'].forEach(s=>$(s).classList.toggle('on',s===id));}
+function drawQ(q,state){$('q').innerHTML=`<div class="badge">${q[0]}</div><div class="ql">${q[1]}</div><div class="qs">${q[2]}</div><div class="opts">${q[3].map((o,j)=>`<div class="${state>=0&&j===q[4]?'ok':''}${state>=0&&j===q[5]&&q[5]!==q[4]?'bad':''}">${o}</div>`).join('')}</div>`;}
+function knot(dv){$('kn').style.left=(50-dv*(50/6)*.92)+'%';}
+window.render=function(t){
+  if(!M)measure();
+  let fx=480,fy=740,press=0;const path=[];
+  const mood=(m)=>$('mo').setAttribute('d',m==='happy'?'M32 44 Q40 56 48 44 Z':m==='worry'?'M34 50 Q40 45 46 50':'M33 46 Q40 53 47 46');
+  mood('');$('kb').setAttribute('transform','');
+  if(t<V0){ // Rangliste vorher
+    show('sR');$('tF').classList.add('on');$('tK').classList.remove('on');table(FAM,0,0);
+    path.push([0,480,740],[1600,480,740],[2400,...M.go],[TAP_GO,...M.go,1],[3000,...M.go]);
+  } else if(t<G0){ // VS + Countdown
+    show('sV');const n=3-Math.floor((t-V0)/((G0-V0)/3));$('vN').textContent=Math.max(1,n);
+    path.push([V0,...M.go],[G0,480,740]);
+  } else if(t<E0){ // Spiel
+    show('sG');$('gT').textContent=Math.max(0,120-Math.floor((t-G0)/1000))+' s';
+    let ev=EV[0];for(const e of EV)if(t>=e.spin)ev=e;
+    const q=QS[ev.i];
+    // Seilstand
+    let dv=ev.d0;
+    if(t>=ev.tap)dv=ev.d0+(ev.d1-ev.d0)*ramp(t,ev.tap,350);
+    if(ev.roya&&t>=ev.roya)dv=ev.d1+(ev.d2-ev.d1)*ramp(t,ev.roya,350);
+    if(t>=GEND)dv=6;
+    knot(dv);
+    // Fragebereich
+    if(t<ev.show){const ks=['📐','🪄','🐚','🕵️'];$('q').innerHTML=`<div class="wheel">${ks[Math.floor((t-ev.spin)/70)%4]}</div>`;}
+    else drawQ(q,t>=ev.tap?1:-1);
+    // Power-up-Zeile
+    const prev=EV[ev.i-1];
+    let puHTML;const dblNow=t>=ev.tap?((ev.puTap&&t>=ev.puTap)?2:ev.dbl):(prev?prev.dblEnd:0);
+    if(ev.puShow&&t>=ev.puShow&&t<ev.puTap)puHTML='<span class="pub">✖️2 Doppelzug einsetzen</span>';
+    else{const s=t>=ev.tap?ev.streak:(prev?prev.streak:0);const dd=dblNow;puHTML=`<span class="st">🔥 Serie: ${s}</span>`+(dd?`<span class="st on">✖️2 aktiv (${dd})</span>`:'');}
+    $('pu').innerHTML=puHTML;
+    // Roya-Zug anzeigen
+    if(ev.roya&&t>=ev.roya&&t<ev.roya+700)$('pu').insertAdjacentHTML('beforeend','<span class="st" style="color:#d9482a">🦉 Roya zieht!</span>');
+    // Finger: zur Antwort, tippen
+    const o=M.o[q[5]];
+    path.push([ev.spin,...(prev?(prev.puTap?M.pu:M.o[QS[prev.i][5]]):[480,740])],[ev.tap-150,...o],[ev.tap,...o,1],[ev.tap+150,...o]);
+    if(ev.puTap){path.push([ev.puTap-500,...o],[ev.puTap-120,...M.pu],[ev.puTap,...M.pu,1],[ev.puTap+150,...M.pu],[ev.end,...M.pu]);}
+    else path.push([ev.end,...o]);
+    // Krabbi fiebert mit
+    mood(dv<0?'worry':dv>=4?'happy':'');
+  } else if(t<R1){ // Ergebnis
+    show('sE');mood('happy');$('kb').setAttribute('transform',`translate(0,${-Math.abs(Math.sin((t-E0)/180))*10})`);
+    const lo=M.o[QS[7][5]];path.push([E0,...lo],[E0+1800,...lo],[TAP_CL-150,...M.cl],[TAP_CL,...M.cl,1],[R1,...M.cl]);
+  } else { // Rangliste nachher
+    show('sR');const k=t>=TAP_K+120;$('tF').classList.toggle('on',!k);$('tK').classList.toggle('on',k);
+    if(!k){const b=60*ramp(t,R1+500,1000);table(FAM,b,Math.min(ramp(t,R1+400,250),1-ramp(t,TAP_K-500,400)));}
+    else table(KL,60,0);
+    mood('happy');
+    path.push([R1,...M.cl],[R1+400,520,560],[TAP_K-700,520,560],[TAP_K-120,...M.k],[TAP_K,...M.k,1],[TAP_K+200,...M.k],[TAP_K+900,470,520],[TEND,470,520]);
+  }
+  // Fahne schwenken
+  $('claw').setAttribute('transform',`rotate(${Math.sin(t/260)*14} 58 36)`);
+  // Finger aus Pfad
+  path.sort((a,b)=>a[0]-b[0]);
+  if(path.length){if(t<path[0][0]){fx=path[0][1];fy=path[0][2];}else{fx=path[path.length-1][1];fy=path[path.length-1][2];}
+    for(let i=0;i<path.length-1;i++){const [a,x1,y1,p]=path[i],[b,x2,y2]=path[i+1];if(t>=a&&t<b){const kk=b>a?ease((t-a)/(b-a)):1;fx=x1+(x2-x1)*kk;fy=y1+(y2-y1)*kk;press=p?1:0;break;}}}
+  const dt=$('dot');dt.style.left=fx+'px';dt.style.top=fy+'px';dt.style.transform=press?'scale(.75)':'';dt.style.background=press?'rgba(255,122,92,.75)':'rgba(255,122,92,.45)';
+};
+document.fonts.ready.then(()=>{M=null;render(0);});
+</script></body></html>

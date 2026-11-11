@@ -28,6 +28,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | 6 | Die interaktive Unterrichtsstunde | Lehrerin an der Tafel, Kind meldet sich | Kommt bald | beschlossen |
 | 7 | Bereit für die Arbeit | Lernplan, schneller Test, freier Test mit Musterlösung | | beschlossen |
 | 8 | Lerngruppen und Duelle | Tauziehen-Duell, Rangliste der Lerngruppe | | beschlossen |
+| 8b | Selbst ein Lernmodul erfinden | Kind wählt Spielidee und Figur, gleiche Frage als Lernkarte und als Spiel, teilen mit der Lerngruppe | Kommt bald | beschlossen |
 | 9 | Vom Schiffsjungen zum Admiral | Ränge der Spielwelten, Paket-Kacheln mit Punkten | | beschlossen |
 | 10 | Eltern sehen, wo ihr Kind steht | Elternübersicht, Personenwahl | | beschlossen |
 | 11 | Gut zu wissen | – | | beschlossen |
@@ -68,6 +69,11 @@ Papier ist nur eine Möglichkeit für die freien Tests. Die Selbsteinschätzung 
 Lerngruppen entstehen mit der Familie, mit Freunden oder mit Mitschülern aus der Klasse. In der Arena geht es dann mit Fragen aus allen Fächern gegeneinander, live beim Tauziehen oder später im Geister-Duell. Jede Lerngruppe hat ihre eigene Rangliste.
 
 Hier der Vergleich in der Gruppe; wie man Punkte verdient, steht in Abschnitt 9. Power-ups und Glücksrad zeigt das Tablet.
+
+### 8b · Selbst ein Lernmodul erfinden `Kommt bald` (beschlossen)
+Aus einem Paket wird ein eigenes Spiel, ein Rätsel oder eine Geschichte, ausgedacht von einem Kind. Der Lernstoff bleibt dabei genau derselbe: Fragen, Antworten und Erklärungen kommen weiter aus dem Paket. Neu ist nur, wie er erlebt wird. Fertige Module lassen sich mit der Lerngruppe teilen, und die anderen probieren aus, was sich jemand ausgedacht hat.
+
+Kinder werden selbst zu Gestaltern. Wichtig für Eltern: Gestaltet wird nur die Art, wie der Stoff erlebt wird, nicht der Inhalt. Steht direkt nach Abschnitt 8, weil das Teilen über die Lerngruppen läuft. Siehe auch `funktionen.html` (Kinder entwerfen eigene Lernmodule, Kaufmodell).
 
 ### 9 · Vom Schiffsjungen zum Admiral (beschlossen)
 Jedes Fach hat seine eigene Spielwelt, mit eigener Sprache, eigenen Spielen und Rängen, etwa vom Praktikanten bis zum Meisterdetektiv. Punkte für den Aufstieg gibt es vor allem für das, was noch nicht sicher sitzt. So zeigen die Punkte ganz nebenbei, was als Nächstes dran ist.
@@ -116,6 +122,7 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - 6 nachgebaut: Tafel mit Aggregatzuständen, Lehrerin fragt, Zeitbalken, Knöpfe „Melden“ und „Nachfragen“.
   - 7 echt: Lernplan mit Lerntagen → schneller Test → Schreibtest mit Selbstkontrolle.
   - 8: Lerngruppen → Arena (echte Aufnahmen) → „Duell und Rangliste“ (nachgebaute Animation im Stil der App, Beispieldaten): In der Rangliste „Familie“ (Robin, Tina, Roya) wird „⚔️ Herausfordern“ gedrückt, Robin gegen Roya, Glücksrad mit allen Fächern, Einsatz 50, Countdown. Dann das Tauziehen: Fragen aus Mathe, Englisch, NWT und Deutsch, Robin tippt Antworten (eine falsch, rot), Roya zieht zweimal zurück, das Seil geht hin und her; nach drei Richtigen in Folge gibt es das Power-up „Doppelzug“. Am Ende „Gewonnen!“ mit +60 Arena-Punkten (10 + Einsatz, wie in der App). Zurück in der Rangliste steigen Robins Arena-Punkte in der eigenen ⚔️-Spalte (zählen wie in der App nicht zur Gesamtsumme), danach Wechsel zum Reiter „Klasse 6b“. Krabbi schaut mit Fahne zu und fiebert mit.
+  - 8b nachgebaut („So könnte es aussehen“): Werkstatt „🎨 Eigenes Lernmodul“ zum Paket „Winkel messen“, Robin wählt Spielidee „🚀 Weltraum-Reise“ und Figur 🤖, Hinweis „🔒 Fragen und Antworten kommen aus dem Paket und bleiben, wie sie sind“. Vorschau: links Lernkarte aus dem Paket, rechts dieselbe Frage als Weltraum-Rätsel mit drei Türen (45°, 90°, 180°), Band „= gleiche Frage · gleiche Antwort · neue Art zu spielen“; der Roboter fliegt durch die 90°-Tür. Dann „👥 Mit Familie teilen“, Meldungen „Tina hat … gespielt, 5 von 5 richtig ⭐⭐⭐“ und Roya. Krabbi malt mit Pinsel und Farbpalette. Auch als Szene im Video (Kommt bald).
   - 9 echt: Küsten-Crew (Rang Schiffsjunge, Paket-Kacheln) → Detektiv-Büro (Rang Praktikant).
   - 10 echt plus Beispiel: Personenwahl der App, darüber eine Elternübersicht mit Beispieldaten.
   - Abstände zwischen den Abschnitten bewusst knapp (zu viel Leerraum verworfen).
@@ -127,10 +134,10 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
 - **Krabbi taucht immer wieder auf** und macht Passendes: fotografiert (2), läuft quer durchs Bild (4), hält eine Lupe (5), meldet sich (6), hält einen Stift (7), zieht mit einer zweiten Krabbe Tau (8; beide angestrengt, aber sympathisch: wechselnde Münder, Schweißtropfen rinnt übers Gesicht), trägt eine Fahne (9), winkt am Ende. Bei den Eltern (10): Mama-Krabbe mit Schleife umarmt ihr Kind (Arm hinter dem Kind), lobt „Toll gemacht!“, das Kind freut sich, Herzen steigen auf.
 - Oben rechts kein zweiter Knopf „App öffnen“: Es gibt nur „Lernzentrale öffnen“ (Einstieg und Schluss).
 - **Impressum und Datenschutz** als eigene Seiten auf dem Canvas, verlinkt im Fuß. Kontakt: lernzentrale@gmx.de (steht auch in Abschnitt 11). Anschrift und Namen stehen nur auf dem Canvas, nicht im Repository.
-- **Erklärvideo** auf der Seite direkt unter dem Einstieg eingebunden („Die Lernzentrale in zwei Minuten“, dazu ein Textlink im Einstieg). Datei (`produkt/lernzentrale-erklaervideo.mp4`, etwa zwei Minuten, 1920×1080, ohne Ton), eigenständig versendbar und auf der Seite einbindbar:
+- **Erklärvideo** auf der Seite direkt unter dem Einstieg eingebunden („Die Lernzentrale in zweieinhalb Minuten“, dazu ein Textlink im Einstieg). Datei (`produkt/lernzentrale-erklaervideo.mp4`, etwa zweieinhalb Minuten, 1920×1080, ohne Ton), eigenständig versendbar und auf der Seite einbindbar:
   1. Titel mit Krabbi: „Jedes Kind lernt anders. Diese App lernt mit.“
   2. Grundgerüst als Ablauf: Lernmaterialien (Arbeitsblatt, Buchseite, Vokabelliste) fliegen in die App (Kommt bald) → kleine Lernpakete → zu jedem Paket gehören Lernmodule (Module = Wege, den Inhalt zu lernen; Krabbi tippt Pakete an), mehrere Pakete gewählt: mehr Module → Schnelltest und Schreibtest mit Musterlösung und Note.
-  3. Abschnitte mit den echten Bewegtbildern: Lernen, anwenden, ausprobieren (Quiz) · Lernen durch Erfahrung (Wasserkreislauf) · Messen wie im Heft (Geodreieck) · Lernbegleiter (Kommt bald) · Unterrichtsstunde (Kommt bald) · Lerngruppen und Duelle (Duell mit Fragen und Seil, danach Rangliste Familie/Klasse; daneben Krabben-Tauziehen) · Bereit für die Arbeit (Lernplan) · Eltern (Beispiel-Übersicht).
+  3. Abschnitte mit den echten Bewegtbildern: Lernen, anwenden, ausprobieren (Quiz) · Lernen durch Erfahrung (Wasserkreislauf) · Messen wie im Heft (Geodreieck) · Lernbegleiter (Kommt bald) · Unterrichtsstunde (Kommt bald) · Lerngruppen und Duelle (Duell mit Fragen und Seil, danach Rangliste Familie/Klasse; daneben Krabben-Tauziehen) · Selbst ein Lernmodul erfinden (Kommt bald) · Bereit für die Arbeit (Lernplan) · Eltern (Beispiel-Übersicht).
   4. Schluss: Experimentierstatus, lernzentrale@gmx.de.
 - **Vor dem Veröffentlichen erledigen:**
   - Schriften selbst hosten (die Datenschutzerklärung sagt „keine Verbindung zu Google“; der Canvas-Entwurf lädt sie noch von Google Fonts).

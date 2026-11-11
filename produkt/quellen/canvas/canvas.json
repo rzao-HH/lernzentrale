@@ -1,0 +1,167 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Artboard-ijrq.dc.html": {
+      "h": 600,
+      "handmade": true,
+      "page": "page-u06kt9",
+      "title": "Artboard 1",
+      "w": 800,
+      "x": 0,
+      "y": 0
+    },
+    "Einstieg-1.dc.html": {
+      "expand": "fill",
+      "h": 980,
+      "title": "Einstieg 1 · Vier Welten auf einen Blick",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "Einstieg-2.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Einstieg 2 · Krabbi führt",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    },
+    "Einstieg-3.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Einstieg 3 · Große Schrift, aufgefächert",
+      "w": 1280,
+      "x": 4080,
+      "y": 0
+    },
+    "Einstieg-4.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "title": "Einstieg 4 · Mischung aus 3 und 2",
+      "w": 1280,
+      "x": 5440,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 3100,
+      "is_interactive": true,
+      "title": "Stil B · ruhig mit Spielwelt",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "Einstieg-5.dc.html": {
+      "expand": "fill",
+      "h": 860,
+      "is_interactive": true,
+      "title": "Einstieg 5 · Text links, Fächer rechts",
+      "w": 1280,
+      "x": 6800,
+      "y": 0
+    },
+    "Einstieg-6.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Einstieg 6 · Großes Tablet in der Mitte",
+      "w": 1280,
+      "x": 8160,
+      "y": 0
+    },
+    "Einstieg-7.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Einstieg 7 · Lesbare Szenen",
+      "w": 1280,
+      "x": 9520,
+      "y": 0
+    },
+    "Seite.dc.html": {
+      "expand": "fill",
+      "h": 7500,
+      "is_interactive": true,
+      "title": "Ganze Seite · Entwurf 1",
+      "w": 1280,
+      "x": 1360,
+      "y": 1500
+    },
+    "Impressum.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Impressum",
+      "w": 1280,
+      "x": 2720,
+      "y": 1500
+    },
+    "Datenschutz.dc.html": {
+      "expand": "fill",
+      "h": 2200,
+      "title": "Datenschutz",
+      "w": 1280,
+      "x": 4080,
+      "y": 1500
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-11T21:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "hinweis": {
+      "fill": "orange",
+      "text": "Ausgangspunkt: Vorschau B „Ruhig mit Spielwelt“ (Einstieg, Abschnitt 3 Lernbegleiter, Abschnitt 5 Lernen durch Erfahrung). Alle Texte sind beschlossen und stehen in produkt/produktseite.md im Repository. Die Tablet-Bilder sind echte Aufnahmen der App, die Lernbegleiter-Szene ist nachgebaut. Ergebnisse dieser Überarbeitung bitte zurück in produkt/produktseite.md tragen.",
+      "w": 393,
+      "x": 10880,
+      "y": 0
+    },
+    "varianten": {
+      "kind": "title1",
+      "maxW": 9440,
+      "text": "Einstieg: Varianten",
+      "w": 240,
+      "x": 1360,
+      "y": -420
+    },
+    "seite": {
+      "x": 1360,
+      "y": 1200,
+      "text": "Ganze Seite, Impressum, Datenschutz",
+      "kind": "title1",
+      "maxW": 4000
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Einstieg-1.dc.html",
+    "Einstieg-2.dc.html",
+    "Einstieg-3.dc.html",
+    "Einstieg-4.dc.html",
+    "Einstieg-5.dc.html",
+    "Einstieg-6.dc.html",
+    "Einstieg-7.dc.html",
+    "Artboard-ijrq.dc.html",
+    "Seite.dc.html",
+    "Impressum.dc.html",
+    "Datenschutz.dc.html"
+  ],
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Page 1"
+    },
+    {
+      "id": "page-u06kt9",
+      "name": "Page 2"
+    }
+  ],
+  "title": "Produktseite Lernzentrale"
+}

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>Lernzentrale Erklärvideo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&display=swap">
+<style>
+:root{--ink:#1c2140;--muted:#4f5679;--blue:#3d4fd6;--soon:#6a32ad;--krabbi:#ff7a5c}
+*{box-sizing:border-box}
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f7f8fb;color:var(--ink);font-family:Nunito,system-ui,sans-serif}
+#bg{position:absolute;inset:0;transition:none}
+.scene{position:absolute;inset:0;opacity:0}
+.h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:64px;line-height:1.05}
+.h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:46px;line-height:1.08}
+.sub{font-size:24px;line-height:1.45;color:var(--muted)}
+.cap{position:absolute;left:0;right:0;top:56px;text-align:center}
+.soon{display:inline-block;font-weight:800;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--soon);border:2.5px solid var(--soon);padding:6px 12px;border-radius:999px;background:#fff}
+.tab{position:absolute;background:#fff;border:1px solid #dde2ef;border-radius:30px;padding:14px;box-shadow:0 30px 60px -30px rgba(28,33,64,.5)}
+.scr{width:100%;height:100%;border-radius:18px;overflow:hidden;background:#eef0f7;position:relative}
+.scr img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.card{position:absolute;background:#fff;border:2px solid #dde2ef;border-radius:18px;padding:14px 18px;font-weight:800;font-size:20px;box-shadow:0 12px 30px -20px rgba(28,33,64,.5)}
+.card small{display:block;color:var(--muted);font-size:15px;font-weight:800}
+.paper{position:absolute;width:200px;height:260px;background:#fff;border:1px solid #dde2ef;border-radius:6px;padding:18px;box-shadow:0 14px 28px -16px rgba(28,33,64,.5);display:flex;flex-direction:column;gap:10px}
+.paper b{font-size:16px}
+.ln{height:9px;background:#e3e6f0;border-radius:5px}
+.mod{position:absolute;width:170px;height:62px;border-radius:16px;border:2px solid #dde2ef;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:#9aa0bd}
+.mod.on{color:var(--ink);border-color:var(--blue);box-shadow:0 0 0 5px rgba(61,79,214,.15)}
+.txt{position:absolute;left:640px;top:0;bottom:0;width:560px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.hop{animation:hop 1.2s ease-in-out infinite}
+@keyframes hop{0%,100%{transform:translate(80px,64px) scale(.82) translate(40px,42px) rotate(-6deg) translate(-40px,-42px)}50%{transform:translate(80px,62px) scale(.82) translate(40px,42px) rotate(6deg) translate(-40px,-42px)}}
+.heart{opacity:0;transform-box:fill-box;animation:heart 2.7s ease-out infinite}
+@keyframes heart{0%{opacity:0;transform:translateY(0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translateY(-46px) scale(1.1)}}
+.praise{transform-box:fill-box;transform-origin:20% 100%;animation:praise 4s ease-in-out infinite}
+@keyframes praise{0%,8%{opacity:0;transform:scale(.6)}18%,85%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.9)}}
+</style></head><body>
+<div id="bg"></div>
+
+<!-- Krabbi als Vorlage -->
+<template id="crabT"><svg viewBox="-6 -20 104 86"><g class="legs" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"/></g><path d="M22 36 Q8 34 8 22" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="8" cy="17" r="9" fill="#FF7A5C"/><g class="claw"><path d="M58 36 Q72 34 72 22" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="72" cy="17" r="9" fill="#FF7A5C"/><g class="prop"></g></g><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"/><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="16" r="6" fill="#fff"/><circle cx="48" cy="16" r="6" fill="#fff"/><circle cx="33" cy="16" r="2.6" fill="#0A1B27"/><circle cx="49" cy="16" r="2.6" fill="#0A1B27"/><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></template>
+
+<div id="stage"></div>
+<script>
+const W=1280,H=720,S=document.getElementById('stage'),BG=document.getElementById('bg');
+const A=window.ANIMS||{};
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+const ramp=(t,a,len)=>ease(cl((t-a)/len));
+function el(tag,cls,parent,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;(parent||S).appendChild(e);return e;}
+function crab(parent,size,prop){const d=el('div','',parent);d.style.position='absolute';d.style.width=size+'px';d.style.height=size*86/104+'px';d.innerHTML=document.getElementById('crabT').innerHTML;d.firstChild.setAttribute('width','100%');d.firstChild.setAttribute('height','100%');if(prop)d.querySelector('.prop').innerHTML=prop;return d;}
+const PROPS={lupe:'<circle cx="82" cy="-1" r="9" fill="#dfe3ff" stroke="#1c2140" stroke-width="3"/><path d="M76 6 L71 12" stroke="#1c2140" stroke-width="4" stroke-linecap="round"/>',
+ pencil:'<g transform="rotate(-35 76 4)"><rect x="73" y="-16" width="7" height="27" rx="1" fill="#f0b429"/><path d="M73 11 L76.5 18 L80 11Z" fill="#e8c9a0"/></g>',
+ flag:'<path d="M75 22 L75 -16" stroke="#1c2140" stroke-width="2.5"/><path d="M75 -16 L94 -10 L75 -4Z" fill="#3d4fd6"/>',
+ camera:'<rect x="62" y="-3" width="28" height="18" rx="3" fill="#1c2140"/><circle cx="77" cy="6" r="5.5" fill="#8fa2ff" stroke="#fff" stroke-width="2"/>'};
+const BGS={N:'#f7f8fb',W:'radial-gradient(circle at 10% 20%,#fff 0 2px,transparent 3px),radial-gradient(circle at 88% 30%,#fff 0 2.5px,transparent 3.5px),radial-gradient(circle at 70% 80%,#fff 0 2px,transparent 3px),#eef0ff',
+ Z:'radial-gradient(circle at 6% 80%,rgba(255,255,255,.9) 0 14px,transparent 15px),radial-gradient(circle at 94% 20%,rgba(255,255,255,.8) 0 16px,transparent 17px),#e6f5f3',
+ E:'repeating-radial-gradient(ellipse at 50% 150%,transparent 0 40px,rgba(15,109,104,.06) 40px 43px),#fbf2e2',D:'#f6efe6'};
+function animFrame(nm,ms){const a=A[nm];if(!a)return '';let t=ms%a.d.reduce((x,y)=>x+y,0);for(let i=0;i<a.f.length;i++){if(t<a.d[i])return a.f[i];t-=a.d[i];}return a.f[a.f.length-1];}
+
+/* ---------- Szenen ---------- */
+const scenes=[];
+function scene(len,bg,build,update){const root=el('div','scene');const ctx=build(root);scenes.push({len,bg,root,ctx,update});}
+
+// 1 Titel
+scene(4800,'W',r=>{const c=crab(r,170);c.style.left='555px';c.style.top='110px';
+  const h=el('div','h1',r,'Jedes Kind lernt anders.<br><span style="color:#3d4fd6">Diese App lernt mit.</span>');Object.assign(h.style,{position:'absolute',left:0,right:0,top:'300px',textAlign:'center'});
+  const s=el('div','sub',r,'Lernzentrale · eine Lern-App für Schulkinder und ihre Eltern');Object.assign(s.style,{position:'absolute',left:0,right:0,top:'470px',textAlign:'center'});return{c,h,s};},
+ (t,x)=>{x.c.style.transform=`translateY(${(1-ramp(t,0,700))*-60}px) rotate(${Math.sin(t/300)*4}deg)`;x.c.style.opacity=ramp(t,0,400);x.h.style.opacity=ramp(t,500,700);x.h.style.transform=`translateY(${(1-ramp(t,500,700))*20}px)`;x.s.style.opacity=ramp(t,1300,600);});
+
+// 2 Lernmaterialien gehen in die App
+scene(6500,'N',r=>{const cap=el('div','cap',r,'<span class="soon">Kommt bald</span><div class="h2" style="margin-top:14px">Aus den eigenen Lernmaterialien …</div>');
+  const names=[['Arbeitsblatt','Station 5 · Verben'],['Buchseite','S. 258'],['Vokabelliste','Unit 6']];
+  const P=names.map((n,i)=>{const p=el('div','paper',r,`<b>${n[0]}</b><small style="color:#4f5679;font-weight:700">${n[1]}</small><div class="ln" style="width:90%"></div><div class="ln" style="width:75%"></div><div class="ln" style="width:85%"></div><div class="ln" style="width:60%"></div><div class="ln" style="width:80%"></div>`);return p;});
+  const tab=el('div','tab',r,'<div class="scr" style="display:flex;align-items:center;justify-content:center;background:#eef0ff"></div>');Object.assign(tab.style,{left:'860px',top:'230px',width:'300px',height:'400px'});
+  const c=crab(tab.firstChild,150);c.style.position='static';
+  const cam=crab(r,110,PROPS.camera);cam.style.left='60px';cam.style.top='560px';
+  return{P,tab,cap,cam};},
+ (t,x)=>{x.cap.style.opacity=ramp(t,0,500);
+  x.P.forEach((p,i)=>{const a=ramp(t,300+i*250,600),m=ramp(t,2600+i*300,1300);const x0=150+i*210,y0=300+(i%2)*20;const x1=930,y1=360;
+   p.style.left=(x0+(x1-x0)*m)+'px';p.style.top=(y0+(y1-y0)*m+(1-a)*40)+'px';p.style.opacity=a*(1-ramp(t,3400+i*300,500));p.style.transform=`rotate(${(i-1)*5*(1-m)}deg) scale(${1-.6*m})`;});
+  x.tab.style.transform=`scale(${1+.04*Math.sin(cl((t-3800)/900)*Math.PI)})`;x.cam.style.transform=`rotate(${Math.sin(t/260)*5}deg)`;});
+
+// 3 Lernpakete
+scene(5200,'N',r=>{const cap=el('div','cap',r,'<div class="h2">… werden kleine Lernpakete.</div><div class="sub" style="margin-top:10px">In jedem Fach und jeder Klasse.</div>');
+  const C=[['Paket 1','Unregelmäßige Verben'],['Paket 2','Fragen im Simple Past'],['Paket 3','Verneinung mit didn\'t']].map(([a,b])=>el('div','card',r,`<small>${a}</small>${b}`));return{cap,C};},
+ (t,x)=>{x.cap.style.opacity=ramp(t,0,500);x.C.forEach((c,i)=>{const a=ramp(t,500+i*400,600);c.style.left=(150+i*340)+'px';c.style.top=(330+(1-a)*40)+'px';c.style.width='300px';c.style.opacity=a;});});
+
+// 4 Pakete und ihre Lernmodule
+scene(8400,'N',r=>{const cap=el('div','cap',r,'<div class="h2">Zu jedem Paket gehören viele Lernmodule.</div><div class="sub" style="margin-top:10px;position:relative;height:32px"><span id="m1" style="position:absolute;left:0;right:0">Module sind die verschiedenen Wege, den Inhalt zu lernen.</span><span id="m2" style="position:absolute;left:0;right:0">Mehrere Pakete gewählt: noch mehr Module.</span></div>');
+  const C=[['Paket 1','Verben'],['Paket 2','Fragen'],['Paket 3','Verneinung']].map(([a,b])=>el('div','card',r,`<small>${a}</small>${b}`));
+  const MC=[['Lernkarten','#9c5418'],['Quiz','#d9482a'],['Lückentext','#0f7f7a'],['Experiment','#0f7f7a'],['Verhör','#d9482a'],['Duell','#3d4fd6']];
+  const M=MC.map(([m,c])=>{const d=el('div','mod',r,`<span style="width:12px;height:12px;border-radius:50%;background:${c};margin-right:10px;opacity:.35" class="dot"></span>${m}`);return d;});
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width',W);svg.setAttribute('height',H);svg.style.position='absolute';svg.style.inset='0';r.insertBefore(svg,r.firstChild);
+  const L=M.map(()=>{const l=document.createElementNS('http://www.w3.org/2000/svg','path');l.setAttribute('stroke','#3d4fd6');l.setAttribute('stroke-width','3');l.setAttribute('fill','none');l.setAttribute('stroke-dasharray','6 7');svg.appendChild(l);return l;});
+  const k=crab(r,96);
+  return{cap,C,M,L,k,m1:cap.querySelector('#m1'),m2:cap.querySelector('#m2')};},
+ (t,x)=>{x.cap.style.opacity=ramp(t,0,500);x.m1.style.opacity=1-ramp(t,4300,400);x.m2.style.opacity=ramp(t,4500,500);
+  const CX=[340,640,940];
+  // Krabbi läuft zu Paket 1, tippt, läuft zu Paket 2, tippt
+  const p1=ramp(t,300,1100),p2=ramp(t,3000,1100);const kx=60+(CX[0]-48-60)*p1+(CX[1]-CX[0])*p2;
+  const tap1=t>1450&&t<1800,tap2=t>4150&&t<4500;
+  x.k.style.left=kx+'px';x.k.style.top=(228+((p1>0&&p1<1)||(p2>0&&p2<1)?Math.abs(Math.sin(t/90))*-6:0))+'px';
+  const cw=x.k.querySelector('.claw');cw.style.transformOrigin='58px 36px';cw.style.transformBox='view-box';cw.style.transform=(tap1||tap2)?'rotate(28deg)':'rotate(0deg)';
+  x.C.forEach((c,i)=>{c.style.left=(CX[i]-110)+'px';c.style.top='310px';c.style.width='220px';c.style.textAlign='center';const on=(i===0&&t>1500)||(i===1&&t>4200);c.style.borderColor=on?'#3d4fd6':'#dde2ef';c.style.boxShadow=on?'0 0 0 6px rgba(61,79,214,.15)':'';c.style.transform=`scale(${(i===0&&tap1)||(i===1&&tap2)?.96:1})`;});
+  x.M.forEach((m,i)=>{const mx=105+i*185,my=530;m.style.left=mx+'px';m.style.top=my+'px';
+   const own=i<3?0:1;const kk=own===0?ramp(t,1700+i*250,450):ramp(t,4400+(i-3)*250,450);
+   m.classList.toggle('on',kk>.5);m.querySelector('.dot').style.opacity=.35+.65*kk;m.style.transform=`translateY(${(1-kk)*6}px)`;
+   const cx=CX[own],cy=392,ex=mx+85,ey=my;const l=x.L[i];
+   l.setAttribute('d',`M${cx} ${cy} C ${cx} ${cy+70}, ${ex} ${ey-80}, ${ex} ${ey}`);l.setAttribute('opacity',kk);l.setAttribute('stroke-dashoffset',-t/40);});});
+
+// 5 Tests: echte Aufnahmen
+feature(10800,'Z','Schnelltest','Fragen zügig beantworten, am Ende steht die Note.',{anim:'schnelltest',speed:1.5},{crab:{prop:'pencil',x:500,y:575}});
+feature(12900,'Z','Schreibtest','Frei schreiben, mit der Musterantwort vergleichen, ganze oder halbe Punkte eintragen, Note.',{anim:'schreibtest',speed:1.8},{crab:{prop:'pencil',x:500,y:575}});
+
+// Abschnitte mit Bewegtbildern
+function feature(len,bg,title,line,src,opts={}){
+ scene(len,bg,r=>{const tab=el('div','tab',r,'<div class="scr"><img></div>');Object.assign(tab.style,{left:'130px',top:'60px',width:'450px',height:'600px'});
+  const tx=el('div','txt',r,(opts.soon?'<span class="soon" style="align-self:flex-start">Kommt bald</span>':'')+`<div class="h2">${title}</div><div class="sub">${line}</div>`);
+  let c=null;if(opts.crab){c=crab(r,opts.crab.size||120,opts.crab.prop?PROPS[opts.crab.prop]:'');c.style.left=(opts.crab.x||470)+'px';c.style.top=(opts.crab.y||560)+'px';}
+  if(opts.mock){tab.querySelector('.scr').innerHTML=opts.mock;}
+  if(opts.extra)opts.extra(r);
+  return{tab,tx,img:tab.querySelector('img'),c};},
+ (t,x)=>{x.tab.style.opacity=ramp(t,0,500);x.tab.style.transform=`translateY(${(1-ramp(t,0,600))*30}px)`;x.tx.style.opacity=ramp(t,300,600);
+  if(x.img){x.img.src=src.anim?animFrame(src.anim,t*(src.speed||1)):src.img;}
+  if(x.c){x.c.style.transform=opts.crab.wave?'':`translateY(${Math.sin(t/320)*6}px) rotate(${Math.sin(t/500)*4}deg)`;if(opts.crab.wave){const cw=x.c.querySelector('.claw');cw.style.transformOrigin='58px 36px';cw.style.transformBox='view-box';cw.style.transform=`rotate(${Math.sin(t/220)*18}deg)`;}}});}
+
+feature(8000,'E','Lernen, anwenden, ausprobieren','Lernkarten, Spiele und Experimente mit denselben Inhalten.',{anim:'quiz'},{crab:{x:500,y:575}});
+feature(8800,'Z','Lernen durch Erfahrung','Die Sonne stärker stellen: Mehr Wasser verdunstet, die Wolke wird dick und regnet am Berg ab.',{anim:'kreis'},{crab:{prop:'lupe',x:500,y:575}});
+feature(12300,'W','Messen wie im Heft','Das Geodreieck anlegen, drehen, ablesen, eintippen und sofort sehen, ob es stimmt.',{anim:'geo',speed:1.4},{crab:{prop:'pencil',x:500,y:575}});
+feature(6200,'E','Der Lernbegleiter','Klappt etwas öfter nicht, gibt Krabbi Tipps: Lernkarten, Lernzettel oder die Unterrichtsstunde.',{},{soon:true,mock:`<div style="padding:28px;display:flex;flex-direction:column;gap:16px;background:linear-gradient(#fbf3e4,#f3e7d0);height:100%;box-sizing:border-box"><div style="font-weight:800;color:#0f6d68;font-size:18px">Quiz · Paket 3</div><div style="background:#fff;border:2px solid #e8d9bb;border-radius:16px;padding:18px;text-align:center;font-family:Fredoka;font-size:28px">brought</div><div style="border:2px solid #e45c4a;background:#fdecea;color:#a3271b;border-radius:12px;padding:12px;font-weight:800">kaufte ✗</div><div style="background:#fff;border:2.5px solid #ff7a5c;border-radius:16px;padding:16px;font-size:18px;line-height:1.4;margin-top:20px"><b style="font-family:Fredoka">Krabbi</b><br>Die Verben aus Paket 3 klappen noch nicht so gut. Wie wär's mit den Lernkarten?</div></div>`,crab:{wave:true,x:470,y:560,size:130}});
+feature(15000,'W','Die interaktive Unterrichtsstunde','Eine eigene Stunde zu den gewählten Paketen. Die Lehrerin erklärt und fragt, und man kann sich melden und nachfragen.',{anim:'klasse',speed:1.4},{soon:true});
+feature(21000,'E','Lerngruppen und Duelle','Mit Familie, Freunden und der Klasse: live beim Tauziehen oder später im Geister-Duell. Jede Lerngruppe hat ihre eigene Rangliste.',{anim:'duell',speed:1.6},{extra:r=>{const g=el('div','',r);g.id='tug';Object.assign(g.style,{position:'absolute',left:'690px',top:'470px',width:'420px',height:'130px'});
+  const a=crab(g,130);a.style.left='0';a.style.top='10px';const b=crab(g,130);b.style.left='290px';b.style.top='10px';b.style.transform='scaleX(-1)';b.querySelectorAll('[fill="#FF7A5C"]').forEach(e=>e.setAttribute('fill','#2fa89e'));b.querySelectorAll('[stroke="#FF7A5C"]').forEach(e=>e.setAttribute('stroke','#2fa89e'));
+  [a,b].forEach(c=>{const m=c.querySelector('path[d^="M33 46"]');m.classList.add('mouth');c.querySelector('svg').insertAdjacentHTML('beforeend','<path class="brow" d="M28 8.5 L36 10 M52 8.5 L44 10" stroke="#1c2140" stroke-width="2" stroke-linecap="round"/><path class="drop" d="M63 30 Q66.5 35 63 38 Q59.5 35 63 30Z" fill="#8fc7ff" stroke="#fff" stroke-width="1"/>');});
+  window.__tugA=a;window.__tugB=b;
+  const rope=el('div','',g);Object.assign(rope.style,{position:'absolute',left:'110px',top:'48px',width:'200px',height:'5px',background:'#8a6a46',borderRadius:'3px'});window.__tug=g;}});
+feature(13200,'D','Selbst ein Lernmodul erfinden','Aus einem Paket wird ein eigenes Spiel. Der Lernstoff bleibt gleich, neu ist nur, wie er erlebt wird. Und die anderen probieren es aus.',{anim:'creator',speed:1.3},{soon:true});
+feature(5600,'Z','Mit Plan bis zur Arbeit','Ein Lernplan verteilt die Pakete auf die Tage bis zur Klassenarbeit, mit Tests zwischendurch und am Ende.',{img:'t_plan.jpg'},{crab:{prop:'pencil',x:500,y:575}});
+feature(5600,'N','Eltern sehen, wo ihr Kind steht','Was schon klappt, wo Unterstützung hilft, und Hinweise zum Helfen.',{},{mock:`<div style="padding:28px;display:flex;flex-direction:column;gap:16px;height:100%;box-sizing:border-box;background:#fff"><div style="display:flex;justify-content:space-between"><b style="font-family:Fredoka;font-size:24px">Übersicht für Eltern</b><span style="color:#4f5679;font-weight:800">Beispiel</span></div><div><b style="font-size:19px">Winkel messen</b><div style="color:#1f7a3d;font-weight:800">Sitzt gut · 18 von 20 richtig</div></div><div><b style="font-size:19px">Kompass und Kurs</b><div style="color:#a35a00;font-weight:800">Braucht Unterstützung</div></div><div style="background:#f3f4fa;border-radius:12px;padding:14px;font-size:17px;line-height:1.4">Hinweis: Gemeinsam eine Wanderkarte ansehen und Richtungen in Grad ansagen.</div></div>`,extra:r=>{const d=el('div','',r);d.innerHTML="<svg class=\"krabbi\" viewBox=\"0 -16 180 161\" width=\"300\" height=\"268\" aria-hidden=\"true\" style=\"position:absolute;left:205px;top:385px\"><path class=\"heart\" style=\"animation-delay:0s\" d=\"M128 48 c-3 -4 -9 -1 -6 4 l6 6 l6 -6 c3 -5 -3 -8 -6 -4z\" fill=\"#e8559a\"></path><path class=\"heart\" style=\"animation-delay:-0.9s\" d=\"M148 48 c-3 -4 -9 -1 -6 4 l6 6 l6 -6 c3 -5 -3 -8 -6 -4z\" fill=\"#e8559a\"></path><path class=\"heart\" style=\"animation-delay:-1.8s\" d=\"M112 48 c-3 -4 -9 -1 -6 4 l6 6 l6 -6 c3 -5 -3 -8 -6 -4z\" fill=\"#e8559a\"></path><g transform=\"translate(0,30) scale(1.25)\"><path d=\"M22 36 Q8 34 8 22\" stroke=\"#FF7A5C\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\"></path><circle cx=\"8\" cy=\"17\" r=\"9\" fill=\"#FF7A5C\"></circle><g stroke=\"#FF7A5C\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60\"></path></g><ellipse cx=\"40\" cy=\"42\" rx=\"24\" ry=\"16\" fill=\"#FF7A5C\"></ellipse><path d=\"M32 28 L32 20 M48 28 L48 20\" stroke=\"#FF7A5C\" stroke-width=\"3\" stroke-linecap=\"round\"></path><circle cx=\"32\" cy=\"16\" r=\"6\" fill=\"#fff\"></circle><circle cx=\"48\" cy=\"16\" r=\"6\" fill=\"#fff\"></circle><circle cx=\"33\" cy=\"16\" r=\"2.6\" fill=\"#0A1B27\"></circle><circle cx=\"49\" cy=\"16\" r=\"2.6\" fill=\"#0A1B27\"></circle><path d=\"M33 46 Q40 52 47 46\" stroke=\"#7A2A1A\" stroke-width=\"2.4\" fill=\"none\" stroke-linecap=\"round\"></path><path d=\"M36 6 L40 10 L44 6 L44 14 L40 10 L36 14Z\" fill=\"#e8559a\"></path></g><path d=\"M70 82 Q104 70 140 84\" stroke=\"#FF7A5C\" stroke-width=\"4.5\" stroke-linecap=\"round\" fill=\"none\"></path><circle cx=\"143\" cy=\"88\" r=\"9\" fill=\"#FF7A5C\"></circle><path d=\"M143 88 L149 82\" stroke=\"#C94F36\" stroke-width=\"2\" stroke-linecap=\"round\"></path><g class=\"hop\"><path d=\"M22 36 Q10 30 12 18\" stroke=\"#ff9a80\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\"></path><circle cx=\"12\" cy=\"14\" r=\"7\" fill=\"#ff9a80\"></circle><path d=\"M58 36 Q70 30 68 18\" stroke=\"#ff9a80\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\"></path><circle cx=\"68\" cy=\"14\" r=\"7\" fill=\"#ff9a80\"></circle><g stroke=\"#ff9a80\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60\"></path></g><ellipse cx=\"40\" cy=\"42\" rx=\"24\" ry=\"16\" fill=\"#ff9a80\"></ellipse><path d=\"M32 28 L32 20 M48 28 L48 20\" stroke=\"#ff9a80\" stroke-width=\"3\" stroke-linecap=\"round\"></path><circle cx=\"32\" cy=\"16\" r=\"6\" fill=\"#fff\"></circle><circle cx=\"48\" cy=\"16\" r=\"6\" fill=\"#fff\"></circle><circle cx=\"33\" cy=\"16\" r=\"2.6\" fill=\"#0A1B27\"></circle><circle cx=\"49\" cy=\"16\" r=\"2.6\" fill=\"#0A1B27\"></circle><path d=\"M32 44 Q40 55 48 44 Z\" fill=\"#7A2A1A\"></path></g><g transform=\"translate(0,-14)\"><g class=\"praise\"><rect x=\"2\" y=\"0\" width=\"112\" height=\"30\" rx=\"15\" fill=\"#ffffff\" stroke=\"#FF7A5C\" stroke-width=\"2\"></rect><path d=\"M40 30 L46 38 L52 30Z\" fill=\"#ffffff\" stroke=\"#FF7A5C\" stroke-width=\"2\"></path><path d=\"M41 29 L51 29\" stroke=\"#ffffff\" stroke-width=\"3\"></path><text x=\"58\" y=\"20\" text-anchor=\"middle\" font-family=\"Fredoka, sans-serif\" font-size=\"15\" font-weight=\"600\" fill=\"#1c2140\">Toll gemacht!</text></g></g></svg>";}});
+
+// Schluss
+scene(5200,'W',r=>{const c=crab(r,150);c.style.left='565px';c.style.top='130px';
+  const h=el('div','h1',r,'Lernzentrale');Object.assign(h.style,{position:'absolute',left:0,right:0,top:'300px',textAlign:'center'});
+  const s=el('div','sub',r,'Noch im Experimentierstatus. Familien zum Mittesten sind willkommen:<br><b style="color:#1c2140">lernzentrale@gmx.de</b>');Object.assign(s.style,{position:'absolute',left:0,right:0,top:'400px',textAlign:'center'});
+  const n=el('div','',r,'„Lernzentrale“ ist ein Arbeitstitel');Object.assign(n.style,{position:'absolute',left:0,right:0,top:'640px',textAlign:'center',color:'#4f5679',fontSize:'16px'});return{c,h,s,n};},
+ (t,x)=>{x.c.style.opacity=ramp(t,0,500);const cw=x.c.querySelector('.claw');cw.style.transformOrigin='58px 36px';cw.style.transformBox='view-box';cw.style.transform=`rotate(${Math.sin(t/220)*18}deg)`;x.h.style.opacity=ramp(t,300,600);x.s.style.opacity=ramp(t,900,600);x.n.style.opacity=ramp(t,1500,600);});
+
+const TOTAL=scenes.reduce((a,s)=>a+s.len,0);
+window.TOTAL=TOTAL;
+window.render=function(T){let acc=0;document.getAnimations().forEach(a=>{a.pause();a.currentTime=T;});
+  scenes.forEach(s=>{const t=T-acc;const on=t>=0&&t<s.len;s.root.style.display=on||(t>=-400&&t<0)?'block':'none';
+    if(on){s.root.style.opacity=Math.min(ramp(t,0,400),1-ramp(t,s.len-400,400));BG.style.background=BGS[s.bg];s.update(t,s.ctx);}
+    acc+=s.len;});
+  if(window.__tug){window.__tug.style.transform=`translateX(${Math.sin(T/420)*14}px)`;
+    const l=-9-4*Math.sin(T/140);window.__tugA.style.transformOrigin='50% 100%';window.__tugA.style.transform=`rotate(${l}deg)`;
+    window.__tugB.style.transformOrigin='50% 100%';window.__tugB.style.transform=`scaleX(-1) rotate(${-9-4*Math.cos(T/140)}deg)`;
+    [window.__tugA,window.__tugB].forEach((c,i)=>{const d=c.querySelector('.drop');const ph=((T+i*1200)%2400)/2400;d.setAttribute('opacity',ph<.35?0:ph<.9?1:Math.max(0,1-(ph-.9)/.1));d.setAttribute('transform',`translate(${ph>.45?1:0} ${ph>.45?(ph-.45)*26:0})`);
+      const mp=((T+i*2400)%4800)/4800;const M=['M33 46 Q40 53 47 46','M34 48 L46 48','M33 48 Q35.3 45.6 37.7 48 T42.3 48 T47 48'];c.querySelector('.mouth').setAttribute('d',M[Math.floor(mp*3)]);
+      c.querySelector('.brow').setAttribute('transform',`translate(0 ${mp<.33?-3:0})`);});}};
+render(0);
+</script></body></html>

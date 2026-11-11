@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Produktseite Lernzentrale, Stil B</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&amp;family=Nunito:wght@500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#f7f8fb;color:#1c2140;font-family:"Nunito","Segoe UI",system-ui,sans-serif}
+a{color:#3d4fd6}a:hover{color:#2a389e}
+.band{position:relative;overflow:hidden;transition:background-color .8s ease}
+.bg-W{background-color:#eef0ff;background-image:radial-gradient(circle at 12% 20%,#fff 0 2px,transparent 3px),radial-gradient(circle at 30% 75%,#fff 0 1.5px,transparent 2.5px),radial-gradient(circle at 82% 30%,#fff 0 2.5px,transparent 3.5px),radial-gradient(circle at 65% 85%,#fff 0 1.5px,transparent 2.5px),radial-gradient(ellipse at 100% 0%,#dfe3ff,transparent 55%)}
+.bg-Z{background-color:#e6f5f3;background-image:radial-gradient(circle at 8% 85%,rgba(255,255,255,.9) 0 10px,transparent 11px),radial-gradient(circle at 14% 70%,rgba(255,255,255,.7) 0 6px,transparent 7px),radial-gradient(circle at 92% 18%,rgba(255,255,255,.8) 0 14px,transparent 15px),radial-gradient(ellipse at 0% 100%,#cfeae6,transparent 55%)}
+.bg-E{background-color:#fbf2e2;background-image:repeating-radial-gradient(ellipse at 50% 140%,transparent 0 38px,rgba(15,109,104,.07) 38px 41px),radial-gradient(ellipse at 100% 100%,#f2e2c4,transparent 55%)}
+.bg-D{background-color:#f6efe6;background-image:radial-gradient(ellipse at 0 0,#ead9c4,transparent 55%)}
+.slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;transition:opacity .6s ease}
+.dot{font:700 13px/1 "Nunito",sans-serif;border:0;background:transparent;color:#5a6185;padding:8px 12px;border-radius:999px;cursor:pointer;min-height:32px}
+.dot-on{background:#fff;color:#1c2140;box-shadow:0 1px 0 #dde2ef}
+.pop{animation:pop 9s infinite}
+@keyframes pop{0%,22%{opacity:0;transform:translateY(16px)}30%,92%{opacity:1;transform:none}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.pop{animation:none}.slide,.band{transition:none}}
+</style>
+</helmet>
+<div style="min-height: 100vh">
+
+<header style="max-width: 1080px; margin: 0 auto; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap">
+  <div style="display: flex; align-items: center; gap: 10px; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 20px">
+    <svg viewBox="0 0 80 64" width="40" height="32" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22 M58 36 Q72 34 72 22"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><circle cx="72" cy="17" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path></svg>
+    <span>Lernzentrale</span>
+  </div>
+  <a href="https://rzao-hh.github.io/lernzentrale/" style="font-weight: 800; text-decoration: none">App öffnen →</a>
+</header>
+
+<section class="band {{heroBg}}" aria-labelledby="h1">
+  <div style="max-width: 1080px; margin: 0 auto; padding: 40px 24px 72px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center">
+    <h1 id="h1" style="margin: 0; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 3.4rem; line-height: 1.12">Jedes Kind lernt anders.<br>Diese App lernt mit.</h1>
+    <p style="margin: 0; max-width: 40em; color: #5a6185; font-size: 1.12rem; line-height: 1.65">Die App merkt sich, wie jedes Kind am besten lernt, und passt sich an. Gelernt wird klassisch, aber auch spielerisch, mit Experimenten und Tests, die zur nächsten Arbeit passen. Geübt wird allein oder mit Freunden und Familie.</p>
+    <a href="https://rzao-hh.github.io/lernzentrale/" style="display: inline-block; background: #1c2140; color: #ffffff; text-decoration: none; font-weight: 800; padding: 15px 24px; border-radius: 999px; min-height: 44px; box-sizing: border-box">Lernzentrale öffnen</a>
+    <div style="margin-top: 28px; width: 100%; max-width: 620px">
+      <div style="background: #ffffff; border: 1px solid #dde2ef; border-radius: 30px; padding: 14px; box-shadow: 0 28px 60px -34px rgba(28,33,64,.45)">
+        <div style="position: relative; aspect-ratio: 3/4; border-radius: 18px; overflow: hidden; background: #eef0f7">
+          <sc-for list="{{hero}}" as="s" hint-placeholder-count="4">
+            <img class="slide" src="{{s.src}}" alt="{{s.alt}}" style="opacity: {{s.op}}">
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 6px; margin-top: 14px; flex-wrap: wrap">
+        <sc-for list="{{hero}}" as="s" hint-placeholder-count="4">
+          <button type="button" class="dot {{s.on}}" onClick="{{s.pick}}">{{s.label}}</button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band bg-E" aria-labelledby="h3">
+  <div style="max-width: 1080px; margin: 0 auto; padding: 80px 24px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center">
+    <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; align-items: center">
+      <div style="width: 100%; max-width: 440px; background: #ffffff; border: 1px solid #dde2ef; border-radius: 30px; padding: 14px; box-shadow: 0 28px 60px -34px rgba(28,33,64,.45)">
+        <div style="position: relative; aspect-ratio: 3/4; border-radius: 18px; overflow: hidden; background: linear-gradient(#fbf3e4,#f3e7d0); padding: 22px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; color: #173c3a">
+          <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 13px; color: #0f6d68"><span>Quiz Englisch → Deutsch</span><span>Paket 3</span></div>
+          <div style="display: flex; gap: 6px; justify-content: center" aria-label="Bisher: richtig, falsch, richtig, falsch, falsch">
+            <span style="width: 22px; height: 22px; border-radius: 50%; background: #3aa76d"></span><span style="width: 22px; height: 22px; border-radius: 50%; background: #e45c4a"></span><span style="width: 22px; height: 22px; border-radius: 50%; background: #3aa76d"></span><span style="width: 22px; height: 22px; border-radius: 50%; background: #e45c4a"></span><span style="width: 22px; height: 22px; border-radius: 50%; background: #e45c4a"></span>
+          </div>
+          <div style="background: #ffffff; border: 2px solid #e8d9bb; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+            <div style="font-family: Fredoka, sans-serif; font-weight: 600; font-size: 18px; text-align: center">brought</div>
+            <div style="border: 2px solid #e45c4a; background: #fdecea; color: #a3271b; border-radius: 12px; padding: 10px 12px; font-weight: 700">kaufte</div>
+            <div style="border: 2px solid #e8d9bb; border-radius: 12px; padding: 10px 12px; font-weight: 700">brachte</div>
+          </div>
+          <div class="pop" style="display: flex; gap: 10px; align-items: flex-end">
+            <svg viewBox="0 0 80 64" width="64" height="52" aria-hidden="true" style="flex: none"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22 M58 36 Q72 34 72 22"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><circle cx="72" cy="17" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path></svg>
+            <div style="flex: 1; min-width: 0; background: #ffffff; border: 2px solid #ff7a5c; border-radius: 16px 16px 16px 4px; padding: 12px; font-size: 14px; line-height: 1.35; display: flex; flex-direction: column; gap: 8px">
+              <strong style="font-family: Fredoka, sans-serif; font-weight: 600">Krabbi</strong>
+              <span>Die Verben aus Paket 3 klappen noch nicht so gut. Wie wär's damit?</span>
+              <span style="border-radius: 10px; padding: 7px 10px; font-weight: 800; font-size: 13px; background: #e7f4f2; color: #0f6d68">Lernkarten ansehen</span>
+              <span style="border-radius: 10px; padding: 7px 10px; font-weight: 800; font-size: 13px; background: #e7f4f2; color: #0f6d68">Lernzettel lesen</span>
+              <span style="border-radius: 10px; padding: 7px 10px; font-weight: 800; font-size: 13px; background: #e7f4f2; color: #0f6d68">In die Unterrichtsstunde</span>
+              <span style="border-radius: 10px; padding: 7px 10px; font-weight: 800; font-size: 13px; background: #f2eafd; color: #6a32ad">Neues Modul dafür bauen?</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="margin: 14px 0 0; color: #5a6185; font-size: 14px">Nachgebaute Szene</p>
+    </div>
+    <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px; align-items: flex-start">
+      <span style="font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #6a32ad; border: 2px solid #6a32ad; padding: 6px 10px; border-radius: 999px; background: #ffffff">Kommt bald</span>
+      <h2 id="h3" style="margin: 0; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 2.4rem; line-height: 1.12">Der Lernbegleiter</h2>
+      <p style="margin: 0; color: #5a6185; font-size: 17px; line-height: 1.65">Klappen Aufgaben aus einem Paket öfter nicht, gibt der Lernbegleiter Tipps: noch einmal die Lernkarten ansehen, den Lernzettel lesen oder sich das Thema in der interaktiven Unterrichtsstunde erklären lassen. Auf Wunsch baut er ein neues Modul genau für diese Inhalte.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band {{expBg}}" aria-labelledby="h5">
+  <div style="max-width: 1080px; margin: 0 auto; padding: 80px 24px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center">
+    <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+      <span style="font-weight: 800; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #5a6185">{{expWhere}}</span>
+      <h2 id="h5" style="margin: 0; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 2.4rem; line-height: 1.12">Lernen durch Erfahrung</h2>
+      <p style="margin: 0; color: #5a6185; font-size: 17px; line-height: 1.65">Im Zauberkessel wird Wasser erhitzt und gekühlt, und man sieht, wie sich die Teilchen bewegen. Im Verhör im Hafen werden Verdächtige auf Englisch befragt, und dafür muss die Frage im richtigen Simple Past stehen. In Mathe wird das Geodreieck auf dem Bildschirm angelegt, gedreht und abgelesen, Schritt für Schritt wie im Heft.</p>
+    </div>
+    <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; align-items: center">
+      <div style="width: 100%; max-width: 440px; background: #ffffff; border: 1px solid #dde2ef; border-radius: 30px; padding: 14px; box-shadow: 0 28px 60px -34px rgba(28,33,64,.45)">
+        <div style="position: relative; aspect-ratio: 3/4; border-radius: 18px; overflow: hidden; background: #eef0f7">
+          <sc-for list="{{exp}}" as="s" hint-placeholder-count="3">
+            <img class="slide" src="{{s.src}}" alt="{{s.alt}}" style="opacity: {{s.op}}">
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 6px; margin-top: 14px; flex-wrap: wrap">
+        <sc-for list="{{exp}}" as="s" hint-placeholder-count="3">
+          <button type="button" class="dot {{s.on}}" onClick="{{s.pick}}">{{s.label}}</button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<p style="margin: 0; padding: 48px 24px 64px; text-align: center; color: #5a6185; font-size: 14px">„Lernzentrale“ ist ein Arbeitstitel</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"autoplay":{"editor":"boolean","default":true},"seconds":{"editor":"range","default":3.4,"min":2,"max":8,"step":0.2,"unit":"s"},"$preview":{"width":1280,"height":3100}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { h: 0, x: 0 }; }
+  componentDidMount(){ this.start(); }
+  componentWillUnmount(){ clearInterval(this.t); }
+  start(){
+    clearInterval(this.t);
+    const auto = this.props.autoplay ?? true;
+    const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!auto || reduce) return;
+    const ms = (this.props.seconds ?? 3.4) * 1000;
+    this.t = setInterval(() => this.setState(s => ({ h: (s.h + 1) % 4, x: (s.x + 1) % 3 })), ms);
+  }
+  renderVals(){
+    const H = [
+      { src: '/_blob/53c97adafd9e5a4fcde8e8d05fd73306', alt: 'Winkel-Akademie', label: 'Mathe', w: 'W' },
+      { src: '/_blob/41e0c5dc818dab2919264aef3df21c42', alt: 'Wasser-Zauberschule', label: 'NWT', w: 'Z' },
+      { src: '/_blob/9cf314df23205d3b6d925a3190a5d3c0', alt: 'Küsten-Crew', label: 'Englisch', w: 'E' },
+      { src: '/_blob/e2f441c1196774b0d60638cbb4bafd77', alt: 'Detektiv-Büro', label: 'Deutsch', w: 'D' }
+    ];
+    const X = [
+      { src: '/_blob/6734c5d2ed43b9da717d28e5bbcb44b2', alt: 'Zauberkessel: Teilchen beim Erhitzen', label: 'Zauberkessel', w: 'Z', where: 'NWT · Zauberkessel' },
+      { src: '/_blob/0aff2b66b56486822c60058f4bb13835', alt: 'Verhör im Hafen', label: 'Verhör', w: 'E', where: 'Englisch · Verhör im Hafen' },
+      { src: '/_blob/5435f552166f990169a9ce521375217b', alt: 'Geodreieck auf dem Bildschirm', label: 'Geodreieck', w: 'W', where: 'Mathe · Geodreieck' }
+    ];
+    const h = this.state.h, x = this.state.x;
+    return {
+      heroBg: 'bg-' + H[h].w,
+      expBg: 'bg-' + X[x].w,
+      expWhere: X[x].where,
+      hero: H.map((s, i) => ({ ...s, op: i === h ? 1 : 0, on: i === h ? 'dot-on' : '', pick: () => { this.setState({ h: i }); this.start(); } })),
+      exp: X.map((s, i) => ({ ...s, op: i === x ? 1 : 0, on: i === x ? 'dot-on' : '', pick: () => { this.setState({ x: i }); this.start(); } }))
+    };
+  }
+}
+</script>
+</body>
+</html>

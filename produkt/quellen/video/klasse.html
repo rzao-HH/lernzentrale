@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>Klassenzimmer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&display=swap">
+<style>
+html,body{margin:0;width:600px;height:800px;overflow:hidden;font-family:Nunito,sans-serif;color:#1c2140}
+#room{position:absolute;inset:0;background:linear-gradient(#f3efe6 0 46%,#d9c9ad 46% 100%)}
+.abs{position:absolute}
+#board{left:120px;top:40px;width:400px;height:230px;background:#24453b;border:10px solid #8a6a46;border-radius:10px;box-sizing:border-box;overflow:hidden}
+#sub{left:30px;right:30px;top:288px;min-height:58px;background:rgba(28,33,64,.86);color:#fff;border-radius:12px;padding:10px 14px;font-size:17px;line-height:1.35;font-weight:700;text-align:center;box-sizing:border-box}
+#spk{left:530px;top:110px;width:62px;height:62px;border-radius:16px;flex-direction:column;background:#fff;border:2px solid #c9cfe2;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:800;color:#6b7190}
+#ui{left:0;right:0;bottom:0;height:96px;background:#fff;border-top:2px solid #dde2ef;display:flex;align-items:center;justify-content:center;gap:14px}
+.btn{height:56px;border-radius:16px;padding:0 22px;display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px}
+#melden{background:#1c2140;color:#fff}
+#ask{left:40px;right:40px;bottom:110px;height:70px;background:#fff;border:2px solid #3d4fd6;border-radius:16px;display:flex;align-items:center;gap:10px;padding:0 12px;box-sizing:border-box;box-shadow:0 14px 30px -16px rgba(28,33,64,.5)}
+#field{flex:1;height:44px;border:2px solid #dde2ef;border-radius:12px;display:flex;align-items:center;padding:0 12px;font-size:17px;font-weight:700}
+.ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+#dot{width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(255,122,92,.45);border:3px solid #ff7a5c;box-shadow:0 0 0 6px rgba(255,122,92,.18);z-index:99}
+#pause{left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);color:#fff;font-weight:800;font-size:18px;gap:8px}
+</style></head><body>
+<div id="room"></div>
+<!-- Tafel mit Erklärvideo -->
+<div id="board" class="abs"><svg id="vid" width="380" height="210" viewBox="0 0 380 210"></svg><div id="pause" class="abs">❚❚ angehalten</div></div>
+<div id="spk" class="abs"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6b7190" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#c9cfe2"/><path d="M16 9l5 6M21 9l-5 6"/></svg>Ton aus</div>
+<!-- Lehrerin -->
+<svg id="teacher" class="abs" width="130" height="150" viewBox="-10 -30 110 120" style="left:14px;top:150px"></svg>
+<div id="sub" class="abs"></div>
+<!-- Klasse -->
+<svg id="class" class="abs" width="600" height="440" viewBox="0 0 600 440" style="left:0;top:360px"></svg>
+<div id="ask" class="abs"><div id="field"></div><div class="ico" style="background:#eef0ff"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3d4fd6" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></div><div class="ico" style="background:#3d4fd6"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M3 11l18-8-8 18-2-8z"/></svg></div></div>
+<div id="ui" class="abs"><div id="melden" class="btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V5a1.5 1.5 0 0 1 3 0v6M11 11V3.5a1.5 1.5 0 0 1 3 0V11M14 11V5a1.5 1.5 0 0 1 3 0v7M17 9a1.5 1.5 0 0 1 3 0v5a7 7 0 0 1-7 7h-1a6 6 0 0 1-5-3l-3-5a1.5 1.5 0 0 1 2.5-1.6L8 13"/></svg>Melden</div></div>
+<div id="dot" class="abs"></div>
+<script>
+const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,ramp=(t,a,l)=>ease(cl((t-a)/l));
+function crabFront(fill,extra=''){return `<g stroke="${fill}" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"/></g><path d="M22 36 Q8 34 8 22" stroke="${fill}" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="8" cy="17" r="9" fill="${fill}"/><g class="rc"><path d="M58 36 Q72 34 72 22" stroke="${fill}" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="72" cy="17" r="9" fill="${fill}"/>${extra}</g><ellipse cx="40" cy="42" rx="24" ry="16" fill="${fill}"/><path d="M32 28 L32 20 M48 28 L48 20" stroke="${fill}" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="16" r="6" fill="#fff"/><circle cx="48" cy="16" r="6" fill="#fff"/><circle cx="33" cy="16" r="2.6" fill="#0A1B27"/><circle cx="49" cy="16" r="2.6" fill="#0A1B27"/><path class="mouth" d="M33 46 Q40 52 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;}
+// Lehrerin: Krabbe mit Brille und Zeigestock
+$('teacher').innerHTML=`<g id="tbody">${crabFront('#8b6fd6','<path id="stick" d="M72 17 L104 -22" stroke="#6b4a2a" stroke-width="3" stroke-linecap="round"/>')}<circle cx="32" cy="16" r="8" fill="none" stroke="#1c2140" stroke-width="2"/><circle cx="48" cy="16" r="8" fill="none" stroke="#1c2140" stroke-width="2"/><path d="M40 16 L40 16" stroke="#1c2140"/></g>`;
+// Klasse: Kinder von hinten an Tischen
+function crabBack(fill){return `<g stroke="${fill}" stroke-width="3" stroke-linecap="round" fill="none"><path d="M22 36 Q8 34 8 22"/></g><circle cx="8" cy="17" r="9" fill="${fill}"/><g class="rc"><path d="M58 36 Q72 34 72 22" stroke="${fill}" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="72" cy="17" r="9" fill="${fill}"/></g><path d="M32 28 L32 20 M48 28 L48 20" stroke="${fill}" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="16" r="6" fill="#fff"/><circle cx="48" cy="16" r="6" fill="#fff"/><ellipse cx="40" cy="42" rx="24" ry="16" fill="${fill}"/>`;}
+const kids=[{x:40,y:6,s:1,c:'#2fa89e'},{x:240,y:0,s:1,c:'#f0b429'},{x:440,y:8,s:1,c:'#5b8def'},{x:110,y:120,s:1.3,c:'#e8559a'},{x:370,y:122,s:1.3,c:'#7bc96f'}];
+let html='';
+kids.forEach((k,i)=>{html+=`<g transform="translate(${k.x},${k.y}) scale(${k.s})"><rect x="-20" y="54" width="130" height="20" rx="4" fill="#b98b5e"/><g class="kid" id="k${i}">${crabBack(k.c)}</g><rect x="-20" y="50" width="130" height="14" rx="4" fill="#cfa274"/></g>`;});
+// eigener Platz: Krabbi von hinten, angeschnitten
+html+=`<g transform="translate(205,250) scale(2.3)"><g id="me">${crabBack('#FF7A5C')}</g></g><rect x="60" y="370" width="480" height="70" rx="10" fill="#cfa274"/><rect x="230" y="378" width="140" height="30" rx="4" fill="#fff" opacity=".9"/><path d="M240 388 H340 M240 398 H320" stroke="#c9cfe2" stroke-width="4"/>`;
+$('class').innerHTML=html;
+// Erklärvideo auf der Tafel: Teilchen
+const vid=$('vid');const P=[];for(let r=0;r<4;r++)for(let c=0;c<6;c++){const e=document.createElementNS(NS,'circle');e.setAttribute('r',11);e.setAttribute('fill','#8fc7ff');vid.appendChild(e);P.push({gx:110+c*32,gy:70+r*30,a:Math.random()*6,b:Math.random()*6});}
+const lab=document.createElementNS(NS,'text');lab.setAttribute('x',190);lab.setAttribute('y',34);lab.setAttribute('text-anchor','middle');lab.setAttribute('fill','#f2f6ef');lab.setAttribute('font-family','Fredoka');lab.setAttribute('font-size','22');vid.appendChild(lab);
+const SUB=[[0,'Im Eis sitzen die Teilchen fest an ihrem Platz und wackeln nur ein bisschen.'],[3800,'Wird es wärmer, bewegen sie sich schneller und verlassen ihren Platz.'],[6600,''],[10200,'Gute Frage! Im Eis liegen die Teilchen weiter auseinander. Deshalb ist Eis leichter.'],[13400,'Wer weiß: Wie heißt der Übergang von fest zu flüssig?'],[17600,'Krabbi, bitte!']];
+const Q='Warum schwimmt Eis oben?';
+let vt=0,last=0;
+window.TOTAL=19500;
+window.render=function(t){
+  // Video läuft, außer während der Frage (6.6s bis 10.2s)
+  const paused=t>=6600&&t<10200; if(!paused)vt+= (t-last); last=t;
+  const heat=cl((vt-3800)/3000);
+  P.forEach((p,i)=>{const amp=2+heat*28;const x=p.gx+Math.sin(vt/(140-heat*60)+p.a)*amp*(heat>0?1:.4),y=p.gy+Math.cos(vt/(160-heat*70)+p.b)*amp*(heat>0?1:.4);p.e=p.e||vid.children[i];p.e.setAttribute('cx',x);p.e.setAttribute('cy',y);});
+  lab.textContent=heat<.3?'Eis: fest':'Wasser: flüssig';
+  $('pause').style.display=paused?'flex':'none';
+  let s='';SUB.forEach(([a,x])=>{if(t>=a)s=x;});$('sub').textContent=s;$('sub').style.opacity=s?1:0;
+  // Lehrerin zeigt
+  $('teacher').querySelector('.rc').setAttribute('transform',`rotate(${Math.sin(t/400)*8} 58 36)`);
+  $('tbody').setAttribute('transform',`translate(0 ${Math.sin(t/300)*2})`);
+  // Kinder bewegen sich etwas, zwei melden sich bei der Lehrer-Frage
+  kids.forEach((k,i)=>{const g=$('k'+i);const up=(i===1&&t>14400)||(i===3&&t>15000)||(i===4&&t>15600);g.setAttribute('transform',`translate(${Math.sin(t/(500+i*90)+i)*2} ${Math.sin(t/(380+i*70)+i*2)*2})`);g.querySelector('.rc').setAttribute('transform',up?`rotate(${-60+Math.sin(t/150)*6} 58 36) translate(4 -8)`:'');});
+  // eigenes Melden
+  const meUp=(t>6900&&t<10600)||t>16700;$('me').querySelector('.rc').setAttribute('transform',meUp?`rotate(${-62+Math.sin(t/140)*5} 58 36) translate(4 -10)`:'');
+  // Frage-Eingabe
+  const ask=t>7300&&t<10400;$('ask').style.display=ask?'flex':'none';
+  const n=Math.floor(cl((t-7700)/1600)*Q.length);$('field').textContent=t<7700?'Deine Frage …':Q.slice(0,n);$('field').style.color=t<7700?'#9aa0bd':'#1c2140';
+  // Fingerpunkt
+  const path=[[0,470,700],[5800,470,700],[6500,300,752],[6700,300,752,1],[7000,300,752],[7400,470,670],[9200,470,670],[9600,533,655],[9750,533,655,1],[10000,520,690],[15600,420,700],[16400,300,752],[16600,300,752,1],[16900,300,752],[19500,330,720]];
+  let px=470,py=700,pr=0;for(let i=0;i<path.length-1;i++){const [a,x1,y1,p1]=path[i],[b,x2,y2]=path[i+1];if(t>=a&&t<b){const k=ease((t-a)/(b-a));px=x1+(x2-x1)*k;py=y1+(y2-y1)*k;pr=p1?1:0;}}
+  if(t>=path[path.length-1][0]){px=path[path.length-1][1];py=path[path.length-1][2];}
+  const d=$('dot');d.style.left=px+'px';d.style.top=py+'px';d.style.transform=pr?'scale(.75)':'';d.style.background=pr?'rgba(255,122,92,.75)':'rgba(255,122,92,.45)';
+  $('melden').style.transform=pr&&py>730?'scale(.95)':'';
+};
+render(0);
+</script></body></html>

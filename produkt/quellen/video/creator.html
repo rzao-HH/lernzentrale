@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>Modul erfinden</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800;900&display=swap">
+<style>
+:root{--bg:#eef0f7;--line:#d5d9e8;--text:#1c2140;--muted:#5a6185;--soft:#f3f4fa;--W:#3d4fd6;--ok:#1f7a3d}
+html,body{margin:0;width:600px;height:800px;overflow:hidden;background:var(--bg);font-family:Nunito,sans-serif;color:var(--text)}
+.scr{position:absolute;left:24px;right:24px;top:36px;bottom:110px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px 20px;box-sizing:border-box;display:none}
+.scr.on{display:block}
+h2{margin:0 0 4px;font-family:Fredoka,sans-serif;font-weight:600;font-size:28px}
+.sub{color:var(--muted);font-weight:700;font-size:16px;margin-bottom:16px}
+.lab{font-weight:900;font-size:17px;margin:14px 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{border:2px solid var(--line);background:var(--soft);border-radius:16px;padding:12px;display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;min-height:46px}
+.card span{font-size:30px}
+.card.on{border-color:var(--W);background:#e8ebff;box-shadow:0 0 0 3px rgba(61,79,214,.18)}
+.figs{display:flex;gap:10px}
+.fig{flex:1;height:70px;border:2px solid var(--line);background:var(--soft);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:40px}
+.fig.on{border-color:var(--W);background:#e8ebff;box-shadow:0 0 0 3px rgba(61,79,214,.18)}
+.btn{display:block;text-align:center;margin-top:18px;border-radius:14px;padding:14px;font-weight:900;font-size:18px;background:var(--W);color:#fff}
+.btn.g{background:var(--ok)}
+.fix{margin-top:14px;background:#fff7e6;border:1px solid #f1d39a;border-radius:12px;padding:10px 12px;font-size:15px;font-weight:700;color:#7a5200}
+/* Vorschau */
+.two{display:grid;grid-template-columns:1fr 1.25fr;gap:12px;align-items:stretch}
+.lk{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fbf3e4;display:flex;flex-direction:column;gap:8px}
+.lk small,.sp small{font-weight:900;font-size:13px;color:var(--muted)}
+.lk .qq{font-family:Fredoka,sans-serif;font-size:19px;line-height:1.25}
+.lk .aa{font-weight:900;color:var(--ok);font-size:18px}
+.sp{border-radius:16px;padding:12px;background:radial-gradient(circle at 70% 20%,#3a3f8f,#141738 70%);color:#fff;position:relative;overflow:hidden;min-height:330px}
+.sp small{color:#c9cdf5}
+.sp .qq{font-family:Fredoka,sans-serif;font-size:19px;line-height:1.25;margin:6px 0 0}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff}
+.doors{position:absolute;left:10px;right:10px;bottom:16px;display:flex;justify-content:space-between}
+.door{width:30%;height:92px;border-radius:40px 40px 10px 10px;background:#5b61c8;border:3px solid #9aa0ff;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;box-sizing:border-box;font-weight:900;font-size:19px}
+.door.ok{background:#1f7a3d;border-color:#7be0a0}
+#robo{position:absolute;font-size:42px;left:50%;top:150px;margin-left:-21px}
+.eq{text-align:center;margin:14px 0 0;font-weight:900;font-size:16px;color:var(--ok);background:#e9f6ee;border-radius:999px;padding:8px}
+.rt{position:absolute;left:0;right:0;top:118px;text-align:center;font-family:Fredoka,sans-serif;font-size:26px;color:#7be0a0}
+/* Teilen */
+.big{font-size:70px;text-align:center;margin-top:20px}
+.ct{text-align:center;font-family:Fredoka,sans-serif;font-size:28px;margin:6px 0}
+.mem{display:flex;justify-content:center;gap:18px;font-size:40px;margin:10px 0 20px}
+.mem div{display:flex;flex-direction:column;align-items:center}.mem b{font-size:15px}
+.nt{border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:10px;display:flex;gap:12px;align-items:center;font-size:17px;font-weight:700;background:#fff;box-shadow:0 10px 24px -14px rgba(28,33,64,.35)}
+.nt span{font-size:34px}.nt small{display:block;color:var(--muted);font-size:14px}
+.note{position:absolute;left:24px;top:704px;font-size:15px;color:var(--muted)}
+#dot{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(255,122,92,.45);border:3px solid #ff7a5c;box-shadow:0 0 0 6px rgba(255,122,92,.18);z-index:9}
+#krabbi{position:absolute;left:420px;top:676px;width:140px}
+</style></head><body>
+
+<div class="scr" id="sA">
+  <h2>🎨 Eigenes Lernmodul</h2>
+  <div class="sub">Paket: 📐 Winkel messen</div>
+  <div class="lab">1. Spielidee</div>
+  <div class="grid">
+    <div class="card" id="cR"><span>🧩</span>Rätsel</div>
+    <div class="card" id="cW"><span>🚀</span>Weltraum-Reise</div>
+    <div class="card" id="cS"><span>🏴‍☠️</span>Schatzsuche</div>
+    <div class="card" id="cG"><span>📖</span>Geschichte</div>
+  </div>
+  <div class="lab">2. Figur</div>
+  <div class="figs"><div class="fig" id="f0">🧑‍🚀</div><div class="fig" id="f1">🤖</div><div class="fig" id="f2">👽</div><div class="fig" id="f3">🐙</div></div>
+  <div class="fix">🔒 Fragen und Antworten kommen aus dem Paket und bleiben, wie sie sind.</div>
+  <div class="btn" id="bV">Vorschau ansehen</div>
+</div>
+
+<div class="scr" id="sB">
+  <h2>Vorschau</h2>
+  <div class="sub">Robins Weltraum-Reise</div>
+  <div class="two">
+    <div class="lk"><small>LERNKARTE AUS DEM PAKET</small><div class="qq">Wie groß ist ein rechter Winkel?</div><div class="aa">90°</div></div>
+    <div class="sp" id="sp"><small>ROBINS WELTRAUM-REISE</small><div class="qq">Wie groß ist ein rechter Winkel?</div>
+      <div id="robo">🤖</div><div class="rt" id="rt"></div>
+      <div class="doors"><div class="door" id="d0">45°</div><div class="door" id="d1">90°</div><div class="door" id="d2">180°</div></div></div>
+  </div>
+  <div class="eq" id="eq">= gleiche Frage · gleiche Antwort · neue Art zu spielen</div>
+  <div class="btn g" id="bT">👥 Mit Familie teilen</div>
+</div>
+
+<div class="scr" id="sC">
+  <div class="big">🚀</div>
+  <div class="ct">Geteilt mit 👥 Familie</div>
+  <div class="mem"><div>🦁<b>Robin</b></div><div>🐬<b>Tina</b></div><div>🦉<b>Roya</b></div></div>
+  <div class="nt" id="n1"><span>🐬</span><div>Tina hat „Robins Weltraum-Reise“ gespielt<small>5 von 5 richtig · ⭐⭐⭐</small></div></div>
+  <div class="nt" id="n2"><span>🦉</span><div>Roya hat „Robins Weltraum-Reise“ gespielt<small>4 von 5 richtig · ⭐⭐</small></div></div>
+</div>
+
+<div class="note">So könnte es aussehen</div>
+<svg id="krabbi" viewBox="-10 -26 130 92"><g id="kb">
+ <g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"/><path d="M22 36 Q8 34 8 22"/></g>
+ <ellipse cx="2" cy="20" rx="16" ry="11" fill="#f6e3c0" stroke="#c9a86a" stroke-width="2"/><circle cx="-6" cy="17" r="3" fill="#e45c4a"/><circle cx="1" cy="13" r="3" fill="#3d4fd6"/><circle cx="9" cy="16" r="3" fill="#1f7a3d"/><circle cx="4" cy="24" r="3" fill="#f2b705"/>
+ <circle cx="8" cy="17" r="7" fill="#FF7A5C" opacity=".0"/>
+ <g id="claw"><path d="M58 36 Q72 34 72 22" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="72" cy="17" r="9" fill="#FF7A5C"/><path d="M74 14 L96 -14" stroke="#8a6a46" stroke-width="4" stroke-linecap="round"/><path d="M96 -14 L103 -22" stroke="#555" stroke-width="5" stroke-linecap="round"/><path id="tip" d="M103 -22 L108 -27" stroke="#3d4fd6" stroke-width="6" stroke-linecap="round"/></g>
+ <ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"/><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="16" r="6" fill="#fff"/><circle cx="48" cy="16" r="6" fill="#fff"/><circle cx="33" cy="16" r="2.6" fill="#0A1B27"/><circle cx="49" cy="16" r="2.6" fill="#0A1B27"/><path id="mo" d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+ <g id="dots"></g></svg>
+<div id="dot"></div>
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,ramp=(t,a,l)=>ease(cl((t-a)/l));
+// Sterne
+(()=>{const sp=$('sp');let s=7;const r=()=>(s=(s*9301+49297)%233280)/233280;for(let i=0;i<26;i++){const d=document.createElement('div');d.className='star';d.style.left=(r()*100)+'%';d.style.top=(r()*60+8)+'%';d.style.opacity=.4+r()*.6;sp.appendChild(d);}})();
+const T_W=1500,T_F=2900,T_V=4200,B0=4500,T_D=8200,T_T=11200,C0=11500,N1=12600,N2=14000,TEND=17000;
+window.TOTAL=TEND;
+let M=null;
+function show(id){['sA','sB','sC'].forEach(s=>$(s).classList.toggle('on',s===id));}
+function measure(){const c=el=>{const r=el.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2];};
+  M={};show('sA');M.w=c($('cW'));M.f=c($('f1'));M.v=c($('bV'));show('sB');M.d=c($('d1'));M.t=c($('bT'));
+  const sp=$('sp').getBoundingClientRect(),dr=$('d1').getBoundingClientRect();M.rx=dr.left+dr.width/2-sp.left;M.ry=dr.top-sp.top;}
+window.render=function(t){
+  if(!M)measure();
+  const path=[];let mood='';
+  if(t<B0){show('sA');
+    $('cW').classList.toggle('on',t>=T_W);$('f1').classList.toggle('on',t>=T_F);
+    path.push([0,480,720],[700,480,720],[T_W-150,...M.w],[T_W,...M.w,1],[T_W+200,...M.w],[T_F-150,...M.f],[T_F,...M.f,1],[T_F+200,...M.f],[T_V-150,...M.v],[T_V,...M.v,1],[B0,...M.v]);
+  } else if(t<C0){show('sB');
+    $('eq').style.opacity=ramp(t,B0+900,500);
+    // Roboter schwebt, dann fliegt zur Tür
+    const fly=ramp(t,T_D+100,700);const sp=$('sp').getBoundingClientRect();
+    const x0=sp.width/2,y0=150;const rb=$('robo');
+    rb.style.left=(x0+(M.rx-x0)*fly)+'px';rb.style.top=(y0+Math.sin(t/300)*6*(1-fly)+(M.ry-30-y0)*fly)+'px';
+    $('d1').classList.toggle('ok',t>=T_D);$('rt').textContent=t>=T_D+600?'⭐ Richtig! ⭐':'';$('rt').style.opacity=ramp(t,T_D+600,300);
+    if(t>=T_D+600)mood='happy';
+    path.push([B0,...M.v],[B0+600,330,380],[T_D-900,330,380],[T_D-150,...M.d],[T_D,...M.d,1],[T_D+200,...M.d],[T_D+900,...M.d],[T_T-150,...M.t],[T_T,...M.t,1],[C0,...M.t]);
+  } else {show('sC');mood='happy';
+    $('n1').style.opacity=ramp(t,N1,400);$('n1').style.transform=`translateY(${(1-ramp(t,N1,400))*20}px)`;
+    $('n2').style.opacity=ramp(t,N2,400);$('n2').style.transform=`translateY(${(1-ramp(t,N2,400))*20}px)`;
+    path.push([C0,...M.t],[C0+700,120,640],[TEND,120,640]);
+  }
+  $('mo').setAttribute('d',mood==='happy'?'M32 44 Q40 56 48 44 Z':'M33 46 Q40 53 47 46');
+  // Krabbi malt: Pinsel schwingt, Farbe wechselt
+  $('claw').setAttribute('transform',`rotate(${Math.sin(t/240)*12} 58 36)`);
+  $('tip').setAttribute('stroke',['#3d4fd6','#e45c4a','#1f7a3d','#f2b705'][Math.floor(t/1400)%4]);
+  // Finger
+  let fx=480,fy=720,press=0;path.sort((a,b)=>a[0]-b[0]);
+  if(path.length){if(t<path[0][0]){fx=path[0][1];fy=path[0][2];}else{fx=path[path.length-1][1];fy=path[path.length-1][2];}
+    for(let i=0;i<path.length-1;i++){const [a,x1,y1,p]=path[i],[b,x2,y2]=path[i+1];if(t>=a&&t<b){const k=b>a?ease((t-a)/(b-a)):1;fx=x1+(x2-x1)*k;fy=y1+(y2-y1)*k;press=p?1:0;break;}}}
+  const d=$('dot');d.style.left=fx+'px';d.style.top=fy+'px';d.style.transform=press?'scale(.75)':'';d.style.background=press?'rgba(255,122,92,.75)':'rgba(255,122,92,.45)';
+};
+document.fonts.ready.then(()=>{M=null;render(0);});
+</script></body></html>
