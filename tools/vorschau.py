@@ -1,4 +1,4 @@
-"""Vorschau bauen: kopiert die App (index.html, sw.js, Icon, apps/, js/, css/) aus einem Git-Stand nach vorschau/.
+"""Vorschau bauen: kopiert die App (index.html, sw.js, Icon, apps/, js/, css/, produkt/) aus einem Git-Stand nach vorschau/.
 Erreichbar unter https://rzao-hh.github.io/lernzentrale/vorschau/ – die echte App (Hauptordner) bleibt unverändert.
 
 Aufruf (im Repository):  python3 tools/vorschau.py [git-stand]     z. B.  python3 tools/vorschau.py entwicklung
@@ -12,12 +12,13 @@ Achtung: Die Vorschau liegt auf derselben Adresse und nutzt den Gerätespeicher 
 import os,sys,shutil,subprocess,tempfile
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT=os.path.join(ROOT,'vorschau')
-PARTS=['index.html','sw.js','icon-180.png','apps','js','css']
+PARTS=['index.html','sw.js','icon-180.png','apps','js','css','produkt']
 BADGE='<div id="lzPreview" style="position:fixed;right:8px;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:99999;background:#c0392b;color:#fff;font:800 12px/1 system-ui,sans-serif;padding:6px 10px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none">🧪 Vorschau</div>'
 def src_dir(ref):
     if not ref: return ROOT,None
     tmp=tempfile.mkdtemp()
-    a=subprocess.run(['git','-C',ROOT,'archive',ref]+PARTS,capture_output=True,check=True).stdout
+    have=[p for p in PARTS if subprocess.run(['git','-C',ROOT,'cat-file','-e',ref+':'+p],capture_output=True).returncode==0]  # ältere Stände haben z. B. noch kein produkt/
+    a=subprocess.run(['git','-C',ROOT,'archive',ref]+have,capture_output=True,check=True).stdout
     subprocess.run(['tar','-x','-C',tmp],input=a,check=True)
     return tmp,tmp
 def main():
@@ -27,6 +28,7 @@ def main():
     os.makedirs(OUT)
     for p in PARTS:
         s=os.path.join(src,p);d=os.path.join(OUT,p)
+        if not os.path.exists(s): continue
         (shutil.copytree if os.path.isdir(s) else shutil.copy2)(s,d)
     for dp,_,fs in os.walk(OUT):
         for f in fs:

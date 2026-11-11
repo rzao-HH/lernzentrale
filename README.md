@@ -5,6 +5,9 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 - **Adresse:** https://rzao-hh.github.io/lernzentrale/ (GitHub Pages, Branch `main`, Ordner `/`)
 - **Offline:** `sw.js` speichert alle Dateien; nach einem Besuch mit Internet läuft alles auch ohne Netz.
 
+## Produkt: Funktionen und Vision
+Was die App heute kann und was geplant ist, steht **nur** in [`produkt/funktionen.html`](produkt/funktionen.html) (online: https://rzao-hh.github.io/lernzentrale/produkt/funktionen.html). Vor Analysen, Vergleichen oder Marketing dort lesen, neue Funktionen und Ideen dort ergänzen.
+
 ## Ablauf: erst Vorschau, dann freigeben
 Neue Versionen gehen **nicht direkt** auf die echte App. Ablauf für alle Chats:
 1. Änderungen im Zweig `entwicklung` machen (von `main` abzweigen) und **die ganze Testsuite** laufen lassen (`python3 tests/run_all.py`) – vor jeder Vorschau, nicht erst vor der Freigabe.
@@ -35,6 +38,7 @@ Neue Versionen gehen **nicht direkt** auf die echte App. Ablauf für alle Chats:
 | `nachtest/` | PDFs zum Nachschreibtest Simple Past (Küsten-Crew): `Nachschreibtest_Simple_Past_V0…V7.pdf` (V0 = Aufgaben vom Original-Zettel) (Test) und `…_Loesung.pdf` (Lösung, Bewertung, Notenschlüssel). Die Aufgaben stehen in `apps/kueste.html` (`NX_VARS`), die PDFs müssen bei Änderungen dort neu erzeugt werden |
 | `videos/` | Erklärvideos als eigenständige Seiten (kein Teil der App): `zeitreise-krabbi.html` (Simple Present und Simple Past, mit Untertiteln und Ton). Verlinkt über die Mission „🎬 Erklärvideo“ in der Küsten-Crew (`KC_MS`, öffnet in neuem Tab); wird beim ersten Ansehen automatisch für offline zwischengespeichert |
 | `archiv/` | Stände vor Version 5.0.0 |
+| `produkt/` | Produktunterlagen, kein Teil der App: `funktionen.html` = Funktionsliste heute und Vision (Grundlage für Produktseite, Konkurrenzanalyse, Finanzierung, Marketing) |
 | `lernzettel/` | Fotos der Arbeitsblätter je Fach als HTML-Dateien, Übersicht in `lernzettel/README.md` (über den 📄-Knopf in den Apps erreichbar, nicht im Offline-Speicher) |
 
 > **Lernzettel:** Die aktuellen Lernzettel-Dateien liegen in `lernzettel/`, mit Übersicht in `lernzettel/README.md`. Änderungen immer dort ablegen, nicht als separate Datei in einem Chat.
