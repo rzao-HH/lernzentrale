@@ -26,7 +26,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | 4 | Lernen, anwenden, ausprobieren | Lernkarte → Spiel → Experiment | | beschlossen |
 | 5 | Lernen durch Erfahrung | Zauberkessel → Verhör → Geodreieck | | beschlossen |
 | 6 | Die interaktive Unterrichtsstunde | Lehrerin an der Tafel, Kind meldet sich | Kommt bald | beschlossen |
-| 7 | Bereit für die Arbeit | Test mit Note, Probearbeit auf Papier | | Entwurf |
+| 7 | Bereit für die Arbeit | Lernplan, schneller Test, freier Test mit Musterlösung | | beschlossen |
 | 8 | Mit Freunden, Familie und der ganzen Klasse | Tauziehen-Duell | | Entwurf |
 | 9 | Punkte für Neues | Paket-Kacheln | | Entwurf |
 | 10 | Eltern sehen, wo ihr Kind steht | Elternübersicht | | Entwurf |
@@ -59,8 +59,10 @@ Schaufenster für die Experimente, drei Fächer: Tablet zeigt Zauberkessel → V
 ### 6 · Die interaktive Unterrichtsstunde `Kommt bald` (beschlossen)
 Aus den gewählten Lernpaketen entsteht eine eigene Unterrichtsstunde. Die Lehrerin vermittelt ihre Inhalte im Zusammenhang, mit Sprache, Bildern und Tafel, sodass ein roter Faden entsteht. Aufpassen lohnt sich, denn zwischendurch stellt sie Fragen. Und wer etwas nicht versteht, meldet sich und fragt nach.
 
-### 7 · Bereit für die Arbeit (Entwurf)
-Jedes Paket endet mit einem Test mit Note. Probearbeiten werden ausgedruckt, auf Papier geschrieben und mit der Musterlösung verglichen. Danach schätzt jedes Kind selbst ein, was gut lief und was noch schwer war.
+### 7 · Bereit für die Arbeit (beschlossen)
+Ein Lernplan verteilt die Pakete auf die Tage bis zur Klassenarbeit und baut immer wieder Tests mit Note ein, zwischendurch und am Ende. Es gibt schnelle Tests mit Auswahlantworten und solche, bei denen frei geschrieben und danach mit der Musterlösung verglichen wird, auf Wunsch auch ausgedruckt auf Papier.
+
+Papier ist nur eine Möglichkeit für die freien Tests. Die Selbsteinschätzung steht in Abschnitt 10.
 
 ### 8 · Mit Freunden, Familie und der ganzen Klasse (Entwurf)
 In Lerngruppen wird live gegeneinander Tauziehen gespielt. Wer gerade keine Zeit hat, tritt später gegen die Aufzeichnung an.
@@ -69,7 +71,7 @@ In Lerngruppen wird live gegeneinander Tauziehen gespielt. Wer gerade keine Zeit
 Am meisten Punkte bringen Aufgaben, die noch nicht sicher sitzen. Was schon gut klappt, bringt erst wieder volle Punkte, wenn es Zeit zum Wiederholen ist.
 
 ### 10 · Eltern sehen, wo ihr Kind steht (Entwurf)
-Eine Übersicht zeigt, was schon gut klappt und wo Unterstützung hilft, mit konkreten Hinweisen. Ein Gerät reicht für mehrere Kinder, jedes mit eigenem Lernstand.
+Eine Übersicht zeigt, was schon gut klappt und wo Unterstützung hilft, mit konkreten Hinweisen. Dazu kommt die eigene Einschätzung des Kindes nach den Tests, was gut lief und was noch schwer war. Ein Gerät reicht für mehrere Kinder, jedes mit eigenem Lernstand.
 
 ### 11 · Gut zu wissen (Entwurf)
 - Arbeitsblätter bleiben privat, nur die Themen werden verwendet.
@@ -88,4 +90,5 @@ Eine Übersicht zeigt, was schon gut klappt und wo Unterstützung hilft, mit kon
 - „Lernkarten, Spiele und Experimente“ (Aufzählung) und „Klassisch und spielerisch“ (zu abstrakt).
 - „Ausprobieren statt auswendig lernen“ (Spruch-Muster „… statt …“, „ausprobieren“ steht schon in Abschnitt 4).
 - „So entsteht ein rundes Bild vom ganzen Thema“ und „Jedes Modul zeigt ihn von einer anderen Seite“ (Abschnitt 4): Es geht um neue Erfahrungen, nicht um Perspektiven.
+- „Jedes Paket endet mit einem Test“ (falsch: Tests gehen über die gewählten Pakete).
 - „Ein Thema, viele Wege“ (Thema heißt in der App die Spielwelt) und „Viele Wege zum selben Stoff“: leer.
