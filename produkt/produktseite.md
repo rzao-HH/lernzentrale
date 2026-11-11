@@ -127,7 +127,7 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
 - **Impressum und Datenschutz** als eigene Seiten auf dem Canvas, verlinkt im Fuß. Kontakt: lernzentrale@gmx.de (steht auch in Abschnitt 11). Anschrift und Namen stehen nur auf dem Canvas, nicht im Repository.
 - **Erklärvideo** auf der Seite direkt unter dem Einstieg eingebunden („Die Lernzentrale in 90 Sekunden“, dazu ein Textlink im Einstieg). Datei (`produkt/lernzentrale-erklaervideo.mp4`, etwa 95 Sekunden, 1920×1080, ohne Ton), eigenständig versendbar und auf der Seite einbindbar:
   1. Titel mit Krabbi: „Jedes Kind lernt anders. Diese App lernt mit.“
-  2. Grundgerüst als Ablauf: Lernmaterialien (Arbeitsblatt, Buchseite, Vokabelliste) fliegen in die App (Kommt bald) → kleine Lernpakete → jedes Paket öffnet Module, mehrere Pakete öffnen mehr Module → Schnelltest und Schreibtest mit Musterlösung und Note.
+  2. Grundgerüst als Ablauf: Lernmaterialien (Arbeitsblatt, Buchseite, Vokabelliste) fliegen in die App (Kommt bald) → kleine Lernpakete → zu jedem Paket gehören Lernmodule (Module = Wege, den Inhalt zu lernen; Krabbi tippt Pakete an), mehrere Pakete gewählt: mehr Module → Schnelltest und Schreibtest mit Musterlösung und Note.
   3. Abschnitte mit den echten Bewegtbildern: Lernen, anwenden, ausprobieren (Quiz) · Lernen durch Erfahrung (Wasserkreislauf) · Messen wie im Heft (Geodreieck) · Lernbegleiter (Kommt bald) · Unterrichtsstunde (Kommt bald) · Lerngruppen und Duelle (Krabben-Tauziehen) · Bereit für die Arbeit (Lernplan) · Eltern (Beispiel-Übersicht).
   4. Schluss: Experimentierstatus, lernzentrale@gmx.de.
 - **Vor dem Veröffentlichen erledigen:**
@@ -140,6 +140,7 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
 
 - Einstiegssätze „Lernen, das sich wie Entdecken anfühlt“, „Aus dem Arbeitsblatt wird ein Spiel“ und ähnliche: zu platt, klingen nach KI.
 - „Unterricht verpasst? Einfach nachholen.“ und „Die Stunde noch einmal hören“: Die Unterrichtsstunde wiederholt keine echte Stunde, sie wird aus den Paketen neu erzeugt.
+- „Ein Paket öffnet Module“ (falsch: Module sind Lernwege, die zu einem Paket gehören).
 - „Hilfe genau da, wo es hakt“ und das Wort „hakt“ allgemein: klingt gewollt.
 - Punkte im Abschnitt „Zusammen lernen“: Punkte sind ein eigenes Thema.
 - „Lernkarten, Spiele und Experimente“ (Aufzählung) und „Klassisch und spielerisch“ (zu abstrakt).
