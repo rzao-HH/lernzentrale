@@ -108,6 +108,17 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - Wechsel automatisch oder per Klick auf ein Fach; Hintergrundstimmung (Sterne, Blasen, Wellen) und Farbe der zweiten Zeile wechseln mit.
   - Tablet-Bilder zeigen Szenen, in denen etwas passiert (Geodreieck, Zauberkessel, Lernkarte, Satz-Baumeister), aufgenommen in schmalem Fenster mit doppelter Schärfe, damit die Schrift lesbar ist. Keine Menü-Übersichten.
   - Verworfen: Einstieg 1–6 (zu klein, zu voll oder Tablets erst nach dem Scrollen sichtbar).
+- **Ganze Seite, Entwurf 1** auf dem Design-Canvas („Ganze Seite“ unter den Einstiegs-Varianten). Tablet-Szenen je Abschnitt:
+  - 2 nachgebaut: Foto eines Arbeitsblatts wird gescannt, daraus entstehen Paket-Karten.
+  - 3 nachgebaut: Krabbi gibt nach falschen Antworten Tipps.
+  - 4 echt: Lernkarte (Detektiv-Büro) → Quiz → Café in Brighton.
+  - 5 echt: Zauberkessel → Verhör im Hafen → Geodreieck (Hintergrund wechselt mit).
+  - 6 nachgebaut: Tafel mit Aggregatzuständen, Lehrerin fragt, Zeitbalken, Knöpfe „Melden“ und „Nachfragen“.
+  - 7 echt: Lernplan mit Lerntagen → schneller Test → Schreibtest mit Selbstkontrolle.
+  - 8 echt: Lerngruppen → Arena → Rangliste.
+  - 9 echt: Küsten-Crew (Rang Schiffsjunge, Paket-Kacheln) → Detektiv-Büro (Rang Praktikant).
+  - 10 echt plus Beispiel: Personenwahl der App, darüber eine Elternübersicht mit Beispieldaten.
+  - 11 Kacheln „Gut zu wissen“, Kasten „Noch im Experimentierstatus“ mit Platzhalter [E-MAIL-ADRESSE].
 
 ## Verworfen (damit es nicht wiederkommt)
 
