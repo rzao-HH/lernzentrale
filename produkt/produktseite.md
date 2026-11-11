@@ -23,7 +23,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | 1 | Jedes Kind lernt anders. Diese App lernt mit. | die App in Bewegung | | beschlossen |
 | 2 | Genau der Stoff aus dem Unterricht | Foto der Lernmaterialien → Inhalte der App | Kommt bald | beschlossen |
 | 3 | Der Lernbegleiter | Tipp des Lernbegleiters | Kommt bald | beschlossen |
-| 4 | Lernkarten, Spiele und Experimente | Karteikarte → Quiz → Café in Brighton | | Entwurf |
+| 4 | Lernen, anwenden, ausprobieren | Lernkarte → Spiel → Experiment | | beschlossen |
 | 5 | Ausprobieren statt auswendig lernen | Wasserlabor, Geodreieck | | Entwurf |
 | 6 | Die interaktive Unterrichtsstunde | Lehrerin an der Tafel, Kind meldet sich | Kommt bald | beschlossen |
 | 7 | Bereit für die Arbeit | Test mit Note, Probearbeit auf Papier | | Entwurf |
@@ -46,10 +46,10 @@ Gewichtung: eigener Schulstoff und „jedes Fach, jede Klasse“ zuerst, Pakete 
 ### 3 · Der Lernbegleiter `Kommt bald` (beschlossen)
 Klappen Aufgaben aus einem Paket öfter nicht, gibt der Lernbegleiter Tipps: noch einmal die Lernkarten ansehen, den Lernzettel lesen oder sich das Thema in der interaktiven Unterrichtsstunde erklären lassen. Auf Wunsch baut er ein neues Modul genau für diese Inhalte.
 
-### 4 · Lernkarten, Spiele und Experimente (Entwurf)
+### 4 · Lernen, anwenden, ausprobieren (beschlossen)
 Zum klassischen Lernen mit Lernkarten kommen Spiele und Experimente zum selben Stoff. Jedes Modul zeigt ihn von einer anderen Seite, so wird vieles aus eigener Erfahrung gelernt. Die Module gibt es in verschiedenen Schwierigkeitsstufen, damit immer etwas zum eigenen Stand passt.
 
-Kern: klassisches Lernen verbunden mit Spiel und Experiment, derselbe Stoff aus verschiedenen Perspektiven, Lernen durch Erfahrung statt immer gleicher Karten; Schwierigkeitsstufen. Offen: Abschnitt 5 zusammenlegen oder als Schaufenster für die Experimente.
+Kern: klassisches Lernen verbunden mit Spiel und Experiment, derselbe Stoff aus verschiedenen Perspektiven, Lernen durch Erfahrung statt immer gleicher Karten; Schwierigkeitsstufen. Abschnitt 5 bleibt als Schaufenster für die Experimente.
 
 ### 5 · Ausprobieren statt auswendig lernen (Entwurf)
 Im Labor wird Wasser zu Eis und zu Dampf, und Wolken regnen über den Bergen ab. Winkel entstehen mit dem Geodreieck auf dem Bildschirm, Schritt für Schritt wie im Heft.
@@ -83,4 +83,5 @@ Eine Übersicht zeigt, was schon gut klappt und wo Unterstützung hilft, mit kon
 - „Unterricht verpasst? Einfach nachholen.“ und „Die Stunde noch einmal hören“: Die Unterrichtsstunde wiederholt keine echte Stunde, sie wird aus den Paketen neu erzeugt.
 - „Hilfe genau da, wo es hakt“ und das Wort „hakt“ allgemein: klingt gewollt.
 - Punkte im Abschnitt „Zusammen lernen“: Punkte sind ein eigenes Thema.
+- „Lernkarten, Spiele und Experimente“ (Aufzählung) und „Klassisch und spielerisch“ (zu abstrakt).
 - „Ein Thema, viele Wege“ (Thema heißt in der App die Spielwelt) und „Viele Wege zum selben Stoff“: leer.
