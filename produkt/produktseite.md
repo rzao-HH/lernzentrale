@@ -145,6 +145,29 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - Die Lern-App braucht eine eigene Datenschutzerklärung (Benutzername, Lernstand, Abgleich über Supabase, Lerngruppen), bevor Familien mittesten.
   - Impressum und Datenschutz rechtlich prüfen lassen.
 
+## Entwurf 2: Der Weg bis zur Arbeit (roter Faden)
+
+Anlass: Seite und Video wirkten wie nebeneinanderstehende Bausteine (im Video ging es direkt nach Paketen und Modulen mit Tests los). Entwurf 1 bleibt unverändert stehen (Canvas „Ganze Seite · Entwurf 1“, Video Version 1, `produkt/lernzentrale-erklaervideo.mp4`).
+
+**Geschichte:** Ein Kind bereitet sich auf eine Arbeit vor. Jeder Abschnitt ist ein Schritt auf diesem Weg, in der Reihenfolge, in der es wirklich passiert:
+
+| Schritt | Frage dahinter | Abschnitte |
+|---|---|---|
+| 1 · Der Stoff kommt rein | Was muss ich lernen? | 2 Genau der Stoff aus dem Unterricht (Material → Pakete → Module) |
+| 2 · Verstehen | Wie verstehe ich es? | 6 Die interaktive Unterrichtsstunde |
+| 3 · Üben und erleben | Wie bleibt es hängen? | 4 Lernen, anwenden, ausprobieren · 5 Lernen durch Erfahrung |
+| 4 · Wenn es hakt | Was, wenn etwas nicht klappt? | 3 Der Lernbegleiter |
+| 5 · Dranbleiben | Warum macht das Spaß? | 9 Vom Schiffsjungen zum Admiral |
+| 6 · Gemeinsam | Mit wem lerne ich? | 8 Lerngruppen und Duelle · 8b Selbst ein Lernmodul erfinden |
+| 7 · Die Arbeit kommt | Bin ich bereit? | 7 Bereit für die Arbeit (Lernplan → Schnelltest → Schreibtest → Note) |
+| Und die Eltern? | | 10 Eltern · 11 Gut zu wissen |
+
+**Seite (Canvas „Ganze Seite · Entwurf 2 · Der Weg bis zur Arbeit“):** Unter dem Video neuer Abschnitt „Der Weg bis zur Arbeit“ (Satz: „Vom Arbeitsblatt bis zur Note: Diese Schritte gehören dazu.“) mit sieben verlinkten Stationen auf einer gestrichelten Linie, Krabbi läuft darüber. Über jeder Überschrift ein Wegpunkt (Kreis mit Nummer + Name des Schritts, bei den Eltern ein Herz und „Und die Eltern?“). Bild links/rechts wechselt weiter ab. Texte der Abschnitte unverändert.
+
+**Video Version 2** (`produkt/lernzentrale-erklaervideo-v2.mp4`, etwa 2:35): gleiche Szenen in der neuen Reihenfolge, oben eine Wegleiste mit den sieben Stationen (erledigt grün, aktuell blau), ein kleiner Krabbi wandert von Station zu Station. Über den Titeln Wegpunkte mit kurzen Übergängen („Schritt 2 · Erst verstehen“, „Schritt 3 · Dann üben und erleben“, „Schritt 7 · Dann kommt die Arbeit“). Neu: Szene „Vom Schiffsjungen zum Admiral“ (echte Startseite der Küsten-Crew mit Rang). Tests stehen am Ende.
+
+**Noch offen:** Ein durchgehendes Beispiel (z. B. Robin und die Mathearbeit über Winkel, vom Winkel-Arbeitsblatt bis zur Note) ist noch nicht umgesetzt, weil die echten Aufnahmen aus verschiedenen Fächern stammen (Tests aus NWT). Dafür bräuchte es neue Aufnahmen der Tests aus der Winkel-Akademie.
+
 ## Verworfen (damit es nicht wiederkommt)
 
 - Einstiegssätze „Lernen, das sich wie Entdecken anfühlt“, „Aus dem Arbeitsblatt wird ein Spiel“ und ähnliche: zu platt, klingen nach KI.

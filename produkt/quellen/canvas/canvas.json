@@ -105,6 +105,15 @@
       "w": 1280,
       "x": 4080,
       "y": 1500
+    },
+    "Seite-2.dc.html": {
+      "expand": "fill",
+      "h": 8000,
+      "is_interactive": true,
+      "title": "Ganze Seite · Entwurf 2 · Der Weg bis zur Arbeit",
+      "w": 1280,
+      "x": 5440,
+      "y": 1500
     }
   },
   "createdOnFiles": {
@@ -151,7 +160,8 @@
     "Artboard-ijrq.dc.html",
     "Seite.dc.html",
     "Impressum.dc.html",
-    "Datenschutz.dc.html"
+    "Datenschutz.dc.html",
+    "Seite-2.dc.html"
   ],
   "pages": [
     {
