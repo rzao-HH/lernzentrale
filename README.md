@@ -7,6 +7,7 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 
 ## Produkt: Funktionen und Vision
 Was die App heute kann und was geplant ist, steht **nur** in [`produkt/funktionen.html`](produkt/funktionen.html) (online: https://rzao-hh.github.io/lernzentrale/produkt/funktionen.html). Vor Analysen, Vergleichen oder Marketing dort lesen, neue Funktionen und Ideen dort ergänzen.
+Texte und Konzept der Produktseite: [`produkt/produktseite.md`](produkt/produktseite.md).
 
 ## Ablauf: erst Vorschau, dann freigeben
 Neue Versionen gehen **nicht direkt** auf die echte App. Ablauf für alle Chats:
