@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Funktionen der Lernzentrale</title>
+<meta name="description" content="Was die Lern-App heute kann und was geplant ist. Grundlage für Produktseite, Konkurrenzanalyse, Finanzierung und Marketing.">
+<link rel="icon" href="../icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Gleiche Farben und Schriften wie die Startseite (css/start.css), immer hell */
+:root{
+  --bg:#eef0f7;--card:#ffffff;--line:#d5d9e8;--text:#1c2140;--muted:#5a6185;--soft:#f3f4fa;
+  --W:#3d4fd6;--Z:#0f7f7a;--E:#d9482a;--D:#9c5418;--ok:#1f7a3d;--plan:#7a3fc4;--part:#b06a00;
+  --display:"Fredoka","Avenir Next Rounded","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next","Segoe UI",Roboto,system-ui,sans-serif;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font-family:var(--body);font-weight:500;line-height:1.55;font-size:16.5px;
+  padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:980px;margin:0 auto;padding-block:24px 56px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.8rem,4.5vw,2.5rem)}
+h2{font-size:1.55rem;margin-top:8px}
+h3{font-size:1.15rem}
+p{margin:0}
+a{color:var(--W);font-weight:700}
+.back{display:inline-block;margin-bottom:14px;text-decoration:none}
+.lead{color:var(--muted);margin-top:10px;max-width:62ch;font-size:1.05rem}
+.meta{color:var(--muted);font-size:.88rem;margin-top:8px}
+
+.note{background:var(--card);border:2px solid var(--W);border-radius:16px;padding:16px 18px;margin-top:20px;display:grid;gap:8px}
+.note b{font-family:var(--display);font-size:1.1rem;font-weight:600}
+.note ul{margin:0;padding-left:20px}
+
+nav.toc{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+nav.toc a{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;text-decoration:none;font-size:.92rem}
+
+.part{margin-top:40px;display:grid;gap:16px}
+.part>header{display:grid;gap:6px;padding-bottom:6px;border-bottom:3px solid var(--line)}
+.part>header .tag{font:800 .78rem/1 var(--body);letter-spacing:.1em;text-transform:uppercase}
+.part.now>header .tag{color:var(--ok)}
+.part.vision>header .tag{color:var(--plan)}
+.part>header p{color:var(--muted)}
+
+.cl{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:grid;gap:10px;min-width:0}
+.cl>p{color:var(--muted)}
+.cl ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.cl li{min-width:0}
+.cl li b{font-weight:800}
+.s{display:inline-block;font:800 .72rem/1 var(--body);letter-spacing:.04em;padding:4px 7px;border-radius:6px;vertical-align:2px;margin-left:4px;white-space:nowrap}
+.s.ja{background:#e4f3e9;color:var(--ok)}
+.s.teil{background:#fbefd9;color:var(--part)}
+.s.plan{background:#efe6fa;color:var(--plan)}
+.s.idee{background:var(--soft);color:var(--muted);border:1px dashed var(--line)}
+
+.apps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.app{border-top:5px solid var(--c)}
+.app h3{color:var(--c)}
+.app.W{--c:var(--W)}.app.Z{--c:var(--Z)}.app.E{--c:var(--E)}.app.D{--c:var(--D)}
+.app .grp{font-weight:800;font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.app ul{gap:3px;font-size:.95rem}
+
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:800}
+.flow span{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.9rem;color:var(--muted)}
+.limits li{color:var(--text)}
+footer{margin-top:40px;color:var(--muted);font-size:.88rem;display:grid;gap:6px}
+
+@media (max-width:720px){.apps{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="../">← Zur Lernzentrale</a>
+<h1>Funktionen der Lernzentrale</h1>
+<p class="lead">Was die App heute kann und was geplant ist, sortiert nach Bereichen. Die Liste ist die gemeinsame Grundlage für die Produktseite, die Konkurrenzanalyse, das Finanzierungskonzept und das Marketing.</p>
+<p class="meta">Stand: 11.11.2026 · App-Version 7.29.0 · „Lernzentrale“ ist ein Arbeitstitel, ein neuer Name wird gesucht.</p>
+
+<div class="note" id="wichtig">
+  <b>Wichtig zum Einordnen</b>
+  <ul>
+    <li><b>Die vier Fächer und die 6. Klasse sind nur der heutige Inhalt, nicht die Grenze des Produkts.</b> Sie stammen aus dem Prototyp für ein Kind. Das Prinzip (Pakete → viele Lernwege → Prüfen) gilt für jedes Fach und jede Klassenstufe.</li>
+    <li><b>Ziel ist eine App, die sich aus dem eigenen Schulmaterial selbst baut</b> (siehe <a href="#v-material">Vision: Aus dem Material wird die App</a>). Die heutigen Inhalte zeigen, wie das Ergebnis aussehen soll. Sie wurden bisher von Hand mit KI-Hilfe aus Fotos der Arbeitsblätter erstellt.</li>
+    <li><b>Zielgruppe:</b> Schulkinder gemeinsam mit ihren Eltern. Keine Festlegung auf Bundesland oder Klasse, weil sich die Inhalte nach dem hochgeladenen Material richten sollen.</li>
+    <li><b>Status:</b> Experimentierstatus. Preis und Geschäftsmodell sind noch offen.</li>
+  </ul>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+  <a href="#heute">Heute vorhanden</a>
+  <a href="#apps">Die vier Lernwelten</a>
+  <a href="#grenzen">Grenzen heute</a>
+  <a href="#vision">Geplant (Vision)</a>
+</nav>
+
+<!-- ================= TEIL A: HEUTE ================= -->
+<section class="part now" id="heute">
+  <header>
+    <span class="tag">Teil A</span>
+    <h2>Heute vorhanden</h2>
+    <p>Alles in diesem Teil ist in der App unter <a href="https://rzao-hh.github.io/lernzentrale/">rzao-hh.github.io/lernzentrale</a> nutzbar.</p>
+    <div class="legend"><span><span class="s ja">vorhanden</span> in allen Apps</span><span><span class="s teil">teilweise</span> nur in einzelnen Apps</span></div>
+  </header>
+
+  <div class="cl" id="a-prinzip">
+    <h3>1. Lernprinzip: Pakete, viele Wege, Prüfen</h3>
+    <div class="flow"><span>📦 Pakete wählen</span><i>→</i><span>📖 Lernen</span><i>→</i><span>🧩 Üben und Erleben</span><i>→</i><span>🎮 Spielen</span><i>→</i><span>🏆 Prüfen mit Note</span></div>
+    <ul>
+      <li><b>Kleine Lernpakete</b> mit eigenem Lernziel („Ich kann …“), schnell lernbar. Mehrere Pakete lassen sich kombinieren. <span class="s ja">vorhanden</span></li>
+      <li><b>Ein Paket, viele Lernwege:</b> Derselbe Stoff kommt in Lernkarten, Quiz, Rätseln, Simulationen, Spielen und Tests vor und festigt sich so aus verschiedenen Richtungen. <span class="s ja">vorhanden</span></li>
+      <li><b>Schwierigkeit in Stufen:</b> erst ansehen, dann mit Auswahl üben (Multiple Choice), dann ohne Hilfe schreiben. So gibt es früh Erfolgserlebnisse. <span class="s ja">vorhanden</span></li>
+      <li><b>Fortschritt je Paket</b> (z. B. „12 von 16 Treffern“) und „🏅 Lernziel erreicht“. <span class="s ja">vorhanden</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="a-lernformen">
+    <h3>2. Lernformen</h3>
+    <ul>
+      <li><b>Lernkarten</b> zum Umdrehen, mit Suche über alle Karten (Wasser 61, Deutsch 40, Englisch-Vokabeln und Verben). <span class="s ja">vorhanden</span></li>
+      <li><b>Nachschlagen:</b> „Wissen“, „Zauberbuch“, „Akte lesen“, „Simple Past erklärt“. <span class="s ja">vorhanden</span></li>
+      <li><b>Erklärvideo</b> mit Untertiteln, Ton, Langsam-Knopf und Mini-Quiz (Englisch). <span class="s teil">teilweise</span></li>
+      <li><b>Experimente und Simulationen:</b> Zauberkessel (Teilchen beim Heizen und Kühlen), Forscherlabor mit sechs Stationen (z. B. Frostsprengung, Flasche im Gefrierfach), Wasserkreislauf-Labor mit steuerbarer Landschaft und Mini-Kreislauf im Glas. Jeweils mit Forscher-Aufträgen. <span class="s teil">teilweise</span></li>
+      <li><b>Konstruieren mit virtuellem Werkzeug:</b> Winkel messen, zeichnen und konstruieren mit einem Geodreieck auf dem Bildschirm, Schritt für Schritt wie im Heft. <span class="s teil">teilweise</span></li>
+      <li><b>Erleben in Alltagsszenen:</b> Café in Brighton (bestellen, mit Pfund bezahlen), Verhör im Hafen (Fragen im Simple Past), Schatzkarte mit englischen Hinweisen. <span class="s teil">teilweise</span></li>
+      <li><b>Hören:</b> britische Aussprache (Hör-Kapitän) und Ton bei richtig und falsch. <span class="s teil">teilweise</span></li>
+      <li><b>Übungsformen:</b> Quiz in beide Richtungen, Lückentext, Buchstabenrätsel, Wahr oder falsch, Puzzles (Reihenfolgen), Sortieren, Fehler finden, Wörter antippen, Sätze bauen, Schätzen. <span class="s ja">vorhanden</span></li>
+      <li><b>Wiederholung von Fehlern:</b> Nicht Gewusstes kommt in der nächsten Runde zuerst wieder. Aufgaben, die gerade dran waren, kommen erst wieder, wenn die anderen durch sind. <span class="s ja">vorhanden</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="a-pruefen">
+    <h3>3. Prüfen, Noten und Selbsteinschätzung</h3>
+    <ul>
+      <li><b>Abschlusstest mit Note</b> (1–6) in jeder App, ohne Hilfen. <span class="s ja">vorhanden</span></li>
+      <li><b>Schreibtest:</b> Antworten frei schreiben, dann mit Musterlösung selbst korrigieren, mit Note. Läuft die App innerhalb von claude.ai, kann stattdessen die KI (Claude) korrigieren und eine Rückmeldung geben. <span class="s teil">teilweise</span> (Wasser, Deutsch, Englisch)</li>
+      <li><b>Probearbeit zum Ausdrucken:</b> Nachschreibtest Simple Past in 8 Varianten, in der App mit Note oder als PDF mit Lösung, Punkten und Notenschlüssel zum Selbstbewerten. <span class="s teil">teilweise</span> (nur Englisch)</li>
+      <li><b>Zeitrunden</b> (60 Sekunden) mit Rekord. <span class="s ja">vorhanden</span></li>
+      <li><b>Selbsteinschätzung:</b> Das Kind sagt pro Thema „kann ich gut / geht so / noch schwierig“ und kann eine eigene Frage notieren. <span class="s teil">teilweise</span> (nur Mathe-Checkliste)</li>
+      <li><b>Checkliste wie in der Schule</b> mit „Ich kann …“-Zielen und Schulaufgaben, verknüpft mit den passenden Übungen. <span class="s teil">teilweise</span> (nur Mathe)</li>
+      <li><b>Noten erscheinen auf den Paket-Kacheln und im Lernplan</b>, die beste Note zählt. <span class="s ja">vorhanden</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="a-steuerung">
+    <h3>4. Lernsteuerung und Lernplan</h3>
+    <ul>
+      <li><b>Lernstand je Paket</b> in Stufen 0–5. Bei mindestens 80 % richtig steigt die Stufe, unter 50 % sinkt sie. <span class="s ja">vorhanden</span></li>
+      <li><b>Verteilte Wiederholung:</b> Ein Paket ist nach 1, 2, 4, 8 oder 16 Tagen wieder fällig. <span class="s ja">vorhanden</span></li>
+      <li><b>Punkte belohnen Lernen, nicht Wiederholen:</b> Neues und Wackeliges bringt volle Punkte, Sicheres nur wenige, bis es fällig ist. Lange nicht Geübtes bringt +20 % Bonus. Ab der dritten Runde am Tag gibt es nur noch Minimalpunkte. <span class="s ja">vorhanden</span></li>
+      <li><b>„Heute lohnt sich besonders“</b> auf der Startseite: fällige und wackelige Pakete, mit einem Tipp direkt startbar. <span class="s ja">vorhanden</span></li>
+      <li><b>Lernplan bis zur Arbeit:</b> Lerntage festlegen, Pakete werden verteilt (Lesen, Wiederholung, Zwischenprobe, Generalprobe, Test). Die heute fällige Übung ist in der App markiert. <span class="s ja">vorhanden</span></li>
+      <li><b>Lernverlauf und Tipps ohne KI:</b> Treffer pro Tag als Kurve, Tendenz, häufige Fehlerarten (z. B. „falsche Skala am Geodreieck“), „lange nicht geübt“, Empfehlung für die nächste Übung. <span class="s teil">teilweise</span> (nur Mathe)</li>
+    </ul>
+  </div>
+
+  <div class="cl" id="a-motivation">
+    <h3>5. Motivation und Spielwelt</h3>
+    <ul>
+      <li><b>Jedes Fach ist eine eigene Welt</b> mit Geschichte und Rängen: Winkel-Akademie (Sternenstaub bis Galaxis-Legende), Wasser-Zauberschule mit vier Häusern, Küsten-Crew (Schiffsjunge bis Admiral), Detektiv-Büro (Praktikant bis Meisterdetektiv). <span class="s ja">vorhanden</span></li>
+      <li><b>Punkte und Rangliste</b> je Fach und gesamt, für das Gerät und für jede Lerngruppe. <span class="s ja">vorhanden</span></li>
+      <li><b>Spiele mit dem Lernstoff:</b> Duelle gegen eine Spielfigur, Wettrennen, Blitz-Runden. <span class="s ja">vorhanden</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="a-gemeinsam">
+    <h3>6. Gemeinsam lernen</h3>
+    <ul>
+      <li><b>Lerngruppen</b> mit Familie, Klasse oder Freunden: beliebig viele, per Link oder Code teilen, auch zwischen Familien. <span class="s ja">vorhanden</span></li>
+      <li><b>Arena:</b> Tauziehen live gegeneinander, Power-ups (Einfrieren, Doppelzug, Schild) nach drei richtigen Antworten in Folge, Einsatz von Arena-Punkten. <span class="s ja">vorhanden</span></li>
+      <li><b>Geister-Duell:</b> zeitversetzt gegen die Aufzeichnung einer anderen Person spielen. <span class="s ja">vorhanden</span></li>
+      <li><b>Fach-Glücksrad:</b> Fragen aus allen Fächern gemischt oder aus einem gewählten Fach. <span class="s ja">vorhanden</span></li>
+      <li><b>Rennen mit mehreren Geräten</b> (Englisch-Vokabeln). <span class="s teil">teilweise</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="a-eltern">
+    <h3>7. Familie und Eltern</h3>
+    <ul>
+      <li><b>Mehrere Kinder auf einem Gerät:</b> eigene Person mit Symbol, getrennte Punkte, Noten und Lernpläne. <span class="s ja">vorhanden</span></li>
+      <li><b>Benutzername:</b> Mit demselben Namen ist der Stand auf jedem Gerät gleich (Abgleich über einen Server). Noch ohne Passwort. <span class="s ja">vorhanden</span></li>
+      <li><b>Übersicht für Eltern:</b> Zusammenfassung, Übungsrhythmus der letzten 14 Tage, Tendenz, Abbrüche, lange nicht Geübtes und die Fragen des Kindes. <span class="s teil">teilweise</span> (nur Mathe)</li>
+      <li><b>Neu anfangen:</b> Lernplan und Fortschritt je Fach zurücksetzen, Punkte bleiben. <span class="s ja">vorhanden</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="a-material">
+    <h3>8. Bezug zum Schulmaterial</h3>
+    <ul>
+      <li><b>Jedes Paket nennt seine Quelle,</b> z. B. „AH S. 13–14“ oder „Vokabelliste S. 258“. <span class="s ja">vorhanden</span></li>
+      <li><b>Begriffe und Erklärweise wie auf den Arbeitsblättern</b> (z. B. „gebeugte (finite) Verbform“). Was nicht auf den Blättern steht, ist als Zusatz markiert. <span class="s ja">vorhanden</span></li>
+      <li><b>📄-Knopf</b> öffnet die Fotos der Arbeitsblätter zum Fach. <span class="s ja">vorhanden</span> (im Prototyp öffentlich abgelegt, siehe Grenzen)</li>
+    </ul>
+  </div>
+
+  <div class="cl" id="a-technik">
+    <h3>9. Technik und Zugang</h3>
+    <ul>
+      <li><b>Web-App:</b> läuft im Browser auf Handy, Tablet und PC, ohne Installation. Lässt sich auf den Home-Bildschirm legen. <span class="s ja">vorhanden</span></li>
+      <li><b>Offline:</b> Nach einem Besuch mit Internet geht alles auch ohne Netz (außer Lernzettel, Arena und Lerngruppen). <span class="s ja">vorhanden</span></li>
+      <li><b>Hinweis auf neue Versionen</b> und „Was ist neu?“ in der App. <span class="s ja">vorhanden</span></li>
+      <li><b>Keine Werbung, keine Käufe in der App.</b> <span class="s ja">vorhanden</span></li>
+      <li><b>Automatische Tests</b> für die wichtigsten Abläufe (über 40 Browser-Tests). <span class="s ja">vorhanden</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= Die vier Lernwelten ================= -->
+<section class="part now" id="apps">
+  <header>
+    <span class="tag">Teil A, Details</span>
+    <h2>Die vier Lernwelten im Prototyp</h2>
+    <p>Beispielinhalte einer 6. Klasse. Sie zeigen, wie ein Fach in der App aussieht. Weitere Fächer und Klassen folgen demselben Aufbau.</p>
+  </header>
+  <div class="apps">
+    <div class="cl app W">
+      <h3>📐 Winkel-Akademie (Mathe)</h3>
+      <p>8 Pakete: Winkelarten und Messen, Kompass und Kurs, Winkel benennen und berechnen, Senkrechte und Parallelen.</p>
+      <div class="grp">Missionen</div>
+      <ul><li>Messen mit Geodreieck (echt oder virtuell), Winkelart erkennen, Gradzahl einordnen, Schätzen</li><li>Winkel zeichnen, Winkel konstruieren Schritt für Schritt</li><li>Aufgaben-Mission (Kompass, Schatzsuche, Beschriften, Berechnen)</li><li>Zeitrunde, Abschlusstest mit Note, Wissen</li><li>Checkliste mit Auswertung, Selbsteinschätzung und Übersicht für Eltern</li></ul>
+    </div>
+    <div class="cl app Z">
+      <h3>🪄 Wasser-Zauberschule (NWT)</h3>
+      <p>6 Pakete: Zustände, Verwandlungen, Eis schwimmt, Geheimnis des Sees, Forschen wie Profis, Wasserkreislauf.</p>
+      <div class="grp">Entdecken · Knobeln · Prüfen</div>
+      <ul><li>Zauberbuch (61 Lernkarten), Zauberkessel, Wasserkreislauf-Labor</li><li>Forscherlabor mit sechs Stationen, Verwandlungskreis, See-Rätsel, Teilchen-Tabelle, Stoff-Thermometer, Lückentext, Zauberworte, Protokoll- und Kreislauf-Puzzle</li><li>Zauberprüfung, Wahr oder falsch, Blitz-Duell, Abschlusstest und Schreibtest mit Note</li><li>Vier Häuser sammeln Punkte</li></ul>
+    </div>
+    <div class="cl app E">
+      <h3>🐚 Küsten-Crew (Englisch)</h3>
+      <p>Vokabelpakete zu je 15 Wörtern, unregelmäßige Verben in 10er-Paketen, Grammatik Simple Past.</p>
+      <div class="grp">Lernen · Üben · Erleben · Spiele · Prüfen</div>
+      <ul><li>Karten, Verben-Karten, Verben lernen in 5er-Portionen, Erklärvideo</li><li>Quiz in beide Richtungen, Verbformen, Lückensätze, Fragewörter, Fehler-Detektiv, Zeiten-Werkstatt, Hör-Kapitän</li><li>Café in Brighton, Verhör im Hafen, Schatzkarte</li><li>Vokabel- und Grammatik-Duell, Rennen</li><li>Vokabel-, Grammatik- und Schreibtest, Nachschreibtest in 8 Varianten (auch als PDF), Schreibwerkstatt</li></ul>
+    </div>
+    <div class="cl app D">
+      <h3>🕵️ Detektiv-Büro (Deutsch)</h3>
+      <p>6 Akten: Hauptsatz und Nebensatz, Satzreihe, Satzgefüge, Konjunktionen, Komma-Profi, Zeitformen.</p>
+      <div class="grp">Lernen · Üben · Prüfen</div>
+      <ul><li>Akte lesen (40 Lernkarten mit Suche)</li><li>Regel-Check, Verb-Jäger, Komma-Setzer, Satzreihe oder Satzgefüge, Satz-Baumeister, Konjunktion wählen, Zeitmaschine</li><li>Blitz-Ermittlung (60 Sekunden)</li><li>Abschlusstest und Schreibtest mit Note</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Grenzen ================= -->
+<section class="part now" id="grenzen">
+  <header>
+    <span class="tag">Teil A, ehrlich</span>
+    <h2>Grenzen heute</h2>
+    <p>Wichtig für Konkurrenzanalyse und Finanzierung: was beim Prototyp noch fehlt oder vor einem Produkt geändert werden muss.</p>
+  </header>
+  <div class="cl">
+    <ul class="limits">
+      <li><b>Inhalte werden noch von Hand erstellt,</b> für eine bestimmte Klasse und deren Arbeitsblätter. Ein Hochladen eigener Materialien gibt es noch nicht.</li>
+      <li><b>Funktionen sind ungleich verteilt:</b> Elternübersicht, Checkliste und Selbsteinschätzung gibt es nur in Mathe, Probearbeiten zum Ausdrucken nur in Englisch.</li>
+      <li><b>Anmeldung nur mit Benutzernamen,</b> ohne Passwort. Geplant ist E-Mail und Passwort.</li>
+      <li><b>Rechtliches vor einem Produkt:</b> Die Fotos der Arbeitsblätter liegen öffentlich. Manche Übungssätze sind wörtlich von den Blättern übernommen. Die Englisch-App nutzt geschützte Figuren aus Star Wars (Vader, Millennium Falke). Das alles muss für ein Produkt ersetzt werden.</li>
+      <li><b>Kein Lehrerzugang und keine Schulversion.</b></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= TEIL B: VISION ================= -->
+<section class="part vision" id="vision">
+  <header>
+    <span class="tag">Teil B</span>
+    <h2>Geplant (Vision)</h2>
+    <p>Diese Funktionen gibt es noch nicht. Sie beschreiben, wohin sich die App entwickeln soll.</p>
+    <div class="legend"><span><span class="s plan">geplant</span> fester Teil der Vision</span><span><span class="s idee">Idee</span> noch offen</span><span><span class="s teil">Ansatz vorhanden</span> erste Version gibt es schon</span></div>
+  </header>
+
+  <div class="cl" id="v-material">
+    <h3>1. Aus dem Material wird die App (Kern-Alleinstellungsmerkmal)</h3>
+    <p>Jede Familie bekommt ihre eigene App, passend zu dem, was in der Schule gerade dran ist. Das geht für jedes Fach und jede Klasse.</p>
+    <ul>
+      <li><b>Foto vom Arbeitsblatt oder der Buchseite hochladen.</b> Die App liest Themen, Begriffe, Vokabeln, Regeln und Beispiele heraus (Lernlandkarte). <span class="s plan">geplant</span></li>
+      <li><b>Stil wie im Unterricht:</b> gleiche Fachbegriffe und Erklärweise wie auf den Blättern, aber eigene Aufgaben und Sätze, keine Kopien. <span class="s plan">geplant</span></li>
+      <li><b>Stufe 1, fertige Module füllen:</b> Lernkarten, Quiz, Lückentext, Duelle und Tests entstehen aus der Lernlandkarte. <span class="s plan">geplant</span></li>
+      <li><b>Stufe 2, Module stellen sich ein:</b> Jedes Standardmodul hat Kontrollfragen („Kommt ‚gasförmig‘ im Material vor?“). Teile, die nicht dran waren, bleiben aus, z. B. die Dampf-Station im Labor. <span class="s plan">geplant</span></li>
+      <li><b>Stufe 3, neue Pakete und Module:</b> Passt Neues in keine Modulart, nimmt die App zuerst das ähnlichste Modul. Häufige Fälle werden zu neuen Standardmodulen, so wächst die Bibliothek. <span class="s plan">geplant</span></li>
+      <li><b>Qualitätssicherung:</b> Jede Aufgabe verweist auf ihre Stelle im Material. Ein zweiter Prüfdurchlauf löst jede Aufgabe noch einmal. In Mathe rechnet der Code selbst. Dazu ein Knopf „Das stimmt nicht“, und Eltern können neue Pakete kurz bestätigen. <span class="s plan">geplant</span></li>
+      <li><b>Fertige Grundinhalte</b> nach Bildungsplänen, für den Start ohne eigenes Material. <span class="s idee">Idee</span></li>
+      <li><b>Lizenzen mit Schulbuchverlagen</b> für offizielle Pakete. <span class="s idee">Idee</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="v-mitlernen">
+    <h3>2. Die App lernt mit</h3>
+    <ul>
+      <li><b>Merkt sich, wie ein Kind am besten lernt</b> (welche Lernwege helfen, wo es hakt) und passt Auswahl und Schwierigkeit an. <span class="s teil">Ansatz vorhanden</span> (Lernstand, Fehlerarten)</li>
+      <li><b>Denkt sich neue Übungen aus,</b> gezielt für Schwachstellen, z. B. eine Mini-Mission nur zu „spitz oder recht“. <span class="s plan">geplant</span></li>
+      <li><b>Erklärt noch einmal anders,</b> wenn etwas mehrmals nicht klappt. <span class="s plan">geplant</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="v-klassenzimmer">
+    <h3>3. Klassenzimmer mit KI-Lehrerin (pro Fach)</h3>
+    <p>Mit Sprache und Bild: Die Lehrerin spricht, zeigt an der Tafel und mit Schaubildern.</p>
+    <ul>
+      <li><b>Sprechstunde:</b> Das Kind stellt Fragen zum Thema, die Lehrerin erklärt an der Tafel oder mit Schaubildern. Name noch offen (Sprechstunde, Fragestunde, Extrastunde). <span class="s plan">geplant</span></li>
+      <li><b>Nachholstunde (etwa 10 Minuten):</b> Die Lehrerin erklärt ein ausgewähltes Thema im Zusammenhang, wie im echten Unterricht. Sie stellt zwischendurch Fragen, aber nur zu dem gerade Erklärten. Man kann sich melden, zum Antworten oder für eine Rückfrage. Sie wartet eine gewisse Zeit und nimmt dann jemanden dran, wer zu lange braucht, kommt diesmal nicht dran. <span class="s plan">geplant</span></li>
+      <li><b>Gemeinsame Nachholstunde mit Freunden</b> aus der Lerngruppe, die sich gleichzeitig melden. <span class="s idee">Idee</span></li>
+      <li><b>Sprachsteuerung:</b> mit der App sprechen statt tippen. <span class="s plan">geplant</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="v-pruefen">
+    <h3>4. Bereit für die Arbeit</h3>
+    <ul>
+      <li><b>Probearbeiten zum Ausdrucken für alle Fächer,</b> passend zum Material, mit Musterlösung, Punkten und Notenschlüssel. Das Kind schreibt auch einmal auf Papier und vergleicht dann. <span class="s teil">Ansatz vorhanden</span> (Englisch)</li>
+      <li><b>Selbstreflexion nach jedem Test</b> in allen Fächern: Wie lief es, was war schwer? <span class="s teil">Ansatz vorhanden</span> (Mathe)</li>
+    </ul>
+  </div>
+
+  <div class="cl" id="v-eltern">
+    <h3>5. Für Eltern</h3>
+    <ul>
+      <li><b>Hinweise in allen Fächern:</b> was das Kind schon gut kann, wo es Unterstützung braucht und wie man helfen kann. <span class="s teil">Ansatz vorhanden</span> (Mathe)</li>
+      <li><b>Einsicht in die Gespräche mit der KI-Lehrerin.</b> <span class="s plan">geplant</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="v-sicherheit">
+    <h3>6. Sicherheit, Datenschutz, Recht</h3>
+    <ul>
+      <li><b>Die KI bleibt beim Thema:</b> mehrere Schutzschichten (Prüfung vor der KI, feste Rolle, nur eigenes Material als Wissen, Prüfung der Antwort, feste kindgerechte Antworten bei heiklen Themen, gezielte Tests vor dem Start). <span class="s plan">geplant</span></li>
+      <li><b>Arbeitsblätter bleiben privat:</b> Fotos nur für die eigene Familie, möglichst nur auf dem Gerät, nie geteilt. Die App übernimmt Themen, keine Texte (rechtlich prüfen lassen). <span class="s plan">geplant</span></li>
+      <li><b>KI auf dem Gerät:</b> eine kleine KI läuft direkt auf dem Tablet, damit Erklären und Nachfragen auch offline gehen und Daten auf dem Gerät bleiben. Das Bauen neuer Pakete aus Fotos läuft online. <span class="s idee">Idee</span></li>
+      <li><b>Einwilligung der Eltern</b> (DSGVO, Kinder unter 16) und Prüfung nach EU AI Act. <span class="s plan">geplant</span></li>
+      <li><b>Anmeldung mit E-Mail und Passwort.</b> <span class="s plan">geplant</span></li>
+    </ul>
+  </div>
+
+  <div class="cl" id="v-produkt">
+    <h3>7. Produkt und Rahmen</h3>
+    <ul>
+      <li><b>Neuer Name:</b> „Lernzentrale“ ist ein Arbeitstitel. Ideen bisher: Blattwerk, Zettelzauber, Zettelwerk, Lernbande, Knobelkiste (Marke und Domain noch nicht geprüft). <span class="s idee">Idee</span></li>
+      <li><b>Offen für alle Fächer, Klassen und Bundesländer,</b> weil sich die Inhalte nach dem Material richten. <span class="s plan">geplant</span></li>
+      <li><b>Experimentierstatus mit Testfamilien,</b> Preis und Geschäftsmodell offen (kostenlos, Abo oder Schullizenz). <span class="s plan">geplant</span></li>
+      <li><b>Produktseite</b> mit der Botschaft „Jedes Kind lernt anders. Diese App lernt mit.“ <span class="s plan">in Arbeit</span></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p>Diese Seite wird bei jeder neuen Funktion und jeder neuen Idee ergänzt. Ablage im Repository: <code>produkt/funktionen.html</code>.</p>
+  <p><a href="../">← Zur Lernzentrale</a></p>
+</footer>
+</div>
+</body>
+</html>
