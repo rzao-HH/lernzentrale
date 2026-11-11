@@ -47,9 +47,9 @@ Gewichtung: eigener Schulstoff und „jedes Fach, jede Klasse“ zuerst, Pakete 
 Klappen Aufgaben aus einem Paket öfter nicht, gibt der Lernbegleiter Tipps: noch einmal die Lernkarten ansehen, den Lernzettel lesen oder sich das Thema in der interaktiven Unterrichtsstunde erklären lassen. Auf Wunsch baut er ein neues Modul genau für diese Inhalte.
 
 ### 4 · Lernen, anwenden, ausprobieren (beschlossen)
-Zum klassischen Lernen mit Lernkarten kommen Spiele und Experimente zum selben Stoff. Jedes Modul zeigt ihn von einer anderen Seite, so wird vieles aus eigener Erfahrung gelernt. Die Module gibt es in verschiedenen Schwierigkeitsstufen, damit immer etwas zum eigenen Stand passt.
+Zum klassischen Lernen mit Lernkarten kommen Spiele und Experimente mit denselben Inhalten. Jedes Modul lässt das Gelernte neu erleben, und so wird es besser verinnerlicht. Die Module gibt es in verschiedenen Schwierigkeitsstufen, damit immer etwas zum eigenen Stand passt.
 
-Kern: klassisches Lernen verbunden mit Spiel und Experiment, derselbe Stoff aus verschiedenen Perspektiven, Lernen durch Erfahrung statt immer gleicher Karten; Schwierigkeitsstufen. Abschnitt 5 bleibt als Schaufenster für die Experimente.
+Kern: klassisches Lernen verbunden mit Spiel und Experiment, jedes Modul eine neue Erfahrung mit denselben Inhalten; Schwierigkeitsstufen. Wort „Stoff“ hier vermeiden (steht schon in Abschnitt 2), „Erfahrung“ ebenso (Überschrift Abschnitt 5).
 
 ### 5 · Lernen durch Erfahrung (beschlossen)
 Im Zauberkessel wird Wasser erhitzt und gekühlt, und man sieht, wie sich die Teilchen bewegen. Im Verhör im Hafen werden Verdächtige auf Englisch befragt, und dafür muss die Frage im richtigen Simple Past stehen. In Mathe wird das Geodreieck auf dem Bildschirm angelegt, gedreht und abgelesen, Schritt für Schritt wie im Heft.
