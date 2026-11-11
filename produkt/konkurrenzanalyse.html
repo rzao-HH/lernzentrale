@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lernzentrale Konkurrenzanalyse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: eine ruhige Lesespalte (Report), breite Tabellen scrollen in eigenen Containern; Kacheln nur für App-Steckbriefe */
+:root{
+  --bg:#f6f7f4; --surface:#ffffff; --fg:#1d2420; --muted:#5d6862; --line:#dde2dc;
+  --accent:#1f6f5c; --accent-soft:#e2efe9; --warn:#a3561a; --warn-soft:#f7ebdf; --us:#3b46b8; --us-soft:#e7e9fb;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141917; --surface:#1c2320; --fg:#e7ece8; --muted:#a1aca6; --line:#2e3833;
+  --accent:#6cc8ad; --accent-soft:#1f3a31; --warn:#e9a46c; --warn-soft:#3a2a1c; --us:#9aa3ff; --us-soft:#262a4d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141917; --surface:#1c2320; --fg:#e7ece8; --muted:#a1aca6; --line:#2e3833;
+  --accent:#6cc8ad; --accent-soft:#1f3a31; --warn:#e9a46c; --warn-soft:#3a2a1c; --us:#9aa3ff; --us-soft:#262a4d; color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15.5px;line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.7rem;font-weight:700}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0;max-width:68ch}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+section{display:flex;flex-direction:column;gap:18px}
+.lede{font-size:1.08rem;color:var(--muted)}
+header{display:flex;flex-direction:column;gap:14px}
+.meta{font-size:.85rem;color:var(--muted)}
+.note{background:var(--warn-soft);border-left:3px solid var(--warn);padding:12px 16px;border-radius:4px;font-size:.92rem;max-width:none}
+ul{margin:0;padding-left:1.2em}
+li{margin:.15em 0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.cols>*{min-width:0}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.box.us{border-color:var(--us);background:var(--us-soft)}
+.box h3{font-size:1.05rem}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-weight:600;background:var(--accent-soft);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.matrix th,.matrix td{text-align:center;white-space:nowrap;padding:7px 9px}
+.matrix th:first-child,.matrix td:first-child{text-align:left;position:sticky;left:0;background:var(--surface)}
+.matrix th:first-child{background:var(--accent-soft)}
+.matrix tr.us td{background:var(--us-soft);font-weight:600}
+.y{color:var(--accent);font-weight:700}.p{color:var(--warn);font-weight:700}.n{color:var(--muted)}
+.legend{font-size:.85rem;color:var(--muted)}
+.group{display:flex;flex-direction:column;gap:14px}
+.group>h3{font-size:1.25rem;border-bottom:1px solid var(--line);padding-bottom:6px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.card .tag{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.card .links{font-size:.85rem;display:flex;gap:12px;flex-wrap:wrap}
+.card ul{font-size:.9rem}
+.usp{background:var(--accent-soft);border-radius:6px;padding:8px 12px;font-size:.9rem}
+.usp b{color:var(--accent)}
+.learn{font-size:.88rem;color:var(--muted)}
+.learn b{color:var(--fg)}
+.ranked{counter-reset:r;list-style:none;padding:0;display:flex;flex-direction:column;gap:12px}
+.ranked li{counter-increment:r;display:grid;grid-template-columns:2.2em 1fr;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.ranked li::before{content:counter(r);font-family:var(--display);font-weight:700;font-size:1.3rem;color:var(--accent)}
+.ranked li>div{min-width:0}
+.ranked .src{font-size:.82rem;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.stat .v{font-family:var(--display);font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums}
+.stat .l{font-size:.85rem;color:var(--muted)}
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media (max-width:760px){.calc{grid-template-columns:1fr}}
+.calc form{display:grid;grid-template-columns:1fr auto;gap:10px 12px;align-items:center;font-size:.9rem}
+.calc label{color:var(--fg)}
+.calc label small{display:block;color:var(--muted);font-size:.78rem}
+.calc input,.calc select{font:inherit;width:8.5em;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);text-align:right}
+.calc select{text-align:left;width:11em}
+.out{display:flex;flex-direction:column;gap:10px}
+.out .row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding-bottom:6px;font-size:.92rem}
+.out .row b{font-variant-numeric:tabular-nums;font-family:var(--display);font-size:1.15rem}
+.out .row.big b{font-size:1.5rem;color:var(--accent)}
+.presets{display:flex;gap:8px;flex-wrap:wrap}
+.presets button{font:inherit;font-size:.82rem;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;padding:5px 12px;cursor:pointer}
+.presets button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
+.presets button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sources{font-size:.82rem;color:var(--muted);columns:2 320px;column-gap:28px}
+.sources li{break-inside:avoid}
+</style>
+</head>
+<body>
+
+
+<style>
+.q{color:var(--us);font-weight:700}
+.tag-plan{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--us);border:1px solid var(--us);border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:middle}
+.box.us li b{color:var(--us)}
+.calc .wide{grid-column:1/-1}
+</style>
+<div class="wrap">
+
+<header>
+  <a href="funktionen.html">← Funktionen und Pläne</a>
+  <span class="eyebrow">Robins Lernzentrale · Marktblick · Stand 11.11.2026 · Version 2</span>
+  <h1>Konkurrenzanalyse Lern-Apps</h1>
+  <p class="lede">Welche Lern-Apps sind beliebt, was können sie, was macht jede besonders, wie verdienen sie Geld, und wo steht die Lernzentrale, wenn alles Geplante fertig ist? Mit Linkliste, Feature-Matrix, Preisen, Downloadzahlen, KI-Kosten und einem Rechenmodell.</p>
+  <p class="note">Grundlage für die eigene App ist <code>produkt/funktionen.html</code> (App-Version 7.29.0). Für diesen Vergleich gilt alles aus „Geplant (Vision)“ als schon vorhanden, auch die „Grenzen heute“ (Rechtliches, Passwort, DSGVO) gelten als gelöst. Zahlen zu Nutzern, Downloads und Preisen der anderen Apps stammen überwiegend aus Herstellerangaben, App-Store-Einträgen und Trackern. Die offiziellen Webseiten der Anbieter waren aus dieser Umgebung nicht direkt abrufbar. Preise schwanken je nach Kaufweg, vor Entscheidungen bitte beim Anbieter prüfen.</p>
+</header>
+
+<section id="wir">
+  <span class="eyebrow">Ausgangslage</span>
+  <h2>Die Lernzentrale mit allen geplanten Funktionen</h2>
+  <p>Kernidee laut Funktionsseite: Jede Familie bekommt ihre eigene App, die sich aus dem Schulmaterial selbst baut, für jedes Fach und jede Klasse. Zielgruppe sind Schulkinder gemeinsam mit ihren Eltern. Die vier Fächer der 6. Klasse sind nur der Inhalt des Prototyps. Arbeitstitel, ein neuer Name wird gesucht.</p>
+  <div class="cols">
+    <div class="box us">
+      <h3>Heute schon da</h3>
+      <ul>
+        <li>Pakete mit „Ich kann …“-Ziel, ein Paket in vielen Lernwegen: Karten, Quiz, Rätsel, Simulationen, Geodreieck, Alltagsszenen, Spiele, Tests</li>
+        <li>Stufen 0–5 je Paket, Wiederholung nach 1/2/4/8/16 Tagen, Punkte belohnen Lernen statt Wiederholen</li>
+        <li>Lernplan bis zur Arbeit mit Zwischen- und Generalprobe, Abschlusstest mit Note</li>
+        <li>Spielwelten mit Rängen, Lerngruppen, Arena (Tauziehen, Power-ups), Geister-Duell, Glücksrad</li>
+        <li>Mehrere Kinder pro Gerät, Abgleich per Benutzername, offline, keine Werbung</li>
+      </ul>
+    </div>
+    <div class="box us">
+      <h3>Geplant, hier als vorhanden angenommen</h3>
+      <ul>
+        <li><b>Aus dem Material wird die App:</b> Foto hochladen → Lernlandkarte → Module füllen sich, stellen sich ein, neue Modularten entstehen. Eigene Aufgaben, keine Kopien</li>
+        <li><b>Qualitätssicherung:</b> Quelle je Aufgabe, zweiter Prüfdurchlauf, Mathe rechnet der Code, „Das stimmt nicht“-Knopf, Eltern bestätigen Pakete</li>
+        <li><b>Die App lernt mit:</b> merkt sich, was hilft, erfindet Übungen für Schwachstellen, erklärt anders</li>
+        <li><b>Klassenzimmer mit KI-Lehrerin:</b> Sprechstunde und 10-Minuten-Nachholstunde mit Sprache, Tafel und Schaubildern, Melden wie im Unterricht, auch gemeinsam mit Freunden</li>
+        <li><b>Bereit für die Arbeit:</b> Probearbeiten zum Ausdrucken und Selbstreflexion in allen Fächern</li>
+        <li><b>Eltern:</b> Hinweise in allen Fächern, Einsicht in die KI-Gespräche</li>
+        <li><b>Sicherheit:</b> KI bleibt beim Thema (mehrere Schutzschichten), Fotos bleiben privat, kleine KI auf dem Gerät, DSGVO und EU AI Act, E-Mail-Login</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="links">
+  <span class="eyebrow">Überblick</span>
+  <h2>Die Apps im Vergleich: Links, Reichweite, Preis</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>App</th><th>Fokus</th><th>Webseite / Store</th><th>Reichweite (Angabe)</th><th>Preis (ca.)</th></tr></thead>
+    <tbody>
+      <tr><td><b>ANTON</b></td><td>Schulstoff Kl. 1–10, DE-Lehrpläne</td><td><a href="https://anton.app/de/">anton.app</a> · <a href="https://apps.apple.com/de/app/id1180554775">App Store</a></td><td class="num">10–100 Mio. Android-Installs (Tracker ≈ 13,8 Mio.), 303.000 Bewertungen iOS DE</td><td>gratis, werbefrei · Plus 9,99 €/Jahr · Familie 19,99 € · Lehrkraft 39,99 €</td></tr>
+      <tr><td><b>simpleclub</b></td><td>Erklärvideos + Übungen ab Kl. 5 bis Abi, Azubis</td><td><a href="https://simpleclub.com">simpleclub.com</a> · <a href="https://apps.apple.com/de/app/id1089299986">App Store</a></td><td class="num">1–10 Mio. Android-Installs, „2 Mio. pro Monat“ (Hersteller)</td><td>Freemium-Abo, aktueller Preis nicht bestätigt</td></tr>
+      <tr><td><b>Knowunity</b></td><td>KI-Tutor + Lernzettel-Community</td><td><a href="https://knowunity.de">knowunity.de</a> · <a href="https://play.google.com/store/apps/details?id=de.knowunity.app">Google Play</a></td><td class="num">10 Mio.+ Android-Installs, 13–22 Mio. Nutzer Europa (Drittangaben)</td><td>Freemium · Lite 5,99 €/Monat · Pro 9,99–69,99 € (je Laufzeit)</td></tr>
+      <tr><td><b>sofatutor</b></td><td>Lernvideos, Übungen, Hausaufgabenchat mit Lehrkräften</td><td><a href="https://www.sofatutor.com">sofatutor.com</a></td><td class="num">> 1 Mio. Nutzer, > 0,5 Mio. Zahlende (2020), Umsatz ≈ 26–28 Mio. €</td><td>nur Abo, 30 Tage Test · ca. 8–20 €/Monat je Laufzeit</td></tr>
+      <tr><td><b>phase6</b></td><td>Vokabeltrainer passend zum Schulbuch</td><td><a href="https://www.phase-6.de">phase-6.de</a> · <a href="https://apps.apple.com/de/app/phase6/id441493173">App Store</a></td><td class="num">1.400+ Vokabelsammlungen, Schul- und Bibliothekslizenzen</td><td>Basis gratis · Sammlungen einzeln · PLUS ca. 36–60 €/Jahr</td></tr>
+      <tr><td><b>Duolingo</b></td><td>Sprachen, dazu Mathe, Musik, Schach</td><td><a href="https://www.duolingo.com">duolingo.com</a></td><td class="num">56,5 Mio. täglich aktiv, 12,5 Mio. Zahlende (Q1 2026)</td><td>gratis mit Werbung · Super ≈ 16,49 €/Monat oder 90–111 €/Jahr · Max ≈ 14,99 €/Monat · Familie 122,99 €/Jahr</td></tr>
+      <tr><td><b>Quizlet</b></td><td>Karteikarten, Lernmodus, Klassenspiele</td><td><a href="https://quizlet.com">quizlet.com</a></td><td class="num">rund 60 Mio. Nutzer (Drittangabe)</td><td>Plus 7,99 $/Monat oder 35,99 $/Jahr</td></tr>
+      <tr><td><b>Kahoot!</b></td><td>Live-Quiz im Klassenraum</td><td><a href="https://kahoot.com">kahoot.com</a></td><td class="num">> 10 Mio. Lehrkräfte (Hersteller)</td><td>gratis für Lehrkräfte (Basis), Kahoot!+ Abos</td></tr>
+      <tr><td><b>Blooket</b></td><td>Quiz-Spielmodi für die Klasse</td><td><a href="https://www.blooket.com">blooket.com</a></td><td class="num">k. A.</td><td>großzügig gratis · Plus ≈ 4,99 $/Monat (jährlich)</td></tr>
+      <tr><td><b>Prodigy Math</b></td><td>Mathe als Rollenspiel, Kl. 1–8 (USA)</td><td><a href="https://www.prodigygame.com">prodigygame.com</a></td><td class="num">k. A.</td><td>Spiel gratis · Eltern-Mitgliedschaft</td></tr>
+      <tr><td><b>Khan Academy</b></td><td>Videos + Übungen, KI-Tutor Khanmigo</td><td><a href="https://de.khanacademy.org">de.khanacademy.org</a> · <a href="https://www.khanmigo.ai">khanmigo.ai</a></td><td class="num">gemeinnützig, weltweit</td><td>gratis · Khanmigo teils ≈ 4 $/Monat</td></tr>
+      <tr><td><b>StudySmarter / Vaia</b></td><td>KI-Karteikarten aus eigenen Unterlagen</td><td><a href="https://www.studysmarter.de">studysmarter.de</a> · <a href="https://apps.apple.com/de/app/id1439949520">App Store</a></td><td class="num">k. A.</td><td>Freemium-Abo</td></tr>
+      <tr><td><b>Studyflix</b></td><td>Kurze Lernvideos, Lernkarten</td><td><a href="https://studyflix.de">studyflix.de</a> · <a href="https://apps.apple.com/de/app/id1514546785">App Store</a></td><td class="num">5.000–8.000 Videos, 25.000 Lernkarten</td><td>komplett gratis, finanziert über Arbeitgeber-Werbung</td></tr>
+      <tr><td><b>Photomath</b></td><td>Aufgabe fotografieren, Rechenweg sehen (Google)</td><td><a href="https://photomath.com">photomath.com</a> · <a href="https://apps.apple.com/de/app/id919087726">App Store</a></td><td class="num">k. A.</td><td>gratis · Plus-Abo für ausführliche Erklärungen</td></tr>
+      <tr><td><b>bettermarks</b></td><td>Adaptives Mathe-System Kl. 4–13</td><td><a href="https://de.bettermarks.com">bettermarks.com</a> · <a href="https://kultus.hessen.de/schulsystem/adaptives-mathematik-lernsystem/">Hessen</a></td><td class="num">Landeslizenzen u. a. RLP (bis 2027/28), Hessen, Hamburg</td><td>für Schulen über Landeslizenz</td></tr>
+      <tr><td><b>Anki</b></td><td>Karteikarten mit Wiederholungs-Algorithmus FSRS</td><td><a href="https://apps.ankiweb.net">apps.ankiweb.net</a></td><td class="num">Open Source</td><td>gratis (iOS einmalig 24,99 $)</td></tr>
+      <tr><td><b>Klett / Cornelsen Lernen</b></td><td>Digitale Begleiter zum Schulbuch</td><td><a href="https://apps.apple.com/de/app/id1260478846">Klett Lernen</a> · <a href="https://apps.apple.com/de/app/id1502080578">Cornelsen Lernen</a></td><td class="num">über Schulbuch-Verbreitung</td><td>meist im Schulbuch bzw. in der Lizenz enthalten</td></tr>
+      <tr><td><b>NotebookLM</b> <span class="tag-plan">neu</span></td><td>Eigene Unterlagen → Quiz, Karten, Audio- und Video-Erklärungen (Google)</td><td><a href="https://notebooklm.google">notebooklm.google</a></td><td class="num">über Google Workspace for Education</td><td>gratis mit Tageslimits (z. B. 10 Quiz, 3 Videos) · mehr in Bezahlstufen</td></tr>
+      <tr><td><b>ChatGPT Lernmodus / Gemini Geführtes Lernen</b> <span class="tag-plan">neu</span></td><td>Allzweck-KI mit Tutor-Modus, fragt nach statt vorzusagen</td><td><a href="https://chatgpt.com">chatgpt.com</a> · <a href="https://gemini.google.com">gemini.google.com</a></td><td class="num">Hunderte Mio. Nutzer der Grund-Apps</td><td>Lernmodus gratis</td></tr>
+      <tr><td><b>telli</b> <span class="tag-plan">neu</span></td><td>Datenschutzkonforme Landes-KI für Schulen</td><td><a href="https://www.gew.de/aktuelles/detailseite/ki-erobert-die-schulen">GEW-Bericht</a></td><td class="num">Einführung in mehreren Ländern 2026</td><td>für Schulen kostenlos (Länder zahlen)</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="matrix">
+  <span class="eyebrow">Feature-Matrix</span>
+  <h2>Wer kann was?</h2>
+  <p class="legend"><span class="y">●</span> vorhanden · <span class="p">◐</span> teilweise oder nur im Bezahl-Abo · <span class="n">–</span> nicht vorhanden oder nicht belegt · <span class="q">?</span> noch offen. Lernzentrale mit allen geplanten Funktionen. Eigene Einschätzung aus öffentlichen Angaben.</p>
+  <div class="tablewrap">
+  <table class="matrix">
+    <thead><tr><th>App</th><th>Genau Schulstoff</th><th>Eigenes Material → Übungen</th><th>Wiederholung nach Plan</th><th>Punkte / Spielwelt</th><th>Live-Duell</th><th>Gruppen</th><th>KI erklärt</th><th>Sprechen mit KI</th><th>Video / Tafel</th><th>Probearbeit drucken</th><th>Eltern-Ansicht</th><th>Lehrkräfte</th><th>Offline</th><th>Gratis-Basis</th></tr></thead>
+    <tbody>
+      <tr class="us"><td>Lernzentrale (Vision)</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="n">–</td><td class="p">◐</td><td class="q">?</td></tr>
+      <tr><td>ANTON</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="p">◐</td><td class="y">●</td></tr>
+      <tr><td>simpleclub</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="p">◐</td></tr>
+      <tr><td>Knowunity</td><td class="p">◐</td><td class="y">●</td><td class="p">◐</td><td class="p">◐</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td></tr>
+      <tr><td>sofatutor</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="p">◐</td><td class="y">●</td><td class="n">–</td><td class="n">–</td></tr>
+      <tr><td>phase6</td><td class="y">●</td><td class="p">◐</td><td class="y">●</td><td class="p">◐</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="y">●</td><td class="p">◐</td></tr>
+      <tr><td>Duolingo</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="p">◐</td><td class="p">◐</td><td class="y">●</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="p">◐</td><td class="y">●</td></tr>
+      <tr><td>Quizlet</td><td class="p">◐</td><td class="y">●</td><td class="y">●</td><td class="p">◐</td><td class="y">●</td><td class="p">◐</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="y">●</td><td class="p">◐</td><td class="p">◐</td></tr>
+      <tr><td>Kahoot!</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="p">◐</td></tr>
+      <tr><td>Blooket</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="y">●</td></tr>
+      <tr><td>Prodigy Math</td><td class="p">◐</td><td class="n">–</td><td class="p">◐</td><td class="y">●</td><td class="p">◐</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="p">◐</td><td class="y">●</td><td class="y">●</td><td class="n">–</td><td class="p">◐</td></tr>
+      <tr><td>Khan Academy</td><td class="p">◐</td><td class="n">–</td><td class="p">◐</td><td class="p">◐</td><td class="n">–</td><td class="p">◐</td><td class="y">●</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="n">–</td><td class="y">●</td></tr>
+      <tr><td>StudySmarter</td><td class="p">◐</td><td class="y">●</td><td class="y">●</td><td class="p">◐</td><td class="n">–</td><td class="p">◐</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td></tr>
+      <tr><td>Studyflix</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td></tr>
+      <tr><td>Photomath</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="p">◐</td></tr>
+      <tr><td>bettermarks</td><td class="y">●</td><td class="n">–</td><td class="p">◐</td><td class="p">◐</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="p">◐</td></tr>
+      <tr><td>Anki</td><td class="n">–</td><td class="p">◐</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="y">●</td></tr>
+      <tr><td>Klett / Cornelsen</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="p">◐</td><td class="p">◐</td><td class="p">◐</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="y">●</td></tr>
+      <tr><td>NotebookLM</td><td class="n">–</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="p">◐</td><td class="y">●</td><td class="n">–</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="p">◐</td></tr>
+      <tr><td>ChatGPT / Gemini Lernmodus</td><td class="n">–</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td><td class="y">●</td><td class="p">◐</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">●</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Mit der Vision hat die Lernzentrale in fast jeder Spalte einen Punkt. Das ist Stärke und Risiko zugleich: Es ist viel zu bauen, und in der Spalte „Eigenes Material → Übungen“ trifft sie auf die finanzstärksten Gegner (Knowunity, StudySmarter, Quizlet, Google NotebookLM). Die Lücke, die bleibt, ist ein Zugang für Lehrkräfte. Offen ist, was es gratis gibt.</p>
+</section>
+
+<section id="naechste">
+  <span class="eyebrow">Neue Lage</span>
+  <h2>Wer der Vision am nächsten kommt</h2>
+  <p>Mit „Aus dem Material wird die App“ und der KI-Lehrerin verschiebt sich die Konkurrenz. ANTON und sofatutor sind weiter Vergleichsgrößen für Preis und Vertrauen, die eigentlichen Wettbewerber sind aber diese:</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Wettbewerber</th><th>Was er schon macht wie wir</th><th>Was ihm fehlt</th></tr></thead>
+    <tbody>
+      <tr><td><b>Knowunity</b></td><td>Foto oder Notizen → Quiz und Karteikarten (NoteGenius), KI-Tutor, Lerngruppen. Starke Marke bei Schülern, 27 Mio. € Kapital</td><td>Keine Spielwelt, keine Prüfung mit Note, kein Lernplan bis zur Arbeit, keine Eltern-Ansicht, Zielgruppe eher ab 13</td></tr>
+      <tr><td><b>Google NotebookLM</b></td><td>Eigene Unterlagen → Quiz, Karteikarten, Erklärvideos und Audio-Erklärungen, mit Quellenangabe. Erklärt, warum eine Antwort falsch war</td><td>Werkzeug, keine Lern-App: kein Wiederholungsplan, keine Motivation, keine Gruppe. Viele Funktionen erst ab 18, sonst nur über Schulkonten</td></tr>
+      <tr><td><b>ChatGPT Lernmodus / Gemini</b></td><td>Fragt nach statt vorzusagen, Sprachdialog, versteht Fotos von Arbeitsblättern. Gratis</td><td>Kein Gedächtnis für den Lernstand, keine Struktur, nicht für 10–12-Jährige gemacht, Eltern sehen nichts</td></tr>
+      <tr><td><b>Duolingo Max</b></td><td>Videoanruf mit KI-Figur Lily, Rollenspiele: das Vorbild für die Sprechstunde der KI-Lehrerin</td><td>Kein Schulstoff, nur Sprachen und Grundlagen-Mathe</td></tr>
+      <tr><td><b>StudySmarter / Quizlet</b></td><td>PDF oder Notizen → Kurs mit Karten, Probeklausur und Lernplan</td><td>Eher Oberstufe und Studium, wenig spielerisch, keine Lerngruppen-Spiele</td></tr>
+      <tr><td><b>telli</b></td><td>Datenschutzkonforme KI in der Schule, von den Ländern bezahlt</td><td>Chatbot ohne Lernstruktur. Zeigt aber: Schulen wollen KI, nur sicher und DSGVO-konform</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Kein Anbieter verbindet bisher alle drei Teile: <b>Material der eigenen Klasse</b> → <b>vollständige, spielerische Lern-App mit Plan und Prüfung</b> → <b>KI-Lehrerin, die nur dieses Material kennt</b>, kindgerecht und mit Eltern im Blick.</p>
+</section>
+
+<section id="steckbriefe">
+  <span class="eyebrow">Steckbriefe</span>
+  <h2>Key Features und USPs je App</h2>
+
+  <div class="group">
+    <h3>KI und eigenes Material</h3>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><h3>Knowunity</h3><span class="tag">ab Kl. 5 · Freemium</span></div>
+        <div class="links"><a href="https://knowunity.de">knowunity.de</a><a href="https://apps.apple.com/de/app/id1484296272">App Store</a></div>
+        <ul>
+          <li>Über 1 Mio. Lernzettel („Knows“) von Schülern, manuell geprüft; die beliebtesten Ersteller bekommen Taschengeld</li>
+          <li>KI-Scanner, KI-Chat, KI-Tutor; NoteGenius macht aus eigenen Notizen Quiz und Karteikarten</li>
+          <li>Chats zu allen Themen, eigene Lerngruppen</li>
+          <li>27 Mio. € Risikokapital (Series B, 2025)</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Inhalte von Schülern für Schüler, gewachsen über TikTok. Wird im Schnitt mehr als 5-mal pro Woche geöffnet.</p>
+        <p class="learn"><b>Für uns:</b> Härtester Gegner für „Material → Übungen“. Abgrenzen über Alter (10–12), Spielwelt, Prüfung mit Note und Eltern. Die Community-Idee lässt sich als Pakete-Teilen in der Lerngruppe übernehmen.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Google NotebookLM</h3><span class="tag">Google · Freemium</span></div>
+        <div class="links"><a href="https://notebooklm.google">notebooklm.google</a><a href="https://blog.google/technology/google-labs/notebooklm-student-features/">Google-Blog</a></div>
+        <ul>
+          <li>Eigene Unterlagen hochladen, daraus Quiz, Karteikarten, Berichte, Audio- und Video-Erklärungen</li>
+          <li>„Erklären“-Knopf zeigt, warum eine Quiz-Antwort falsch war, mit Quelle</li>
+          <li>Seit 2025/26 für Schüler unter 18 über Schulkonten, mit Schutzregeln für Jugendliche</li>
+          <li>Gratis-Stufe: 10 Quiz, 10 Kartensätze, 3 Videos pro Tag</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Kostenlos, sehr gute Qualität, jede Quelle belegt. Kommt über Google Classroom in die Schulen.</p>
+        <p class="learn"><b>Für uns:</b> Beweis, dass „Material → Lernstoff“ technisch geht und gratis sein wird. Bezahlt wird also nicht für das Erzeugen, sondern für das, was danach kommt: Lernplan, Spiel, Gruppe, Lehrerin, Eltern.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>ChatGPT Lernmodus / Gemini Geführtes Lernen</h3><span class="tag">gratis</span></div>
+        <div class="links"><a href="https://chatgpt.com">chatgpt.com</a><a href="https://gemini.google.com">gemini.google.com</a></div>
+        <ul>
+          <li>Seit 2025: KI gibt nicht sofort die Lösung, sondern Hinweise und Rückfragen</li>
+          <li>Gemini setzt mehr auf Bilder, Schaubilder und kleine interaktive Elemente</li>
+          <li>Sprachdialog, Foto vom Arbeitsblatt möglich</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Überall verfügbar, gratis, Kinder kennen es oft schon.</p>
+        <p class="learn"><b>Für uns:</b> Die Sprechstunde muss mehr können als ein Chat: nur das eigene Material, Tafel, Melden, Lernstand im Blick, Eltern sehen das Gespräch.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>StudySmarter / Vaia</h3><span class="tag">Schule + Uni · Freemium</span></div>
+        <div class="links"><a href="https://www.studysmarter.de">studysmarter.de</a><a href="https://apps.apple.com/de/app/id1439949520">App Store</a></div>
+        <ul>
+          <li>PDF, Skript oder Notizen hochladen, KI erstellt Kurs mit Zusammenfassung, Karteikarten, Probeklausur</li>
+          <li>Automatischer Lernplan je Fach, Karteikarten mit verteilter Wiederholung</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Eigene Unterlagen werden zum Lernkurs. International unter dem Namen Vaia.</p>
+        <p class="learn"><b>Für uns:</b> Ähnliche Idee für ältere Schüler und Studierende. Für Klasse 5–7 fehlt das Spielerische.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Photomath</h3><span class="tag">Mathe · Google</span></div>
+        <div class="links"><a href="https://photomath.com">photomath.com</a><a href="https://apps.apple.com/de/app/id919087726">App Store</a></div>
+        <ul>
+          <li>Aufgabe fotografieren (gedruckt oder handschriftlich), Lösung mit Schritt-für-Schritt-Rechenweg</li>
+          <li>Seit 2023 Teil von Google</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Kamera statt Tippen; der Rechenweg ist das Produkt, nicht die Lösung.</p>
+        <p class="learn"><b>Für uns:</b> Vorbild für „Erklärt noch einmal anders“ in Mathe. Gut, dass bei uns der Code selbst rechnet.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="group">
+    <h3>Schul-Allrounder</h3>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><h3>ANTON</h3><span class="tag">Kl. 1–10 · gratis</span></div>
+        <div class="links"><a href="https://anton.app/de/">anton.app</a><a href="https://apps.apple.com/de/app/id1180554775">App Store</a></div>
+        <ul>
+          <li>≈ 100.000 Aufgaben, 200 Übungstypen, passend zu den Lehrplänen der Bundesländer</li>
+          <li>Münzen für gelöste Aufgaben, damit Lernspiele und Avatar-Kleidung freischalten, Krone für fehlerfreie Blöcke</li>
+          <li>Lehrkräfte legen Klassen an, verteilen Aufgaben mit Frist und sehen den Fortschritt</li>
+          <li>Eltern-Konten, Familiengruppe in ANTON Plus, Offline im Plus-Abo</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Kompletter Schulstoff gratis und ohne Werbung, finanziert über sehr günstige Plus-Abos und Schullizenzen.</p>
+        <p class="learn"><b>Für uns:</b> Setzt die Preisgrenze für „normalen“ Übungsstoff nahe null. Die geplanten „fertigen Grundinhalte nach Bildungsplänen“ treten direkt gegen ANTON an und sollten daher gratis sein. Kritik an der Münz-Mechanik („auf Mikrotransaktionen konditioniert“) beachten.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>simpleclub</h3><span class="tag">Kl. 5–Abi · Freemium</span></div>
+        <div class="links"><a href="https://simpleclub.com">simpleclub.com</a><a href="https://apps.apple.com/de/app/id1089299986">App Store</a></div>
+        <ul>
+          <li>3.000+ kurze Erklärvideos von Klasse 5 bis 13, dazu Zusammenfassungen und Übungen</li>
+          <li>Automatischer Lernplan für die nächste Prüfung, KI-Prüfungsmodus mit unbegrenzten Übungsaufgaben</li>
+          <li>KI-Tutor und Hausaufgaben-Chat im größten Abo</li>
+          <li>Zweites Standbein: simpleclub Business für Azubis und Betriebe</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Bekannte YouTube-Marke, jugendlicher Ton. Die Reichweite kam über Social Media, nicht über den App Store.</p>
+        <p class="learn"><b>Für uns:</b> Lernplan bis zur Prüfung haben wir schon. Die Nachholstunde wäre die interaktive Antwort auf deren Erklärvideos.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>sofatutor</h3><span class="tag">Kl. 1–13 · nur Abo</span></div>
+        <div class="links"><a href="https://www.sofatutor.com">sofatutor.com</a></div>
+        <ul>
+          <li>≈ 8.600–10.000 Lernvideos in 19 Fächern, ≈ 40.000 Übungen, ≈ 35.000 Arbeitsblätter</li>
+          <li>Hausaufgaben-Chat mit echten Lehrkräften, Whiteboard und Foto-Upload</li>
+          <li>Inhalte von Lehrkräften erstellt und geprüft</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Menschliche Hilfe von Lehrkräften. Eltern zahlen dafür ein echtes Abo ohne Gratis-Version.</p>
+        <p class="learn"><b>Für uns:</b> Bester Preisanker für die KI-Lehrerin: Eltern zahlen 8–20 € im Monat für „jemand erklärt meinem Kind den Stoff“.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Studyflix</h3><span class="tag">Schule + Studium · gratis</span></div>
+        <div class="links"><a href="https://studyflix.de">studyflix.de</a><a href="https://apps.apple.com/de/app/id1514546785">App Store</a></div>
+        <ul>
+          <li>5.000–8.000 Videos unter 5 Minuten, 25.000 fertige Lernkarten, Quizze</li>
+          <li>Nutzung ohne Anmeldung, Konto für Lernplan und Fortschritt</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Völlig gratis, bezahlt über Arbeitgeber-Spots vor den Videos.</p>
+        <p class="learn"><b>Für uns:</b> Werbefinanzierung passt nicht zu Kindern und zum Versprechen „keine Werbung“.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Khan Academy</h3><span class="tag">gemeinnützig · gratis</span></div>
+        <div class="links"><a href="https://de.khanacademy.org">de.khanacademy.org</a><a href="https://www.khanmigo.ai">khanmigo.ai</a></div>
+        <ul>
+          <li>Videos und Übungen mit Lernstand je Fähigkeit</li>
+          <li>KI-Tutor Khanmigo führt mit Rückfragen zur Lösung, für US-Lehrkräfte gratis</li>
+          <li>Für deutsche Familien kaum nutzbar (Zahlung, Sprache)</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Gemeinnützig und spendenfinanziert, KI-Tutor mit sokratischer Gesprächsführung.</p>
+        <p class="learn"><b>Für uns:</b> Gleiches Prinzip wie die Nachholstunde (nur zum gerade Erklärten fragen). Auf Deutsch gibt es das noch nicht.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="group">
+    <h3>Wiederholen und Vokabeln</h3>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><h3>Duolingo</h3><span class="tag">Sprachen + Mathe · Freemium</span></div>
+        <div class="links"><a href="https://www.duolingo.com">duolingo.com</a></div>
+        <ul>
+          <li>Tägliche Serie mit Serienschutz, Wochen-Ligen mit Auf- und Abstieg, Figuren</li>
+          <li>„Explain My Answer“ seit Januar 2026 für alle gratis</li>
+          <li>Max-Abo: Videoanruf mit KI-Figur Lily, Rollenspiele; Videoanruf wandert teilweise ins günstigere Super-Abo</li>
+          <li>Juni 2026: Aktion „Streak Revival“ holte 15,4 Mio. Lernende zurück</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Die stärkste Gewohnheits-Mechanik am Markt. 9–12 % der monatlich Aktiven zahlen.</p>
+        <p class="learn"><b>Für uns:</b> Lily ist das nächste Vorbild für die KI-Lehrerin mit Sprache. Duolingo testet, Videoanrufe pro Tag zu begrenzen: ein Hinweis, wie teuer Sprach-KI ist.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>phase6</h3><span class="tag">Vokabeln · Schulbuch</span></div>
+        <div class="links"><a href="https://www.phase-6.de">phase-6.de</a><a href="https://apps.apple.com/de/app/phase6/id441493173">App Store</a></div>
+        <ul>
+          <li>Karteikasten-Prinzip mit wachsenden Abständen</li>
+          <li>1.400+ Vokabelsammlungen genau zum Schulbuch, einzeln zu kaufen</li>
+          <li>PLUS: Testvorbereitung, Übersetzung und Vertonung eigener Karten</li>
+          <li>Schullizenzen und Bibliothekszugänge, Eltern-Ansicht</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Genau die Vokabeln aus dem eigenen Englischbuch, verkauft je Schulbuch.</p>
+        <p class="learn"><b>Für uns:</b> Zeigt, dass Verlags-Lizenzen (Idee „offizielle Pakete“) ein funktionierendes Geschäft sind.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Quizlet</h3><span class="tag">Karteikarten · Freemium</span></div>
+        <div class="links"><a href="https://quizlet.com">quizlet.com</a></div>
+        <ul>
+          <li>Karteikarten, Lern- und Testmodus, Magic Notes (Notizen/PDF → Karten, Tests)</li>
+          <li>Spielmodi Blast und Live (Teams im Klassenraum)</li>
+          <li>Gratis-Version zuletzt stark eingeschränkt (Tageslimits)</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Riesige Bibliothek von Nutzern erstellter Kartensätze.</p>
+        <p class="learn"><b>Für uns:</b> Wer die Gratis-Version zu stark beschneidet, wird öffentlich kritisiert. Die Grenze zwischen gratis und bezahlt früh festlegen.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Anki</h3><span class="tag">Open Source · gratis</span></div>
+        <div class="links"><a href="https://apps.ankiweb.net">apps.ankiweb.net</a></div>
+        <ul>
+          <li>Karteikarten mit dem lernenden Wiederholungs-Algorithmus FSRS (seit 2023)</li>
+          <li>Sehr flexibel, für Kinder zu kompliziert</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Der genaueste Wiederholungsplan, frei als Bibliothek verfügbar, auch für JavaScript.</p>
+        <p class="learn"><b>Für uns:</b> Passt zu „Die App lernt mit“: Abstände je Kind anpassen statt fest 1/2/4/8/16 Tage.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="group">
+    <h3>Spiel und Klassenraum</h3>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><h3>Kahoot!</h3><span class="tag">Live-Quiz</span></div>
+        <div class="links"><a href="https://kahoot.com">kahoot.com</a></div>
+        <ul>
+          <li>Lehrkraft zeigt Fragen am Beamer, alle antworten per Handy mit PIN</li>
+          <li>Hausaufgaben-Challenges, seit 09/2026 geräteloses „Kahootopia!“</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Verbreitung über Lehrkräfte. Eine Lehrkraft bringt 25 Kinder auf einmal mit.</p>
+        <p class="learn"><b>Für uns:</b> Lehrkräfte sind die Lücke in unserer Matrix und der schnellste Weg zu vielen Kindern.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Blooket</h3><span class="tag">Quiz-Spiele</span></div>
+        <div class="links"><a href="https://www.blooket.com">blooket.com</a></div>
+        <ul>
+          <li>15–25+ Spielmodi auf demselben Fragenset</li>
+          <li>Live in der Klasse oder allein als Hausaufgabe, bis 60 Spieler gratis</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Glück und Tempo gleichen Leistungsunterschiede aus, auch Schwächere haben Spaß.</p>
+        <p class="learn"><b>Für uns:</b> Jedes automatisch erzeugte Paket sollte sofort in allen Arena-Modi spielbar sein.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Prodigy Math</h3><span class="tag">Kl. 1–8 · Rollenspiel</span></div>
+        <div class="links"><a href="https://www.prodigygame.com">prodigygame.com</a></div>
+        <ul>
+          <li>Eigene Figur in einer Fantasy-Welt, Kämpfe gewinnt man mit Matheaufgaben</li>
+          <li>Eltern setzen Lernziele und vergeben Belohnungen im Spiel</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Fühlt sich an wie ein richtiges Spiel. Die Eltern-Mitgliedschaft ist das Produkt.</p>
+        <p class="learn"><b>Für uns:</b> Eltern als Zahler, Kind als Spieler. Kritik: Kinder raten, um weiterzuspielen.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="group">
+    <h3>Schule und Verlag</h3>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><h3>bettermarks</h3><span class="tag">Mathe Kl. 4–13 · Schulen</span></div>
+        <div class="links"><a href="https://de.bettermarks.com">bettermarks.com</a><a href="https://kultus.hessen.de/schulsystem/adaptives-mathematik-lernsystem/">Kultus Hessen</a></div>
+        <ul>
+          <li>Adaptive Übungen und Lernpfade, Vorwissenstest findet Lücken</li>
+          <li>Landeslizenzen, z. B. RLP aus DigitalPakt-Mitteln</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Ein Kunde (das Bundesland) bringt alle Schulen eines Landes.</p>
+        <p class="learn"><b>Für uns:</b> Vorwissenstest für die Startstufe neuer Pakete. Landeslizenz ist ein späterer Weg.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>Klett / Cornelsen Lernen</h3><span class="tag">Schulbuch-Begleiter</span></div>
+        <div class="links"><a href="https://apps.apple.com/de/app/id1260478846">Klett Lernen</a><a href="https://apps.apple.com/de/app/id1502080578">Cornelsen Lernen</a></div>
+        <ul>
+          <li>Audios, Videos und Übungen passgenau zum Schulbuch, QR-Codes im Buch</li>
+          <li>Cornelsen ChatClass: KI-Feedback zur Englisch-Aussprache</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Steckt schon im Schulbuch.</p>
+        <p class="learn"><b>Für uns:</b> Möglicher Partner für „offizielle Pakete“. Die Verlage haben Material, aber kaum Motivation und keine Lehrerin.</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>telli</h3><span class="tag">Landes-KI · Schulen</span></div>
+        <div class="links"><a href="https://www.gew.de/aktuelles/detailseite/ki-erobert-die-schulen">GEW-Bericht</a></div>
+        <ul>
+          <li>KI-Chatbot, den mehrere Bundesländer 2026 für ihre Schulen einführen</li>
+          <li>Datenschutzkonform, für Lehrkräfte und Schüler</li>
+        </ul>
+        <p class="usp"><b>USP:</b> Vom Land bezahlt und freigegeben.</p>
+        <p class="learn"><b>Für uns:</b> Schulen kaufen KI nur mit DSGVO und Freigabe. Unsere Schutzschichten sind dafür Voraussetzung, nicht nur Zusatz.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="ideen">
+  <span class="eyebrow">Ableitung</span>
+  <h2>Was über die Vision hinaus fehlt</h2>
+  <p>Ideen aus der Konkurrenz, die noch nicht in der Funktionsliste stehen. Sortiert nach Nutzen im Verhältnis zum Aufwand.</p>
+  <ol class="ranked">
+    <li><div><b>Pakete in der Lerngruppe teilen.</b> Eine Familie lädt das Arbeitsblatt hoch, die ganze Lerngruppe der Klasse bekommt das fertige Paket (nur die erzeugten Aufgaben, nie die Fotos). Teilt die KI-Kosten, macht die App für Mitschüler sofort nützlich und ist ein eingebauter Weg zu neuen Familien. <span class="src">Vorbild: Knowunity-Community, Quizlet-Kartensätze</span></div></li>
+    <li><div><b>Zugang für Lehrkräfte.</b> Lehrkraft lädt das Material einmal hoch, die Klasse übt; Arena als Klassen-Modus am Beamer. Einzige Lücke in der Matrix und der schnellste Weg zu vielen Kindern. <span class="src">Vorbild: Kahoot!, ANTON, bettermarks</span></div></li>
+    <li><div><b>Klare Grenze zwischen gratis und bezahlt.</b> Gratis: alles, was ohne KI läuft, plus fertige Grundinhalte. Bezahlt: Material-Upload und KI-Lehrerin. Begrenzte Kontingente statt plötzlicher Sperren. <span class="src">Vorbild: ANTON (gratis Basis), Kritik an Quizlet, Duolingo (Videoanrufe pro Tag)</span></div></li>
+    <li><div><b>Serienschutz und Wochenliga.</b> Ein Joker pro Woche rettet die Serie, die Rangliste der Lerngruppe startet jeden Montag neu. <span class="src">Vorbild: Duolingo</span></div></li>
+    <li><div><b>Eltern-Belohnungen.</b> Eltern legen fest: „Paket Wasserkreislauf auf Stufe 3 → Kinoabend“. Echte Belohnung statt Münz-Shop. <span class="src">Vorbild: Prodigy, Kritik an ANTON</span></div></li>
+    <li><div><b>Wiederholungsabstände je Kind.</b> Statt fest 1/2/4/8/16 Tage berechnet ein lernender Algorithmus die Abstände. Passt direkt zu „Die App lernt mit“. <span class="src">Vorbild: Anki (FSRS)</span></div></li>
+    <li><div><b>Kurzer Einstiegstest für neue Pakete.</b> Fünf Fragen setzen die Startstufe, damit Bekanntes nicht von vorn geübt wird. <span class="src">Vorbild: bettermarks</span></div></li>
+    <li><div><b>Wöchentlicher Bericht an die Eltern.</b> Die Eltern-Hinweise einmal pro Woche als kurze Nachricht, statt dass Eltern in die App schauen müssen. <span class="src">Vorbild: phase6, Prodigy</span></div></li>
+  </ol>
+</section>
+
+<section id="finanzierung">
+  <span class="eyebrow">Finanzierung</span>
+  <h2>Wie die anderen Geld verdienen</h2>
+  <div class="cols">
+    <div class="box"><h3>1 · Freemium-Abo für Eltern</h3><p>Gratis-Basis, Abo für Extras. ANTON, Knowunity, Duolingo, Quizlet, phase6, Prodigy. Spanne: 10 € pro Jahr (ANTON Plus) bis ≈ 180 € pro Jahr (Duolingo Max).</p></div>
+    <div class="box"><h3>2 · Reines Abo mit Testphase</h3><p>sofatutor: kein Gratis-Teil, dafür menschliche Hilfe. Mehr als eine halbe Million Zahlende, Umsatz rund 26–28 Mio. € pro Jahr.</p></div>
+    <div class="box"><h3>3 · Schul- und Landeslizenzen</h3><p>bettermarks, telli (Land), ANTON, phase6, Kahoot! (Schule). Lange Verkaufszyklen, dafür viele Nutzer auf einmal.</p></div>
+    <div class="box"><h3>4 · Werbung</h3><p>Studyflix, Duolingo (Gratis-Version). Bei Kindern rechtlich und für Eltern heikel, widerspricht „keine Werbung“.</p></div>
+    <div class="box"><h3>5 · Verlags-Lizenzen</h3><p>Klett und Cornelsen verkaufen das Buch, phase6 verkauft Inhalte je Schulbuch. Passt zur Idee „offizielle Pakete“.</p></div>
+    <div class="box"><h3>6 · Spenden und Kapital</h3><p>Khan Academy ist gemeinnützig. Knowunity wächst mit 27 Mio. € Risikokapital und Verlusten. Google verschenkt NotebookLM, um Schulen an Google zu binden.</p></div>
+  </div>
+
+  <h3>Neu durch die Vision: KI kostet pro Kind</h3>
+  <p>Heute kostet ein zusätzliches Kind fast nichts. Mit Material-Upload und KI-Lehrerin entstehen Kosten bei jeder Nutzung. Grobe Schätzung mit heutigen Claude-API-Preisen (Sonnet 5.5: 2 $ je Mio. Eingabe-Tokens, 10 $ je Mio. Ausgabe-Tokens; Haiku 5.5: 0,10 $ / 0,50 $):</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Vorgang</th><th>Annahme</th><th>Kosten je Vorgang</th><th>Pro Kind und Monat</th></tr></thead>
+      <tbody>
+        <tr><td>Paket aus Fotos bauen, mit Prüfdurchlauf</td><td>5 Fotos, ≈ 40.000 Tokens Eingabe, ≈ 25.000 Ausgabe, Sonnet</td><td class="num">≈ 0,30 €</td><td class="num">8 Pakete: ≈ 2,40 €<br>(geteilt in Lerngruppe von 5: ≈ 0,50 €)</td></tr>
+        <tr><td>Nachholstunde, 10 Minuten (nur Text)</td><td>≈ 20 Wortwechsel, Sonnet bzw. Haiku</td><td class="num">≈ 0,25 € bzw. 0,02 €</td><td class="num">8 Stunden: ≈ 2 € bzw. 0,15 €</td></tr>
+        <tr><td>Sprache (Sprechen und Hören)</td><td>Fremdanbieter, sehr unterschiedlich</td><td class="num">≈ 0,05–0,30 €</td><td class="num">8 Stunden: ≈ 0,40–2,40 €</td></tr>
+        <tr><td>Sprechstunde, KI erklärt anders</td><td>kurze Fragen, eher günstig</td><td class="num">≈ 0,01–0,05 €</td><td class="num">≈ 0,20–1 €</td></tr>
+        <tr><td><b>Summe aktives zahlendes Kind</b></td><td>je nach Modellwahl und Teilen</td><td></td><td class="num"><b>≈ 1–8 €</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="legend">Eigene Überschlagsrechnung, Dollar grob gleich Euro gesetzt. Tatsächliche Werte vor dem Start mit echten Arbeitsblättern messen. Die geplante „kleine KI auf dem Gerät“ und das Teilen von Paketen in der Lerngruppe senken die Kosten deutlich. Gratis-Nutzer ohne KI kosten nur Server-Anteile.</p>
+
+  <h3>Preisanker</h3>
+  <div class="stats">
+    <div class="stat"><span class="v">0,83 €</span><span class="l">ANTON Plus pro Monat (9,99 €/Jahr): Preis für „normalen“ Übungsstoff</span></div>
+    <div class="stat"><span class="v">6–10 €</span><span class="l">Knowunity Lite/Pro pro Monat: Preis für KI-Hilfe</span></div>
+    <div class="stat"><span class="v">8–20 €</span><span class="l">sofatutor pro Monat: Preis für „jemand erklärt meinem Kind den Stoff“</span></div>
+    <div class="stat"><span class="v">14,99 €</span><span class="l">Duolingo Max pro Monat: Preis für Gespräch mit KI-Figur</span></div>
+  </div>
+  <p>Daraus ergibt sich ein Vorschlag: <b>Gratis-Stufe</b> mit der heutigen App und fertigen Grundinhalten (gegen ANTON), <b>Familienabo um 7–10 € im Monat</b> mit Material-Upload, KI-Lehrerin und Eltern-Hinweisen für alle Kinder der Familie (zwischen Knowunity und sofatutor), Nachholstunden als monatliches Kontingent. Später <b>Schullizenz</b> mit Lehrkraft-Zugang.</p>
+
+  <h3>Kennzahlen für die Rechnung</h3>
+  <div class="stats">
+    <div class="stat"><span class="v">2,1 %</span><span class="l">der Downloads zahlen nach 35 Tagen bei Freemium (Median aller Kategorien, RevenueCat 2026)</span></div>
+    <div class="stat"><span class="v">10,7 %</span><span class="l">bei harter Bezahlschranke ohne Gratis-Teil (Median, RevenueCat 2026)</span></div>
+    <div class="stat"><span class="v">2–6 %</span><span class="l">Gratis → Zahler bei Lern-Apps (Drittquelle, Spitzenreiter Duolingo 9–12 %)</span></div>
+    <div class="stat"><span class="v">2–8 %</span><span class="l">der neuen Nutzer sind nach 30 Tagen noch aktiv (Lern-Apps, Quellen uneinheitlich)</span></div>
+    <div class="stat"><span class="v">45 $</span><span class="l">durchschnittlicher Umsatz pro Zahler in 12 Monaten, Lern-Apps (Adapty 2026)</span></div>
+    <div class="stat"><span class="v">15 %</span><span class="l">Store-Gebühr bei Apple und Google für kleine Anbieter, dazu 19 % MwSt. Als Web-App über einen Bezahldienst ≈ 3 %</span></div>
+  </div>
+</section>
+
+<section id="rechner">
+  <span class="eyebrow">Rechenmodell</span>
+  <h2>Wie viele zahlende Familien bräuchten wir?</h2>
+  <p>Werte anpassen, die Rechnung läuft sofort mit. Die Knöpfe laden Beispiel-Szenarien. Neu sind die KI-Kosten: Sie fallen pro zahlendem Kind an und, falls die Gratis-Stufe KI enthält, auch für alle Gratis-Nutzer.</p>
+  <div class="presets" role="group" aria-label="Szenarien">
+    <button type="button" data-p="hobby">Kosten decken</button>
+    <button type="button" data-p="teil" aria-pressed="true">Eine Teilzeitstelle</button>
+    <button type="button" data-p="team">Kleines Team</button>
+  </div>
+  <div class="calc">
+    <form id="f" autocomplete="off">
+      <label for="kosten">Feste Kosten pro Monat in €<small>Server, Gehälter, Werbung</small></label><input id="kosten" type="number" min="0" step="50" value="3000">
+      <label for="preis">Preis pro Monat in € (brutto)<small>Jahresabo ÷ 12</small></label><input id="preis" type="number" min="0.5" step="0.5" value="7.99">
+      <label for="weg">Zahlungsweg</label>
+      <select id="weg"><option value="0.15">App Store (15 %)</option><option value="0.03" selected>Web-Bezahldienst (≈ 3 %)</option></select>
+      <label for="kiz">KI-Kosten je zahlendem Kind in €<small>Schätzung oben: 1–8 €</small></label><input id="kiz" type="number" min="0" step="0.5" value="2">
+      <label for="kif">KI-Kosten je Gratis-Kind in €<small>0, wenn gratis ohne KI</small></label><input id="kif" type="number" min="0" step="0.05" value="0">
+      <label for="conv">Anteil Zahler unter Aktiven in %<small>Lern-Apps 2–6 %, Duolingo ≈ 10 %</small></label><input id="conv" type="number" min="0.1" step="0.5" value="4">
+      <label for="ret">Nach 30 Tagen noch aktiv in %<small>Lern-Apps 2–8 %</small></label><input id="ret" type="number" min="0.5" step="0.5" value="8">
+    </form>
+    <div class="out" aria-live="polite">
+      <div class="row"><span>Netto pro Zahler und Monat (nach MwSt. und Gebühr)</span><b id="o-netto">–</b></div>
+      <div class="row"><span>Davon bleibt nach KI-Kosten</span><b id="o-marge">–</b></div>
+      <div class="row big"><span>Zahlende Familien nötig</span><b id="o-zahler">–</b></div>
+      <div class="row"><span>Aktive Kinder nötig</span><b id="o-aktiv">–</b></div>
+      <div class="row"><span>Downloads / Anmeldungen grob nötig</span><b id="o-dl">–</b></div>
+      <div class="row"><span>KI-Kosten insgesamt pro Monat</span><b id="o-ki">–</b></div>
+      <p class="legend" id="o-text"></p>
+    </div>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Szenario (7,99 €/Monat, Web, 2 € KI je Zahler, Gratis ohne KI, 4 % Zahler, 8 % bleiben)</th><th>Feste Kosten/Monat</th><th>Zahler</th><th>Aktive</th><th>Downloads grob</th></tr></thead>
+      <tbody id="szen"></tbody>
+    </table>
+  </div>
+  <p class="legend">Rechenweg: Netto = Preis ÷ 1,19 × (1 − Gebühr). Beitrag je Zahler = Netto − KI je Zahler − KI je Gratis-Kind × (Gratis-Kinder je Zahler). Zahler = feste Kosten ÷ Beitrag. Aktive = Zahler ÷ Zahleranteil. Downloads ≈ Aktive ÷ Anteil, der nach 30 Tagen bleibt. Kündigungen und Werbekosten je Neukunde sind nicht eingerechnet. Zum Vergleich: In Deutschland gibt es grob 760.000 Kinder pro Schuljahrgang, bei Klassen 5–10 also rund 4,5 Mio.</p>
+</section>
+
+<section id="markt">
+  <span class="eyebrow">Markt und Long Tail</span>
+  <h2>Die meisten Lern-Apps findet niemand</h2>
+  <div class="stats">
+    <div class="stat"><span class="v">412.000</span><span class="l">Lern-Apps in App Store und Google Play zusammen (Business of Apps 2026)</span></div>
+    <div class="stat"><span class="v">> 730.000</span><span class="l">Apps kamen 2014 nie über 1.000 Downloads; 0,1 % der Apps hatten fast 50 % aller Downloads</span></div>
+    <div class="stat"><span class="v">90 %</span><span class="l">der iOS-Apps tauchten 2016 in keiner Bestenliste auf („Zombie-Apps“, Adjust)</span></div>
+    <div class="stat"><span class="v">10.000+</span><span class="l">typische Downloadstufe kleiner Mathe-Lernspiele für Kinder, oft nur durch Gratis-Aktionen</span></div>
+  </div>
+  <p>Aktuelle Zahlen, wie viele Lern-Apps unter 1.000 Downloads bleiben, veröffentlicht niemand frei. Die älteren Auswertungen zeigen aber deutlich: Downloads ballen sich bei sehr wenigen Apps. Bei Lern-Apps kommt die schwache Bindung dazu: Nach 30 Tagen nutzen nur 2–8 % die App noch.</p>
+  <div class="cols">
+    <div class="box"><h3>Gescheitert oder eingestellt</h3>
+      <ul>
+        <li><b>Super Eddy</b> (Berlin): Lernspiel bei Legasthenie, trotz Förderung 2017 insolvent</li>
+        <li><b>Charly</b> (Berlin): Lernplattform, 2022 insolvent</li>
+        <li><b>Lernsieg</b> (Österreich): Lehrer-Bewertungs-App, insolvent</li>
+        <li><b>Mondly</b> (Pearson): Sprach-App, Marketing seit 30.06.2026 eingestellt</li>
+      </ul>
+    </div>
+    <div class="box"><h3>Was die Erfolgreichen gemeinsam haben</h3>
+      <ul>
+        <li>Einen eigenen Weg zu den Nutzern, der nicht der App Store ist: YouTube (simpleclub), TikTok (Knowunity), Lehrkräfte (ANTON, Kahoot!), Bundesländer (bettermarks, telli), Schulbücher (Klett, Cornelsen), eine riesige Plattform (Google NotebookLM)</li>
+        <li>Eine Sache, die sie deutlich besser machen als alle anderen</li>
+        <li>Gratis-Einstieg, an dem Kinder und Lehrkräfte hängen bleiben</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="position">
+  <span class="eyebrow">Positionierung</span>
+  <h2>Wo die Lernzentrale eine Chance hat</h2>
+  <p>„Material hochladen, Übungen bekommen“ allein reicht nicht als Alleinstellung. Google bietet das gratis an, Knowunity mit Millionen Kapital. Die Chance liegt in dem, was nach dem Hochladen passiert, und für wen:</p>
+  <div class="cols">
+    <div class="box us"><h3>Eine ganze Lern-App, nicht ein Kartenstapel</h3><p>Aus dem Arbeitsblatt wird eine Spielwelt mit vielen Lernwegen, Lernplan bis zur Arbeit, Probearbeit und Note. Das hat kein Wettbewerber. Die Botschaft „Jedes Kind lernt anders. Diese App lernt mit.“ trifft genau das.</p></div>
+    <div class="box us"><h3>Für 10–12-Jährige und ihre Eltern gebaut</h3><p>NotebookLM ist teils erst ab 18, ChatGPT ist nicht für Kinder gemacht, Knowunity zielt auf Teenager. Kindgerechte Lehrerin, die beim Thema bleibt, Eltern sehen die Gespräche, keine Werbung: dafür zahlen Eltern, ähnlich wie bei sofatutor.</p></div>
+    <div class="box us"><h3>Die Lerngruppe als Verbreitungsweg</h3><p>Pakete teilen, Arena, gemeinsame Nachholstunde: Jede Familie zieht Mitschüler nach. Das ist der eigene Weg zu Nutzern, den alle Erfolgreichen haben, und senkt zugleich die KI-Kosten pro Kind.</p></div>
+  </div>
+  <p class="note">Risiken: Große Anbieter können einzelne Funktionen schnell nachbauen; der Schutz liegt in der Verbindung aller Teile und im Vertrauen der Eltern. KI-Kosten müssen gemessen werden, bevor der Preis feststeht. Für Kinder gelten DSGVO-Einwilligung und eine Einstufung nach EU AI Act (Lern-KI kann als Hochrisiko gelten, wie bei eKidz). Sinnvoller nächster Schritt laut Funktionsseite: Experimentierphase mit Testfamilien, dabei messen, wie viele Kinder nach 30 Tagen noch üben und was ein aktives Kind an KI kostet. Diese zwei Zahlen entscheiden die Rechnung oben.</p>
+</section>
+
+<section id="quellen">
+  <span class="eyebrow">Quellen</span>
+  <h2>Quellen</h2>
+  <ul class="sources">
+    <li>Eigene App: <code>produkt/funktionen.html</code> und <code>README.md</code> im Repository rzao-hh/lernzentrale</li>
+    <li><a href="https://apps.apple.com/DE/app/id1180554775">ANTON im App Store</a>, <a href="https://www.heise.de/tipps-tricks/Lern-Apps-fuer-Schueler-und-Studenten-4710975.html">heise: Lern-Apps</a>, <a href="https://trusted.de/anton">trusted.de ANTON</a>, <a href="https://appgoblin.info/apps/com.solocode.anton">AppGoblin ANTON</a>, <a href="https://www.appbrain.com/dev/ANTON+-+The+Learning+App+for+School/">AppBrain ANTON</a>, <a href="https://www.iphone-ticker.de/lern-app-anton-kaugummi-zigaretten-fuer-die-naechste-generation-223601/">iphone-ticker: Kritik an ANTON-Münzen</a></li>
+    <li><a href="https://apps.apple.com/DE/app/id1089299986">simpleclub im App Store</a>, <a href="https://www.munich-startup.de/news/simpleclub-praesentiert-eigenen-ki-tutor">Munich Startup: simpleclub KI-Tutor</a>, <a href="https://www.appbrain.com/dev/simpleclub+GmbH/">AppBrain simpleclub</a></li>
+    <li><a href="https://apps.apple.com/DE/app/id1484296272">Knowunity im App Store</a>, <a href="https://tech.eu/2025/06/13/knowunity-raises-eur27m-to-bring-ai-tutor-to-1-billion-students/">tech.eu: Knowunity Series B</a>, <a href="https://www.appbrain.com/dev/Knowunity/">AppBrain Knowunity</a>, <a href="https://apppricinglab.com/iap/apple/1484296272">App Pricing Lab Knowunity</a>, <a href="https://moge.ai/de/product/knowunity">moge.ai Knowunity</a></li>
+    <li><a href="https://trusted.de/sofatutor">trusted.de sofatutor</a>, <a href="https://www.mydealz.de/deals/sofatutor-lernplattform-30-tage-gratis-80-danach-799mtl-premium-mitgliedschaft-schule-24h-hilfe-von-lehrerinnen-2834219">mydealz sofatutor</a>, <a href="https://omr.com/de/daily/sofatutor-stephan-bayer-omr-podcast">OMR: sofatutor</a>, <a href="https://www.deutsche-startups.de/tag/Sofatutor/">deutsche-startups: sofatutor</a></li>
+    <li><a href="https://apps.apple.com/de/app/phase6/id441493173">phase6 im App Store</a>, <a href="https://www.mindomax.com/de/phase6-kosten">mindomax: phase6 Kosten</a></li>
+    <li><a href="https://www.fool.com/earnings/call-transcripts/2026/05/04/duolingo-duol-q1-2026-earnings-transcript/">Duolingo Q1 2026 Earnings Call</a>, <a href="https://investors.duolingo.com/node/11661/html">Duolingo Investor Relations</a>, <a href="https://www.monsterdealz.de/magazin/duolingo-super-kosten">monsterdealz: Duolingo Preise</a></li>
+    <li><a href="https://www.techlearning.com/how-to/what-is-quizlet-and-how-can-i-teach-with-it">Tech&amp;Learning: Quizlet</a>, <a href="https://www.mindomax.com/quizlet-plus-cost">mindomax: Quizlet Plus</a>, <a href="https://kahoot.com/press/2026/09/03/kahoot-launches-new-experiences-to-boost-engagement-and-help-improve-learning-outcomes-this-back-to-school-season/">Kahoot! Presse 09/2026</a>, <a href="https://ahaslides.com/blog/blooket-review/">Blooket Review 2026</a></li>
+    <li><a href="https://prodigygame.com/main-en/parents">Prodigy für Eltern</a>, <a href="https://hackr.io/blog/khan-academy-review">Khan Academy Review 2026</a>, <a href="https://www.ki-syndikat.de/tools/khanmigo/">KI-Syndikat: Khanmigo</a></li>
+    <li><a href="https://apps.apple.com/DE/app/id1439949520">StudySmarter im App Store</a>, <a href="https://studyflix.de/schule-und-lernen/was-ist-studyflix-9107">Was ist Studyflix</a>, <a href="https://www.googlewatchblog.de/2024/03/android-neue-google-app-photomath/">GoogleWatchBlog: Photomath</a></li>
+    <li><a href="https://kultus.hessen.de/schulsystem/adaptives-mathematik-lernsystem/">Kultus Hessen: bettermarks</a>, <a href="https://bildung.rlp.de/fileadmin/user_upload/mint.bildung.rlp.de/2026/Unterstuetzunsmassnahmen/bettermarks.pdf">Bildung RLP: bettermarks</a>, <a href="https://apps.apple.com/app/id1260478846">Klett Lernen</a>, <a href="https://apps.apple.com/app/id1502080578">Cornelsen Lernen</a>, <a href="https://docs.ankiweb.net/manual/background.md">Anki Handbuch</a></li>
+    <li><a href="https://services.google.com/fh/files/misc/gemininotebook_gfe_one_pager.pdf">Google: NotebookLM für Bildung</a>, <a href="https://chromeunboxed.com/notebooklms-fantastic-video-overviews-are-now-available-for-students-of-all-ages/">Chrome Unboxed: NotebookLM für Schüler</a>, <a href="https://teachercast.net/edtech/google-notebook-lm-updates-april-2026/">TeacherCast: NotebookLM 04/2026</a>, <a href="https://blog.google/technology/google-labs/notebooklm-student-features/">Google-Blog</a></li>
+    <li><a href="https://pearson.com/international-schools/international-schools-blog/2026/02/what-is-gemini_s-guided-learning-and-chatgpts-study-mode-.html">Pearson: Guided Learning und Study Mode</a>, <a href="https://techcrunch.com/2025/08/06/google-takes-on-chatgpts-study-mode-with-new-guided-learning-tool-in-gemini/">TechCrunch: Gemini Guided Learning</a>, <a href="https://findskill.ai/blog/best-free-ai-for-studying-2026/">findskill: KI zum Lernen 2026</a></li>
+    <li><a href="https://www.gew.de/aktuelles/detailseite/ki-erobert-die-schulen">GEW: KI erobert die Schulen (telli)</a>, <a href="https://www.ki-syndikat.de/tools/ekidz/">KI-Syndikat: eKidz und EU AI Act</a></li>
+    <li><a href="https://www.revenuecat.com/state-of-subscription-apps-2026-education">RevenueCat State of Subscription Apps 2026</a>, <a href="https://adapty.io/blog/education-app-subscription-benchmarks/">Adapty: Education Benchmarks</a>, <a href="https://www.bolderapps.com/blog-posts/freemium-app-economics-2026">Freemium Economics 2026</a>, <a href="https://getstream.io/blog/user-retention/">getstream: Retention</a>, <a href="https://adapty.io/blog/app-store-small-business-program/">Apple Small Business Program</a>, <a href="https://adapty.io/blog/markdown/google-play-billing-changes-subscriptions-fees.md">Google Play Gebühren</a></li>
+    <li>KI-Preise: Claude-API-Preisliste (Stand 11/2026); Kosten je Vorgang sind eigene Überschlagsrechnungen</li>
+    <li><a href="https://www.businessofapps.com/data/education-app-market/">Business of Apps: Education Apps</a>, <a href="https://theshorthead.com/2014/04/how-to-get-35-million-downloads-in-7-weeks-the-short-head-of-apps/">The Short Head of Apps (2014)</a>, <a href="https://www.statista.com/chart/5715/90-of-all-ios-apps-are-zombies/">Statista: Zombie-Apps</a>, <a href="https://www.netzwelt.de/news/211888-kostenlos-statt-jeweils-299-euro-fuenf-mathe-lern-apps-kinder-gibt-gratis.html">netzwelt: Mathe-Apps</a></li>
+    <li><a href="https://www.deutsche-startups.de/2017/03/15/berliner-e-learning-start-super-eddy-ist-insolvent/">Super Eddy insolvent</a>, <a href="https://www.deutsche-startups.de/2022/03/07/edtech-charly-insolvent/">Charly insolvent</a>, <a href="https://www.cbinsights.com/company/lernsieg">Lernsieg</a>, <a href="https://www.techbook.de/mobile-lifestyle/apps/mondly-sprachlern-app-ende">techbook: Mondly</a></li>
+  </ul>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var P={hobby:{kosten:60},teil:{kosten:3000},team:{kosten:20000}};
+  var $=function(id){return document.getElementById(id)};
+  var fmt=function(n){return Math.ceil(n).toLocaleString('de-DE')};
+  var eur=function(n){return n.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'};
+  function calc(k,preis,fee,kiz,kif,conv,ret){
+    var netto=preis/1.19*(1-fee);
+    var gratisJeZahler=100/conv-1;
+    var beitrag=netto-kiz-kif*gratisJeZahler;
+    if(beitrag<=0) return {netto:netto,beitrag:beitrag,ok:false};
+    var zahler=k/beitrag, aktiv=zahler/(conv/100), dl=aktiv/(ret/100);
+    var ki=zahler*kiz+(aktiv-zahler)*kif;
+    return {netto:netto,beitrag:beitrag,zahler:zahler,aktiv:aktiv,dl:dl,ki:ki,ok:true};
+  }
+  function v(id,d){var x=parseFloat($(id).value);return isNaN(x)?d:x}
+  function upd(){
+    var k=v('kosten',0), preis=Math.max(v('preis',0.5),0.5), fee=+$('weg').value, kiz=v('kiz',0), kif=v('kif',0), conv=Math.max(v('conv',0.1),0.1), ret=Math.max(v('ret',0.5),0.5);
+    var r=calc(k,preis,fee,kiz,kif,conv,ret);
+    $('o-netto').textContent=eur(r.netto);
+    $('o-marge').textContent=eur(r.beitrag);
+    if(!r.ok){
+      ['o-zahler','o-aktiv','o-dl','o-ki'].forEach(function(i){$(i).textContent='–'});
+      $('o-text').textContent='So rechnet es sich nicht: Die KI-Kosten (inklusive der Gratis-Nutzer) sind höher als der Preis. Preis erhöhen, KI-Kosten senken oder die Gratis-Stufe ohne KI anbieten.';
+      return;
+    }
+    $('o-zahler').textContent=fmt(r.zahler);
+    $('o-aktiv').textContent=fmt(r.aktiv);
+    $('o-dl').textContent=fmt(r.dl);
+    $('o-ki').textContent=fmt(r.ki)+' €';
+    $('o-text').textContent='Bei '+eur(preis)+' im Monat müssten '+fmt(r.zahler)+' Familien zahlen. Bei '+conv.toLocaleString('de-DE')+' % Zahlern braucht es dafür '+fmt(r.aktiv)+' aktive Kinder.';
+  }
+  var rows=[['Kosten decken (Server, Domain)',60],['Eine Teilzeitstelle',3000],['Kleines Team (3 Personen)',20000]];
+  $('szen').innerHTML=rows.map(function(x){var r=calc(x[1],7.99,0.03,2,0,4,8);
+    return '<tr><td>'+x[0]+'</td><td class="num">'+x[1].toLocaleString('de-DE')+' €</td><td class="num">'+fmt(r.zahler)+'</td><td class="num">'+fmt(r.aktiv)+'</td><td class="num">'+fmt(r.dl)+'</td></tr>';}).join('');
+  $('f').addEventListener('input',upd);
+  $('f').addEventListener('submit',function(e){e.preventDefault()});
+  document.querySelectorAll('.presets button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.presets button').forEach(function(o){o.setAttribute('aria-pressed','false')});
+      b.setAttribute('aria-pressed','true');
+      $('kosten').value=P[b.dataset.p].kosten; upd();
+    });
+  });
+  upd();
+})();
+</script>
+
+</body>
+</html>
