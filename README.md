@@ -6,10 +6,7 @@ Lern-Web-App für die 6. Klasse: 📐 Winkel-Akademie · 🪄 Wasser-Zauberschul
 - **Offline:** `sw.js` speichert alle Dateien; nach einem Besuch mit Internet läuft alles auch ohne Netz.
 
 ## Produkt: Funktionen und Vision
-**Bevor du die App bewertest, vergleichst oder vermarktest: zuerst [`produkt/funktionen.html`](produkt/funktionen.html) lesen** (online: https://rzao-hh.github.io/lernzentrale/produkt/funktionen.html, verlinkt unten auf der Startseite).
-- Die vier Fächer und die 6. Klasse sind nur der Inhalt des Prototyps, nicht die Grenze des Produkts. Ziel ist eine App, die sich aus dem eigenen Schulmaterial selbst baut – für jedes Fach und jede Klasse.
-- Die Seite trennt **heute vorhanden** (Teil A, mit „Grenzen heute“) und **geplant** (Teil B, Vision). Sie ist die Grundlage für Produktseite, Konkurrenzanalyse, Finanzierung und Marketing.
-- Neue Funktionen oder Ideen dort ergänzen (Stand-Datum oben anpassen). „Lernzentrale“ ist ein Arbeitstitel.
+Was die App heute kann und was geplant ist, steht **nur** in [`produkt/funktionen.html`](produkt/funktionen.html) (online: https://rzao-hh.github.io/lernzentrale/produkt/funktionen.html). Vor Analysen, Vergleichen oder Marketing dort lesen, neue Funktionen und Ideen dort ergänzen.
 
 ## Ablauf: erst Vorschau, dann freigeben
 Neue Versionen gehen **nicht direkt** auf die echte App. Ablauf für alle Chats:
