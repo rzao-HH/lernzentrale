@@ -29,7 +29,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | 7 | Bereit für die Arbeit | Lernplan, schneller Test, freier Test mit Musterlösung | | beschlossen |
 | 8 | Lerngruppen und Duelle | Tauziehen-Duell, Rangliste der Lerngruppe | | beschlossen |
 | 9 | Vom Schiffsjungen zum Admiral | Ränge der Spielwelten, Paket-Kacheln mit Punkten | | beschlossen |
-| 10 | Eltern sehen, wo ihr Kind steht | Elternübersicht | | Entwurf |
+| 10 | Eltern sehen, wo ihr Kind steht | Elternübersicht, Personenwahl | | beschlossen |
 | 11 | Gut zu wissen | – | | Entwurf |
 
 ## Texte
@@ -74,8 +74,10 @@ Jedes Fach hat seine eigene Spielwelt, mit eigener Sprache, eigenen Spielen und 
 
 Kern: Motivation, und zwar fürs Richtige. Spielwelten, Ränge und Punkte sind nur Mittel. Die Punkte lenken von selbst auf das, was noch geübt werden muss (Lernbegleiter lenkt mit Tipps, Lernplan mit Terminen). Freie Wahl der Spielwelt vorerst nur in der Feature-Liste. Tablet: Ränge der verschiedenen Spielwelten nacheinander.
 
-### 10 · Eltern sehen, wo ihr Kind steht (Entwurf)
-Eine Übersicht zeigt, was schon gut klappt und wo Unterstützung hilft, mit konkreten Hinweisen. Dazu kommt die eigene Einschätzung des Kindes nach den Tests, was gut lief und was noch schwer war. Ein Gerät reicht für mehrere Kinder, jedes mit eigenem Lernstand.
+### 10 · Eltern sehen, wo ihr Kind steht (beschlossen)
+Eine Übersicht zeigt, was gerade gelernt wird, was schon gut klappt und wo das Kind noch Unterstützung braucht, mit Hinweisen, wie Eltern helfen können. Dazu kommt die eigene Einschätzung des Kindes nach den Tests. Ein Gerät reicht für mehrere Kinder, jedes mit eigenem Lernstand.
+
+Wöchentlicher Bericht und Belohnungen durch Eltern bleiben vorerst nur Ideen in der Feature-Liste.
 
 ### 11 · Gut zu wissen (Entwurf)
 - Arbeitsblätter bleiben privat, nur die Themen werden verwendet.
