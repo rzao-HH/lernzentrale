@@ -106,7 +106,7 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - Text links: Überschrift in zwei Zeilen, die zweite („Diese App lernt mit.“) in der Farbe der gerade gezeigten Welt; Fließtext; Fächer-Knöpfe Mathe · NWT · Englisch · Deutsch plus gestrichelt „und jedes weitere Fach“; Knopf „Lernzentrale öffnen“.
   - Rechts: drei aufgefächerte Tablets, das mittlere groß und gut lesbar, die seitlichen klein und gekippt (vorige und nächste Welt); Krabbi schaut über das mittlere Tablet.
   - Wechsel automatisch oder per Klick auf ein Fach; Hintergrundstimmung (Sterne, Blasen, Wellen) und Farbe der zweiten Zeile wechseln mit.
-  - Tablet-Bilder zeigen Szenen, in denen etwas passiert (Geodreieck, Zauberkessel, Lernkarte, Satz-Baumeister), aufgenommen in schmalem Fenster mit doppelter Schärfe, damit die Schrift lesbar ist. Keine Menü-Übersichten.
+  - Tablet-Bilder zeigen Szenen, in denen etwas passiert (Geodreieck, Wasserkreislauf-Labor, Lernkarte, Satz-Baumeister; NWT zeigt das Wasserkreislauf-Labor, damit sich nichts mit Abschnitt 5 doppelt), aufgenommen in schmalem Fenster mit doppelter Schärfe, damit die Schrift lesbar ist. Keine Menü-Übersichten.
   - Verworfen: Einstieg 1–6 (zu klein, zu voll oder Tablets erst nach dem Scrollen sichtbar).
 - **Ganze Seite, Entwurf 1** auf dem Design-Canvas („Ganze Seite“ unter den Einstiegs-Varianten). Tablet-Szenen je Abschnitt:
   - 2 nachgebaut: Foto eines Arbeitsblatts wird gescannt, daraus entstehen Paket-Karten.
@@ -118,6 +118,7 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - 8 echt: Lerngruppen → Arena → Rangliste.
   - 9 echt: Küsten-Crew (Rang Schiffsjunge, Paket-Kacheln) → Detektiv-Büro (Rang Praktikant).
   - 10 echt plus Beispiel: Personenwahl der App, darüber eine Elternübersicht mit Beispieldaten.
+  - Abstände zwischen den Abschnitten bewusst knapp (zu viel Leerraum verworfen).
   - 11 Kacheln „Gut zu wissen“, Kasten „Noch im Experimentierstatus“ mit Platzhalter [E-MAIL-ADRESSE].
 
 ## Verworfen (damit es nicht wiederkommt)
