@@ -115,7 +115,7 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - 5 echt: Zauberkessel → Verhör im Hafen → Geodreieck (Hintergrund wechselt mit).
   - 6 nachgebaut: Tafel mit Aggregatzuständen, Lehrerin fragt, Zeitbalken, Knöpfe „Melden“ und „Nachfragen“.
   - 7 echt: Lernplan mit Lerntagen → schneller Test → Schreibtest mit Selbstkontrolle.
-  - 8 echt: Lerngruppen → Arena → Rangliste. Die Rangliste ist eine nachgebaute Animation mit Beispieldaten: Zwischen den Lerngruppen „Familie“ (Robin, Roya, Tina) und „Klasse 6b“ wird hin- und hergeschaltet; nach einem gewonnenen Duell steigen Robins Punkte (+80 in der Familie, +60 in der Klasse), und in der Klasse überholt Robin dabei Mia. Unten steht „Beispieldaten“.
+  - 8: Lerngruppen → Arena (echte Aufnahmen) → „Duell und Rangliste“ (nachgebaute Animation im Stil der App, Beispieldaten): In der Rangliste „Familie“ (Robin, Tina, Roya) wird „⚔️ Herausfordern“ gedrückt, Robin gegen Roya, Glücksrad mit allen Fächern, Einsatz 50, Countdown. Dann das Tauziehen: Fragen aus Mathe, Englisch, NWT und Deutsch, Robin tippt Antworten (eine falsch, rot), Roya zieht zweimal zurück, das Seil geht hin und her; nach drei Richtigen in Folge gibt es das Power-up „Doppelzug“. Am Ende „Gewonnen!“ mit +60 Arena-Punkten (10 + Einsatz, wie in der App). Zurück in der Rangliste steigen Robins Arena-Punkte in der eigenen ⚔️-Spalte (zählen wie in der App nicht zur Gesamtsumme), danach Wechsel zum Reiter „Klasse 6b“. Krabbi schaut mit Fahne zu und fiebert mit.
   - 9 echt: Küsten-Crew (Rang Schiffsjunge, Paket-Kacheln) → Detektiv-Büro (Rang Praktikant).
   - 10 echt plus Beispiel: Personenwahl der App, darüber eine Elternübersicht mit Beispieldaten.
   - Abstände zwischen den Abschnitten bewusst knapp (zu viel Leerraum verworfen).
@@ -130,7 +130,7 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
 - **Erklärvideo** auf der Seite direkt unter dem Einstieg eingebunden („Die Lernzentrale in zwei Minuten“, dazu ein Textlink im Einstieg). Datei (`produkt/lernzentrale-erklaervideo.mp4`, etwa zwei Minuten, 1920×1080, ohne Ton), eigenständig versendbar und auf der Seite einbindbar:
   1. Titel mit Krabbi: „Jedes Kind lernt anders. Diese App lernt mit.“
   2. Grundgerüst als Ablauf: Lernmaterialien (Arbeitsblatt, Buchseite, Vokabelliste) fliegen in die App (Kommt bald) → kleine Lernpakete → zu jedem Paket gehören Lernmodule (Module = Wege, den Inhalt zu lernen; Krabbi tippt Pakete an), mehrere Pakete gewählt: mehr Module → Schnelltest und Schreibtest mit Musterlösung und Note.
-  3. Abschnitte mit den echten Bewegtbildern: Lernen, anwenden, ausprobieren (Quiz) · Lernen durch Erfahrung (Wasserkreislauf) · Messen wie im Heft (Geodreieck) · Lernbegleiter (Kommt bald) · Unterrichtsstunde (Kommt bald) · Lerngruppen und Duelle (Rangliste mit Wechsel Familie/Klasse, daneben Krabben-Tauziehen) · Bereit für die Arbeit (Lernplan) · Eltern (Beispiel-Übersicht).
+  3. Abschnitte mit den echten Bewegtbildern: Lernen, anwenden, ausprobieren (Quiz) · Lernen durch Erfahrung (Wasserkreislauf) · Messen wie im Heft (Geodreieck) · Lernbegleiter (Kommt bald) · Unterrichtsstunde (Kommt bald) · Lerngruppen und Duelle (Duell mit Fragen und Seil, danach Rangliste Familie/Klasse; daneben Krabben-Tauziehen) · Bereit für die Arbeit (Lernplan) · Eltern (Beispiel-Übersicht).
   4. Schluss: Experimentierstatus, lernzentrale@gmx.de.
 - **Vor dem Veröffentlichen erledigen:**
   - Schriften selbst hosten (die Datenschutzerklärung sagt „keine Verbindung zu Google“; der Canvas-Entwurf lädt sie noch von Google Fonts).
