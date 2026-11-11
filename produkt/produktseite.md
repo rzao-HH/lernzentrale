@@ -30,7 +30,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | 8 | Lerngruppen und Duelle | Tauziehen-Duell, Rangliste der Lerngruppe | | beschlossen |
 | 9 | Vom Schiffsjungen zum Admiral | Ränge der Spielwelten, Paket-Kacheln mit Punkten | | beschlossen |
 | 10 | Eltern sehen, wo ihr Kind steht | Elternübersicht, Personenwahl | | beschlossen |
-| 11 | Gut zu wissen | – | | Entwurf |
+| 11 | Gut zu wissen | – | | beschlossen |
 
 ## Texte
 
@@ -79,13 +79,16 @@ Eine Übersicht zeigt, was gerade gelernt wird, was schon gut klappt und wo das 
 
 Wöchentlicher Bericht und Belohnungen durch Eltern bleiben vorerst nur Ideen in der Feature-Liste.
 
-### 11 · Gut zu wissen (Entwurf)
-- Arbeitsblätter bleiben privat, nur die Themen werden verwendet.
-- Die KI-Lehrerin spricht nur über den Schulstoff. `Kommt bald`
-- Lernkarten und Lernzettel bleiben immer da, Spiele ersetzen das Grundwissen nicht.
+### 11 · Gut zu wissen (beschlossen)
+- Fotos der Lernmaterialien bleiben privat. Die App schreibt daraus eigene Aufgaben. `Kommt bald`
+- Die Lehrerin in der Unterrichtsstunde spricht nur über die gewählten Lernpakete. `Kommt bald`
+- Lernkarten und Lernmaterialien bleiben immer da, Spiele ersetzen das Grundwissen nicht.
+- Ein frei gewählter Benutzername genügt, ein echter Name ist nicht nötig.
 - Läuft auf Handy, Tablet und PC, auch ohne Internet.
-- Keine Werbung, keine Käufe in der App.
+- Keine Werbung.
 - Noch im Experimentierstatus. Familien zum Mittesten sind willkommen.
+
+Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
 
 ## Verworfen (damit es nicht wiederkommt)
 
@@ -99,4 +102,5 @@ Wöchentlicher Bericht und Belohnungen durch Eltern bleiben vorerst nur Ideen in
 - „Jedes Paket endet mit einem Test“ (falsch: Tests gehen über die gewählten Pakete).
 - „Mit Freunden, Familie und der ganzen Klasse“ (lang, klingt nach Klassenmodus) und „Aufzeichnung“ (technisch, in der App heißt es Geister-Duell).
 - „Punkte für Neues“ (ungenau) und „Punkte und Ränge“ (nur das Mittel, nicht das Ziel Motivation); „Motiviert fürs Richtige“ als Überschrift verworfen, Gedanke steckt im Text.
+- „Keine Käufe in der App“ (es wird Käufe geben, z. B. eigene Module) und „nur die Themen werden verwendet“ (widerspricht Abschnitt 2).
 - „Ein Thema, viele Wege“ (Thema heißt in der App die Spielwelt) und „Viele Wege zum selben Stoff“: leer.
