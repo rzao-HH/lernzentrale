@@ -101,6 +101,7 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - A „Stilvorbilder“: große runde Schrift, Text und Tablet abwechselnd, Symbole der Spielwelten.
   - B „Ruhig mit Spielwelt“: ruhiger Grund, zentrierter Einstieg, jeder Abschnitt in der Stimmung seiner Welt, Hintergrund wechselt mit dem Tablet.
   - **Entschieden: B „Ruhig mit Spielwelt“** (https://claude.ai/artifact/93XsFzdatTbTP3XcRpjABP). Vorschau A: https://claude.ai/artifact/RaLJFaeCzNL1CFHMLhUdxE
+- **Design-Canvas zum Überarbeiten in Claude:** https://claude.ai/artifact/DbJoBTVC8SDXFhGdh44UMS (Ausgangspunkt Stil B). Ergebnisse von dort hier eintragen, bevor die fertige Seite gebaut wird.
 
 ## Verworfen (damit es nicht wiederkommt)
 
