@@ -21,7 +21,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 | # | Abschnitt | Tablet zeigt | Schild | Status |
 |---|---|---|---|---|
 | 1 | Jedes Kind lernt anders. Diese App lernt mit. | die App in Bewegung | | beschlossen |
-| 2 | Genau der Stoff aus dem Unterricht | Foto der Lernmaterialien → Inhalte der App | Kommt bald | Entwurf |
+| 2 | Genau der Stoff aus dem Unterricht | Foto der Lernmaterialien → Inhalte der App | Kommt bald | beschlossen |
 | 3 | Der Lernbegleiter | Tipp des Lernbegleiters | Kommt bald | beschlossen |
 | 4 | Ein Thema, viele Wege | Karteikarte → Quiz → Café in Brighton | | Entwurf |
 | 5 | Ausprobieren statt auswendig lernen | Wasserlabor, Geodreieck | | Entwurf |
@@ -38,7 +38,7 @@ Die Abschnitte folgen der Unterzeile des Einstiegs: lernt mit → klassisch und 
 **Jedes Kind lernt anders. Diese App lernt mit.**
 Die App merkt sich, wie jedes Kind am besten lernt, und passt sich an. Gelernt wird klassisch, aber auch spielerisch, mit Experimenten und Tests, die zur nächsten Arbeit passen. Geübt wird allein oder mit Freunden und Familie.
 
-### 2 · Genau der Stoff aus dem Unterricht `Kommt bald` (Entwurf)
+### 2 · Genau der Stoff aus dem Unterricht `Kommt bald` (beschlossen)
 Aus Fotos der Lernmaterialien entstehen die Inhalte der App, mit denselben Begriffen und Erklärungen wie in der Schule. Das geht in jedem Fach und jeder Klasse, aufgeteilt in kleine Lernpakete.
 
 Gewichtung: eigener Schulstoff und „jedes Fach, jede Klasse“ zuerst, Pakete nur nebenbei. „Lernmaterialien“ statt Arbeitsblatt oder Buch.
