@@ -120,6 +120,16 @@ Offen für die Gestaltung: Wie melden sich Familien zum Mittesten?
   - 10 echt plus Beispiel: Personenwahl der App, darüber eine Elternübersicht mit Beispieldaten.
   - Abstände zwischen den Abschnitten bewusst knapp (zu viel Leerraum verworfen).
   - 11 Kacheln „Gut zu wissen“, Kasten „Noch im Experimentierstatus“ mit Platzhalter [E-MAIL-ADRESSE].
+- **Bewegtbilder statt Standbilder:** Kurze animierte Aufnahmen der echten App mit orangem Fingerpunkt (Tippen, Ziehen). Fertig: Winkel zeichnen, Wasserkreislauf (Sonne hochziehen → Regen), Quiz, Lernkarte umdrehen (Englisch und Deutsch), Zauberkessel (+10 bis gasförmig), Verhör, Geodreieck (schieben, drehen, ablesen, eintippen, „Exakt 64°!“). Jede Szene läuft einmal ganz durch, bevor die nächste kommt. Aufnahme-Skripte liegen nicht im Repository (nur in der Session).
+  - Einstieg: Winkel zeichnen, Wasserkreislauf, Quiz, Detektiv-Lernkarte. Abschnitt 4: Lernkarte (animiert), Café, Satz-Baumeister. Abschnitt 5: Zauberkessel, Verhör, Geodreieck (alle animiert).
+- **Krabbi taucht immer wieder auf** und macht Passendes: fotografiert (2), läuft quer durchs Bild (4), hält eine Lupe (5), meldet sich (6), hält einen Stift (7), zieht mit einer zweiten Krabbe Tau (8), trägt eine Fahne (9), winkt am Ende.
+- **Impressum und Datenschutz** als eigene Seiten auf dem Canvas, verlinkt im Fuß. Kontakt: lernzentrale@gmx.de (steht auch in Abschnitt 11). Anschrift und Namen stehen nur auf dem Canvas, nicht im Repository.
+- **Vor dem Veröffentlichen erledigen:**
+  - Schreibweise von Name und Straße im Impressum prüfen.
+  - Schriften selbst hosten (die Datenschutzerklärung sagt „keine Verbindung zu Google“; der Canvas-Entwurf lädt sie noch von Google Fonts).
+  - Hosting festlegen (Datenschutzerklärung geht von GitHub Pages aus).
+  - Die Lern-App braucht eine eigene Datenschutzerklärung (Benutzername, Lernstand, Abgleich über Supabase, Lerngruppen), bevor Familien mittesten.
+  - Impressum und Datenschutz rechtlich prüfen lassen.
 
 ## Verworfen (damit es nicht wiederkommt)
 
