@@ -178,6 +178,22 @@
       "w": 768,
       "h": 1120,
       "title": "E · Flugkarte · Stilblatt"
+    },
+    "F-Englisch.dc.html": {
+      "x": 0,
+      "y": 11000,
+      "w": 768,
+      "h": 1024,
+      "title": "F · Englisch (Küste) · 24 Pakete · Klick-Dummy",
+      "is_interactive": true
+    },
+    "F-Mathe.dc.html": {
+      "x": 848,
+      "y": 11000,
+      "w": 768,
+      "h": 1024,
+      "title": "F · Mathe (Weltraum) · 8 Pakete · Klick-Dummy",
+      "is_interactive": true
     }
   },
   "order": [
@@ -202,7 +218,9 @@
     "D2-App.dc.html",
     "E-App.dc.html",
     "E-Themen.dc.html",
-    "E-Stil.dc.html"
+    "E-Stil.dc.html",
+    "F-Englisch.dc.html",
+    "F-Mathe.dc.html"
   ],
   "notes": {
     "tA": {
@@ -279,6 +297,13 @@
       "x": 0,
       "y": 9300,
       "text": "E · Entwurf von Fable",
+      "kind": "title1",
+      "maxW": 4000
+    },
+    "tF2": {
+      "x": 0,
+      "y": 10740,
+      "text": "F · Pakete wählen, Module darunter (Fable)",
       "kind": "title1",
       "maxW": 4000
     }

@@ -174,6 +174,42 @@ Auf der Arbeitsfläche (Reihe „E · Entwurf von Fable“ ganz unten): `E-App` 
 
 **Im Dummy noch nicht gezeigt:** Countdown und Lernplan, andere Übungsarten (Zeichnen, Messen, Schätzen, Duell), Lernkarten-Suche, Fotos der Arbeitsblätter, Schreibtest, Selbsteinschätzung, Inhalt des Eltern-Bereichs.
 
+## Entwurf F (Fable): Regal und Treppe – Pakete oben wählen, Lernformen darunter
+
+Auf der Arbeitsfläche (Reihe „F · Pakete wählen, Module darunter (Fable)“ ganz unten): `F-Englisch` (Küste, 24 Pakete) und `F-Mathe` (Weltraum, 8 Pakete), dieselbe App mit anderem Fach. Anlass: Die Spuren aus Entwurf E tragen nicht bei 20 und mehr Paketen. F zeigt die freie Wahl („Was?“ oben, „Wie?“ darunter) mit einer Lenkung, die ein Kind ohne Erklärung versteht. Optik bewusst anders als E: helle Fläche, farbiges Kopfband mit Wellenkante, runde Schrift (Fredoka, Figtree), Pakete als runde Marken, keine Reiterleiste unten. Quellen in `produkt/quellen/redesign-f/`.
+
+**Ein Bildschirm, drei Zonen**
+
+1. **Regal („1 · Was möchtest du lernen?“).** Pakete sind runde Marken, nach Gruppen sortiert (Unit 1, Unit 2, Unregelmäßige Verben …). Jede Gruppe ist eine Zeile zum Auf- und Zuklappen; zugeklappt zeigt sie eine Punktreihe mit dem Lernstand und die Zählung („3 noch üben · 3 neu“). Offen sind zuerst nur Gruppen, in denen gerade etwas läuft. So passen 24 Pakete auf eine halbe Seite, und 8 sehen genauso aus.
+   - Lernstand an der Marke: leer und gestrichelt = neu, halb gefüllt = noch üben, voll = sicher, dazu immer das Wort.
+   - Schnellwahl: „Krabbis Vorschlag“ (Neues plus Bekanntes), „Was dran ist“, „Noch üben“, „Nächstes neues Paket“, „Leeren“. Suchfeld. Höchstens 6 Pakete pro Runde.
+2. **Treppe („2 · Wie möchtest du üben?“).** Vier Stufen: **Kennenlernen → Mit Auswahl → Selbst machen → Ohne Hilfen**. Auf jeder Stufe liegen Lernformen als Kacheln (Englisch: Lernkarten, Hör-Kapitän | Quiz, Buchstabenrätsel | Schreiben, Lückensätze | Zeitrunde, Duell). Die gewählten Pakete stehen als kleine Marken auf der Stufe, die sie erreicht haben.
+3. **Startleiste.** Gewählte Lernform, Mischung als Balken mit Paketnummern, Punkte je Paket (volle Punkte, +20 %, wenige), welche Pakete noch nicht mitmachen. Ein Knopf: „Runde starten“.
+
+**Freischalten in einem Satz:** „Zwei gute Runden, und ein Paket steigt eine Stufe höher.“
+
+- Der Stand gilt **je Paket**. Gute Runde = mindestens 7 von 10 richtig und in Ruhe beantwortet. Punkte schalten nichts frei.
+- Eine Lernform nimmt Aufgaben nur aus den gewählten Paketen, die ihre Stufe erreicht haben („mit allen 3 Paketen“, „mit 1 von 3 Paketen“).
+- Passt keins: Kachel gestrichelt mit Schloss und Bedingung („Paket 9: noch 2 gute Runden auf Stufe 1“, „erst Stufe 3 schaffen“, „passt nicht zu Paket 3“).
+- Der Kurztest mit Note geht immer (z. B. vor einer Arbeit).
+- Klappt eine Runde nicht, bleibt das Paket auf seiner Stufe; Krabbi rät zu einer anderen Lernform derselben Stufe.
+
+So stehen Spiele und Zeitrunden sichtbar oben (Vorfreude), sind für ein Paket aber erst erreichbar, wenn Erkennen und Selbermachen klappen. Abwechslung bleibt, weil jede Stufe mehrere Lernformen hat und „Krabbis Tipp“ nach jeder Runde wechselt.
+
+**Standort bestimmen (gelenkter Weg):** Im Kopfband „Standort bestimmen“: etwa 12 kurze Fragen quer durch alle begonnenen Pakete, ohne Note und Punkte. Danach „Hier stehst du“ und „Krabbis Fokus für dich“ (2–3 Pakete mit Grund). „Fokus übernehmen“ setzt die Auswahl. „Selbst wählen“ bleibt möglich.
+
+**Ohne Erklärung verständlich:** Krabbis Vorschlag ist beim Öffnen gewählt, eine Lernform als „Krabbis Tipp“ markiert; wer nur „Runde starten“ drückt, lernt sinnvoll. Die Treppe ist das Bild der Regel. Jedes Schloss nennt seine Bedingung als Zahl. Das Ergebnis sagt je Paket, was die Runde gebracht hat; bei Aufstieg „Neue Stufe frei“. „So geht die Treppe“ erklärt alles in vier Sätzen.
+
+**Aus E übernommen:** Mischung als Balken, Herkunft jeder Aufgabe, „antippen, dann prüfen“, Tempo-Bremse, Tagesdosis, Sternbild der Woche, Themenhaut.
+
+**Navigation:** keine Reiterleiste; die Lernseite ist die Startseite, „Gemeinsam“ und „Ich“ (Eltern-Bereich hinter Code) als Knöpfe im Kopfband.
+
+**Annahmen von Fable:** Stufennamen und Zuordnung, Schwellen (2 gute Runden, 7 von 10, max. 6 Pakete), Beispiel-Pakete Englisch erfunden, Fokus nach Standort fest hinterlegt.
+
+**Offene Fragen von Fable:** Stand je Paket oder je Gruppe? Weniger Punkte für Lernformen unterhalb der erreichten Stufe? Soll ein sicheres Paket wieder sinken? Neue Pakete frei wählbar oder nur das nächste je Gruppe? Wie oft Standort bestimmen, ändert er den Lernstand? E und F kombinieren (E als geführter Weg, F als „Frei üben“)? Trägt die Navigation ohne Reiterleiste mit Fachwechsel und Lernplan?
+
+**Noch nicht gezeigt:** Fachwechsel, Countdown und Lernplan, andere Aufgabenarten als Auswahl, Themen-Vorbeiflieger, Stilblatt.
+
 ## Themen: Grunddesign + Themenhaut (Themen-Baukasten auf der Arbeitsfläche)
 
 Jede Welt folgt einem Thema, und das soll man auch sehen, ohne dass Bedienung und Aufbau sich ändern. Deshalb gibt es **ein Grunddesign** (Aufbau, Schrift, Knöpfe mit Umriss, Krabbi, Tab-Leiste) und darüber **eine Themenhaut** aus festen Bausteinen:
