@@ -155,6 +155,29 @@
       "h": 1024,
       "title": "D2 · NEU · Weg mit Paket-Symbolen und „Frei üben“",
       "is_interactive": true
+    },
+    "E-App.dc.html": {
+      "x": 0,
+      "y": 9560,
+      "w": 768,
+      "h": 1024,
+      "title": "E · Flugkarte · Klick-Dummy",
+      "is_interactive": true
+    },
+    "E-Themen.dc.html": {
+      "x": 848,
+      "y": 9560,
+      "w": 768,
+      "h": 1024,
+      "title": "E · Themenhaut · Fach wechseln",
+      "is_interactive": true
+    },
+    "E-Stil.dc.html": {
+      "x": 1696,
+      "y": 9560,
+      "w": 768,
+      "h": 1120,
+      "title": "E · Flugkarte · Stilblatt"
     }
   },
   "order": [
@@ -176,7 +199,10 @@
     "B-App2.dc.html",
     "B-Themen.dc.html",
     "B-Check.dc.html",
-    "D2-App.dc.html"
+    "D2-App.dc.html",
+    "E-App.dc.html",
+    "E-Themen.dc.html",
+    "E-Stil.dc.html"
   ],
   "notes": {
     "tA": {
@@ -248,6 +274,13 @@
       "w": 420,
       "fill": "teal",
       "text": "D2, gebaut nach Duolingos eigenem Artikel zum Lernweg (blog.duolingo.com, „introducing the new duolingo learning path“):\n\n• Jede Station trägt das Symbol ihres Pakets; dieselben Pakete kommen später im Weg wieder (verteilte Wiederholung). So sieht man das Mischen.\n• Misch-Stationen zeigen die Farben aller beteiligten Pakete.\n• Stationen erklären sich beim Antippen (Popup), Abschnitte haben ein Band mit Lernzettel.\n• Freies Üben: eigener Reiter „Üben“ mit Was/Wie (wie Duolingos Übungsbereich).\n• Kräftige Vollfarben, Tasten mit dunklerer Kante, Ring und START am aktuellen Schritt, Krabbi und Themen-Bilder am Weg."
+    },
+    "tE": {
+      "x": 0,
+      "y": 9300,
+      "text": "E · Entwurf von Fable",
+      "kind": "title1",
+      "maxW": 4000
     }
   },
   "designSystems": []

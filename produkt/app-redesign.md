@@ -140,6 +140,40 @@ Rückmeldung zu D: optisch keine verspielten Elemente, vom Vorbild nichts wieder
 
 **D2 setzt das um:** Jedes Paket hat Farbe und Symbol; dasselbe Paket kommt im Weg später wieder (z. B. Paket 1 Stufe 3 mit Bonus); grüne Misch-Stationen für „Paket 1 + 2“, „1 + 2 + 3“; Popup mit Stufe und Punkten; Reiter **„Frei üben“** mit Was/Wie (eigene Mischung, Module frei); Lektion mit „3 in Folge“, Krabbi stellt die Frage, „Prüfen“, grüner bzw. roter Streifen; Ergebnis mit drei Kacheln. Bewusst anders: keine Leben, Serie ohne Druck, eigene Symbole und Krabbi.
 
+## Entwurf E (Fable): die Flugkarte, ein Linienplan statt einer Perlenkette
+
+Auf der Arbeitsfläche (Reihe „E · Entwurf von Fable“ ganz unten): `E-App` (Klick-Dummy), `E-Themen` (Themenhaut, Fach wechseln), `E-Stil` (Stilblatt). Von einem anderen Modell (Fable 5.2) unabhängig von A–D2 entworfen; es kannte nur Anforderungen, Lernmodell und Weg-Regeln. Quellen in `produkt/quellen/redesign-e/`.
+
+**Leitidee:** Der Lernweg ist kein einzelner Pfad aus Knoten, sondern ein **Linienplan** wie bei der U-Bahn. Jedes Paket ist eine farbige, nummerierte **Leuchtspur**, die von oben nach unten läuft. Jede Station ist eine Zeile. Sitzt sie auf einer Spur, wird ein Paket allein geübt. Verbindet eine Kapsel mehrere Spuren, wird gemischt. So zeigt die Karte das Lernmodell selbst:
+
+- **Neu, zuerst allein:** Eine neue Spur beginnt sichtbar an der Stelle, an der das Paket dazukommt.
+- **Dann gemischt:** Die Kapsel spannt sich über alle beteiligten Spuren.
+- **Wiederholung:** Eine einzelne Station sitzt wieder auf einer alten Spur („nachleuchten“, +20 %).
+- **Perspektivwechsel:** Rechts in jeder Zeile stehen Lernform und Symbol; keine Lernform steht zweimal direkt hintereinander.
+
+**Was neu ist und welche Anforderung es löst**
+
+1. **Flugkarte als Liste mit Spuren.** Links das Bild (Spuren, Kapseln), rechts Klartext („Erkennen · gemischt“, „jetzt dran · volle Punkte“, „geht auf nach 2 Stationen“). Jede Station ist eine 56 px hohe Zeile, die ganze Zeile ist die Tippfläche.
+2. **Heute-Karte mit Tagesdosis.** Krabbi sagt in einem Satz, was heute dran ist und warum. Darunter drei Stationen als Chips (etwa 12 Minuten) und ein großer Knopf „Weiterfliegen“. Nach drei Stationen: „Für heute bist du fertig. Du kannst aufhören oder noch weiterfliegen.“
+3. **Station antippen: Mischung als Balken.** Das Blatt zeigt, was man tut, die Zusammensetzung der 10 Aufgaben als farbigen Balken („5 × Überstumpf, neu dabei · 3 × Spitz & recht · 2 × Stumpf & gestreckt“), „Warum jetzt?“, die Punkte-Münze mit Grund und „Danach kommt“.
+4. **Vorfreude ohne Überspringen.** Kommende Stationen stehen mit Lernform, Symbol und Marken (NEU, +20 %, Note) gestrichelt und blass in der Karte; Antippen erklärt, wann sie aufgehen, ohne Start-Knopf. Am Ende steht „Im Fernrohr“ der nächste Abschnitt.
+5. **Extra-Station statt Sperre.** Klappt eine Station nicht, erscheint eine Zeile „Sortieren · Extra-Station“: gleicher Stoff, andere Perspektive. Nichts wird gesperrt oder abgezogen.
+6. **Zwei Bremsen gegen wildes Klicken.** „Antippen, dann prüfen“ (Wahl vor dem Prüfen änderbar) und eine Tempo-Regel: Wer zu schnell prüft, sieht „Richtig, aber sehr schnell. Dafür gibt es diesmal keine Punkte.“ Lernen wird nie blockiert, nur die Punkte entfallen.
+7. **Herkunft jeder Aufgabe.** Über jeder Aufgabe steht „Paket 3 · Überstumpf · neu dabei“ oder „kennst du schon“. Das Ergebnis rechnet je Paket ab.
+8. **Sternbild der Woche statt Serie.** Jeder Lerntag lässt einen Stern leuchten. Freie Tage löschen nichts; keine Flamme, keine Leben, kein Verlust.
+9. **Frei üben erklärt die Punkte.** Erst „Was?“ (nur erreichte Pakete), dann „Wie?“ (nur erreichte Lernformen, unpassende mit Grund). Die Zusammenfassung zeigt je Paket die Münze mit Grund.
+10. **Grunddesign: Bühne und Papier.** Alles zum Lesen und Tippen liegt auf hellen Papier-Karten und sieht in jedem Fach gleich aus. Das Thema färbt nur die Bühne dahinter. Ein Thema ist ein Steckbrief aus sieben Angaben: Bühne, Farben, Paketform, Krabbis Kostüm, Vorbeiflieger, Rangnamen, Wörter. `E-Themen` zeigt vier feste Themen und ein eigenes (Tiefsee).
+
+**Stil:** Bricolage Grotesque (Überschriften), Atkinson Hyperlegible (Lesetext, für gute Lesbarkeit entworfen). Weltraum: Nachtblau #171A45, Papier #FBF8F1, Tinte #15173A, Sternengelb #FFC83D, Krabbi-Orange #F47B20. Richtig grün mit Häkchen und Wort; „Noch nicht ganz“ orange und gestrichelt, nie rot. Knöpfe mindestens 56 px, Bewegung sparsam und bei „weniger Bewegung“ aus. Krabbis Kostüme: Raumhelm, Zauberhut, Südwester, Mütze mit Lupe, Taucherbrille.
+
+**Navigation:** Flugkarte (je Thema anders benannt: Seekarte, Spurenkarte …) · Frei üben · Gemeinsam · Ich (Eltern-Bereich hinter Code). In der Übung keine Reiter.
+
+**Annahmen von Fable:** Stationsreihenfolge, Aufteilung 5/3/2 in Misch-Stationen, Rang-Schwellen und 10 Punkte je Antwort, Tempo-Grenze 1,5 s (Demowert), Kind heißt im Dummy „Mika“, eigene Wörter („nachleuchten“, „wieder dran“), eigene Paketformen (Planeten, Tropfen, Signalflaggen, Aktenreiter, Seesterne).
+
+**Offene Fragen von Fable:** Trägt der Linienplan bei 8+ Paketen (Vorschlag: höchstens 4 Spuren je Abschnitt, ältere gebündelt)? Startet „Weiterfliegen“ direkt oder erst mit dem Warum-Blatt? Wie groß ist die Tagesdosis und wie verändert sie der Lernplan bis zur Arbeit? Fachwechsel per Umschalter oder Reiter? Punkte bei zu schnellem Tippen wirklich streichen oder nur Hinweis? Quellenangabe je Paket ins Paket-Blatt. Duell als Station gegen Krabbi oder gegen echte Person?
+
+**Im Dummy noch nicht gezeigt:** Countdown und Lernplan, andere Übungsarten (Zeichnen, Messen, Schätzen, Duell), Lernkarten-Suche, Fotos der Arbeitsblätter, Schreibtest, Selbsteinschätzung, Inhalt des Eltern-Bereichs.
+
 ## Themen: Grunddesign + Themenhaut (Themen-Baukasten auf der Arbeitsfläche)
 
 Jede Welt folgt einem Thema, und das soll man auch sehen, ohne dass Bedienung und Aufbau sich ändern. Deshalb gibt es **ein Grunddesign** (Aufbau, Schrift, Knöpfe mit Umriss, Krabbi, Tab-Leiste) und darüber **eine Themenhaut** aus festen Bausteinen:

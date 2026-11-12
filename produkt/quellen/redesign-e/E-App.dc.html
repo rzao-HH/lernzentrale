@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>E · Flugkarte · Klick-Dummy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+
+body{margin:0}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;text-align:left}
+button:focus-visible,input:focus-visible{outline:3px solid #FF8A00;outline-offset:2px}
+.h{font-family:'Bricolage Grotesque','Trebuchet MS',sans-serif;font-weight:800;letter-spacing:-.01em;margin:0}
+.scr{position:absolute;left:0;top:0;width:768px;height:1024px;display:flex;flex-direction:column}
+.cap13{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 26px;border-radius:18px;font-weight:700;font-size:19px;background:#FFC83D;color:#15173A}
+.btn:hover{background:#FFD469}.btn:active{transform:translateY(1px)}
+.btn.sec{background:#FFFFFF;border:2px solid #15173A}
+.btn.ghost{background:rgba(255,255,255,.12);color:#FFFFFF;border:2px solid #7C84D6}
+.btn.off{background:#E4DFD2;color:#5A5C78;cursor:default}
+.row{display:flex;align-items:center;gap:14px;width:100%;height:56px;padding:0 20px 0 24px;color:#FFFFFF}
+.row:hover{background:rgba(255,255,255,.07)}
+.row.cur{background:rgba(255,200,61,.17)}
+.row.cur:hover{background:rgba(255,200,61,.24)}
+.weave{position:relative;flex:none;width:224px;height:56px;display:block}
+.ln{position:absolute;width:4px;border-radius:2px;display:block}
+.cap{position:absolute;top:8px;height:40px;border-radius:20px;display:block}
+.nd{position:absolute;top:13px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.rtx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.rt{font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs{font-size:14px;color:#C3C8F2}
+.bdg{flex:none;padding:3px 10px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:.04em}
+.ric{flex:none;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.tchip{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:12px;font-size:14px;font-weight:700;background:#F1ECDF;color:#3D3F63;white-space:nowrap}
+.tchip.cur{background:#15173A;color:#FFFFFF}
+.tchip.done{background:#DFF5EA;color:#0B5C40}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:14px;font-weight:700;color:#5A5C78;height:100%}
+.tab .ti{width:56px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+.tab.on{color:#15173A}.tab.on .ti{background:#FFC83D}
+.ans{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:76px;padding:0 22px;border-radius:20px;background:#FFFFFF;border:2px solid #CFC8B6;font-size:21px;font-weight:700}
+.ans:hover{border-color:#15173A}
+.ans.sel{border:3px solid #15173A;background:#FFF3CC}
+.ans.ok{border:3px solid #0E7A54;background:#DFF5EA}
+.ans.no{border:3px dashed #B4500A;background:#FFE9D6}
+.ans.dim{color:#5A5C78;cursor:default}
+.ans .mk{font-size:14px;font-weight:700}
+.pk{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:104px;padding:12px;border-radius:18px;background:#FFFFFF;border:2px solid #CFC8B6}
+.pk.on{border:3px solid #15173A;padding:11px;background:#FFF3CC}
+.pk.lock{background:#F1ECDF;border-style:dashed;color:#5A5C78;cursor:default}
+.dot{flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#15173A}
+.md{display:flex;align-items:center;gap:10px;min-height:64px;padding:8px 12px;border-radius:16px;background:#FFFFFF;border:2px solid #CFC8B6;font-weight:700;font-size:16px}
+.md.on{border:3px solid #15173A;padding:7px 11px;background:#FFF3CC}
+.md.lock{background:#F1ECDF;border-style:dashed;color:#5A5C78;cursor:default}
+.md small{display:block;font-size:13px;font-weight:400;color:#5A5C78}
+.card{background:#FFFFFF;border-radius:22px;padding:18px 20px}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#FBF8F1;border-radius:30px 30px 0 0;padding:14px 28px 28px;color:#15173A;max-height:860px;overflow-y:auto}
+.scrim{position:absolute;left:0;top:0;width:768px;height:1024px;background:rgba(10,11,40,.55);cursor:default}
+@keyframes schnuppe{0%{transform:translate(0,0);opacity:0}4%{opacity:.7}12%{transform:translate(-300px,150px);opacity:0}100%{transform:translate(-300px,150px);opacity:0}}
+.schnuppe{position:absolute;left:640px;top:20px;width:70px;height:2px;border-radius:2px;background:#FFFFFF;transform-origin:right center;rotate:-27deg;animation:schnuppe 16s linear infinite;opacity:0}
+@keyframes wink{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+.kr{animation:wink 5s ease-in-out infinite;transform-origin:50% 90%}
+@media (prefers-reduced-motion:reduce){.schnuppe,.kr{animation:none}}
+
+</style>
+</helmet>
+<div style="width:768px;height:1024px;position:relative;overflow:hidden;font-family:'Atkinson Hyperlegible', 'Verdana', sans-serif;font-size:17px;line-height:1.4;background:#FBF8F1;color:#15173A">
+<sc-if value="{{isWeg}}" hint-placeholder-val="{{ true }}">
+<div class="scr" style="background:#171A45;color:#FFFFFF;padding-bottom:80px">
+<svg width="768" height="330" viewBox="0 0 768 330" aria-hidden="true" style="position:absolute;left:0;top:0;pointer-events:none"><circle cx="40" cy="30" r="1.5" fill="#FFFFFF" opacity="0.7"></circle><circle cx="130" cy="90" r="1" fill="#FFFFFF" opacity="0.5"></circle><circle cx="210" cy="24" r="2" fill="#FFFFFF" opacity="0.6"></circle><circle cx="300" cy="70" r="1" fill="#FFFFFF" opacity="0.5"></circle><circle cx="388" cy="18" r="1.5" fill="#FFFFFF" opacity="0.8"></circle><circle cx="470" cy="58" r="1" fill="#FFFFFF" opacity="0.5"></circle><circle cx="560" cy="28" r="2" fill="#FFFFFF" opacity="0.5"></circle><circle cx="700" cy="84" r="1.5" fill="#FFFFFF" opacity="0.6"></circle><circle cx="740" cy="30" r="1" fill="#FFFFFF" opacity="0.7"></circle><circle cx="96" cy="180" r="1" fill="#FFFFFF" opacity="0.4"></circle><circle cx="730" cy="210" r="1.5" fill="#FFFFFF" opacity="0.4"></circle><circle cx="20" cy="260" r="1.5" fill="#FFFFFF" opacity="0.5"></circle><circle cx="748" cy="300" r="1" fill="#FFFFFF" opacity="0.5"></circle></svg><div class="schnuppe" aria-hidden="true"></div>
+<div style="position:relative;display:flex;align-items:center;justify-content:space-between;height:68px;padding:0 24px;flex:none">
+<div style="display:flex;flex-direction:column">
+<span class="cap13" style="color:#C3C8F2">Mathe · Weltraum</span>
+<h1 class="h" style="font-size:26px;line-height:1.1">Winkel-Akademie</h1>
+</div>
+<button type="button" onClick="{{goIch}}" aria-label="Rang und Punkte ansehen" style="display:flex;align-items:center;gap:10px;min-height:48px;padding:4px 16px 4px 8px;border-radius:24px;background:#262B6B;border:1px solid #4A52A8">
+<svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 8l11 9M5 17l8 6M14 5l9 8" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" fill="none"></path><circle cx="27" cy="26" r="9" fill="#FFC83D" stroke="#FFFFFF" stroke-width="2"></circle><circle cx="24" cy="24" r="2" fill="#FFFFFF" opacity=".45"></circle><circle cx="30" cy="29" r="1.5" fill="#FFFFFF" opacity=".45"></circle></svg>
+<span style="display:flex;flex-direction:column;line-height:1.15"><span style="font-weight:700;font-size:16px">Meteor</span><span style="font-size:14px;color:#C3C8F2">{{points}} Punkte</span></span>
+</button>
+</div>
+<div style="position:relative;display:flex;align-items:flex-end;gap:6px;padding:0 24px 0 14px;flex:none">
+<div class="kr" style="flex:none;margin-bottom:-4px"><svg width="118" height="142" viewBox="0 -24 120 144" role="img" aria-label="Krabbi mit Raumhelm"><path d="M30 88l-11 8M27 79l-13 4M90 88l11 8M93 79l13 4" stroke="#C75A12" stroke-width="5" stroke-linecap="round" fill="none"></path><path d="M33 68C22 63 17 56 17 46M87 68c11-5 16-12 16-22" stroke="#F47B20" stroke-width="7" stroke-linecap="round" fill="none"></path><circle cx="17" cy="38" r="12" fill="#F47B20"></circle><path d="M17 40L9 25h14Z" fill="#C75A12"></path><circle cx="103" cy="38" r="12" fill="#F47B20"></circle><path d="M103 40l8-15H97Z" fill="#C75A12"></path><path d="M50 54L46 32M70 54l4-22" stroke="#F47B20" stroke-width="6" stroke-linecap="round" fill="none"></path><ellipse cx="60" cy="74" rx="34" ry="26" fill="#F47B20"></ellipse><ellipse cx="60" cy="83" rx="21" ry="11" fill="#FFA24D"></ellipse><circle cx="46" cy="27" r="10" fill="#FFFFFF" stroke="#15173A" stroke-width="2"></circle><circle cx="74" cy="27" r="10" fill="#FFFFFF" stroke="#15173A" stroke-width="2"></circle><circle cx="48" cy="28" r="4.5" fill="#15173A"></circle><circle cx="76" cy="28" r="4.5" fill="#15173A"></circle><path d="M52 73q8 7 16 0" stroke="#15173A" stroke-width="3" stroke-linecap="round" fill="none"></path><circle cx="41" cy="72" r="4" fill="#FF8F6B"></circle><circle cx="79" cy="72" r="4" fill="#FF8F6B"></circle><circle cx="60" cy="38" r="40" fill="rgba(170,195,255,.18)" stroke="#BFD0FF" stroke-width="3"></circle><path d="M30 22a34 34 0 0 1 18-16" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity=".85"></path></svg></div>
+<div style="position:relative;flex:1;background:#FBF8F1;color:#15173A;border-radius:24px;padding:16px 20px 18px;display:flex;flex-direction:column;gap:12px">
+<div style="position:absolute;left:-8px;bottom:44px;width:18px;height:18px;background:#FBF8F1;transform:rotate(45deg);border-radius:3px"></div>
+<span class="cap13" style="color:#5A5C78">{{heuteLabel}}</span>
+<p style="margin:0;font-size:18px;line-height:1.4">{{heuteText}}</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{today}}" as="t" hint-placeholder-count="3">
+<span class="tchip {{t.cls}}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="{{t.icon}}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>{{t.label}}</span></span>
+</sc-for>
+</div>
+<button type="button" class="btn" onClick="{{startCur}}" style="align-self:stretch">Weiterfliegen: {{curShort}} <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+</div>
+</div>
+<div style="position:relative;display:flex;align-items:center;gap:14px;padding:18px 24px 6px;flex:none">
+<div style="display:flex;width:224px;flex:none">
+<sc-for list="{{heads}}" as="p" hint-placeholder-count="4">
+<button type="button" onClick="{{p.open}}" aria-label="{{p.aria}}" style="width:56px;height:48px;display:flex;align-items:center;justify-content:center"><span class="dot" style="width:36px;height:36px;font-size:17px;background:{{p.bg}};border:{{p.bd}};color:{{p.ink}}">{{p.n}}</span></button>
+</sc-for>
+</div>
+<div style="flex:1;min-width:0">
+<h2 class="h" style="font-size:20px">Flugkarte · Abschnitt 1: Winkelarten</h2>
+<p style="margin:0;font-size:14px;color:#C3C8F2">Jede Leuchtspur ist ein Paket. Wo Spuren zusammenlaufen, wird gemischt.</p>
+</div>
+</div>
+<div style="position:relative;flex:1;min-height:0;overflow-y:auto">
+<button type="button" class="row" onClick="{{toggleDone}}" aria-expanded="{{showDone}}" style="height:44px">
+<span class="weave" style="height:44px">
+<sc-for list="{{togLines}}" as="l" hint-placeholder-count="2"><span class="ln" style="left:{{l.x}}px;top:0;height:44px;background:{{l.bg}}"></span></sc-for>
+</span>
+<span style="font-size:15px;font-weight:700;color:#C3C8F2;text-decoration:underline;text-underline-offset:3px">{{togLabel}}</span>
+</button>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+<button type="button" class="row {{r.cls}}" onClick="{{r.open}}" aria-label="{{r.aria}}">
+<span class="weave">
+<sc-for list="{{r.lines}}" as="l" hint-placeholder-count="3"><span class="ln" style="left:{{l.x}}px;top:{{l.top}}px;height:{{l.h}}px;background:{{l.bg}};opacity:{{l.op}}"></span></sc-for>
+<span class="cap" style="left:{{r.capX}}px;width:{{r.capW}}px;background:{{r.capBg}};border:{{r.capBd}}"></span>
+<sc-for list="{{r.nodes}}" as="n" hint-placeholder-count="2"><span class="nd" style="left:{{n.x}}px;background:{{n.bg}};border:{{n.bd}};color:{{n.ink}}">{{n.n}}</span></sc-for>
+</span>
+<span class="rtx"><span class="rt" style="color:{{r.tcol}}">{{r.title}}</span><span class="rs">{{r.sub}}</span></span>
+<sc-if value="{{r.hasBadge}}" hint-placeholder-val="{{ false }}"><span class="bdg" style="background:{{r.badgeBg}};color:#15173A">{{r.badge}}</span></sc-if>
+<span class="ric" style="background:{{r.icBg}};color:{{r.icCol}}"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="{{r.icon}}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+</button>
+</sc-for>
+<div style="display:flex;align-items:center;gap:14px;margin:10px 24px 16px;padding:14px 18px;border-radius:18px;border:2px dashed #5C64B8;color:#FFFFFF">
+<span style="flex:none;color:#FFC83D"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14l12-6 2.5 5-12 6L3 14ZM15 8l3-1.5 2.5 5-3 1.5M9 17l-2 4M11 16l3 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+<div><div style="font-weight:700;font-size:16px">Im Fernrohr: Abschnitt 2 · Kompass und Kurs</div><div style="font-size:14px;color:#C3C8F2">Mit Schatzsuche nach Himmelsrichtungen. Geht auf nach dem Kurztest.</div></div>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{isFrei}}" hint-placeholder-val="{{ false }}">
+<div class="scr" style="background:#FBF8F1;padding:24px 28px 96px;gap:14px;overflow-y:auto">
+<div style="flex:none"><h1 class="h" style="font-size:34px">Frei üben</h1><p style="margin:4px 0 0;font-size:17px;color:#3D3F63">Deine eigene Mischung aus allem, was du auf der Flugkarte schon erreicht hast. Neues gibt es nur dort.</p></div>
+<div style="flex:none"><h2 class="h" style="font-size:20px;margin-bottom:8px">1 · Was? <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif;font-weight:400;font-size:15px;color:#5A5C78;letter-spacing:0">Ein Paket oder mehrere</span></h2>
+<div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px">
+<sc-for list="{{fPk}}" as="p" hint-placeholder-count="8">
+<button type="button" class="pk {{p.cls}}" onClick="{{p.toggle}}" aria-pressed="{{p.on}}" aria-disabled="{{p.locked}}"><span style="display:flex;align-items:center;gap:8px"><span class="dot" style="background:{{p.col}}">{{p.n}}</span><sc-if value="{{p.locked}}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></span><span style="font-weight:700;font-size:16px;line-height:1.2">{{p.name}}</span><span style="font-size:14px">{{p.st}}</span></button>
+</sc-for>
+</div></div>
+<div style="flex:none"><h2 class="h" style="font-size:20px;margin-bottom:8px">2 · Wie? <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif;font-weight:400;font-size:15px;color:#5A5C78;letter-spacing:0">Eine Lernform</span></h2>
+<div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:10px">
+<sc-for list="{{fMod}}" as="m" hint-placeholder-count="9">
+<button type="button" class="md {{m.cls}}" onClick="{{m.pick}}" aria-pressed="{{m.on}}" aria-disabled="{{m.locked}}"><span style="flex:none;display:flex"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="{{m.icon}}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>{{m.t}}<small>{{m.note}}</small></span></button>
+</sc-for>
+</div></div>
+<div style="flex:none;background:#171A45;color:#FFFFFF;border-radius:24px;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div><span class="cap13" style="color:#C3C8F2">Deine Mischung</span><div class="h" style="font-size:22px">{{fTitle}}</div></div>
+<button type="button" class="btn {{fStartCls}}" onClick="{{fStart}}">Mischung starten</button></div>
+<div style="display:flex;gap:3px;height:14px;border-radius:7px;overflow:hidden;background:#262B6B">
+<sc-for list="{{fMix}}" as="m" hint-placeholder-count="2"><span style="flex:1;background:{{m.col}}"></span></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px">
+<sc-for list="{{fMix}}" as="m" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:10px;font-size:15px"><span class="dot" style="width:24px;height:24px;font-size:13px;background:{{m.col}}">{{m.n}}</span><span><strong>{{m.coin}}</strong> · {{m.why}}</span></div>
+</sc-for>
+<sc-if value="{{fEmpty}}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:15px;color:#C3C8F2">Wähle oben mindestens ein Paket.</p></sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{isGem}}" hint-placeholder-val="{{ false }}">
+<div class="scr" style="background:#FBF8F1;padding:24px 28px 96px;gap:14px;overflow-y:auto">
+<div style="flex:none"><h1 class="h" style="font-size:34px">Gemeinsam</h1><p style="margin:4px 0 0;font-size:17px;color:#3D3F63">Spielen mit Familie, Klasse und Freunden. Die Fragen kommen nur aus Paketen, die alle Mitspielenden schon erreicht haben.</p></div>
+<div class="card" style="display:flex;align-items:center;gap:16px"><span class="ric" style="width:56px;height:56px;border-radius:18px;background:#15173A;color:#FFC83D"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12c3-3 5 3 8 0s5 3 8 0 3-1 4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><div style="flex:1"><div class="h" style="font-size:20px">Tauziehen</div><p style="margin:2px 0 0;font-size:16px;color:#3D3F63">Live gegeneinander. Jede richtige Antwort zieht das Seil zu dir.</p></div><button type="button" class="btn sec" style="flex:none;font-size:17px;padding:0 18px">Herausfordern</button></div><div class="card" style="display:flex;align-items:center;gap:16px"><span class="ric" style="width:56px;height:56px;border-radius:18px;background:#15173A;color:#FFC83D"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20V10a6 6 0 0 1 12 0v10l-3-2-3 2-3-2-3 2ZM10 10h.01M14 10h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><div style="flex:1"><div class="h" style="font-size:20px">Geister-Duell</div><p style="margin:2px 0 0;font-size:16px;color:#3D3F63">Gegen die Aufzeichnung von jemandem, der gerade keine Zeit hat.</p></div><button type="button" class="btn sec" style="flex:none;font-size:17px;padding:0 18px">Geist wählen</button></div><div class="card" style="display:flex;align-items:center;gap:16px"><span class="ric" style="width:56px;height:56px;border-radius:18px;background:#15173A;color:#FFC83D"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><div style="flex:1"><div class="h" style="font-size:20px">Fach-Glücksrad</div><p style="margin:2px 0 0;font-size:16px;color:#3D3F63">Fragen aus allen Fächern gemischt, oder aus einem Fach.</p></div><button type="button" class="btn sec" style="flex:none;font-size:17px;padding:0 18px">Drehen</button></div>
+<h2 class="h" style="font-size:20px;margin-top:6px;flex:none">Deine Lerngruppen</h2>
+<div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;flex:none">
+<div class="card"><div style="font-weight:700;font-size:18px">Familie</div><p style="margin:2px 0 10px;font-size:15px;color:#3D3F63">3 dabei · du bist diese Woche auf Platz 2</p><button type="button" class="btn sec" style="min-height:48px;font-size:16px;width:100%">Rangliste ansehen</button></div>
+<div class="card"><div style="font-weight:700;font-size:18px">Klasse 6b</div><p style="margin:2px 0 10px;font-size:15px;color:#3D3F63">11 dabei · du bist diese Woche auf Platz 5</p><button type="button" class="btn sec" style="min-height:48px;font-size:16px;width:100%">Rangliste ansehen</button></div>
+</div>
+<button type="button" class="btn sec" style="flex:none;border-style:dashed">Gruppe gründen oder mit Code beitreten</button>
+</div>
+</sc-if>
+<sc-if value="{{isIch}}" hint-placeholder-val="{{ false }}">
+<div class="scr" style="background:#FBF8F1;padding-bottom:80px;overflow-y:auto">
+<div style="position:relative;background:#171A45;color:#FFFFFF;padding:22px 28px 22px;flex:none">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+<div><span class="cap13" style="color:#C3C8F2">Ich · Mathe · Weltraum</span><h1 class="h" style="font-size:32px;line-height:1.1">Mika, Rang Meteor</h1></div>
+<div style="text-align:right"><div class="h" style="font-size:32px;color:#FFC83D">{{points}}</div><div style="font-size:15px;color:#C3C8F2">Punkte · noch {{toNext}} bis Komet</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(7, minmax(0, 1fr));gap:6px;margin-top:12px"><div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center"><div style="width:60px;height:60px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:#262B6B;"><svg width="42" height="42" viewBox="0 0 40 40" aria-hidden="true"><circle cx="12" cy="26" r="3.5" fill="#FFC83D" stroke="#FFFFFF" stroke-width="1.5"></circle><circle cx="21" cy="13" r="3" fill="#FFC83D" stroke="#FFFFFF" stroke-width="1.5"></circle><circle cx="28" cy="25" r="4.5" fill="#FFC83D" stroke="#FFFFFF" stroke-width="1.5"></circle><circle cx="18" cy="33" r="2" fill="#FFFFFF"></circle><circle cx="32" cy="12" r="2" fill="#FFFFFF"></circle></svg></div><div style="font-size:14px;font-weight:700;line-height:1.15;color:#FFFFFF">Sternenstaub</div><div style="font-size:13px;color:#C3C8F2">ab 0</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center"><div style="width:60px;height:60px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:#FFC83D;"><svg width="42" height="42" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 8l11 9M5 17l8 6M14 5l9 8" stroke="#15173A" stroke-width="2.5" stroke-linecap="round" fill="none"></path><circle cx="27" cy="26" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><circle cx="24" cy="24" r="2" fill="#15173A" opacity=".45"></circle><circle cx="30" cy="29" r="1.5" fill="#15173A" opacity=".45"></circle></svg></div><div style="font-size:14px;font-weight:700;line-height:1.15;color:#FFC83D">Meteor</div><div style="font-size:13px;color:#C3C8F2">ab 200</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center"><div style="width:60px;height:60px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:transparent;border:2px dashed #5C64B8;"><svg width="42" height="42" viewBox="0 0 40 40" aria-hidden="true"><path d="M4 5l22 12-9 9Z" fill="#FFE9A8" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"></path><circle cx="26" cy="26" r="9" fill="#FFC83D" stroke="#FFFFFF" stroke-width="2"></circle></svg></div><div style="font-size:14px;font-weight:700;line-height:1.15;color:#FFFFFF">Komet</div><div style="font-size:13px;color:#C3C8F2">ab 500</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center"><div style="width:60px;height:60px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:transparent;border:2px dashed #5C64B8;"><svg width="42" height="42" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="10" fill="#FFC83D" stroke="#FFFFFF" stroke-width="2"></circle><ellipse cx="20" cy="20" rx="18" ry="5" transform="rotate(-20 20 20)" fill="none" stroke="#FFFFFF" stroke-width="2.5"></ellipse></svg></div><div style="font-size:14px;font-weight:700;line-height:1.15;color:#FFFFFF">Planet</div><div style="font-size:13px;color:#C3C8F2">ab 1 000</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center"><div style="width:60px;height:60px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:transparent;border:2px dashed #5C64B8;"><svg width="42" height="42" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 4l24 32" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" fill="none"></path><circle cx="20" cy="20" r="13" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3 4"></circle><circle cx="20" cy="20" r="7" fill="#FFC83D" stroke="#FFFFFF" stroke-width="2"></circle></svg></div><div style="font-size:14px;font-weight:700;line-height:1.15;color:#FFFFFF">Pulsar</div><div style="font-size:13px;color:#C3C8F2">ab 2 000</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center"><div style="width:60px;height:60px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:transparent;border:2px dashed #5C64B8;"><svg width="42" height="42" viewBox="0 0 40 40" aria-hidden="true"><polygon points="20.0,3.0 22.8,11.4 30.0,6.2 27.3,14.7 36.2,14.7 29.0,20.0 36.2,25.3 27.3,25.3 30.0,33.8 22.8,28.6 20.0,37.0 17.2,28.6 10.0,33.8 12.7,25.3 3.8,25.3 11.0,20.0 3.8,14.7 12.7,14.7 10.0,6.2 17.2,11.4" fill="#FFC83D" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"></polygon><circle cx="20" cy="20" r="3" fill="#FFFFFF"></circle></svg></div><div style="font-size:14px;font-weight:700;line-height:1.15;color:#FFFFFF">Supernova</div><div style="font-size:13px;color:#C3C8F2">ab 4 000</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center"><div style="width:60px;height:60px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:transparent;border:2px dashed #5C64B8;"><svg width="42" height="42" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 20c0-7 7-10 12-6 5 4 4 12-1 16M20 20c0 7-7 10-12 6-5-4-4-12 1-16" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" fill="none"></path><circle cx="20" cy="20" r="5.5" fill="#FFC83D" stroke="#FFFFFF" stroke-width="2"></circle></svg></div><div style="font-size:14px;font-weight:700;line-height:1.15;color:#FFFFFF">Galaxis-Legende</div><div style="font-size:13px;color:#C3C8F2">ab 8 000</div></div></div>
+</div>
+<div style="padding:16px 28px 20px;display:flex;flex-direction:column;gap:14px">
+<div class="card"><span class="cap13" style="color:#5A5C78">Wofür es Punkte gibt</span>
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+<div style="display:flex;align-items:center;gap:12px"><span style="flex:none;min-width:128px;text-align:center;padding:6px 10px;border-radius:999px;font-size:14px;font-weight:700;background:#FFC83D;color:#15173A">volle Punkte</span><span style="font-size:15px">Neues und alles, was du noch übst.</span></div><div style="display:flex;align-items:center;gap:12px"><span style="flex:none;min-width:128px;text-align:center;padding:6px 10px;border-radius:999px;font-size:14px;font-weight:700;background:#FFA366;color:#15173A">+20 % Bonus</span><span style="font-size:15px">Was du lange nicht geübt hast und wieder dran ist.</span></div><div style="display:flex;align-items:center;gap:12px"><span style="flex:none;min-width:128px;text-align:center;padding:6px 10px;border-radius:999px;font-size:14px;font-weight:700;background:#E4DFD2;color:#15173A">wenige Punkte</span><span style="font-size:15px">Was schon sicher ist und noch nicht wieder dran ist.</span></div><div style="display:flex;align-items:center;gap:12px"><span style="flex:none;min-width:128px;text-align:center;padding:6px 10px;border-radius:999px;font-size:14px;font-weight:700;background:#FFFFFF;border:2px dashed #5A5C78;color:#15173A">keine Punkte</span><span style="font-size:15px">Falsche Antworten und sehr schnelles Tippen ohne Lesen.</span></div>
+</div></div>
+<div class="card"><span class="cap13" style="color:#5A5C78">Meine Pakete</span>
+<div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px;margin-top:10px">
+<sc-for list="{{allPk}}" as="p" hint-placeholder-count="8">
+<div style="display:flex;align-items:center;gap:8px"><span class="dot" style="background:{{p.bg}};border:{{p.bd}}">{{p.n}}</span><span style="font-size:14px;line-height:1.2"><strong>{{p.name}}</strong><br>{{p.st}}</span></div>
+</sc-for>
+</div></div>
+<div class="card" style="display:flex;align-items:center;gap:18px">
+<sc-if value="{{todayLit}}" hint-placeholder-val="{{ false }}"><svg width="320" height="84" viewBox="0 0 320 84" role="img" aria-label="Sternbild der Woche"><path d="M20 48 L66 22 L112 40 L160 16 L208 44 L254 24 L300 50" fill="none" stroke="#7C84D6" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"></path><circle cx="20" cy="48" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="20" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Mo</text><circle cx="66" cy="22" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="66" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Di</text><circle cx="112" cy="40" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="112" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Mi</text><circle cx="160" cy="16" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="160" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Do</text><circle cx="208" cy="44" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="208" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Fr</text><circle cx="254" cy="24" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="254" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Sa</text><circle cx="300" cy="50" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="300" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">So</text></svg></sc-if>
+<sc-if value="{{todayDark}}" hint-placeholder-val="{{ true }}"><svg width="320" height="84" viewBox="0 0 320 84" role="img" aria-label="Sternbild der Woche"><path d="M20 48 L66 22 L112 40 L160 16 L208 44 L254 24 L300 50" fill="none" stroke="#7C84D6" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"></path><circle cx="20" cy="48" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="20" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Mo</text><circle cx="66" cy="22" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="66" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Di</text><circle cx="112" cy="40" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="112" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Mi</text><circle cx="160" cy="16" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="160" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Do</text><circle cx="208" cy="44" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="208" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Fr</text><circle cx="254" cy="24" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="254" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Sa</text><circle cx="300" cy="50" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="300" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">So</text></svg></sc-if>
+<div><div style="font-weight:700;font-size:17px">Sternbild der Woche</div><p style="margin:2px 0 0;font-size:15px;color:#3D3F63">{{weekText}}</p></div>
+</div>
+<div style="display:flex;gap:12px">
+<button type="button" class="btn sec" style="flex:1;font-size:17px">Person wechseln</button>
+<button type="button" class="btn sec" onClick="{{openCode}}" style="flex:1;font-size:17px"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg> Eltern-Bereich</button>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{isEx}}" hint-placeholder-val="{{ false }}">
+<div class="scr" style="background:#FBF8F1;padding:20px 32px 28px;gap:18px">
+<div style="display:flex;align-items:center;gap:16px;flex:none">
+<button type="button" onClick="{{quitEx}}" aria-label="Übung beenden" style="width:48px;height:48px;border-radius:24px;background:#F1ECDF;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+<div role="img" aria-label="{{exProgress}}" style="flex:1;display:flex;gap:6px">
+<sc-for list="{{segs}}" as="g" hint-placeholder-count="4"><span style="flex:1;height:12px;border-radius:6px;background:{{g.bg}}"></span></sc-for>
+</div>
+<span style="flex:none;display:flex;align-items:center;gap:6px;font-weight:700;font-size:17px;padding:8px 14px;border-radius:999px;background:#15173A;color:#FFFFFF"><span style="color:#FFC83D;display:flex"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16ZM12 8v8M9.5 10h3.5a1.5 1.5 0 0 1 0 3h-2a1.5 1.5 0 0 0 0 3H14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>{{exPts}} Punkte</span>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none">
+<div style="display:flex;align-items:center;gap:10px;font-size:16px"><span class="dot" style="background:{{q.col}}">{{q.pn}}</span><span><strong>Paket {{q.pn}} · {{q.pname}}</strong> · {{q.ptag}}</span></div>
+<span style="font-size:15px;color:#5A5C78">{{exTitle}} · {{exProgress}}</span>
+</div>
+<h1 class="h" style="font-size:32px;flex:none">Welche Winkelart ist das?</h1>
+<div style="flex:none;height:300px;background:#FFFFFF;border-radius:26px;border:1px solid #DAD3C2;display:flex;align-items:center;justify-content:center">
+<svg width="440" height="280" viewBox="0 0 400 260" role="img" aria-label="Ein Winkel mit zwei Schenkeln und einem Bogen">
+<path d="{{q.arc}}" fill="none" stroke="#F47B20" stroke-width="6" stroke-linecap="round"></path>
+<path d="{{q.rays}}" fill="none" stroke="#15173A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+<circle cx="200" cy="140" r="7" fill="#15173A"></circle>
+</svg>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;flex:none">
+<sc-for list="{{opts}}" as="o" hint-placeholder-count="4">
+<button type="button" class="ans {{o.cls}}" onClick="{{o.pick}}" aria-pressed="{{o.on}}"><span>{{o.t}}</span><sc-if value="{{o.hasMark}}" hint-placeholder-val="{{ false }}"><span class="mk" style="color:{{o.markCol}}">{{o.mark}}</span></sc-if></button>
+</sc-for>
+</div>
+<div style="flex:1"></div>
+<sc-if value="{{notChecked}}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:16px;flex:none">
+<p style="flex:1;margin:0;font-size:16px;color:#5A5C78">Erst antippen, dann prüfen. Du kannst deine Wahl vorher noch ändern.</p>
+<button type="button" class="btn {{checkCls}}" onClick="{{check}}" style="min-width:220px">Prüfen</button>
+</div>
+</sc-if>
+<sc-if value="{{checked}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display:flex;align-items:center;gap:14px;padding:14px 18px 14px 10px;border-radius:24px;background:{{fbBg}};flex:none">
+<div style="flex:none"><svg width="76" height="91" viewBox="0 -24 120 144" aria-hidden="true"><path d="M30 88l-11 8M27 79l-13 4M90 88l11 8M93 79l13 4" stroke="#C75A12" stroke-width="5" stroke-linecap="round" fill="none"></path><path d="M33 68C22 63 17 56 17 46M87 68c11-5 16-12 16-22" stroke="#F47B20" stroke-width="7" stroke-linecap="round" fill="none"></path><circle cx="17" cy="38" r="12" fill="#F47B20"></circle><path d="M17 40L9 25h14Z" fill="#C75A12"></path><circle cx="103" cy="38" r="12" fill="#F47B20"></circle><path d="M103 40l8-15H97Z" fill="#C75A12"></path><path d="M50 54L46 32M70 54l4-22" stroke="#F47B20" stroke-width="6" stroke-linecap="round" fill="none"></path><ellipse cx="60" cy="74" rx="34" ry="26" fill="#F47B20"></ellipse><ellipse cx="60" cy="83" rx="21" ry="11" fill="#FFA24D"></ellipse><circle cx="46" cy="27" r="10" fill="#FFFFFF" stroke="#15173A" stroke-width="2"></circle><circle cx="74" cy="27" r="10" fill="#FFFFFF" stroke="#15173A" stroke-width="2"></circle><circle cx="48" cy="28" r="4.5" fill="#15173A"></circle><circle cx="76" cy="28" r="4.5" fill="#15173A"></circle><path d="M52 73q8 7 16 0" stroke="#15173A" stroke-width="3" stroke-linecap="round" fill="none"></path><circle cx="41" cy="72" r="4" fill="#FF8F6B"></circle><circle cx="79" cy="72" r="4" fill="#FF8F6B"></circle><circle cx="60" cy="38" r="40" fill="rgba(170,195,255,.18)" stroke="#BFD0FF" stroke-width="3"></circle><path d="M30 22a34 34 0 0 1 18-16" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity=".85"></path></svg></div>
+<div style="flex:1"><div class="h" style="font-size:22px">{{fbHead}}</div><p style="margin:2px 0 0;font-size:17px">{{fbText}}</p></div>
+<button type="button" class="btn" onClick="{{next}}" style="flex:none;background:#15173A;color:#FFFFFF">{{nextLabel}}</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{isRes}}" hint-placeholder-val="{{ false }}">
+<div class="scr" style="background:#171A45;color:#FFFFFF;padding:28px 32px;gap:16px">
+<svg width="768" height="330" viewBox="0 0 768 330" aria-hidden="true" style="position:absolute;left:0;top:0;pointer-events:none"><circle cx="40" cy="30" r="1.5" fill="#FFFFFF" opacity="0.7"></circle><circle cx="130" cy="90" r="1" fill="#FFFFFF" opacity="0.5"></circle><circle cx="210" cy="24" r="2" fill="#FFFFFF" opacity="0.6"></circle><circle cx="300" cy="70" r="1" fill="#FFFFFF" opacity="0.5"></circle><circle cx="388" cy="18" r="1.5" fill="#FFFFFF" opacity="0.8"></circle><circle cx="470" cy="58" r="1" fill="#FFFFFF" opacity="0.5"></circle><circle cx="560" cy="28" r="2" fill="#FFFFFF" opacity="0.5"></circle><circle cx="700" cy="84" r="1.5" fill="#FFFFFF" opacity="0.6"></circle><circle cx="740" cy="30" r="1" fill="#FFFFFF" opacity="0.7"></circle><circle cx="96" cy="180" r="1" fill="#FFFFFF" opacity="0.4"></circle><circle cx="730" cy="210" r="1.5" fill="#FFFFFF" opacity="0.4"></circle><circle cx="20" cy="260" r="1.5" fill="#FFFFFF" opacity="0.5"></circle><circle cx="748" cy="300" r="1" fill="#FFFFFF" opacity="0.5"></circle></svg>
+<div style="position:relative;display:flex;align-items:center;gap:18px;flex:none">
+<div class="kr" style="flex:none"><svg width="130" height="156" viewBox="0 -24 120 144" role="img" aria-label="Krabbi"><path d="M30 88l-11 8M27 79l-13 4M90 88l11 8M93 79l13 4" stroke="#C75A12" stroke-width="5" stroke-linecap="round" fill="none"></path><path d="M33 68C22 63 17 56 17 46M87 68c11-5 16-12 16-22" stroke="#F47B20" stroke-width="7" stroke-linecap="round" fill="none"></path><circle cx="17" cy="38" r="12" fill="#F47B20"></circle><path d="M17 40L9 25h14Z" fill="#C75A12"></path><circle cx="103" cy="38" r="12" fill="#F47B20"></circle><path d="M103 40l8-15H97Z" fill="#C75A12"></path><path d="M50 54L46 32M70 54l4-22" stroke="#F47B20" stroke-width="6" stroke-linecap="round" fill="none"></path><ellipse cx="60" cy="74" rx="34" ry="26" fill="#F47B20"></ellipse><ellipse cx="60" cy="83" rx="21" ry="11" fill="#FFA24D"></ellipse><circle cx="46" cy="27" r="10" fill="#FFFFFF" stroke="#15173A" stroke-width="2"></circle><circle cx="74" cy="27" r="10" fill="#FFFFFF" stroke="#15173A" stroke-width="2"></circle><circle cx="48" cy="28" r="4.5" fill="#15173A"></circle><circle cx="76" cy="28" r="4.5" fill="#15173A"></circle><path d="M52 73q8 7 16 0" stroke="#15173A" stroke-width="3" stroke-linecap="round" fill="none"></path><circle cx="41" cy="72" r="4" fill="#FF8F6B"></circle><circle cx="79" cy="72" r="4" fill="#FF8F6B"></circle><circle cx="60" cy="38" r="40" fill="rgba(170,195,255,.18)" stroke="#BFD0FF" stroke-width="3"></circle><path d="M30 22a34 34 0 0 1 18-16" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity=".85"></path></svg></div>
+<div><span class="cap13" style="color:#C3C8F2">{{exTitle}}</span><h1 class="h" style="font-size:40px;line-height:1.05">{{resHead}}</h1><p style="margin:8px 0 0;font-size:18px;color:#E6E8FB">{{resText}}</p></div>
+</div>
+<div style="position:relative;display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px;flex:none">
+<div class="card" style="color:#15173A"><span class="cap13" style="color:#5A5C78">Punkte</span><div class="h" style="font-size:38px">+{{resPts}}</div><p style="margin:4px 0 0;font-size:15px;color:#3D3F63">{{resPtsNote}}</p></div>
+<div class="card" style="color:#15173A"><span class="cap13" style="color:#5A5C78">Rang</span>
+<div style="display:flex;align-items:center;gap:10px;margin-top:4px"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 8l11 9M5 17l8 6M14 5l9 8" stroke="#15173A" stroke-width="2.5" stroke-linecap="round" fill="none"></path><circle cx="27" cy="26" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><circle cx="24" cy="24" r="2" fill="#15173A" opacity=".45"></circle><circle cx="30" cy="29" r="1.5" fill="#15173A" opacity=".45"></circle></svg><div style="flex:1"><div style="font-weight:700;font-size:18px">Meteor · {{points}} Punkte</div><div style="height:12px;border-radius:6px;background:#E4DFD2;margin-top:6px;overflow:hidden"><div style="height:12px;border-radius:6px;background:#F47B20;width:{{rankPct}}%"></div></div></div><svg width="32" height="32" viewBox="0 0 40 40" aria-hidden="true"><path d="M4 5l22 12-9 9Z" fill="#FFE9A8" stroke="#15173A" stroke-width="2" stroke-linejoin="round"></path><circle cx="26" cy="26" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle></svg></div>
+<p style="margin:6px 0 0;font-size:15px;color:#3D3F63">Noch {{toNext}} Punkte bis Komet.</p></div>
+</div>
+<div class="card" style="position:relative;color:#15173A;flex:none">
+<span class="cap13" style="color:#5A5C78">So lief es je Paket</span>
+<div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+<sc-for list="{{resPk}}" as="p" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:12px;font-size:17px"><span class="dot" style="background:{{p.col}}">{{p.n}}</span><span style="flex:1;font-weight:700">{{p.name}}</span><span>{{p.score}}</span><span class="st" style="min-width:150px;justify-content:flex-end">{{p.st}}</span></div>
+</sc-for>
+</div>
+</div>
+<div class="card" style="position:relative;color:#15173A;flex:none;display:flex;align-items:center;gap:18px">
+<svg width="320" height="84" viewBox="0 0 320 84" role="img" aria-label="Sternbild der Woche"><path d="M20 48 L66 22 L112 40 L160 16 L208 44 L254 24 L300 50" fill="none" stroke="#7C84D6" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"></path><circle cx="20" cy="48" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="20" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Mo</text><circle cx="66" cy="22" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="66" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Di</text><circle cx="112" cy="40" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="112" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Mi</text><circle cx="160" cy="16" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="160" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Do</text><circle cx="208" cy="44" r="9" fill="#FFC83D" stroke="#15173A" stroke-width="2"></circle><text x="208" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Fr</text><circle cx="254" cy="24" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="254" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">Sa</text><circle cx="300" cy="50" r="8" fill="#FBF8F1" stroke="#5A5C78" stroke-width="2"></circle><text x="300" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#3D3F63">So</text></svg>
+<div><div style="font-weight:700;font-size:17px">Sternbild der Woche</div><p style="margin:2px 0 0;font-size:15px;color:#3D3F63">Heute leuchtet ein neuer Stern. Freie Tage löschen nichts.</p></div>
+</div>
+<div style="flex:1"></div>
+<div style="position:relative;display:flex;gap:14px;flex:none">
+<button type="button" class="btn ghost" onClick="{{replay}}" style="flex:1">Noch einmal üben</button>
+<button type="button" class="btn" onClick="{{backToWeg}}" style="flex:1.4">Zurück zur Flugkarte <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{showTabs}}" hint-placeholder-val="{{ true }}">
+<nav aria-label="Hauptbereiche" style="position:absolute;left:0;bottom:0;width:768px;height:80px;display:flex;background:#FBF8F1;border-top:1px solid #DAD3C2;padding:0 40px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+<button type="button" class="tab {{t.cls}}" onClick="{{t.go}}" aria-pressed="{{t.on}}"><span class="ti"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="{{t.icon}}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>{{t.label}}</span></button>
+</sc-for>
+</nav>
+</sc-if>
+<sc-if value="{{hasSheet}}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;top:0;width:768px;height:1024px;z-index:5">
+<button type="button" class="scrim" onClick="{{closeSheet}}" aria-label="Schließen"></button>
+<sc-if value="{{isStSheet}}" hint-placeholder-val="{{ false }}">
+<div class="sheet" role="dialog" aria-label="{{sh.title}}">
+<div style="width:56px;height:5px;border-radius:3px;background:#CFC8B6;margin:0 auto 16px"></div>
+<div style="display:flex;align-items:center;gap:14px">
+<span class="ric" style="width:52px;height:52px;border-radius:16px;background:#15173A;color:#FFC83D"><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="{{sh.icon}}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+<div style="flex:1"><span class="cap13" style="color:#5A5C78">{{sh.kicker}}</span><h2 class="h" style="font-size:28px;line-height:1.1">{{sh.title}}</h2></div>
+<button type="button" onClick="{{closeSheet}}" aria-label="Schließen" style="width:48px;height:48px;border-radius:24px;background:#F1ECDF;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+</div>
+<p style="margin:16px 0 0;font-size:18px">{{sh.was}}</p>
+<div style="margin-top:18px">
+<span class="cap13" style="color:#5A5C78">Die Mischung · 10 Aufgaben</span>
+<div style="display:flex;gap:3px;height:18px;margin-top:8px;border-radius:9px;overflow:hidden">
+<sc-for list="{{sh.mix}}" as="m" hint-placeholder-count="3"><span style="flex-grow:{{m.c}};flex-basis:0;background:{{m.col}}"></span></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
+<sc-for list="{{sh.mix}}" as="m" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:10px;font-size:16px"><span class="dot" style="width:26px;height:26px;font-size:14px;background:{{m.col}}">{{m.n}}</span><span style="font-weight:700">{{m.c}} × {{m.name}}</span><span style="color:#5A5C78">{{m.tag}}</span></div>
+</sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;margin-top:18px">
+<div class="card"><span class="cap13" style="color:#5A5C78">Warum jetzt?</span><p style="margin:6px 0 0;font-size:16px">{{sh.why}}</p></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div class="card" style="display:flex;gap:12px;align-items:flex-start"><span style="flex:none;color:#8A5A00"><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16ZM12 8v8M9.5 10h3.5a1.5 1.5 0 0 1 0 3h-2a1.5 1.5 0 0 0 0 3H14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><div><div style="font-weight:700;font-size:17px">{{sh.coin}}</div><div style="font-size:15px;color:#3D3F63">{{sh.coinWhy}}</div></div></div>
+<div class="card"><span class="cap13" style="color:#5A5C78">Danach kommt</span><p style="margin:6px 0 0;font-size:16px;font-weight:700">{{sh.next}}</p></div>
+</div>
+</div>
+<sc-if value="{{sh.locked}}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:12px;align-items:center;margin-top:18px;padding:14px 18px;border-radius:18px;background:#F1ECDF;font-size:16px"><span style="flex:none"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>{{sh.lockText}}</span></div>
+</sc-if>
+<sc-if value="{{sh.canStart}}" hint-placeholder-val="{{ true }}">
+<button type="button" class="btn" onClick="{{sh.start}}" style="width:100%;margin-top:18px">{{sh.startLabel}}</button>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{isPkSheet}}" hint-placeholder-val="{{ false }}">
+<div class="sheet" role="dialog" aria-label="{{ps.name}}">
+<div style="width:56px;height:5px;border-radius:3px;background:#CFC8B6;margin:0 auto 16px"></div>
+<div style="display:flex;align-items:center;gap:14px">
+<span class="dot" style="width:52px;height:52px;font-size:24px;background:{{ps.col}}">{{ps.n}}</span>
+<div style="flex:1"><span class="cap13" style="color:#5A5C78">Paket {{ps.n}} · {{ps.st}}</span><h2 class="h" style="font-size:28px;line-height:1.1">{{ps.name}}</h2></div>
+<button type="button" onClick="{{closeSheet}}" aria-label="Schließen" style="width:48px;height:48px;border-radius:24px;background:#F1ECDF;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+</div>
+<p style="margin:16px 0 0;font-size:18px">{{ps.ziel}}</p>
+<div class="card" style="margin-top:16px"><span class="cap13" style="color:#5A5C78">Dein Stand</span><p style="margin:6px 0 0;font-size:16px">{{ps.info}}</p></div>
+<sc-if value="{{ps.reached}}" hint-placeholder-val="{{ true }}">
+<button type="button" class="btn sec" onClick="{{goFrei}}" style="width:100%;margin-top:16px">Frei üben mit diesem Paket</button>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{isCodeSheet}}" hint-placeholder-val="{{ false }}">
+<div class="sheet" role="dialog" aria-label="Eltern-Bereich">
+<div style="width:56px;height:5px;border-radius:3px;background:#CFC8B6;margin:0 auto 16px"></div>
+<h2 class="h" style="font-size:28px">Eltern-Bereich</h2>
+<p style="margin:10px 0 0;font-size:18px">Hier stehen Lernverlauf, Übungsrhythmus, Noten, Lernplan bis zur Arbeit und Einstellungen. Der Bereich öffnet sich mit dem Eltern-Code.</p>
+<label for="ecode" style="display:block;margin-top:18px;font-weight:700;font-size:16px">Eltern-Code (4 Ziffern)</label>
+<div style="display:flex;gap:12px;margin-top:8px">
+<input id="ecode" type="password" inputmode="numeric" maxlength="4" autocomplete="off" style="flex:1;height:56px;border-radius:16px;border:2px solid #15173A;padding:0 18px;font:inherit;font-size:24px;letter-spacing:.4em;background:#FFFFFF;color:#15173A">
+<button type="button" class="btn" onClick="{{closeSheet}}">Öffnen</button>
+</div>
+<button type="button" onClick="{{closeSheet}}" style="margin-top:14px;min-height:44px;font-size:16px;font-weight:700;text-decoration:underline;text-underline-offset:3px">Zurück</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { tab: 'weg', scr: 'main', sheet: null, showDone: false, cur: 'r9', extra: false, points: 380, doneToday: 0,
+    playing: null, free: false, qi: 0, sel: -1, checked: false, res: [], pts: 0, tShown: 0, last: null, fSel: [true, false, true], fMod: 'erkennen' }; }
+  renderVals() {
+    const s = this.state, I = {"wissen": "M4 5.5C4 4.7 4.7 4 5.5 4H11v15H5.5C4.7 19 4 19.7 4 20.5V5.5ZM20 5.5C20 4.7 19.3 4 18.5 4H13v15h5.5c.8 0 1.5.7 1.5 1.5V5.5Z", "karten": "M7 8h11a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1ZM8 4.5h9M10 13h5", "erkennen": "M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12ZM12 9.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z", "zeichnen": "M4 20l1-4.5L16.5 4a2.1 2.1 0 0 1 3 3L8 18.5 4 20ZM14.5 6l3 3", "messen": "M3 19 12 5l9 14H3ZM12 19v-3M8 19v-2M16 19v-2", "schaetzen": "M4 17a8 8 0 1 1 16 0M12 17l4-6M7.5 17h9", "zeit": "M12 8a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM12 11v3.5l2 1.5M10 3.5h4M12 3.5V8", "test": "M8 4h8v3H8V4ZM6 5.5H5a1 1 0 0 0-1 1V20a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V6.5a1 1 0 0 0-1-1h-1M8.5 14l2.5 2.5 4.5-5", "duell": "M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4M12 9v6", "stern": "M12 3l2.2 5.6 5.8.4-4.5 3.7 1.5 5.8L12 15.3 6.9 18.5l1.5-5.8L4 9l5.8-.4L12 3Z", "sortieren": "M4 5h7v6H4V5ZM13 13h7v6h-7v-6ZM14 6h6M14 9h4M4 15h6M4 18h4", "schloss": "M7 11V8a5 5 0 0 1 10 0v3M6 11h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z", "check": "M5 12.5l4.5 4.5L19 7.5", "x": "M6 6l12 12M18 6L6 18", "pfeil": "M5 12h14M13 6l6 6-6 6", "weg": "M5 19.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM19 8.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM7 17.5h7a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h7", "frei": "M5 7h8M17 7h2M5 12h2M11 12h8M5 17h9M18 17h1M15 5v4M9 10v4M16 15v4", "gem": "M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.5 19a5.5 5.5 0 0 1 11 0M16 11a2.5 2.5 0 1 0 0-5M17 14.5a4.5 4.5 0 0 1 3.5 4.5", "ich": "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0", "fernrohr": "M3 14l12-6 2.5 5-12 6L3 14ZM15 8l3-1.5 2.5 5-3 1.5M9 17l-2 4M11 16l3 5", "muenze": "M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16ZM12 8v8M9.5 10h3.5a1.5 1.5 0 0 1 0 3h-2a1.5 1.5 0 0 0 0 3H14", "seil": "M2 12c3-3 5 3 8 0s5 3 8 0 3-1 4 0", "rad": "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4", "geist": "M6 20V10a6 6 0 0 1 12 0v10l-3-2-3 2-3-2-3 2ZM10 10h.01M14 10h.01"};
+    const INK = '#15173A', STAGE = '#171A45';
+    const PK = [
+      { n: 1, name: 'Spitz & recht', col: '#FFC83D', st: 'sicher · wieder dran', ziel: 'Ich kann spitze und rechte Winkel erkennen und messen.', info: 'Sicher. Zuletzt vor 9 Tagen geübt, deshalb ist das Paket wieder dran. Einmal üben bringt 20 % Bonus und lässt den Stern wieder hell leuchten.', coin: '+20 % Bonus', why: 'lange nicht geübt' },
+      { n: 2, name: 'Stumpf & gestreckt', col: '#5FE3C0', st: 'sicher', ziel: 'Ich kann stumpfe und gestreckte Winkel erkennen und zeichnen.', info: 'Sicher. Wieder dran in 3 Tagen. Bis dahin bringt freies Üben nur wenige Punkte.', coin: 'wenige Punkte', why: 'sicher, noch nicht wieder dran' },
+      { n: 3, name: 'Überstumpf', col: '#FF93B8', st: 'noch üben', ziel: 'Ich kann überstumpfe Winkel erkennen und zeichnen.', info: 'Noch üben. Zweimal allein geübt, es klappt einigermaßen. Jetzt wird es mit Paket 1 und 2 gemischt.', coin: 'volle Punkte', why: 'noch nicht sicher' },
+      { n: 4, name: 'Grenzfälle', col: '#9FB6FF', st: 'neu', ziel: 'Ich kann Nullwinkel und Vollwinkel unterscheiden.', info: 'Neu. Das Paket startet auf der Flugkarte, sobald Überstumpf gemischt einigermaßen klappt. Vorher lässt es sich nicht wählen.' },
+      { n: 5, name: 'Kompass', col: '#FFA366', st: 'neu' }, { n: 6, name: 'Benennen', col: '#C9A2FF', st: 'neu' },
+      { n: 7, name: 'Berechnen', col: '#8BE08B', st: 'neu' }, { n: 8, name: 'Senkrecht & parallel', col: '#7FD8F2', st: 'neu' }
+    ];
+    const MOD = {
+      wissen: { t: 'Wissen lesen', was: 'Du liest das Wichtigste in Ruhe, mit Bildern. Am Ende kommen zwei kurze Fragen.' },
+      erkennen: { t: 'Erkennen', was: 'Du siehst einen Winkel und tippst die richtige Winkelart an.' },
+      messen: { t: 'Messen', was: 'Du legst das Geodreieck an und liest die Gradzahl ab.' },
+      zeichnen: { t: 'Zeichnen', was: 'Du zeichnest einen Winkel mit einer vorgegebenen Größe, Schritt für Schritt wie im Heft.' },
+      zeit: { t: 'Zeitrunde', was: '60 Sekunden: so viele Winkel richtig erkennen wie möglich. Dein Rekord wird gespeichert.' },
+      schaetzen: { t: 'Schätzen', was: 'Ohne Geodreieck und ohne Auswahl: Wie groß ist der Winkel ungefähr?' },
+      duell: { t: 'Duell', was: 'Tauziehen gegen Krabbi oder jemanden aus deiner Lerngruppe. Jede richtige Antwort zieht das Seil zu dir.' },
+      test: { t: 'Kurztest', was: '10 Aufgaben ohne Hilfen. Am Ende bekommst du eine Note. Die beste Note zählt.' },
+      sortieren: { t: 'Sortieren', was: 'Du ziehst Winkel-Bilder in die richtige Gruppe. Gleicher Stoff, anderer Blick.' }
+    };
+    const ST = [
+      { id: 'r1', m: 'wissen', pk: [0], why: 'Am Anfang steht das Wissen: kurz lesen, was ein spitzer und ein rechter Winkel ist.' },
+      { id: 'r2', m: 'erkennen', pk: [0], why: 'Erst erkennen, mit Auswahl. So siehst du schnell, ob das Gelesene angekommen ist.' },
+      { id: 'r3', m: 'messen', pk: [0], why: 'Jetzt selbst machen: Mit dem Geodreieck merkst du dir die Winkel besser als nur durch Antippen.' },
+      { id: 'r4', m: 'wissen', pk: [1], why: 'Paket 1 klappte gut genug. Deshalb kommt ein neues Paket dazu, zuerst allein.' },
+      { id: 'r5', m: 'zeichnen', pk: [1], why: 'Selbst zeichnen statt antippen: ein anderer Blick auf dasselbe Paket.' },
+      { id: 'r6', m: 'zeit', pk: [0, 1], why: 'Die erste Mischung: Paket 1 und 2 durcheinander, gegen die Uhr. So kommen die Aufgaben auch in der Arbeit.' },
+      { id: 'r7', m: 'wissen', pk: [2], why: 'Paket 2 klappte gut genug. Neues Paket, zuerst allein: der überstumpfe Winkel.' },
+      { id: 'r8', m: 'zeichnen', pk: [2], why: 'Überstumpfe Winkel selbst zeichnen, noch ohne die anderen Pakete.' },
+      { id: 'r9', m: 'erkennen', pk: [0, 1, 2], why: 'Überstumpf hast du zweimal allein geübt, und es klappt einigermaßen. Jetzt kommt es zu Paket 1 und 2 dazu. Gemischt merkst du, ob du die Winkelarten auseinanderhalten kannst.', kr: 'Überstumpf kennst du jetzt allein. Heute mischen wir es mit Paket 1 und 2, so wie die Aufgaben in der Arbeit kommen.' },
+      { id: 'rx', m: 'sortieren', pk: [0, 1, 2], extra: true, why: 'Die Misch-Runde war noch knapp. Statt dasselbe zu wiederholen, sortierst du Winkel-Bilder in Gruppen. Danach geht es normal weiter.', kr: 'Das üben wir noch einmal anders: Wir sortieren Bilder. Gleiche Winkel, anderer Blick.' },
+      { id: 'r10', m: 'messen', pk: [0], bonus: true, why: 'Paket 1 hast du vor 9 Tagen zuletzt geübt. Bevor es verblasst, einmal messen. Dafür gibt es 20 % Bonus.', kr: 'Paket 1 hast du länger nicht geübt. Einmal nachleuchten lassen bringt 20 % Bonus.' },
+      { id: 'r11', m: 'schaetzen', pk: [0, 1, 2], neu: true, why: 'Schätzen ist neu: ohne Geodreieck und ohne Auswahl. Das geht auf, wenn du die drei Pakete gemischt erkennst.', kr: 'Jetzt wird es spannend: Schätzen ohne Geodreieck. Das ist neu.' },
+      { id: 'r12', m: 'wissen', pk: [3], why: 'Neues Paket, zuerst allein: Nullwinkel und Vollwinkel.' },
+      { id: 'r13', m: 'erkennen', pk: [3], why: 'Erkennen mit Auswahl, nur das neue Paket.' },
+      { id: 'r14', m: 'duell', pk: [0, 1, 2, 3], neu: true, why: 'Tauziehen mit allen vier Paketen. Das Duell geht auf, wenn Paket 4 einigermaßen klappt.' },
+      { id: 'r15', m: 'test', pk: [0, 1, 2, 3], note: true, why: 'Der Abschluss des Abschnitts: 10 Aufgaben ohne Hilfen, mit Note.' }
+    ].filter((x) => !x.extra || s.extra);
+    const curIdx = Math.max(0, ST.findIndex((x) => x.id === s.cur));
+    const ORDER = ['r1','r2','r3','r4','r5','r6','r7','r8','r9','rx','r10','r11','r12','r13','r14','r15'], LSTART = ['r1','r4','r7','r12'];
+    const cx = (i) => 28 + i * 56;
+    const titleOf = (x) => MOD[x.m].t + (x.extra ? ' · Extra-Station' : x.bonus ? ' · Paket 1 nachleuchten' : x.pk.length > 1 ? ' · gemischt' : ' · Paket ' + (x.pk[0] + 1));
+    const mixOf = (x) => {
+      const c = x.pk.length === 1 ? [10] : x.pk.length === 2 ? [4, 6] : x.pk.length === 3 ? [3, 2, 5] : [2, 2, 2, 4];
+      return x.pk.map((p, k) => ({ n: PK[p].n, name: PK[p].name, col: PK[p].col, c: c[k], tag: x.pk.length > 1 && k === x.pk.length - 1 ? 'neu dabei' : (x.pk.length > 1 ? 'kennst du schon' : '') }));
+    };
+    const start = (id, free) => () => this.setState({ scr: 'ex', sheet: null, playing: id, free: !!free, qi: 0, sel: -1, checked: false, res: [], pts: 0, tShown: Date.now() });
+    const build = (x, i) => {
+      const status = i < curIdx ? 'done' : i === curIdx ? 'cur' : 'lock';
+      const lo = x.pk[0], hi = x.pk[x.pk.length - 1];
+      const lines = [];
+      for (let l = 0; l < 4; l++) {
+        if (ORDER.indexOf(x.id) < ORDER.indexOf(LSTART[l])) continue;
+        const isStart = x.id === LSTART[l];
+        lines.push({ x: cx(l) - 2, top: isStart ? 28 : 0, h: isStart ? 28 : 56, bg: PK[l].col, op: status === 'lock' ? 0.35 : 1 });
+      }
+      const nodes = x.pk.map((p) => ({ n: PK[p].n, x: cx(p) - 15,
+        bg: status === 'lock' ? STAGE : PK[p].col, bd: status === 'lock' ? '2px solid ' + PK[p].col : '2px solid ' + PK[p].col, ink: status === 'lock' ? PK[p].col : INK }));
+      const away = i - curIdx;
+      const sub = status === 'done' ? 'geschafft' : status === 'cur' ? 'jetzt dran · ' + (x.bonus ? '+20 % Bonus' : 'volle Punkte') : away === 1 ? 'als Nächstes' : 'geht auf nach ' + away + ' Stationen';
+      const badge = status === 'done' ? '' : x.bonus ? '+20 %' : x.neu ? 'NEU' : x.note ? 'Note' : x.extra ? 'Extra' : '';
+      return { id: x.id, cls: status, title: titleOf(x), sub, tcol: status === 'lock' ? '#DADDF7' : '#FFFFFF',
+        lines, nodes, capX: cx(lo) - 21, capW: (hi - lo) * 56 + 42,
+        capBg: status === 'cur' ? '#FFFFFF' : status === 'done' ? 'rgba(255,255,255,.16)' : 'transparent',
+        capBd: status === 'lock' ? '2px dashed #5C64B8' : '2px solid transparent',
+        hasBadge: badge !== '', badge, badgeBg: x.bonus ? '#FFA366' : x.neu ? '#FFC83D' : '#FFFFFF',
+        icon: status === 'done' ? I.check : I[x.m === 'zeit' ? 'zeit' : x.m], icBg: status === 'cur' ? '#FFC83D' : status === 'done' ? '#262B6B' : 'transparent', icCol: status === 'cur' ? INK : status === 'done' ? '#8BE0B6' : '#C3C8F2',
+        aria: titleOf(x) + ', ' + sub, open: () => this.setState({ sheet: { t: 'st', id: x.id } }), status, away };
+    };
+    const all = ST.map(build);
+    const rows = s.showDone ? all : all.slice(6);
+    const cur = ST[curIdx], curRow = all[curIdx];
+    const tIdx = ST.findIndex((x) => x.id === 'r9');
+    const today = ST.slice(tIdx, tIdx + 3).map((x, k) => { const r = all[tIdx + k]; return { label: MOD[x.m].t, icon: r.status === 'done' ? I.check : I[x.m], cls: r.status === 'done' ? 'done' : r.status === 'cur' ? 'cur' : '' }; });
+    const todayLeft = today.filter((t) => t.cls !== 'done').length;
+    const sheet = s.sheet || {};
+    let sh = { mix: [] }, ps = {};
+    if (sheet.t === 'st') {
+      const i = ST.findIndex((x) => x.id === sheet.id), x = ST[i], r = all[i], nx = ST[i + 1];
+      sh = { title: titleOf(x), icon: I[x.m], kicker: r.status === 'done' ? 'Geschafft' : r.status === 'cur' ? 'Jetzt dran' : 'Kommt noch', was: MOD[x.m].was, why: x.why, mix: mixOf(x),
+        coin: r.status === 'done' ? 'wenige Punkte' : x.bonus ? '+20 % Bonus' : 'volle Punkte',
+        coinWhy: r.status === 'done' ? 'Schon geschafft und noch nicht wieder dran.' : x.bonus ? 'Lange nicht geübt.' : 'Hier lernst du Neues oder übst, was noch nicht sicher ist.',
+        next: nx ? titleOf(nx) : 'Abschnitt 2 · Kompass und Kurs', locked: r.status === 'lock',
+        lockText: (r.away === 1 ? 'Noch zu. Geht auf, sobald die Station davor geschafft ist.' : 'Noch zu. Geht auf nach ' + r.away + ' Stationen.') + ' Überspringen geht nicht, aber du siehst schon, was kommt.',
+        canStart: r.status !== 'lock', startLabel: r.status === 'cur' ? 'Starten' : 'Noch einmal üben (wenige Punkte)', start: start(x.id) };
+    }
+    if (sheet.t === 'pk') { const p = PK[sheet.i]; ps = { n: p.n, name: p.name, col: p.col, st: p.st, ziel: p.ziel, info: p.info, reached: sheet.i < 3 }; }
+    // Übung
+    const QS = [
+      { p: 2, a: 230, opts: ['stumpfer Winkel', 'überstumpfer Winkel', 'spitzer Winkel', 'gestreckter Winkel'], ok: 1, ex: 'Der Bogen geht über die gerade Linie hinaus. Das sind mehr als 180°, also überstumpf.' },
+      { p: 0, a: 90, opts: ['spitzer Winkel', 'stumpfer Winkel', 'rechter Winkel', 'gestreckter Winkel'], ok: 2, ex: 'Die Schenkel stehen wie eine Zimmerecke zueinander: genau 90°, ein rechter Winkel.' },
+      { p: 2, a: 300, opts: ['überstumpfer Winkel', 'stumpfer Winkel', 'rechter Winkel', 'spitzer Winkel'], ok: 0, ex: 'Der Bogen läuft fast ganz herum. Mehr als 180° und weniger als 360°: überstumpf.' },
+      { p: 1, a: 130, opts: ['spitzer Winkel', 'gestreckter Winkel', 'überstumpfer Winkel', 'stumpfer Winkel'], ok: 3, ex: 'Größer als ein rechter Winkel, aber noch keine gerade Linie: zwischen 90° und 180°, also stumpf.' }
+    ];
+    const qd = QS[Math.min(s.qi, QS.length - 1)], rad = qd.a * Math.PI / 180, f = (v) => v.toFixed(1);
+    const q = { pn: PK[qd.p].n, pname: PK[qd.p].name, col: PK[qd.p].col, ptag: qd.p === 2 ? 'neu dabei' : 'kennst du schon',
+      rays: 'M320 140L200 140L' + f(200 + 120 * Math.cos(rad)) + ' ' + f(140 - 120 * Math.sin(rad)),
+      arc: 'M244 140A44 44 0 ' + (qd.a > 180 ? 1 : 0) + ' 0 ' + f(200 + 44 * Math.cos(rad)) + ' ' + f(140 - 44 * Math.sin(rad)) };
+    const lastR = s.res[s.qi] || {};
+    const opts = qd.opts.map((t, i) => {
+      const isOk = i === qd.ok, isSel = i === s.sel;
+      return { t, on: isSel, cls: s.checked ? (isOk ? 'ok' : isSel ? 'no' : 'dim') : (isSel ? 'sel' : ''),
+        hasMark: s.checked && (isOk || isSel), mark: isOk ? 'richtig' : 'deine Antwort', markCol: isOk ? '#0B5C40' : '#8A3C06',
+        pick: () => { if (!this.state.checked) this.setState({ sel: i }); } };
+    });
+    const check = () => { const st = this.state; if (st.sel < 0 || st.checked) return;
+      const ok = st.sel === qd.ok, fast = Date.now() - st.tShown < 1500, gain = ok && !fast ? 10 : 0;
+      this.setState({ checked: true, res: st.res.concat([{ ok, fast, p: qd.p }]), pts: st.pts + gain }); };
+    const next = () => { const st = this.state;
+      if (st.qi < QS.length - 1) { this.setState({ qi: st.qi + 1, sel: -1, checked: false, tShown: Date.now() }); return; }
+      const correct = st.res.filter((r) => r.ok).length, pass = correct >= 3, onPath = !st.free && st.playing === st.cur;
+      const upd = { scr: 'res', points: st.points + st.pts, doneToday: st.doneToday + 1, last: { correct, pass, pts: st.pts, fastN: st.res.filter((r) => r.fast && r.ok).length, res: st.res, onPath, wasR9: st.playing === 'r9', extraNow: false } };
+      if (onPath) {
+        if (st.cur === 'r9' && !pass && !st.extra) { upd.extra = true; upd.cur = 'rx'; upd.last.extraNow = true; }
+        else if (pass || st.cur === 'rx') { const ids = ST.map((x) => x.id), k = ids.indexOf(st.cur); upd.cur = ids[Math.min(k + 1, ids.length - 1)]; }
+      }
+      this.setState(upd); };
+    const playing = ST.find((x) => x.id === s.playing);
+    const exTitle = s.free ? 'Frei üben · ' + MOD[s.fMod].t : playing ? titleOf(playing) : '';
+    const L = s.last || { correct: 0, pass: true, pts: 0, fastN: 0, res: [] };
+    const resPk = [2, 0, 1].map((p) => { const rs = L.res.filter((r) => r.p === p); const okN = rs.filter((r) => r.ok).length;
+      return { n: PK[p].n, name: PK[p].name, col: PK[p].col, score: okN + ' von ' + rs.length + ' richtig', st: p === 2 ? (okN === rs.length ? 'noch üben · fast sicher' : 'noch üben') : 'sicher' }; });
+    const toNext = Math.max(0, 500 - s.points);
+    // Frei üben
+    const fCount = s.fSel.filter(Boolean).length;
+    const fPk = PK.map((p, i) => { const locked = i > 2, on = !locked && s.fSel[i];
+      return { n: p.n, name: p.name, col: locked ? '#DAD3C2' : p.col, st: locked ? 'kommt auf der Flugkarte' : p.st, locked, on, cls: locked ? 'lock' : on ? 'on' : '',
+        toggle: () => { if (locked) return; const a = this.state.fSel.slice(); a[i] = !a[i]; this.setState({ fSel: a }); } }; });
+    const FM = [['wissen', ''], ['erkennen', ''], ['messen', ''], ['zeichnen', ''], ['zeit', 'ab 2 Paketen'], ['schaetzen', 'geht auf nach 2 Stationen'], ['duell', 'geht auf nach 5 Stationen'], ['test', 'geht auf nach 6 Stationen']];
+    const fMod = FM.map(([k, note], i) => { const locked = i > 4, unfit = k === 'zeit' && fCount < 2, on = !locked && !unfit && s.fMod === k;
+      return { t: MOD[k].t, icon: locked ? I.schloss : I[k], note: locked ? note : unfit ? 'geht erst ' + note : (k === 'zeit' ? 'mit deiner Mischung' : ''), locked: locked || unfit, on, cls: locked || unfit ? 'lock' : on ? 'on' : '',
+        pick: () => { if (locked || unfit) return; this.setState({ fMod: k }); } }; });
+    const fModOk = !(s.fMod === 'zeit' && fCount < 2);
+    const fMix = PK.slice(0, 3).filter((p, i) => s.fSel[i]).map((p) => ({ n: p.n, col: p.col, coin: p.coin, why: p.name + ': ' + p.why }));
+    const fReady = fCount > 0 && fModOk;
+    const TABS = [['weg', 'Flugkarte', I.weg], ['frei', 'Frei üben', I.frei], ['gem', 'Gemeinsam', I.gem], ['ich', 'Ich', I.ich]];
+    const main = s.scr === 'main';
+    const goTab = (k) => () => this.setState({ tab: k, scr: 'main', sheet: null });
+    return {
+      isWeg: main && s.tab === 'weg', isFrei: main && s.tab === 'frei', isGem: main && s.tab === 'gem', isIch: main && s.tab === 'ich',
+      isEx: s.scr === 'ex', isRes: s.scr === 'res', showTabs: main,
+      tabs: TABS.map(([k, label, icon]) => ({ label, icon, on: s.tab === k, cls: s.tab === k ? 'on' : '', go: goTab(k) })),
+      points: s.points, toNext, rankPct: Math.round((s.points - 200) / 3),
+      heuteLabel: todayLeft === 0 ? 'Heute · geschafft' : 'Heute · noch ' + todayLeft + (todayLeft === 1 ? ' Station' : ' Stationen') + ' · etwa ' + todayLeft * 4 + ' Minuten',
+      heuteText: todayLeft === 0 ? 'Für heute bist du fertig. Du kannst aufhören oder noch weiterfliegen, ganz wie du magst.' : (cur.kr || 'Weiter geht es mit ' + titleOf(cur) + '.'),
+      today, curShort: MOD[cur.m].t, startCur: start(cur.id),
+      heads: PK.slice(0, 4).map((p, i) => ({ n: p.n, bg: i < 3 ? p.col : STAGE, bd: '2px solid ' + p.col, ink: i < 3 ? INK : p.col, aria: 'Paket ' + p.n + ', ' + p.name + ', ' + p.st, open: () => this.setState({ sheet: { t: 'pk', i } }) })),
+      showDone: s.showDone, toggleDone: () => this.setState({ showDone: !s.showDone }),
+      togLabel: s.showDone ? 'Geschaffte Stationen einklappen' : '6 Stationen geschafft · anzeigen',
+      togLines: s.showDone ? [] : [{ x: cx(0) - 2, bg: PK[0].col }, { x: cx(1) - 2, bg: PK[1].col }],
+      rows, hasSheet: !!s.sheet, isStSheet: sheet.t === 'st', isPkSheet: sheet.t === 'pk', isCodeSheet: sheet.t === 'code', sh, ps,
+      closeSheet: () => this.setState({ sheet: null }), goIch: goTab('ich'), goFrei: goTab('frei'), openCode: () => this.setState({ sheet: { t: 'code' } }),
+      q, opts, check, next, checked: s.checked, notChecked: !s.checked, checkCls: s.sel < 0 ? 'off' : '',
+      segs: QS.map((_, i) => ({ bg: i < s.res.length ? (s.res[i].ok ? '#0E7A54' : '#E08A3C') : i === s.qi ? '#15173A' : '#DAD3C2' })),
+      exProgress: 'Aufgabe ' + (s.qi + 1) + ' von ' + QS.length, exPts: s.pts, exTitle,
+      fbBg: lastR.ok ? (lastR.fast ? '#FFF3CC' : '#DFF5EA') : '#FFE9D6',
+      fbHead: lastR.ok ? (lastR.fast ? 'Richtig, aber sehr schnell' : 'Richtig · +10 Punkte') : 'Noch nicht ganz',
+      fbText: lastR.ok && lastR.fast ? 'Dafür gibt es diesmal keine Punkte. Lies die Frage in Ruhe, dann zählt es wieder.' : qd.ex,
+      nextLabel: s.qi < QS.length - 1 ? 'Weiter' : 'Zum Ergebnis',
+      quitEx: () => this.setState({ scr: 'main', sheet: null }),
+      resHead: L.correct + ' von 4 richtig', resPts: L.pts,
+      resText: !L.onPath ? 'Gut geübt. Auf der Flugkarte geht es an derselben Stelle weiter.' : L.extraNow ? 'Das war noch knapp, und das ist in Ordnung. Ich habe dir eine Extra-Station eingebaut: gleiche Winkel, aber als Bilder zum Sortieren.' : L.pass ? (L.wasR9 ? 'Gelandet. Überstumpf klappt auch gemischt. Als Nächstes lassen wir Paket 1 nachleuchten.' : 'Gelandet. Die nächste Station ist offen.') : 'Das üben wir noch einmal. Die Station bleibt für dich offen.',
+      resPtsNote: L.fastN > 0 ? 'Bei ' + L.fastN + (L.fastN === 1 ? ' Aufgabe' : ' Aufgaben') + ' warst du sehr schnell. Dafür gab es keine Punkte.' : '10 Punkte für jede richtige Antwort.',
+      resPk, backToWeg: goTab('weg'), replay: start(s.playing, s.free),
+      fPk, fMod, fMix, fEmpty: fCount === 0, fTitle: fCount === 0 ? 'Noch nichts gewählt' : MOD[s.fMod].t + ' mit ' + fCount + (fCount === 1 ? ' Paket' : ' Paketen'),
+      fStartCls: fReady ? '' : 'off', fStart: () => { if (fReady) start(s.cur, true)(); },
+      allPk: PK.map((p, i) => ({ n: p.n, name: p.name, st: p.st, bg: i < 3 ? p.col : '#FFFFFF', bd: i < 3 ? '2px solid ' + p.col : '2px dashed #5A5C78' })),
+      todayLit: s.doneToday > 0, todayDark: s.doneToday === 0,
+      weekText: s.doneToday > 0 ? '4 Sterne leuchten, auch der von heute. Freie Tage löschen nichts.' : '3 Sterne leuchten. Der Stern für heute wartet auf deine erste Station. Freie Tage löschen nichts.'
+    };
+  }
+}
+
+</script>
+</body>
+</html>
