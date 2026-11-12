@@ -118,6 +118,8 @@ Rückmeldung zu D: optisch keine verspielten Elemente, vom Vorbild nichts wieder
 
 **Was man in den Bildern sieht:** kräftige Vollfarben; runde Stationen mit dem **Symbol ihres Themas**, Stufen-Abzeichen mit Zahl; dicker Ring und „START“ an der aktuellen Station; Tasten und Karten mit dunklerer Unterkante statt Umriss; oben bunte Werte (Flamme, Edelsteine, Herzen), unten bunte Reiter-Symbole.
 
+**Rückmeldung zur ersten Fassung von D2:** Module nicht zu sehen (Popup zeigte nur „Wissen“), wieder nüchtern. **Überarbeitet:** Jede Station ist ein bestimmtes **Modul** (Symbol + Schild, z. B. „Messen · P3“, „Zeitrunde · P1+2“), die **Farbe zeigt das Paket**, Misch-Stationen sind **mehrfarbig**. Das Popup nennt Paket und Modul und bietet „Oder lieber anders üben:“ mit den anderen Modulen. Lebendiger: Farbflächen im Hintergrund, Planeten, funkelnde Sterne, eine Rakete fliegt durchs Bild, Krabbi als Astronaut an der aktuellen Station, Bonus-Truhe, Duell-Station, Konfetti im Ergebnis. Paket-Legende oben am Weg.
+
 **D2 setzt das um:** Jedes Paket hat Farbe und Symbol; dasselbe Paket kommt im Weg später wieder (z. B. Paket 1 Stufe 3 mit Bonus); grüne Misch-Stationen für „Paket 1 + 2“, „1 + 2 + 3“; Popup mit Stufe und Punkten; Reiter **„Frei üben“** mit Was/Wie (eigene Mischung, Module frei); Lektion mit „3 in Folge“, Krabbi stellt die Frage, „Prüfen“, grüner bzw. roter Streifen; Ergebnis mit drei Kacheln. Bewusst anders: keine Leben, Serie ohne Druck, eigene Symbole und Krabbi.
 
 ## Themen: Grunddesign + Themenhaut (Themen-Baukasten auf der Arbeitsfläche)
