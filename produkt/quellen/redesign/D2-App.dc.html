@@ -76,6 +76,10 @@ button{font-family:Nunito,sans-serif;cursor:pointer;color:#3c3c3c}
       <span style="padding: 6px 12px; border-radius: 999px; background: #fff; border: 2px solid #e5e5e5; font-size: 13px; font-weight: 900"><span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #ff9600; margin-right: 6px"></span>Paket 3 Überstumpf</span>
       <span style="padding: 6px 12px; border-radius: 999px; background: #fff; border: 2px solid #e5e5e5; font-size: 13px; font-weight: 900"><span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: conic-gradient(#1cb0f6 0 33%, #ce82ff 33% 66%, #ff9600 66%); margin-right: 6px"></span>gemischt</span>
     </div>
+    <div style="margin: 12px 24px 0; padding: 12px 14px; border: 2px dashed #ce82ff; border-radius: 16px; background: rgba(255,255,255,.85); display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+      <span style="font-size: 14px; font-weight: 900">Kommt noch in diesem Abschnitt:</span>
+      <sc-for list="{{teaser}}" as="t" hint-placeholder-count="3"><span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 900"><span style="width: 34px; height: 34px; border-radius: 10px; background: {{t.col}}; box-shadow: 0 3px 0 {{t.edge}}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{t.icon}}"></path></svg></span>{{t.t}}</span></sc-for>
+    </div>
     <div style="position: relative; height: 1860px">
       <svg class="rocket" width="80" height="80" viewBox="0 0 80 80" style="top: 760px" aria-hidden="true"><path d="M40 6 C56 18 60 38 54 56 L26 56 C20 38 24 18 40 6 Z" fill="#ffffff" stroke="#3c3c3c" stroke-width="3"></path><circle cx="40" cy="30" r="8" fill="#1cb0f6" stroke="#3c3c3c" stroke-width="3"></circle><path d="M26 46 L14 62 L28 58 M54 46 L66 62 L52 58" fill="#ff4b4b" stroke="#3c3c3c" stroke-width="3" stroke-linejoin="round"></path><path d="M32 58 Q40 78 48 58 Z" fill="#ffc800"></path></svg>
       <svg class="tw" width="34" height="34" viewBox="0 0 24 24" style="position: absolute; left: 640px; top: 40px" aria-hidden="true"><path d="M12 1.8l3 6.4 7 .9-5.1 4.8 1.3 6.9L12 17.4l-6.2 3.4 1.3-6.9L2 9.1l7-.9z" fill="#ffc800"></path></svg>
@@ -97,6 +101,7 @@ button{font-family:Nunito,sans-serif;cursor:pointer;color:#3c3c3c}
           </span>
         </button>
         <span class="lbl" style="left: {{n.x}}px; top: {{n.ly}}px"><i>{{n.label}}</i></span>
+        <sc-if value="{{n.isNew}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; left: {{n.x}}px; top: {{n.ny}}px; margin-left: 22px; padding: 3px 9px; border-radius: 999px; background: #ff4b4b; color: #fff; font-size: 12px; font-weight: 900; letter-spacing: .05em; box-shadow: 0 3px 0 #d93a3a; z-index: 2">NEU</span></sc-if>
       </sc-for>
 
       <svg width="132" height="140" viewBox="-6 -34 104 100" style="position: absolute; left: {{krX}}px; top: {{krY}}px" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 30 6 14 M58 36 Q72 30 74 14"></path></g><circle cx="6" cy="9" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><circle cx="40" cy="14" r="26" fill="rgba(200,235,255,.55)" stroke="#ffffff" stroke-width="3"></circle><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="31" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="47" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M32 44 Q40 56 48 44 Z" fill="#7A2A1A"></path><path d="M40 -12 L40 -22" stroke="#3c3c3c" stroke-width="2"></path><circle cx="40" cy="-25" r="4" fill="#ffc800"></circle></svg>
@@ -106,11 +111,9 @@ button{font-family:Nunito,sans-serif;cursor:pointer;color:#3c3c3c}
           <span>{{popSub}}</span>
           <strong>{{popTitle}}</strong>
           <span>{{popText}}</span>
-          <button type="button" class="pbtn" style="margin-top: 6px; color: {{popInk}}" onClick="{{goLektion}}">{{popBtn}}</button>
-          <span style="margin-top: 8px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em; opacity: .9">Oder lieber anders üben:</span>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap">
-            <sc-for list="{{alts}}" as="a" hint-placeholder-count="4"><button type="button" class="alt" onClick="{{a.go}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{a.icon}}"></path></svg>{{a.t}}</button></sc-for>
-          </div>
+          <span style="background: rgba(255,255,255,.16); border-radius: 12px; padding: 8px 12px; font-size: 14px"><b style="font-weight: 900">Warum hier?</b> {{popWhy}}</span>
+          <sc-if value="{{popOpen}}" hint-placeholder-val="{{ true }}"><button type="button" class="pbtn" style="margin-top: 6px; color: {{popInk}}" onClick="{{goLektion}}">{{popBtn}}</button></sc-if>
+          <sc-if value="{{popLocked}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 6px; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 14px; border-radius: 14px; background: rgba(0,0,0,.18); font-size: 15px; font-weight: 900"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>{{popLockText}}</div></sc-if>
         </div>
       </sc-if>
     </div>
@@ -120,7 +123,7 @@ button{font-family:Nunito,sans-serif;cursor:pointer;color:#3c3c3c}
 <sc-if value="{{isUeben}}" hint-placeholder-val="{{ false }}">
   <div class="scroll" style="padding: 22px 30px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; background: radial-gradient(ellipse 340px 200px at 100% 0%, #e6dcff 0 60%, transparent 61%), #fff">
     <h1 style="margin: 0; font-size: 30px; font-weight: 900">Frei üben</h1>
-    <p style="margin: 0; font-size: 16px; font-weight: 800; color: #777">Neben dem Weg: eigene Mischung, jedes Modul.</p>
+    <p style="margin: 0; font-size: 16px; font-weight: 800; color: #777">Eigene Mischung, aber nur mit dem, was du auf dem Weg schon erreicht hast. Neues gibt es nur auf dem Weg.</p>
     <strong style="font-size: 18px; font-weight: 900">1 · Was?</strong>
     <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
       <sc-for list="{{hub}}" as="h" hint-placeholder-count="4">
@@ -175,6 +178,8 @@ button{font-family:Nunito,sans-serif;cursor:pointer;color:#3c3c3c}
     <svg width="210" height="174" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 30 6 14 M58 36 Q72 30 74 14"></path></g><circle cx="6" cy="9" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M32 44 Q40 56 48 44 Z" fill="#7A2A1A"></path></svg>
     <h1 style="margin: 0; font-size: 40px; font-weight: 900; color: #ffc800">Übung geschafft!</h1>
     <p style="margin: 0; font-size: 18px; font-weight: 800; color: #777">{{lekLabel}}</p>
+    <sc-if value="{{passed}}" hint-placeholder-val="{{ true }}"><div style="width: 100%; padding: 12px 16px; border-radius: 16px; background: #d7ffb8; color: #58a700; font-size: 17px; font-weight: 900">9 von 10 richtig · ab 7 geht es weiter: die nächste Station ist offen</div></sc-if>
+    <sc-if value="{{notPassed}}" hint-placeholder-val="{{ false }}"><div style="width: 100%; padding: 12px 16px; border-radius: 16px; background: #fff4d6; color: #a86a00; font-size: 17px; font-weight: 900">5 von 10 richtig · ab 7 geht es weiter. Krabbi setzt eine Extra-Station ein: dasselbe nochmal, aber anders (als Spiel).</div></sc-if>
     <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; width: 100%">
       <div style="border: 2px solid #ffc800; border-radius: 16px; overflow: hidden"><div style="background: #ffc800; color: #fff; font-size: 13px; font-weight: 900; padding: 6px">PUNKTE</div><div style="padding: 16px 0; font-size: 28px; font-weight: 900; color: #e8a400">+15</div></div>
       <div style="border: 2px solid #58cc02; border-radius: 16px; overflow: hidden"><div style="background: #58cc02; color: #fff; font-size: 13px; font-weight: 900; padding: 6px">RICHTIG</div><div style="padding: 16px 0; font-size: 28px; font-weight: 900; color: #58a700">90 %</div></div>
@@ -219,10 +224,23 @@ class Component extends DCLogic {
     };
     // Weg: [Pakete, Modul, Zustand]
     const W = [
-      [[0], 'wissen', 'done'], [[0], 'erkennen', 'done'], [[0], 'messen', 'done'], [[1], 'wissen', 'done'], [[1], 'zeichnen', 'done'],
-      [[0, 1], 'zeit', 'done'], [[2], 'wissen', 'done'], [[2], 'erkennen', 'now'], [[2], 'messen', 'next'], [[0], 'truhe', 'next'],
-      [[0, 1, 2], 'erkennen', 'next'], [[2], 'zeichnen', 'next'], [[0, 1, 2], 'test', 'next'], [[0, 1, 2], 'duell', 'next'], [[3], 'wissen', 'next'], [[0, 1, 2, 3], 'test', 'next']
+      [[0], 'wissen', 'done'], [[0], 'erkennen', 'done'], [[0], 'zeichnen', 'done'], [[1], 'wissen', 'done'], [[1], 'erkennen', 'done'],
+      [[0, 1], 'zeit', 'done'], [[1], 'messen', 'done'], [[2], 'wissen', 'now'], [[2], 'erkennen', 'next'], [[0], 'truhe', 'next'],
+      [[0, 1, 2], 'zeichnen', 'next'], [[2], 'messen', 'next'], [[0, 1, 2], 'schaetzen', 'next'], [[0, 1, 2], 'duell', 'next'], [[3], 'wissen', 'next'], [[0, 1, 2, 3], 'test', 'next']
     ];
+    const WHY = {
+      wissen: 'Neues Paket: erst lesen und ansehen, worum es geht.',
+      erkennen: 'Erst erkennen, mit Auswahl. Das gibt schnell Sicherheit.',
+      zeichnen: 'Jetzt selbst machen: mit dem Finger zeichnen.',
+      messen: 'Anwenden wie im Heft: mit dem Geodreieck messen.',
+      zeit: 'Gemischt und gegen die Uhr, wenn es schon gut klappt.',
+      schaetzen: 'Ohne Hilfsmittel: Augenmaß für alle Winkelarten.',
+      duell: 'Mit der Familie oder Klasse, Fragen aus allen bisherigen Paketen.',
+      test: 'Alles gemischt, ohne Hilfen, mit Note.',
+      truhe: 'Paket 1 ist lange her: kurz auffrischen, damit es bleibt.'
+    };
+    const seen = {}; W.forEach(([, m, st]) => { if (st !== 'next') seen[m] = 1; });
+    const firstNew = {}; W.forEach(([, m, st], i) => { if (st === 'next' && !seen[m] && firstNew[m] === undefined && m !== 'truhe') firstNew[m] = i; });
     const OFF = [0, -80, -125, -80, 0, 80, 125, 80, 0, -80, -125, -80, 0, 80, 125, 80];
     const colOf = (ps) => ps.length === 1 ? PK[ps[0]].col : 'conic-gradient(' + ps.map((p, k) => PK[p].col + ' ' + Math.round(k * 100 / ps.length) + '% ' + Math.round((k + 1) * 100 / ps.length) + '%').join(', ') + ')';
     const edgeOf = (ps) => ps.length === 1 ? PK[ps[0]].edge : '#7a7a7a';
@@ -232,7 +250,7 @@ class Component extends DCLogic {
       const done = st === 'done', next = st === 'next';
       return { x, y, bg: next ? '#e5e5e5' : (done ? '#ffc800' : colOf(ps)), edge: next ? '#cfcfcf' : (done ? '#e8a400' : edgeOf(ps)),
         inner: next ? '#e5e5e5' : colOf(ps), ic: next ? '#afafaf' : '#ffffff', icon: M.icon, cur: st === 'now', ring: ps.length === 1 ? PK[ps[0]].col : '#58cc02',
-        rx: x - 56, ry: y - 20, ty: y - 64, ly: y + 80, label: M.t + ' · ' + pkLabel(ps),
+        rx: x - 56, ry: y - 20, ty: y - 64, ly: y + 80, label: M.t + ' · ' + pkLabel(ps), isNew: firstNew[m] === i, ny: y - 14,
         aria: M.t + ', ' + (ps.length === 1 ? 'Paket ' + (ps[0] + 1) : 'Pakete ' + ps.map(p => p + 1).join(', ')),
         pick: () => this.setState({ pop: this.state.pop === i ? -1 : i }) };
     });
@@ -244,19 +262,25 @@ class Component extends DCLogic {
       const [ps, m, st] = W[s.pop], M = MOD[m];
       const bg = ps.length === 1 ? PK[ps[0]].col : '#58cc02', edge = ps.length === 1 ? PK[ps[0]].edge : '#46a302';
       const sub = ps.length === 1 ? 'Paket ' + (ps[0] + 1) + ' · ' + PK[ps[0]].name : 'Gemischt: Paket ' + ps.map(p => p + 1).join(' + ');
-      const text = m === 'truhe' ? 'Lange nicht geübt: Paket 1 bringt gerade +20 % Bonus. Krabbi wählt ein passendes Modul.' : (st === 'done' ? 'Geschafft. Wiederholen geht jederzeit.' : (st === 'now' ? 'Jetzt dran · volle Punkte' : 'Kommt noch auf dem Weg'));
-      const alts = Object.keys(MOD).filter(k => ['erkennen', 'messen', 'schaetzen', 'zeichnen', 'zeit', 'test'].indexOf(k) >= 0 && k !== m).slice(0, 5)
-        .map(k => ({ t: MOD[k].t, icon: MOD[k].icon, go: go('lektion', { lek: lekName(k, ps), lekCol: bg }) }));
-      pv = { hasPop: true, popY: 60 + s.pop * 104 + 108, popBg: bg, popEdge: edge, popInk: bg, popSub: sub, popTitle: M.t, popText: text,
-        popBtn: st === 'done' ? 'WIEDERHOLEN' : (st === 'now' ? 'LOS' : 'TROTZDEM STARTEN'), alts, goLektion: go('lektion', { lek: lekName(m === 'truhe' ? 'schaetzen' : m, ps), lekCol: bg }) };
+      const text = m === 'truhe' ? 'Lange nicht geübt: bringt gerade +20 % Bonus.' : (st === 'done' ? 'Geschafft. Zurückgehen und wiederholen geht jederzeit.' : (st === 'now' ? 'Jetzt dran · volle Punkte · weiter geht es ab 7 von 10 richtig' : 'Kommt noch auf dem Weg'));
+      const newPk = ps.length === 1 && ps[0] === 3;
+      const lockText = newPk ? 'Paket 4 kommt dazu, wenn Paket 3 einigermaßen klappt (7 von 10).' : 'Öffnet sich, wenn die Station davor geschafft ist.';
+      pv = { hasPop: true, popY: 60 + s.pop * 104 + 108, popBg: st === 'next' ? '#8a8fa8' : bg, popEdge: st === 'next' ? '#6b7088' : edge, popInk: bg, popSub: sub, popTitle: M.t + (firstNew[m] === s.pop ? ' · NEU' : ''), popText: text,
+        popWhy: WHY[m], popOpen: st !== 'next', popLocked: st === 'next', popLockText: lockText,
+        popBtn: st === 'done' ? 'WIEDERHOLEN · WENIGER PUNKTE' : 'LOS', goLektion: go('lektion', { lek: lekName(m === 'truhe' ? 'erkennen' : m, ps), lekCol: bg }) };
     }
     const sel = s.sel, has = (i) => sel.indexOf(i) >= 0;
-    const hub = PK.map((p, i) => ({ name: 'Paket ' + (i + 1) + ' · ' + p.name, col: p.col, edge: p.edge, st: p.st, on: has(i), cls: has(i) ? 'on' : '',
-      toggle: () => this.setState({ sel: has(i) ? sel.filter(x => x !== i) : sel.concat([i]).sort() }) }));
+    const reached = { 0: 1, 1: 1, 2: 1 };
+    const hub = PK.map((p, i) => ({ name: 'Paket ' + (i + 1) + ' · ' + p.name, col: reached[i] ? p.col : '#cfcfcf', edge: reached[i] ? p.edge : '#b5b5b5', st: reached[i] ? p.st : 'noch nicht erreicht', on: has(i), cls: has(i) ? 'on' : '',
+      toggle: () => { if (!reached[i]) return; this.setState({ sel: has(i) ? sel.filter(x => x !== i) : sel.concat([i]).sort() }); } }));
     const nums = sel.map(i => i + 1);
     const bag = sel.length === 0 ? 'Noch nichts gewählt' : (sel.length === 1 ? 'Du übst: Paket ' + nums[0] + ' allein' : 'Du übst: Paket ' + nums.join(' + ') + ' gemischt');
-    const mods = ['wissen', 'erkennen', 'messen', 'schaetzen', 'zeichnen', 'zeit', 'test', 'duell'].map(k => ({ t: MOD[k].t, icon: MOD[k].icon, col: MOD[k].col, edge: MOD[k].edge,
-      s: sel.length ? 'aus Paket ' + nums.join(', ') : 'erst Pakete wählen', go: sel.length ? go('lektion', { lek: lekName(k, sel), lekCol: '#1cb0f6' }) : () => {} }));
+    const mods = ['wissen', 'erkennen', 'messen', 'schaetzen', 'zeichnen', 'zeit', 'test', 'duell'].map(k => {
+      const open = !!seen[k] && sel.length > 0;
+      return { t: MOD[k].t, icon: MOD[k].icon, col: seen[k] ? MOD[k].col : '#cfcfcf', edge: seen[k] ? MOD[k].edge : '#b5b5b5',
+        s: !seen[k] ? 'auf dem Weg noch nicht erreicht' : (sel.length ? 'aus Paket ' + nums.join(', ') : 'erst Pakete wählen'), go: open ? go('lektion', { lek: lekName(k, sel), lekCol: '#1cb0f6' }) : () => {} };
+    });
+    const teaser = ['schaetzen', 'duell', 'test'].map(k => ({ t: MOD[k].t, icon: MOD[k].icon, col: MOD[k].col, edge: MOD[k].edge }));
     const names = ['spitz', 'stumpf', 'gestreckt', 'überstumpf'];
     const opts = names.map((t, i) => ({ t, cls: s.checked ? (i === 3 ? 'ok' : (i === s.pick ? 'bad' : '')) : (i === s.pick ? 'sel' : ''), pick: () => { if (!this.state.checked) this.setState({ pick: i }); } }));
     const ok = s.pick === 3, hasPick = s.pick !== null;
@@ -265,8 +289,8 @@ class Component extends DCLogic {
       showTop: s.scr === 'weg' || s.scr === 'ueben', showTabs: s.scr === 'weg' || s.scr === 'ueben',
       tW: s.scr === 'weg' ? 'on' : '', tU: s.scr === 'ueben' ? 'on' : '',
       nodes, krX: 384 + OFF[cur] + 70, krY: 60 + cur * 104 - 10,
-      goWeg: go('weg'), goUeben: go('ueben'), goErgebnis: go('ergebnis'),
-      hub, bag, mods, lekLabel: s.lek, lekCol: s.lekCol,
+      goWeg: go('weg'), goUeben: go('ueben'), goErgebnis: () => this.setState({ scr: 'ergebnis' }),
+      hub, bag, mods, teaser, lekLabel: s.lek, lekCol: s.lekCol, passed: s.pick === 3, notPassed: s.pick !== 3,
       opts, notChecked: !s.checked, checked: s.checked,
       check: () => { if (this.state.pick !== null) this.setState({ checked: true }); },
       checkBg: hasPick ? '#58cc02' : '#e5e5e5', checkInk: hasPick ? '#ffffff' : '#afafaf', checkEdge: hasPick ? '#46a302' : '#cfcfcf',

@@ -105,6 +105,24 @@ Angelehnt an den Aufbau großer Sprach-Apps (Duolingo), **ohne deren Gestaltung 
 **Abgeglichen mit echten Bildschirmen:** Die offiziellen App-Store-Bilder von Duolingo und Khan Academy Kids (apps.apple.com, in der Umgebung „lernzentrale“ freigegeben) zeigen die Übungsbildschirme: weißer Grund, dünner runder Fortschrittsbalken mit „… in Folge“ darüber, oben eine Anweisung, große Bild- oder Wortkacheln (gewählt = hellblau), eine Figur stellt die Frage mit Sprechblase, unten ein hellgrüner Streifen „Sehr gut!“ mit breitem „Weiter“. Entwurf D folgt dem; ergänzt wurden „3 richtig in Folge“ über dem Balken und Krabbi, der die Frage in einer Sprechblase stellt. Den Lernweg selbst zeigen die Store-Bilder nicht.
 **Stilvorbilder der Konkurrenzanalyse:** Die Session „Konkurrenzanalyse Lern-Apps“ hat 130 Aufnahmen der Webseiten von StudySmarter, Duolingo, Prodigy, Knowunity, Khanmigo und Photomath gemacht (Artefakt „Stilvorbilder“, https://claude.ai/artifact/XoV1Vka1YbEpkVBV5C7xoP#galerie). Das sind Werbeseiten, keine App-Bildschirme; brauchbar für Farben, Schrift und Tasten, nicht für Aufbau. Echte App-Bildschirme: App-Store-/Play-Einträge oder eigene Screenshots vom Handy.
 
+## Entscheidung in Arbeit: geführter Lernweg statt freier Wahl (Stand 12.11.2026)
+
+**Anlass:** Mit der freien Wahl hat Robin oft nur Spiele und Auswahlaufgaben gemacht, wild geklickt, dafür Punkte bekommen und den Stoff nicht verstanden. Deshalb führt künftig ein **fester Lernweg** wie bei Duolingo. Wichtig bleibt: Man lernt **nicht erst alle Lernkarten eines Pakets vollständig**, sondern wechselt ständig die Perspektive. So setzt sich der Stoff, und es wird nicht dröge.
+
+**Regeln für den Weg:**
+1. **Stationen = Modul + Pakete.** Jede Station ist ein bestimmtes Modul mit einem oder mehreren Paketen (Farbe = Paket, mehrfarbig = gemischt).
+2. **Perspektiven wechseln sich ab,** von leicht zu anspruchsvoll, aber gemischt: Wissen lesen → Erkennen (mit Auswahl) → selbst machen (Zeichnen, Messen) → ohne Hilfen (Schätzen, Schreiben) → gegen die Uhr, Duell → Test. Kein Modul kommt zweimal direkt hintereinander.
+3. **Ein neues Paket kommt dazu,** wenn das vorige **einigermaßen klappt**, nicht erst bei 100 %. Vorschlag: mindestens 7 von 10 in seinen letzten zwei Stationen. Danach folgt eine **Misch-Station** mit allen bisherigen Paketen.
+4. **Weiter geht es ab 7 von 10** in einer Station. Klappt es nicht, wird nicht gesperrt und nicht bestraft: Krabbi setzt eine **Extra-Station** ein, dasselbe noch einmal, aber aus anderer Perspektive (z. B. als Spiel oder mit Bildern).
+5. **Wiederholung ist eingebaut:** Wird ein altes Paket fällig (1, 2, 4, 8, 16 Tage), erscheint eine **Bonus-Truhe** im Weg (+20 % Punkte).
+6. **Zurückgehen geht immer:** Fertige Stationen sind gold und lassen sich wiederholen, mit weniger Punkten, solange nichts fällig ist.
+7. **Neues ist sichtbar, aber zu:** Kommende Stationen zeigen ihr Modul (grau), beim ersten Auftreten mit **NEU**. Am Abschnitt steht „Kommt noch: Schätzen, Duell, Abschnittstest“. Antippen erklärt, wann es aufgeht. Überspringen gibt es nicht.
+8. **„Frei üben“ nur mit Erreichtem:** eigene Mischung nur aus Paketen und Modulen, die man auf dem Weg schon erreicht hat, mit weniger Punkten. Neues gibt es nur auf dem Weg.
+9. **Gegen wildes Klicken:** Punkte nur für richtige Antworten. Sehr schnelle Antworten hintereinander bringen keine Punkte (Krabbi: „Langsam, lies die Frage zuerst“). Auswahlaufgaben kommen vor allem früh; später muss man selbst zeichnen, messen oder schreiben.
+10. **Jede Station sagt, warum** sie gerade dran ist („Warum hier? Erst erkennen, mit Auswahl …“).
+
+Diese Regeln passen zur vorhandenen Lernlogik (Stufen 0–5, verteilte Wiederholung, volle oder wenige Punkte) und ersetzen die Paket-Auswahl als Hauptweg. Offen: genaue Schwellen, wie viele Stationen pro Paket, wie der Lernplan bis zur Arbeit den Weg beschleunigt (z. B. mehr Misch-Stationen und Test kurz vor der Arbeit).
+
 ## Entwurf D2: nach Duolingos eigenem Artikel zum Lernweg
 
 Rückmeldung zu D: optisch keine verspielten Elemente, vom Vorbild nichts wiederzuerkennen. Zu Recht: D war aus dem Gedächtnis gebaut, der Artikel war nicht lesbar. Jetzt gelesen: Duolingo-Blog „introducing the new duolingo learning path“ (blog.duolingo.com, 2022, mit Bildern). Der UX-Planet-Artikel blockt automatische Browser und bleibt ungelesen.
