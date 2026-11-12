@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>D2: Weg mit Themen-Symbolen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:Nunito,sans-serif;cursor:pointer;color:#3c3c3c}
+.top{position:absolute;left:0;right:0;top:0;height:72px;padding:0 22px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #e5e5e5;background:#fff;z-index:6}
+.stat{display:flex;align-items:center;gap:6px;font-size:18px;font-weight:900}
+.scroll{position:absolute;left:0;right:0;top:72px;bottom:92px;overflow-y:auto;background:#fff}
+.band{margin:16px 26px 0;border-radius:16px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.band b{display:block;font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+.band strong{display:block;font-size:22px;font-weight:900;margin-top:2px}
+.gb{width:56px;height:52px;border:2px solid rgba(255,255,255,.5);border-radius:14px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.node{position:absolute;width:76px;height:70px;margin-left:-38px;border:0;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.badge{position:absolute;margin-left:18px;width:30px;height:30px;font-size:13px;font-weight:900;color:#fff;display:flex;align-items:center;justify-content:center}
+.startTag{position:absolute;margin-left:-40px;width:80px;padding:7px 0;border:2px solid #e5e5e5;border-radius:12px;background:#fff;text-align:center;font-size:14px;font-weight:900;letter-spacing:.06em;animation:hop 1.4s ease-in-out infinite}
+@keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){.startTag{animation:none}}
+.pop{position:absolute;left:70px;right:70px;border-radius:18px;padding:18px 20px;color:#fff;z-index:5;display:flex;flex-direction:column;gap:6px}
+.pop strong{font-size:20px;font-weight:900}.pop span{font-size:15px;font-weight:800;opacity:.95}
+.pbtn{min-height:52px;border:0;border-radius:14px;background:#fff;font-size:15px;font-weight:900;letter-spacing:.05em;box-shadow:0 4px 0 rgba(0,0,0,.18)}
+.tabs{position:absolute;left:0;right:0;bottom:0;height:92px;border-top:2px solid #e5e5e5;background:#fff;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:900;color:#afafaf}
+.tab span{width:58px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;border:2px solid transparent}
+.tab.on{color:#1899d6}.tab.on span{background:#ddf4ff;border-color:#84d8ff}
+.chip{display:flex;align-items:center;gap:10px;min-height:58px;padding:0 14px;border:2px solid #e5e5e5;border-radius:16px;background:#fff;font-size:16px;font-weight:800;box-shadow:0 4px 0 #e5e5e5;text-align:left}
+.chip.on{border-color:#84d8ff;background:#ddf4ff;box-shadow:0 4px 0 #84d8ff;color:#1899d6}
+.mod{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:84px;padding:12px 14px;border:2px solid #e5e5e5;border-radius:16px;background:#fff;box-shadow:0 4px 0 #e5e5e5;font-size:16px;font-weight:900;text-align:left;box-sizing:border-box}
+.mod small{font-size:13px;font-weight:800;color:#1899d6}
+.mod.no{color:#afafaf}.mod.no small{color:#afafaf}
+.tile{min-height:72px;border:2px solid #e5e5e5;border-radius:16px;background:#fff;font-size:21px;font-weight:800;box-shadow:0 4px 0 #e5e5e5}
+.tile.sel{border-color:#84d8ff;background:#ddf4ff;color:#1899d6;box-shadow:0 4px 0 #84d8ff}
+.tile.ok{border-color:#a5ed6e;background:#d7ffb8;color:#58a700;box-shadow:0 4px 0 #a5ed6e}
+.tile.bad{border-color:#ffb2b2;background:#ffdfe0;color:#ea2b2b;box-shadow:0 4px 0 #ffb2b2}
+.big{width:100%;min-height:56px;border:0;border-radius:16px;font-size:17px;font-weight:900;letter-spacing:.06em}
+</style>
+</helmet>
+<div style="width: 768px; height: 1024px; position: relative; overflow: hidden; background: #ffffff; color: #3c3c3c; font-family: Nunito, sans-serif">
+
+<sc-if value="{{showTop}}" hint-placeholder-val="{{ true }}">
+  <div class="top">
+    <span class="stat" style="color: #3c3c3c"><span style="width: 36px; height: 30px; border-radius: 8px; background: #1cb0f6; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 #1899d6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 19L20 19M4 19L15 6"></path></svg></span>Mathe</span>
+    <span class="stat" style="color: #ff9600"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 3.5 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-2.2 1-3.8 2.2-5 0 2.2 1.1 3.3 2.2 3.3C10.9 8 10 5 12 2z" fill="#ff9600"></path><path d="M12 11c.6 1.8 2.6 2.8 2.6 5a2.6 2.6 0 0 1-5.2 0c0-1.3.9-2.4 1.6-3 .1 1 .6 1.5 1 1.5 0-1.2-.4-2.4 0-3.5z" fill="#ffc800"></path></svg>4</span>
+    <span class="stat" style="color: #e8a400"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffc800"></circle><circle cx="12" cy="12" r="6" fill="none" stroke="#e8a400" stroke-width="2"></circle></svg>280</span>
+    <span class="stat" style="color: #ce82ff"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8l3 6.4 7 .9-5.1 4.8 1.3 6.9L12 17.4l-6.2 3.4 1.3-6.9L2 9.1l7-.9z" fill="#ce82ff"></path></svg>Komet</span>
+    <span class="stat" style="color: #ff4b4b"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="4" fill="#ff4b4b"></rect><rect x="3" y="5" width="18" height="5" rx="2" fill="#d93a3a"></rect></svg>5 Tage</span>
+  </div>
+</sc-if>
+
+<sc-if value="{{isWeg}}" hint-placeholder-val="{{ true }}">
+  <div class="scroll">
+    <div class="band" style="background: #1cb0f6">
+      <div><b>Abschnitt 1 · Pakete 1–4</b><strong>Winkelarten erkennen und messen</strong></div>
+      <button type="button" class="gb" aria-label="Lernzettel"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H4zM20 5h-7a3 3 0 0 0-3 3"></path></svg></button>
+    </div>
+    <div style="position: relative; height: 1250px">
+      <svg width="130" height="130" viewBox="0 0 130 130" style="position: absolute; left: 40px; top: 120px" aria-hidden="true"><circle cx="65" cy="65" r="40" fill="#ce82ff"></circle><ellipse cx="65" cy="65" rx="62" ry="14" fill="none" stroke="#ffc800" stroke-width="7" transform="rotate(-18 65 65)"></ellipse><circle cx="52" cy="52" r="8" fill="#e2b3ff"></circle></svg>
+      <svg width="60" height="60" viewBox="0 0 24 24" style="position: absolute; left: 620px; top: 70px" aria-hidden="true"><path d="M12 1.8l3 6.4 7 .9-5.1 4.8 1.3 6.9L12 17.4l-6.2 3.4 1.3-6.9L2 9.1l7-.9z" fill="#ffc800"></path></svg>
+      <svg width="40" height="40" viewBox="0 0 24 24" style="position: absolute; left: 600px; top: 760px" aria-hidden="true"><path d="M12 1.8l3 6.4 7 .9-5.1 4.8 1.3 6.9L12 17.4l-6.2 3.4 1.3-6.9L2 9.1l7-.9z" fill="#1cb0f6"></path></svg>
+      <svg width="140" height="140" viewBox="0 0 140 140" style="position: absolute; left: 560px; top: 980px" aria-hidden="true"><circle cx="70" cy="70" r="46" fill="#ff9600"></circle><circle cx="52" cy="58" r="9" fill="#ffb84d"></circle><circle cx="84" cy="86" r="12" fill="#ffb84d"></circle></svg>
+
+      <sc-for list="{{nodes}}" as="n" hint-placeholder-count="12">
+        <sc-if value="{{n.cur}}" hint-placeholder-val="{{ false }}">
+          <svg width="110" height="110" viewBox="0 0 110 110" style="position: absolute; left: {{n.rx}}px; top: {{n.ry}}px" aria-hidden="true"><circle cx="55" cy="55" r="49" fill="none" stroke="#e5e5e5" stroke-width="9"></circle><circle cx="55" cy="55" r="49" fill="none" stroke="{{n.col}}" stroke-width="9" stroke-dasharray="102 308" stroke-linecap="round" transform="rotate(-90 55 55)"></circle></svg>
+          <span class="startTag" style="left: {{n.x}}px; top: {{n.ty}}px; color: {{n.col}}">START</span>
+        </sc-if>
+        <button type="button" class="node" style="left: {{n.x}}px; top: {{n.y}}px; background: {{n.bg}}; box-shadow: 0 8px 0 {{n.edge}}" onClick="{{n.pick}}" aria-label="{{n.aria}}">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{n.ic}}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.icon}}"></path></svg>
+        </button>
+        <sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{ false }}">
+          <span class="badge" style="left: {{n.x}}px; top: {{n.by}}px"><svg width="30" height="30" viewBox="0 0 24 24" style="position: absolute; inset: 0" aria-hidden="true"><path d="M12 1.8l3 6.4 7 .9-5.1 4.8 1.3 6.9L12 17.4l-6.2 3.4 1.3-6.9L2 9.1l7-.9z" fill="{{n.badgeCol}}" stroke="#fff" stroke-width="1.5"></path></svg><span style="position: relative">{{n.stufe}}</span></span>
+        </sc-if>
+      </sc-for>
+
+      <svg width="120" height="104" viewBox="-6 -20 104 86" style="position: absolute; left: 500px; top: 560px" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 30 6 14 M58 36 Q72 30 74 14"></path></g><circle cx="6" cy="9" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="31" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="47" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M32 44 Q40 56 48 44 Z" fill="#7A2A1A"></path><path d="M28 8 L28 -6 M52 8 L52 -6" stroke="#3c3c3c" stroke-width="2"></path><circle cx="28" cy="-9" r="4" fill="#ffc800"></circle><circle cx="52" cy="-9" r="4" fill="#ffc800"></circle></svg>
+
+      <sc-if value="{{hasPop}}" hint-placeholder-val="{{ false }}">
+        <div class="pop" style="top: {{popY}}px; background: {{popBg}}; box-shadow: 0 6px 0 {{popEdge}}">
+          <strong>{{popTitle}}</strong>
+          <span>{{popText}}</span>
+          <div style="display: flex; gap: 10px; margin-top: 6px">
+            <button type="button" class="pbtn" style="flex: 1; background: rgba(255,255,255,.2); color: #fff; box-shadow: none; border: 2px solid rgba(255,255,255,.6)">WISSEN</button>
+            <button type="button" class="pbtn" style="flex: 2; color: {{popBg}}" onClick="{{goLektion}}">{{popBtn}}</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isUeben}}" hint-placeholder-val="{{ false }}">
+  <div class="scroll" style="padding: 22px 30px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <h1 style="margin: 0; font-size: 30px; font-weight: 900">Frei üben</h1>
+    <p style="margin: 0; font-size: 16px; font-weight: 800; color: #777">Neben dem Weg geht immer auch die eigene Mischung.</p>
+    <strong style="font-size: 18px; font-weight: 900">1 · Was?</strong>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{hub}}" as="h" hint-placeholder-count="8">
+        <button type="button" class="chip {{h.cls}}" onClick="{{h.toggle}}" aria-pressed="{{h.on}}"><span style="width: 38px; height: 38px; border-radius: 50%; background: {{h.col}}; box-shadow: 0 3px 0 {{h.edge}}; display: flex; align-items: center; justify-content: center; flex: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.icon}}"></path></svg></span><span style="flex-grow: 1">{{h.name}}</span><span style="font-size: 12px; font-weight: 900; color: #777">{{h.st}}</span></button>
+      </sc-for>
+    </div>
+    <div style="border-radius: 16px; background: #1cb0f6; color: #fff; padding: 12px 16px; font-size: 17px; font-weight: 900; box-shadow: 0 4px 0 #1899d6">{{bag}}</div>
+    <strong style="font-size: 18px; font-weight: 900">2 · Wie?</strong>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{mods}}" as="m" hint-placeholder-count="6">
+        <button type="button" class="mod {{m.cls}}" onClick="{{m.go}}"><span>{{m.t}}</span><small>{{m.s}}</small></button>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isLektion}}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; inset: 0; padding: 28px 40px 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; align-items: center; gap: 16px">
+      <button type="button" aria-label="Übung beenden" style="width: 44px; height: 44px; border: 0; background: transparent; color: #afafaf; display: flex; align-items: center; justify-content: center" onClick="{{goWeg}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      <div style="flex-grow: 1; position: relative; padding-top: 18px"><span style="position: absolute; left: 28%; top: 0; font-size: 12px; font-weight: 900; letter-spacing: .06em; color: #ff9600">3 IN FOLGE</span><span style="display: block; height: 16px; border-radius: 999px; background: #e5e5e5; overflow: hidden"><span style="display: block; width: 40%; height: 100%; border-radius: 999px; background: #58cc02"></span></span></div>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <span style="padding: 5px 12px; border-radius: 999px; background: {{lekCol}}; color: #fff; font-size: 13px; font-weight: 900">{{lekLabel}}</span>
+      <span style="padding: 5px 12px; border-radius: 999px; background: #ffc800; color: #3c3c3c; font-size: 13px; font-weight: 900">volle Punkte</span>
+    </div>
+    <div style="display: flex; align-items: flex-end; gap: 8px">
+      <svg width="110" height="92" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22 M58 36 Q72 30 74 14"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="34" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="50" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path></svg>
+      <h2 style="margin: 0 0 16px; padding: 14px 18px; border: 2px solid #e5e5e5; border-radius: 18px 18px 18px 4px; font-size: 24px; font-weight: 900">Welche Winkelart ist das?</h2>
+    </div>
+    <div style="display: flex; justify-content: center"><svg width="480" height="220" viewBox="0 0 640 300" role="img" aria-label="Ein Winkel von 235 Grad"><path d="M320 150 L370 150 A50 50 0 1 0 291.3 191 Z" fill="#ffe7a3" stroke="#ff9600" stroke-width="3"></path><path d="M320 150 L600 150" stroke="#3c3c3c" stroke-width="7" stroke-linecap="round"></path><path d="M320 150 L217 297" stroke="#ff9600" stroke-width="7" stroke-linecap="round"></path><circle cx="320" cy="150" r="8" fill="#3c3c3c"></circle></svg></div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+      <sc-for list="{{opts}}" as="o" hint-placeholder-count="4"><button type="button" class="tile {{o.cls}}" onClick="{{o.pick}}">{{o.t}}</button></sc-for>
+    </div>
+    <sc-if value="{{notChecked}}" hint-placeholder-val="{{ true }}">
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 20px 40px 26px; border-top: 2px solid #e5e5e5; background: #fff">
+        <button type="button" class="big" style="background: {{checkBg}}; color: {{checkInk}}; box-shadow: 0 5px 0 {{checkEdge}}" onClick="{{check}}">PRÜFEN</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{checked}}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 20px 40px 26px; background: {{fbBg}}; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; align-items: center; gap: 14px; color: {{fbInk}}"><span style="width: 48px; height: 48px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="{{fbInk}}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{fbIcon}}"></path></svg></span><div><strong style="display: block; font-size: 24px; font-weight: 900">{{fbTitle}}</strong><span style="font-size: 16px; font-weight: 800">Größer als 180° und kleiner als 360° heißt überstumpf.</span></div></div>
+        <button type="button" class="big" style="background: {{fbBtn}}; color: #fff; box-shadow: 0 5px 0 {{fbEdge}}" onClick="{{goErgebnis}}">WEITER</button>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{isErgebnis}}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; inset: 0; padding: 56px 56px 40px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center">
+    <svg width="210" height="174" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 30 6 14 M58 36 Q72 30 74 14"></path></g><circle cx="6" cy="9" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M32 44 Q40 56 48 44 Z" fill="#7A2A1A"></path></svg>
+    <h1 style="margin: 0; font-size: 40px; font-weight: 900; color: #ffc800">Übung geschafft!</h1>
+    <p style="margin: 0; font-size: 18px; font-weight: 800; color: #777">Als Nächstes auf dem Weg: Mischen mit Paket 1, 2 und 3.</p>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; width: 100%">
+      <div style="border: 2px solid #ffc800; border-radius: 16px; overflow: hidden"><div style="background: #ffc800; color: #fff; font-size: 13px; font-weight: 900; padding: 6px">PUNKTE</div><div style="padding: 16px 0; font-size: 28px; font-weight: 900; color: #e8a400">+15</div></div>
+      <div style="border: 2px solid #58cc02; border-radius: 16px; overflow: hidden"><div style="background: #58cc02; color: #fff; font-size: 13px; font-weight: 900; padding: 6px">RICHTIG</div><div style="padding: 16px 0; font-size: 28px; font-weight: 900; color: #58a700">90 %</div></div>
+      <div style="border: 2px solid #1cb0f6; border-radius: 16px; overflow: hidden"><div style="background: #1cb0f6; color: #fff; font-size: 13px; font-weight: 900; padding: 6px">ZEIT</div><div style="padding: 16px 0; font-size: 28px; font-weight: 900; color: #1899d6">2:14</div></div>
+    </div>
+    <button type="button" class="big" style="margin-top: auto; background: #1cb0f6; color: #fff; box-shadow: 0 5px 0 #1899d6" onClick="{{goWeg}}">WEITER</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{showTabs}}" hint-placeholder-val="{{ true }}">
+  <nav class="tabs" aria-label="Hauptmenü">
+    <button type="button" class="tab {{tW}}" onClick="{{goWeg}}"><span><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="#ff9600"></path><rect x="9.5" y="14" width="5" height="7" fill="#ffd28a"></rect></svg></span>Weg</button>
+    <button type="button" class="tab {{tU}}" onClick="{{goUeben}}"><span><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="9" r="5" fill="#1cb0f6"></circle><circle cx="16" cy="9" r="5" fill="#ce82ff"></circle><circle cx="12" cy="15" r="5" fill="#ffc800"></circle></svg></span>Frei üben</button>
+    <button type="button" class="tab"><span><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z" fill="#ffc800"></path><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4" fill="none" stroke="#e8a400" stroke-width="2"></path><rect x="10.5" y="13" width="3" height="5" fill="#e8a400"></rect><rect x="7" y="18" width="10" height="3" rx="1" fill="#ff9600"></rect></svg></span>Gemeinsam</button>
+    <button type="button" class="tab"><span><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4.5" fill="#ff4b4b"></circle><path d="M3.5 21c1-4.4 4.4-6.8 8.5-6.8s7.5 2.4 8.5 6.8z" fill="#ff4b4b"></path></svg></span>Ich</button>
+  </nav>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { scr: 'weg', pop: -1, sel: [0, 1, 2], pick: null, checked: false, lek: 'Paket 3 · Überstumpf · allein', lekCol: '#ff9600' }; }
+  renderVals() {
+    const s = this.state;
+    const PK = [
+      { name: 'Spitz & recht', col: '#1cb0f6', edge: '#1899d6', icon: 'M5 19h14M5 19L15 7M5 15h4v4', st: 'sicher' },
+      { name: 'Stumpf & gestreckt', col: '#ce82ff', edge: '#a568cc', icon: 'M5 18h14M12 18L5 9', st: 'noch üben' },
+      { name: 'Überstumpf', col: '#ff9600', edge: '#cc7800', icon: 'M12 13h8M12 13L7 20M14.5 13a2.5 2.5 0 1 0-1.5 2.3', st: 'neu' },
+      { name: 'Grenzfälle', col: '#ff4b4b', edge: '#d93a3a', icon: 'M12 12m-7 0a7 7 0 1 0 14 0a7 7 0 1 0-14 0M12 12h7', st: 'neu' }
+    ];
+    const MIX = 'M4 7h4l8 10h4M4 17h4l2.5-3.1M14 9.6L16 7h4M18 5l2 2-2 2M18 15l2 2-2 2';
+    const CHECK = 'M5 12l5 5L20 7';
+    const CUP = 'M7 4h10v5a5 5 0 0 1-10 0zM12 14v4M8 21h8';
+    // Weg: Pakete kommen verteilt wieder, Misch-Stationen dazwischen
+    const W = [
+      ['p', 0, 1, 'done'], ['p', 0, 2, 'done'], ['p', 1, 1, 'done'], ['m', [0, 1], 0, 'done'], ['p', 1, 2, 'done'],
+      ['p', 2, 1, 'now'], ['p', 0, 3, 'next'], ['m', [0, 1, 2], 0, 'next'], ['p', 2, 2, 'next'], ['p', 3, 1, 'next'], ['m', [0, 1, 2, 3], 0, 'next'], ['t', 0, 0, 'next']
+    ];
+    const OFF = [0, -70, -115, -70, 0, 70, 115, 70, 0, -70, -115, -70];
+    const nodes = W.map(([kind, ref, stufe, st], i) => {
+      const x = 384 + OFF[i], y = 70 + i * 96;
+      let col = '#e5e5e5', edge = '#cfcfcf', icon = CHECK, ic = '#afafaf', name = '';
+      if (kind === 'p') { const p = PK[ref]; name = 'Paket ' + (ref + 1) + ' · ' + p.name; icon = p.icon; if (st !== 'next') { col = p.col; edge = p.edge; ic = '#fff'; } }
+      if (kind === 'm') { name = 'Mischen: Paket ' + ref.map(k => k + 1).join(' + '); icon = MIX; if (st !== 'next') { col = '#58cc02'; edge = '#46a302'; ic = '#fff'; } }
+      if (kind === 't') { name = 'Abschnittstest'; icon = CUP; }
+      if (st === 'done' && kind !== 'p') { col = '#ffc800'; edge = '#e8a400'; ic = '#fff'; }
+      if (st === 'done' && kind === 'p') { col = '#ffc800'; edge = '#e8a400'; ic = '#fff'; }
+      const badgeCol = kind === 'p' ? PK[ref].col : '#58cc02';
+      return { x, y, bg: col, edge, icon: st === 'done' && kind !== 'p' ? CHECK : icon, ic, aria: name, cur: st === 'now',
+        rx: x - 55, ry: y - 20, ty: y - 64, by: y - 6, hasBadge: kind === 'p', stufe: stufe, badgeCol,
+        pick: () => this.setState({ pop: this.state.pop === i ? -1 : i }) };
+    });
+    const pw = s.pop >= 0 ? W[s.pop] : null;
+    let popTitle = '', popText = '', popBg = '#1cb0f6', popEdge = '#1899d6', popBtn = 'LOS · VOLLE PUNKTE';
+    if (pw) {
+      const [kind, ref, stufe, st] = pw;
+      if (kind === 'p') { const p = PK[ref]; popTitle = 'Paket ' + (ref + 1) + ' · ' + p.name; popBg = p.col; popEdge = p.edge;
+        popText = 'Stufe ' + stufe + ' von 5 · ' + (st === 'done' ? 'geschafft' : (st === 'now' ? 'jetzt dran, erst allein' : (stufe === 3 ? 'kommt wieder: lange nicht geübt, +20 % Bonus' : 'kommt noch'))); popBtn = st === 'done' ? 'WIEDERHOLEN' : (st === 'now' ? 'LOS · VOLLE PUNKTE' : 'TROTZDEM AUSPROBIEREN'); }
+      if (kind === 'm') { popTitle = 'Mischen: Paket ' + ref.map(k => k + 1).join(' + '); popBg = '#58cc02'; popEdge = '#46a302';
+        popText = 'Aufgaben aus diesen Paketen kommen durcheinander, wie in der Arbeit.'; popBtn = st === 'done' ? 'NOCH MAL MISCHEN' : 'TROTZDEM AUSPROBIEREN'; }
+      if (kind === 't') { popTitle = 'Abschnittstest'; popBg = '#ff9600'; popEdge = '#cc7800'; popText = 'Alle vier Pakete, ohne Hilfen, mit Note.'; popBtn = 'TROTZDEM AUSPROBIEREN'; }
+    }
+    const lekFrom = () => {
+      if (!pw) return { lek: 'Paket 3 · Überstumpf · allein', lekCol: '#ff9600' };
+      const [kind, ref] = pw;
+      if (kind === 'p') return { lek: 'Paket ' + (ref + 1) + ' · ' + PK[ref].name + ' · allein', lekCol: PK[ref].col };
+      if (kind === 'm') return { lek: 'Paket ' + ref.map(k => k + 1).join(' + ') + ' gemischt', lekCol: '#58cc02' };
+      return { lek: 'Abschnittstest', lekCol: '#ff9600' };
+    };
+    const go = (k, extra) => () => this.setState(Object.assign({ scr: k, pop: -1, pick: null, checked: false }, extra || {}));
+    const sel = s.sel, has = (i) => sel.indexOf(i) >= 0;
+    const hub = PK.map((p, i) => ({ name: 'Paket ' + (i + 1) + ' · ' + p.name, col: p.col, edge: p.edge, icon: p.icon, st: p.st, on: has(i), cls: has(i) ? 'on' : '',
+      toggle: () => this.setState({ sel: has(i) ? sel.filter(x => x !== i) : sel.concat([i]).sort() }) }));
+    const nums = sel.map(i => i + 1);
+    const bag = sel.length === 0 ? 'Noch nichts gewählt' : (sel.length === 1 ? 'Du übst: Paket ' + nums[0] + ' allein' : 'Du übst: Paket ' + nums.join(' + ') + ' gemischt');
+    const from = sel.length ? 'aus Paket ' + nums.join(', ') : 'erst Pakete wählen';
+    const mods = ['Winkelart erkennen', 'Messen', 'Schätzen', 'Winkel zeichnen', 'Zeitrunde', 'Kurztest'].map(t => ({ t, s: from, cls: sel.length ? '' : 'no',
+      go: sel.length ? go('lektion', { lek: t + ' · ' + (sel.length > 1 ? 'Paket ' + nums.join(' + ') + ' gemischt' : 'Paket ' + nums[0] + ' allein'), lekCol: '#1cb0f6' }) : () => {} }));
+    const names = ['spitz', 'stumpf', 'gestreckt', 'überstumpf'];
+    const opts = names.map((t, i) => ({ t, cls: s.checked ? (i === 3 ? 'ok' : (i === s.pick ? 'bad' : '')) : (i === s.pick ? 'sel' : ''), pick: () => { if (!this.state.checked) this.setState({ pick: i }); } }));
+    const ok = s.pick === 3, hasPick = s.pick !== null;
+    return {
+      isWeg: s.scr === 'weg', isUeben: s.scr === 'ueben', isLektion: s.scr === 'lektion', isErgebnis: s.scr === 'ergebnis',
+      showTop: s.scr === 'weg' || s.scr === 'ueben', showTabs: s.scr === 'weg' || s.scr === 'ueben',
+      tW: s.scr === 'weg' ? 'on' : '', tU: s.scr === 'ueben' ? 'on' : '',
+      nodes, hasPop: !!pw, popY: s.pop >= 0 ? 70 + s.pop * 96 + 92 : 0, popTitle, popText, popBg, popEdge, popBtn,
+      goLektion: go('lektion', lekFrom()), goWeg: go('weg'), goUeben: go('ueben'), goErgebnis: go('ergebnis'),
+      hub, bag, mods, lekLabel: s.lek, lekCol: s.lekCol,
+      opts, notChecked: !s.checked, checked: s.checked,
+      check: () => { if (this.state.pick !== null) this.setState({ checked: true }); },
+      checkBg: hasPick ? '#58cc02' : '#e5e5e5', checkInk: hasPick ? '#ffffff' : '#afafaf', checkEdge: hasPick ? '#46a302' : '#cfcfcf',
+      fbBg: ok ? '#d7ffb8' : '#ffdfe0', fbInk: ok ? '#58a700' : '#ea2b2b', fbBtn: ok ? '#58cc02' : '#ff4b4b', fbEdge: ok ? '#46a302' : '#d93a3a',
+      fbTitle: ok ? 'Sehr gut!' : 'Richtige Lösung: überstumpf', fbIcon: ok ? 'M5 12l5 5L20 7' : 'M6 6l12 12M18 6L6 18'
+    };
+  }
+}
+</script>
+</body>
+</html>

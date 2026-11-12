@@ -105,6 +105,21 @@ Angelehnt an den Aufbau großer Sprach-Apps (Duolingo), **ohne deren Gestaltung 
 **Abgeglichen mit echten Bildschirmen:** Die offiziellen App-Store-Bilder von Duolingo und Khan Academy Kids (apps.apple.com, in der Umgebung „lernzentrale“ freigegeben) zeigen die Übungsbildschirme: weißer Grund, dünner runder Fortschrittsbalken mit „… in Folge“ darüber, oben eine Anweisung, große Bild- oder Wortkacheln (gewählt = hellblau), eine Figur stellt die Frage mit Sprechblase, unten ein hellgrüner Streifen „Sehr gut!“ mit breitem „Weiter“. Entwurf D folgt dem; ergänzt wurden „3 richtig in Folge“ über dem Balken und Krabbi, der die Frage in einer Sprechblase stellt. Den Lernweg selbst zeigen die Store-Bilder nicht.
 **Stilvorbilder der Konkurrenzanalyse:** Die Session „Konkurrenzanalyse Lern-Apps“ hat 130 Aufnahmen der Webseiten von StudySmarter, Duolingo, Prodigy, Knowunity, Khanmigo und Photomath gemacht (Artefakt „Stilvorbilder“, https://claude.ai/artifact/XoV1Vka1YbEpkVBV5C7xoP#galerie). Das sind Werbeseiten, keine App-Bildschirme; brauchbar für Farben, Schrift und Tasten, nicht für Aufbau. Echte App-Bildschirme: App-Store-/Play-Einträge oder eigene Screenshots vom Handy.
 
+## Entwurf D2: nach Duolingos eigenem Artikel zum Lernweg
+
+Rückmeldung zu D: optisch keine verspielten Elemente, vom Vorbild nichts wiederzuerkennen. Zu Recht: D war aus dem Gedächtnis gebaut, der Artikel war nicht lesbar. Jetzt gelesen: Duolingo-Blog „introducing the new duolingo learning path“ (blog.duolingo.com, 2022, mit Bildern). Der UX-Planet-Artikel blockt automatische Browser und bleibt ungelesen.
+
+**Was der Artikel sagt (und für uns passt):**
+- Startseite ist ein Weg; jeder Kreis eine Stufe. Grund: Viele waren unsicher, ob sie die App „richtig“ benutzen.
+- **Stufen aus verschiedenen Themen sind im Weg verteilt und gemischt** (verteilte Wiederholung), Übungsrunden sind eingebaut. Das entspricht unserem Modell „allein lernen, dann mischen, später wiederholen“.
+- Stationen haben keine Beschriftung; Antippen zeigt ein Popup mit Thema, Stufe und Start. Abschnitte haben ein farbiges Band mit beschreibendem Titel und einem „Guidebook“ (bei uns: Lernzettel).
+- Abgeschlossene Stationen sind gold und lassen sich wiederholen; freies Üben gibt es zusätzlich in einem eigenen Übungsbereich.
+- Figuren stehen am Weg und feuern an.
+
+**Was man in den Bildern sieht:** kräftige Vollfarben; runde Stationen mit dem **Symbol ihres Themas**, Stufen-Abzeichen mit Zahl; dicker Ring und „START“ an der aktuellen Station; Tasten und Karten mit dunklerer Unterkante statt Umriss; oben bunte Werte (Flamme, Edelsteine, Herzen), unten bunte Reiter-Symbole.
+
+**D2 setzt das um:** Jedes Paket hat Farbe und Symbol; dasselbe Paket kommt im Weg später wieder (z. B. Paket 1 Stufe 3 mit Bonus); grüne Misch-Stationen für „Paket 1 + 2“, „1 + 2 + 3“; Popup mit Stufe und Punkten; Reiter **„Frei üben“** mit Was/Wie (eigene Mischung, Module frei); Lektion mit „3 in Folge“, Krabbi stellt die Frage, „Prüfen“, grüner bzw. roter Streifen; Ergebnis mit drei Kacheln. Bewusst anders: keine Leben, Serie ohne Druck, eigene Symbole und Krabbi.
+
 ## Themen: Grunddesign + Themenhaut (Themen-Baukasten auf der Arbeitsfläche)
 
 Jede Welt folgt einem Thema, und das soll man auch sehen, ohne dass Bedienung und Aufbau sich ändern. Deshalb gibt es **ein Grunddesign** (Aufbau, Schrift, Knöpfe mit Umriss, Krabbi, Tab-Leiste) und darüber **eine Themenhaut** aus festen Bausteinen:
