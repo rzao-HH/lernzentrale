@@ -14,7 +14,7 @@
       "x": 0,
       "y": 0,
       "w": 1280,
-      "h": 900,
+      "h": 1000,
       "title": "Übersicht · drei Richtungen",
       "is_interactive": true
     },
@@ -149,11 +149,11 @@
       "title": "Funktions-Check · was steckt wo"
     },
     "D2-App.dc.html": {
-      "x": 1696,
-      "y": 6730,
+      "x": 1360,
+      "y": 0,
       "w": 768,
       "h": 1024,
-      "title": "D2 · Weg mit Themen-Symbolen und Übungsbereich (nach Duolingos Artikel)",
+      "title": "D2 · NEU · Weg mit Paket-Symbolen und „Frei üben“",
       "is_interactive": true
     }
   },
@@ -181,7 +181,7 @@
   "notes": {
     "tA": {
       "x": 0,
-      "y": 990,
+      "y": 1020,
       "text": "A · Klar und ruhig",
       "kind": "title1",
       "maxW": 1616
@@ -243,8 +243,8 @@
       "maxW": 2400
     },
     "d2hinweis": {
-      "x": 2544,
-      "y": 6730,
+      "x": 2208,
+      "y": 0,
       "w": 420,
       "fill": "teal",
       "text": "D2, gebaut nach Duolingos eigenem Artikel zum Lernweg (blog.duolingo.com, „introducing the new duolingo learning path“):\n\n• Jede Station trägt das Symbol ihres Pakets; dieselben Pakete kommen später im Weg wieder (verteilte Wiederholung). So sieht man das Mischen.\n• Misch-Stationen zeigen die Farben aller beteiligten Pakete.\n• Stationen erklären sich beim Antippen (Popup), Abschnitte haben ein Band mit Lernzettel.\n• Freies Üben: eigener Reiter „Üben“ mit Was/Wie (wie Duolingos Übungsbereich).\n• Kräftige Vollfarben, Tasten mit dunklerer Kante, Ring und START am aktuellen Schritt, Krabbi und Themen-Bilder am Weg."
