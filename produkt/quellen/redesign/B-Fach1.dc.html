@@ -107,7 +107,7 @@ class Component extends DCLogic {
       { title: 'Verstehen', why: 'Erst lesen, worum es geht.', mods: ['Wissen lesen', 'Lernzettel'] },
       { title: 'Üben', why: 'So lange üben, bis es klappt.', mods: ['Winkelart erkennen', 'Messen', 'Schätzen'] },
       { title: 'Erleben', why: 'Ausprobieren und anwenden.', mods: ['Winkel zeichnen', 'Zeitrunde'] },
-      { title: 'Prüfen', why: 'Zeigen, dass es sitzt.', mods: ['Kurztest', 'Duell'] }
+      { title: 'Prüfen', why: 'Zeigen, was du kannst.', mods: ['Kurztest', 'Duell'] }
     ];
     const cur = { sitzt: 4, uebt: 1, neu: 0 };
     const pakete = P.map(([name, st], i) => {
@@ -117,7 +117,7 @@ class Component extends DCLogic {
         return { title: (j + 1) + ' · ' + s.title, why: s.why, cls, mark: j < c ? '✓' : String(j + 1), tag: cls === 'now' ? 'jetzt dran' : (cls === 'done' ? 'geschafft' : 'danach'), showMods: cls !== 'later', mods: s.mods.map((t, k) => ({ t, first: k === 0 && cls === 'now' ? 'first' : '' })) };
       });
       return { n: i + 1, name, st, open, rot: open ? 'rotate(180deg)' : 'none', bg: open ? '#ffffff' : '#fffaf0',
-        chip: st === 'sitzt' ? 'sitzt' : (st === 'uebt' ? 'übt' : 'neu'), chipBg: st === 'sitzt' ? '#ffd34d' : (st === 'uebt' ? '#c9d4ff' : '#fff'),
+        chip: st === 'sitzt' ? 'sicher' : (st === 'uebt' ? 'noch üben' : 'neu'), chipBg: st === 'sitzt' ? '#ffd34d' : (st === 'uebt' ? '#c9d4ff' : '#fff'),
         steps, toggle: () => this.setState({ open: this.state.open === i ? -1 : i }) };
     });
     return { pakete };

@@ -25,16 +25,21 @@ Aus der Recherche (Nielsen Norman Group zu Kindern 3–12, Analysen von Duolingo
 4. **Eine Aufgabe pro Bildschirm.** In der Übung keine Leisten, nur Fortschritt, Aufgabe, große Antworten, Rückmeldung.
 5. **Große Tippflächen** (mindestens 56–64 px hoch), Text mindestens 16–17 px, gute Kontraste (WCAG AA). Farbe nie als einziges Signal (immer auch Wort oder Häkchen).
 6. **Symbole statt Emojis:** eine Liniensymbol-Familie mit Beschriftung.
-7. **Fortschritt als Bild** (Balken, Ring, Weg) und ein Wort („neu“, „übt“, „sitzt“) statt Zahlenkolonnen. Zahlen nur auf Nachfrage.
+7. **Fortschritt als Bild** (Balken, Ring, Weg) und ein Wort („neu“, „noch üben“, „sicher“) statt Zahlenkolonnen. Zahlen nur auf Nachfrage.
 8. **Module nach Zweck sortiert** statt als lange Liste: Verstehen · Üben · Erleben · Testen, eins davon „empfohlen“.
 9. **Nicht kindisch.** Die Zielgruppe ist etwa 9–13. Freundlich, aber erwachsen genug (Tweens empfinden Kleinkind-Optik als peinlich).
 10. **Krabbi bleibt** als Begleiter: für Tipps, Lob, „Als Nächstes“. Wie präsent, hängt von der Richtung ab.
+
+## Begriffe
+
+- Stufen eines Pakets: **neu · noch üben · sicher**.
+- Nicht verwenden: „wackelt“, „wackelig“, „noch nicht sitzt“ (wirkt abwertend bzw. unklar). Die heutige App sagt an einer Stelle „Volle Punkte – noch wackelig“ (Startseite, „Heute lohnt sich besonders“); beim Umbau ändern.
 
 ## Neuer Aufbau (in allen Entwürfen gleich)
 
 - **Heute:** Begrüßung, Countdown zur nächsten Arbeit mit Lernplan-Fortschritt, Karte „Als Nächstes“ mit einem Knopf, „Heute im Plan“ (3 Punkte, abhakbar).
 - **Fächer:** vier Kacheln (Fach, Lernwelt, Fortschritt). Darunter später „Neues Lernmaterial hinzufügen“ (Foto → Pakete, kommt bald).
-- **Fach:** Name, Rang, Pakete der Reihe nach mit Status (sitzt / übt / neu), am Ende der Abschlusstest.
+- **Fach:** Name, Rang, Pakete der Reihe nach mit Status (sicher / noch üben / neu), am Ende der Abschlusstest.
 - **Paket:** Lernziel, Buchseite, Fortschritt, Module in vier Gruppen (Verstehen, Üben, Erleben, Testen), eins empfohlen.
 - **Übung:** Schließen, Fortschritt, Aufgabe, große Antworten, Rückmeldung mit Erklärung, „Weiter“.
 - **Ergebnis:** Lob, „9 von 10“, Punkte, was das für das Paket heißt, „Noch eine Runde“ / „Weiter im Plan“.
@@ -74,14 +79,14 @@ Rückmeldung zu den ersten Dummies (A, B, C) und zum festen Weg in D: Wer erst e
 2. Ein Band zeigt die Auswahl in Worten: „Du übst: Paket 1 + 2 + 3 gemischt“.
 3. **Wie übst du?** Alle Module frei wählbar. Jedes Modul zeigt, **aus welchen der gewählten Pakete** es Aufgaben nimmt („aus Paket 1 und 2“). Passt ein Modul zu keinem gewählten Paket, ist es ausgegraut mit Grund („nur mit Paket 5–8“).
 4. In der Übung steht oben „Winkelart erkennen · Paket 1 + 2 + 3 gemischt“, und an jeder Aufgabe, **aus welchem Paket sie kommt**.
-5. Das Ergebnis zeigt **pro Paket**, wie es lief. So sieht man, welches Paket noch wackelt.
+5. Das Ergebnis zeigt **pro Paket**, wie es lief. So sieht man, welches Paket man noch üben sollte.
 
 Krabbi erklärt je nach Auswahl in einem Satz, was das bedeutet (allein = kennenlernen, gemischt = wie in der Arbeit, Altes bleibt frisch). Vorschläge (Konzept 2), Plan (4) und Weg (D) können darauf aufbauen, indem sie eine Auswahl plus ein Modul vorschlagen, statt den Weg festzulegen.
 
 ## Startseite je Fach: fünf Konzepte (Stil B, auf der Arbeitsfläche, alle klickbar)
 
 1. **Weg mit Schritten** (Pakete als Akkordeon, jedes mit Verstehen → Üben → Erleben → Prüfen). **Verworfen** in dieser Form: Es tut so, als hätte jedes Paket eine eigene Strecke, Module kämen mehrfach vor, und Mischen ginge nicht.
-2. **Krabbi schlägt vor:** oben ein einziger Vorschlag mit „Warum das?“, darunter vier zugeklappte Schubladen (Neues lernen, Üben was wackelt, Spielen und ausprobieren, Testen).
+2. **Krabbi schlägt vor:** oben ein einziger Vorschlag mit „Warum das?“, darunter vier zugeklappte Schubladen (Neues lernen, Noch üben, Spielen und ausprobieren, Testen).
 3. **Was willst du heute?** Vier große Türen nach Absicht, darunter erscheint nur das Passende.
 4. **Plan bis zur Arbeit:** Wenn eine Arbeit eingetragen ist, ist der Lernplan die Startseite (Tag für Tag, heute aufgeklappt, Probearbeit, Arbeit).
 5. **Lernrucksack:** zeigt das Lernmodell direkt. Oben steht, was gerade „im Rucksack“ ist (ein Paket allein oder mehrere gemischt), mit „Allein lernen“ für das neue Paket und „Alles, was ich kann“. Darunter die Module, die für diese Mischung gelten; nicht passende sind ausgegraut mit Grund („braucht Paket 1–4“).

@@ -79,7 +79,7 @@ button{font-family:Nunito,sans-serif;cursor:pointer;color:#2b2140}
 class Component extends DCLogic {
   constructor(p){ super(p); this.state = { sel: [0, 1, 4] }; }
   renderVals() {
-    const P = [['Spitz & recht','sitzt'],['Stumpf & gestreckt','übt'],['Überstumpf','neu'],['Grenzfälle','neu'],['Kompass & Kurs','sitzt'],['Winkel benennen','neu'],['Winkel berechnen','neu'],['Senkrecht & parallel','neu']];
+    const P = [['Spitz & recht','sicher'],['Stumpf & gestreckt','noch üben'],['Überstumpf','neu'],['Grenzfälle','neu'],['Kompass & Kurs','sicher'],['Winkel benennen','neu'],['Winkel berechnen','neu'],['Senkrecht & parallel','neu']];
     const sel = this.state.sel;
     const has = (i) => sel.indexOf(i) >= 0;
     const set = (s) => this.setState({ sel: s });

@@ -142,7 +142,7 @@ class Component extends DCLogic {
   constructor(p){ super(p); this.state = { sel: [0, 1, 2], scr: 'fach', mod: 1, ans: null }; }
   renderVals() {
     const s = this.state;
-    const P = [['Spitz & recht','sitzt'],['Stumpf & gestreckt','übt'],['Überstumpf','neu'],['Grenzfälle','neu'],['Kompass & Kurs','sitzt'],['Winkel benennen','neu'],['Winkel berechnen','neu'],['Senkrecht & parallel','neu']];
+    const P = [['Spitz & recht','sicher'],['Stumpf & gestreckt','noch üben'],['Überstumpf','neu'],['Grenzfälle','neu'],['Kompass & Kurs','sicher'],['Winkel benennen','neu'],['Winkel berechnen','neu'],['Senkrecht & parallel','neu']];
     const sel = s.sel, has = (i) => sel.indexOf(i) >= 0, set = (x) => this.setState({ sel: x });
     const pakete = P.map(([name, st], i) => ({ n: i + 1, name, st, on: has(i), cls: has(i) ? 'on' : 'off',
       toggle: () => set(has(i) ? sel.filter(x => x !== i) : sel.concat([i]).sort()) }));

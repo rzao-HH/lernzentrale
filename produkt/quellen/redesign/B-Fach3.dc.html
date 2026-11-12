@@ -60,7 +60,7 @@ button{font-family:Nunito,sans-serif;cursor:pointer;color:#2b2140}
       </div>
     </sc-if>
     <sc-if value="{{noPick}}" hint-placeholder-val="{{ false }}">
-      <div class="stk" style="padding: 16px 18px; box-shadow: none; border-style: dashed; background: transparent; font-size: 16px; font-weight: 700; color: #5b4a36">Tipp: Wer nicht weiß, was dran ist, tippt auf „Üben, was wackelt“. Da sucht Krabbi die Aufgaben aus.</div>
+      <div class="stk" style="padding: 16px 18px; box-shadow: none; border-style: dashed; background: transparent; font-size: 16px; font-weight: 700; color: #5b4a36">Tipp: Wer nicht weiß, was dran ist, tippt auf „Noch üben“. Da sucht Krabbi die Aufgaben aus.</div>
     </sc-if>
   </div>
   <nav class="tabs" aria-label="Hauptmenü">
@@ -78,11 +78,11 @@ class Component extends DCLogic {
     const D = [
       { title: 'Neues lernen', why: 'Das nächste Paket anfangen und verstehen', color: '#c9d4ff', icon: 'M4 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H4zM20 5h-7a3 3 0 0 0-3 3',
         list: [{ t: 'Paket 3 · Überstumpf', s: 'Wissen lesen, 5 Minuten', tag: 'als Nächstes' }, { t: 'Paket 4 · Grenzfälle', s: 'Wissen lesen', tag: '' }, { t: 'Lernzettel: alle Winkelarten', s: 'zum Ausdrucken', tag: '' }] },
-      { title: 'Üben, was wackelt', why: 'Krabbi sucht die Aufgaben mit Fehlern aus', color: '#ffd34d', icon: 'M12 3l2.6 5.6 6 .8-4.4 4.2 1.1 6L12 16.8 6.7 19.6l1.1-6L3.4 9.4l6-.8z',
+      { title: 'Noch üben', why: 'Krabbi sucht die Aufgaben mit Fehlern aus', color: '#ffd34d', icon: 'M12 3l2.6 5.6 6 .8-4.4 4.2 1.1 6L12 16.8 6.7 19.6l1.1-6L3.4 9.4l6-.8z',
         list: [{ t: 'Stumpfe Winkel erkennen', s: 'Paket 2 · 4 Fehler beim letzten Mal', tag: 'empfohlen' }, { t: 'Messen mit dem Geodreieck', s: 'Paket 2', tag: '' }, { t: 'Spitz und recht wiederholen', s: 'Paket 1 · vor 9 Tagen', tag: '' }] },
       { title: 'Spielen und ausprobieren', why: 'Zeichnen, Schätzen, gegen die Zeit', color: '#c9f2d9', icon: 'M6 12h4M8 10v4M15 11h.01M18 13h.01M7 6h10a5 5 0 0 1 5 5v1a4 4 0 0 1-7 2.6H9A4 4 0 0 1 2 12v-1a5 5 0 0 1 5-5z',
         list: [{ t: 'Winkel zeichnen', s: 'mit dem Finger', tag: '' }, { t: 'Schätzen', s: 'Augenmaß', tag: '' }, { t: 'Zeitrunde', s: '60 Sekunden, Rekord: 14', tag: '' }] },
-      { title: 'Testen, ob es sitzt', why: 'Kurztest, Abschlusstest oder Duell', color: '#ffd9cf', icon: 'M7 4h10v5a5 5 0 0 1-10 0zM12 14v4M8 21h8',
+      { title: 'Testen', why: 'Kurztest, Abschlusstest oder Duell', color: '#ffd9cf', icon: 'M7 4h10v5a5 5 0 0 1-10 0zM12 14v4M8 21h8',
         list: [{ t: 'Kurztest Paket 2', s: 'mit Note', tag: '' }, { t: 'Abschlusstest', s: 'alle Pakete, wie in der Arbeit', tag: 'in 5 Tagen' }, { t: 'Duell', s: 'gegen Familie oder Klasse', tag: '' }] }
     ];
     const k = this.state.door;
