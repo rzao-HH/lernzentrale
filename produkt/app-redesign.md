@@ -66,6 +66,18 @@ Ein Paket hat **keine eigene Lernstrecke**. Module gelten für die **gewählte A
 
 Heute geschieht das mit „Pakete ankreuzen, dann Modus wählen“. Das ist richtig gedacht, aber nicht erklärt.
 
+## Grundablauf neu: erst „Was?“, dann „Wie?“ (Klick-Dummy 2, Stil B)
+
+Rückmeldung zu den ersten Dummies (A, B, C) und zum festen Weg in D: Wer erst ein Paket wählt und dann dessen Module bekommt, sieht nicht, dass dieselben Module für mehrere Pakete gelten, kann nicht mehrere Pakete zusammen lernen und hat in D sogar einen festen Weg statt freier Wahl. Deshalb gilt ab jetzt dieser Grundablauf auf der Fach-Seite:
+
+1. **Was übst du?** Pakete antippen: eins allein oder mehrere zusammen. Schnellwahl: „Neu: nur Paket 3“, „Alles, was ich kann“, „Neues + Bekanntes“.
+2. Ein Band zeigt die Auswahl in Worten: „Du übst: Paket 1 + 2 + 3 gemischt“.
+3. **Wie übst du?** Alle Module frei wählbar. Jedes Modul zeigt, **aus welchen der gewählten Pakete** es Aufgaben nimmt („aus Paket 1 und 2“). Passt ein Modul zu keinem gewählten Paket, ist es ausgegraut mit Grund („nur mit Paket 5–8“).
+4. In der Übung steht oben „Winkelart erkennen · Paket 1 + 2 + 3 gemischt“, und an jeder Aufgabe, **aus welchem Paket sie kommt**.
+5. Das Ergebnis zeigt **pro Paket**, wie es lief. So sieht man, welches Paket noch wackelt.
+
+Krabbi erklärt je nach Auswahl in einem Satz, was das bedeutet (allein = kennenlernen, gemischt = wie in der Arbeit, Altes bleibt frisch). Vorschläge (Konzept 2), Plan (4) und Weg (D) können darauf aufbauen, indem sie eine Auswahl plus ein Modul vorschlagen, statt den Weg festzulegen.
+
 ## Startseite je Fach: fünf Konzepte (Stil B, auf der Arbeitsfläche, alle klickbar)
 
 1. **Weg mit Schritten** (Pakete als Akkordeon, jedes mit Verstehen → Üben → Erleben → Prüfen). **Verworfen** in dieser Form: Es tut so, als hätte jedes Paket eine eigene Strecke, Module kämen mehrfach vor, und Mischen ginge nicht.

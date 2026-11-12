@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Richtung B: Klick-Dummy 2, Pakete wählen und mischen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:Nunito,sans-serif;cursor:pointer;color:#2b2140}
+.h{font-family:'Baloo 2',sans-serif;font-weight:800;margin:0;line-height:1.05}
+.stk{background:#fff;border:3px solid #2b2140;border-radius:22px;box-shadow:0 5px 0 #2b2140;box-sizing:border-box}
+.back{display:flex;align-items:center;gap:6px;min-height:46px;padding:0 14px 0 8px;border:3px solid #2b2140;border-radius:14px;background:#fff;font-size:16px;font-weight:800;box-shadow:0 3px 0 #2b2140}
+.step{display:flex;align-items:center;gap:10px}
+.sn{width:36px;height:36px;flex:none;border-radius:50%;border:3px solid #2b2140;background:#ffd34d;display:flex;align-items:center;justify-content:center;font:800 18px 'Baloo 2',sans-serif}
+.pk{display:flex;align-items:center;gap:10px;min-height:56px;padding:0 12px;border:3px solid #2b2140;border-radius:16px;font-size:15px;font-weight:800;text-align:left;box-sizing:border-box}
+.pk.on{background:#3557e8;color:#fff;box-shadow:0 4px 0 #2b2140}
+.pk.off{background:#fffaf0;border-style:dashed;border-color:#b9a383;color:#5b4a36}
+.n{width:28px;height:28px;flex:none;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font:800 14px 'Baloo 2',sans-serif}
+.st{margin-left:auto;font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px;background:#fff;color:#2b2140;border:2px solid #2b2140}
+.qb{min-height:44px;padding:0 14px;border:2px solid #2b2140;border-radius:12px;background:#fff;font-size:14px;font-weight:800}
+.mod{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:84px;padding:12px 14px;border:3px solid #2b2140;border-radius:18px;background:#fff;box-shadow:0 4px 0 #2b2140;font-size:16px;font-weight:800;text-align:left;box-sizing:border-box}
+.mod small{font-size:13px;font-weight:800;color:#3557e8}
+.mod.no{background:#f3ead9;border-color:#c9b48f;box-shadow:none;color:#8d7a5f}
+.mod.no small{color:#8d7a5f}
+.ans{min-height:76px;border:3px solid #2b2140;border-radius:20px;background:#fff;font-size:21px;font-weight:800;box-shadow:0 5px 0 #2b2140}
+.ans.ok{border-color:#12704a;background:#c9f2d9;color:#0c5a3a;box-shadow:0 5px 0 #12704a}.ans.bad{border-color:#a3261a;background:#ffd9d1;color:#8c1f14;box-shadow:0 5px 0 #a3261a}
+.btn{min-height:60px;padding:0 28px;border:3px solid #2b2140;border-radius:18px;background:#ffd34d;font-size:19px;font-weight:800;box-shadow:0 5px 0 #2b2140}
+.tabs{position:absolute;left:16px;right:16px;bottom:14px;height:78px;background:#fff;border:3px solid #2b2140;border-radius:26px;box-shadow:0 5px 0 #2b2140;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:hidden}
+.tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:14px;font-weight:800;color:#7d6a52}
+.tab.on{color:#2b2140;background:#ffd34d}
+</style>
+</helmet>
+<div style="width: 768px; height: 1024px; position: relative; overflow: hidden; background: #fff4e2; color: #2b2140; font-family: Nunito, sans-serif">
+
+<sc-if value="{{isFach}}" hint-placeholder-val="{{ true }}">
+  <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 106px; padding: 24px 34px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <button type="button" class="back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Welten</button>
+      <h1 class="h" style="font-size: 30px">Winkel-Akademie</h1>
+      <span style="padding: 6px 14px; border: 3px solid #2b2140; border-radius: 999px; background: #ffd34d; font-weight: 800; font-size: 14px">Komet</span>
+    </div>
+
+    <div style="display: flex; align-items: flex-end; gap: 8px">
+      <svg width="80" height="66" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22 M58 36 Q72 30 74 14"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path></svg>
+      <div class="stk" style="flex-grow: 1; padding: 12px 16px; border-radius: 20px 20px 20px 6px; font-size: 16px; font-weight: 700; line-height: 1.4">{{krabbi}}</div>
+    </div>
+
+    <div class="step"><span class="sn">1</span><strong class="h" style="font-size: 24px">Was übst du?</strong><span style="font-size: 14px; font-weight: 700; color: #7d6a52">ein Paket allein oder mehrere zusammen</span></div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <button type="button" class="qb" style="background: #ff6b4a" onClick="{{onlyNew}}">Neu: nur Paket 3</button>
+      <button type="button" class="qb" onClick="{{allKnown}}">Alles, was ich kann</button>
+      <button type="button" class="qb" onClick="{{withNew}}">Neues + Bekanntes</button>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+      <sc-for list="{{pakete}}" as="p" hint-placeholder-count="8">
+        <button type="button" class="pk {{p.cls}}" onClick="{{p.toggle}}" aria-pressed="{{p.on}}"><span class="n">{{p.n}}</span><span>{{p.name}}</span><span class="st">{{p.st}}</span></button>
+      </sc-for>
+    </div>
+
+    <div class="stk" style="background: #3557e8; color: #ffffff; padding: 12px 18px; display: flex; align-items: center; gap: 12px">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2M4 13h16"></path></svg>
+      <strong style="font-size: 18px; font-weight: 800; flex-grow: 1">{{bag}}</strong>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffd34d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"></path></svg>
+    </div>
+
+    <div class="step"><span class="sn">2</span><strong class="h" style="font-size: 24px">Wie übst du?</strong><span style="font-size: 14px; font-weight: 700; color: #7d6a52">jedes Modul nimmt Aufgaben aus deiner Auswahl</span></div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{mods}}" as="m" hint-placeholder-count="9">
+        <button type="button" class="mod {{m.cls}}" onClick="{{m.go}}"><span>{{m.t}}</span><small>{{m.s}}</small></button>
+      </sc-for>
+    </div>
+  </div>
+  <nav class="tabs" aria-label="Hauptmenü">
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Heute</button>
+    <button type="button" class="tab on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"></path></svg>Welten</button>
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><circle cx="17" cy="9" r="2.8"></circle><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"></path></svg>Gemeinsam</button>
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"></path></svg>Ich</button>
+  </nav>
+</sc-if>
+
+<sc-if value="{{isUebung}}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; inset: 0; padding: 30px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; align-items: center; gap: 14px">
+      <button type="button" class="back" style="padding: 0 12px" aria-label="Übung beenden" onClick="{{goFach}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      <span style="flex-grow: 1; height: 22px; border-radius: 999px; border: 3px solid #2b2140; background: #ffffff; overflow: hidden"><span style="display: block; width: 30%; height: 100%; background: #13a596"></span></span>
+      <span style="font-size: 17px; font-weight: 800">3 / 10</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+      <strong class="h" style="font-size: 24px">{{modName}}</strong>
+      <span style="padding: 5px 12px; border: 2px solid #2b2140; border-radius: 999px; background: #3557e8; color: #fff; font-size: 14px; font-weight: 800">{{mixLabel}}</span>
+    </div>
+    <div class="stk" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 20px 26px; background: #fffdf8">
+      <span style="align-self: flex-start; padding: 4px 12px; border: 2px solid #2b2140; border-radius: 999px; background: #ffd34d; font-size: 14px; font-weight: 800">diese Aufgabe kommt aus Paket 2 · Stumpf und gestreckt</span>
+      <svg width="520" height="230" viewBox="0 0 640 260" role="img" aria-label="Ein Winkel von 125 Grad"><path d="M300 230 L580 230" stroke="#2b2140" stroke-width="8" stroke-linecap="round"></path><path d="M300 230 L151 17" stroke="#3557e8" stroke-width="8" stroke-linecap="round"></path><path d="M360 230 A60 60 0 0 0 265.6 180.9" fill="#ffd34d" stroke="#2b2140" stroke-width="3"></path><circle cx="300" cy="230" r="9" fill="#2b2140"></circle></svg>
+    </div>
+    <h2 class="h" style="font-size: 30px; text-align: center">Welche Winkelart ist das?</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+      <sc-for list="{{opts}}" as="o" hint-placeholder-count="4">
+        <button type="button" class="ans {{o.cls}}" onClick="{{o.pick}}">{{o.t}}</button>
+      </sc-for>
+    </div>
+    <sc-if value="{{answered}}" hint-placeholder-val="{{ false }}">
+      <div class="stk" style="display: flex; align-items: center; gap: 16px; background: {{fbBg}}; margin-top: auto">
+        <span style="flex-grow: 1; font-size: 18px; font-weight: 800; line-height: 1.4">{{fbText}}</span>
+        <button type="button" class="btn" onClick="{{goErgebnis}}">Weiter</button>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{isErgebnis}}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; inset: 0; padding: 50px 56px 40px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 20px; background: #ffe6a8; text-align: center">
+    <svg width="150" height="124" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 30 6 14 M58 36 Q72 30 74 14"></path></g><circle cx="6" cy="9" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M32 44 Q40 56 48 44 Z" fill="#7A2A1A"></path></svg>
+    <h1 class="h" style="font-size: 48px">Geschafft!</h1>
+    <p style="margin: 0; font-size: 20px; font-weight: 800">{{modName}} · 9 von 10 richtig</p>
+    <div class="stk" style="width: 100%; padding: 18px 22px; display: flex; flex-direction: column; gap: 12px; text-align: left">
+      <span style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #a24a14">So lief es pro Paket</span>
+      <sc-for list="{{res}}" as="r" hint-placeholder-count="3">
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="width: 230px; font-size: 16px; font-weight: 800">{{r.name}}</span>
+          <span style="flex-grow: 1; height: 16px; border: 2px solid #2b2140; border-radius: 999px; background: #fff; overflow: hidden"><span style="display: block; height: 100%; width: {{r.w}}; background: {{r.c}}"></span></span>
+          <span style="width: 54px; text-align: right; font-weight: 800">{{r.t}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; gap: 14px; margin-top: auto">
+      <button type="button" class="btn" style="background: #ffffff" onClick="{{goUebung}}">Noch eine Runde</button>
+      <button type="button" class="btn" onClick="{{goFach}}">Andere Auswahl</button>
+    </div>
+  </div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { sel: [0, 1, 2], scr: 'fach', mod: 1, ans: null }; }
+  renderVals() {
+    const s = this.state;
+    const P = [['Spitz & recht','sitzt'],['Stumpf & gestreckt','übt'],['Überstumpf','neu'],['Grenzfälle','neu'],['Kompass & Kurs','sitzt'],['Winkel benennen','neu'],['Winkel berechnen','neu'],['Senkrecht & parallel','neu']];
+    const sel = s.sel, has = (i) => sel.indexOf(i) >= 0, set = (x) => this.setState({ sel: x });
+    const pakete = P.map(([name, st], i) => ({ n: i + 1, name, st, on: has(i), cls: has(i) ? 'on' : 'off',
+      toggle: () => set(has(i) ? sel.filter(x => x !== i) : sel.concat([i]).sort()) }));
+    const A = sel.filter(i => i < 4), B = sel.filter(i => i >= 4);
+    const list = (xs) => xs.length === 1 ? 'aus Paket ' + (xs[0] + 1) : 'aus Paket ' + xs.slice(0, -1).map(i => i + 1).join(', ') + ' und ' + (xs[xs.length - 1] + 1);
+    const M = [
+      ['Wissen lesen', sel, ''],
+      ['Winkelart erkennen', A, 'nur mit Paket 1–4'],
+      ['Messen', A, 'nur mit Paket 1–4'],
+      ['Schätzen', A, 'nur mit Paket 1–4'],
+      ['Winkel zeichnen', A, 'nur mit Paket 1–4'],
+      ['Aufgaben-Mission', B, 'nur mit Paket 5–8'],
+      ['Zeitrunde', A, 'nur mit Paket 1–4'],
+      ['Kurztest mit Note', sel, ''],
+      ['Duell', sel, '']
+    ];
+    const go = (k, extra) => () => this.setState(Object.assign({ scr: k, ans: null }, extra || {}));
+    const mods = M.map(([t, xs, why], i) => {
+      const ok = xs.length > 0;
+      return { t, cls: ok ? '' : 'no', s: ok ? list(xs) : (sel.length ? why : 'erst Pakete wählen'), go: ok ? go('uebung', { mod: i }) : () => {} };
+    });
+    const nums = sel.map(i => i + 1);
+    let krabbi = 'Wähle bei 1, was du üben willst, und bei 2, wie. Jede Übung mischt die Aufgaben aus allen gewählten Paketen.';
+    if (sel.length === 1) krabbi = 'Paket ' + nums[0] + ' allein: gut, um es kennenzulernen. Wenn es klappt, nimm die Pakete dazu, die du schon kannst.';
+    if (sel.length > 1) krabbi = 'Gemischt üben: Die Aufgaben aus Paket ' + nums.join(', ') + ' kommen durcheinander, wie in der Arbeit. So bleibt auch Altes frisch.';
+    const bag = sel.length === 0 ? 'Noch nichts gewählt' : (sel.length === 1 ? 'Du übst: Paket ' + nums[0] + ' allein' : 'Du übst: Paket ' + nums.join(' + ') + ' gemischt');
+    const used = M[s.mod] ? M[s.mod][1] : sel;
+    const names = ['spitz', 'recht', 'stumpf', 'gestreckt'];
+    const a = s.ans;
+    const opts = names.map((t, i) => ({ t, cls: a === null ? '' : (i === 2 ? 'ok' : (i === a ? 'bad' : '')), pick: () => { if (this.state.ans === null) this.setState({ ans: i }); } }));
+    const ok = a === 2;
+    const scores = [[4, 4], [3, 4], [2, 2], [2, 3], [3, 3], [1, 2], [2, 2], [1, 1]];
+    const res = used.map((i) => { const [r, n] = scores[i]; return { name: 'Paket ' + (i + 1) + ' · ' + P[i][0], t: r + '/' + n, w: Math.round(100 * r / n) + '%', c: r === n ? '#13a596' : '#ffd34d' }; });
+    return {
+      isFach: s.scr === 'fach', isUebung: s.scr === 'uebung', isErgebnis: s.scr === 'ergebnis',
+      pakete, mods, krabbi, bag,
+      onlyNew: () => set([2]), allKnown: () => set([0, 1, 4]), withNew: () => set([0, 1, 2]),
+      modName: M[s.mod] ? M[s.mod][0] : '', mixLabel: used.length > 1 ? 'Paket ' + used.map(i => i + 1).join(' + ') + ' gemischt' : 'Paket ' + (used[0] + 1) + ' allein',
+      opts, answered: a !== null, fbBg: ok ? '#c9f2d9' : '#ffd9d1',
+      fbText: ok ? 'Richtig! Zwischen 90° und 180° heißt der Winkel stumpf.' : 'Fast! Größer als 90° und kleiner als 180°, das ist stumpf.',
+      res, goFach: go('fach'), goUebung: go('uebung'), goErgebnis: go('ergebnis')
+    };
+  }
+}
+</script>
+</body>
+</html>

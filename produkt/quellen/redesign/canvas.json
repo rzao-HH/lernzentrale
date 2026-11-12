@@ -1,35 +1,214 @@
 {
   "v": 3,
-  "createdOnFiles": {"v": 1, "at": "2026-11-12T00:30:00Z"},
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-12T00:30:00Z"
+  },
   "title": "App-Redesign Lernzentrale",
-  "launch": {"view": "canvas"},
+  "launch": {
+    "view": "canvas"
+  },
   "pages": [],
   "boards": {
-    "Main.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 900, "title": "Übersicht · drei Richtungen", "is_interactive": true},
-    "A-Stil.dc.html": {"x": 0, "y": 1250, "w": 768, "h": 1024, "title": "A · Klar · Stilblatt"},
-    "A-App.dc.html": {"x": 848, "y": 1250, "w": 768, "h": 1024, "title": "A · Klar · Klick-Dummy", "is_interactive": true},
-    "B-Stil.dc.html": {"x": 0, "y": 2620, "w": 768, "h": 1024, "title": "B · Lernwelt · Stilblatt"},
-    "B-App.dc.html": {"x": 848, "y": 2620, "w": 768, "h": 1024, "title": "B · Lernwelt · Klick-Dummy", "is_interactive": true},
-    "C-Stil.dc.html": {"x": 0, "y": 3990, "w": 768, "h": 1024, "title": "C · Studio · Stilblatt"},
-    "C-App.dc.html": {"x": 848, "y": 3990, "w": 768, "h": 1024, "title": "C · Studio · Klick-Dummy", "is_interactive": true},
-    "B-Fach1.dc.html": {"x": 0, "y": 5360, "w": 768, "h": 1024, "title": "Fach-Start 1 · Weg mit Schritten", "is_interactive": true},
-    "B-Fach2.dc.html": {"x": 848, "y": 5360, "w": 768, "h": 1024, "title": "Fach-Start 2 · Krabbi schlägt vor", "is_interactive": true},
-    "B-Fach3.dc.html": {"x": 1696, "y": 5360, "w": 768, "h": 1024, "title": "Fach-Start 3 · Was willst du heute?", "is_interactive": true},
-    "B-Fach4.dc.html": {"x": 2544, "y": 5360, "w": 768, "h": 1024, "title": "Fach-Start 4 · Plan bis zur Arbeit", "is_interactive": true},
-    "B-Navi.dc.html": {"x": 3392, "y": 5360, "w": 900, "h": 1024, "title": "Navigation: von heute nach neu"},
-    "B-Fach5.dc.html": {"x": 4372, "y": 5360, "w": 768, "h": 1024, "title": "Fach-Start 5 · Lernrucksack (Pakete mischen)", "is_interactive": true},
-    "D-Stil.dc.html": {"x": 0, "y": 6730, "w": 768, "h": 1024, "title": "D · Weg wie bei Sprach-Apps · Stilblatt"},
-    "D-App.dc.html": {"x": 848, "y": 6730, "w": 768, "h": 1024, "title": "D · Weg wie bei Sprach-Apps · Klick-Dummy", "is_interactive": true}
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 900,
+      "title": "Übersicht · drei Richtungen",
+      "is_interactive": true
+    },
+    "A-Stil.dc.html": {
+      "x": 0,
+      "y": 1250,
+      "w": 768,
+      "h": 1024,
+      "title": "A · Klar · Stilblatt"
+    },
+    "A-App.dc.html": {
+      "x": 848,
+      "y": 1250,
+      "w": 768,
+      "h": 1024,
+      "title": "A · Klar · Klick-Dummy",
+      "is_interactive": true
+    },
+    "B-Stil.dc.html": {
+      "x": 0,
+      "y": 2620,
+      "w": 768,
+      "h": 1024,
+      "title": "B · Lernwelt · Stilblatt"
+    },
+    "B-App.dc.html": {
+      "x": 848,
+      "y": 2620,
+      "w": 768,
+      "h": 1024,
+      "title": "B · Lernwelt · Klick-Dummy",
+      "is_interactive": true
+    },
+    "C-Stil.dc.html": {
+      "x": 0,
+      "y": 3990,
+      "w": 768,
+      "h": 1024,
+      "title": "C · Studio · Stilblatt"
+    },
+    "C-App.dc.html": {
+      "x": 848,
+      "y": 3990,
+      "w": 768,
+      "h": 1024,
+      "title": "C · Studio · Klick-Dummy",
+      "is_interactive": true
+    },
+    "B-Fach1.dc.html": {
+      "x": 0,
+      "y": 5360,
+      "w": 768,
+      "h": 1024,
+      "title": "Fach-Start 1 · Weg mit Schritten",
+      "is_interactive": true
+    },
+    "B-Fach2.dc.html": {
+      "x": 848,
+      "y": 5360,
+      "w": 768,
+      "h": 1024,
+      "title": "Fach-Start 2 · Krabbi schlägt vor",
+      "is_interactive": true
+    },
+    "B-Fach3.dc.html": {
+      "x": 1696,
+      "y": 5360,
+      "w": 768,
+      "h": 1024,
+      "title": "Fach-Start 3 · Was willst du heute?",
+      "is_interactive": true
+    },
+    "B-Fach4.dc.html": {
+      "x": 2544,
+      "y": 5360,
+      "w": 768,
+      "h": 1024,
+      "title": "Fach-Start 4 · Plan bis zur Arbeit",
+      "is_interactive": true
+    },
+    "B-Navi.dc.html": {
+      "x": 3392,
+      "y": 5360,
+      "w": 900,
+      "h": 1024,
+      "title": "Navigation: von heute nach neu"
+    },
+    "B-Fach5.dc.html": {
+      "x": 4372,
+      "y": 5360,
+      "w": 768,
+      "h": 1024,
+      "title": "Fach-Start 5 · Lernrucksack (Pakete mischen)",
+      "is_interactive": true
+    },
+    "D-Stil.dc.html": {
+      "x": 0,
+      "y": 6730,
+      "w": 768,
+      "h": 1024,
+      "title": "D · Weg wie bei Sprach-Apps · Stilblatt"
+    },
+    "D-App.dc.html": {
+      "x": 848,
+      "y": 6730,
+      "w": 768,
+      "h": 1024,
+      "title": "D · Weg wie bei Sprach-Apps · Klick-Dummy",
+      "is_interactive": true
+    },
+    "B-App2.dc.html": {
+      "x": 1696,
+      "y": 2620,
+      "w": 768,
+      "h": 1024,
+      "title": "B · Klick-Dummy 2 · Pakete wählen und mischen",
+      "is_interactive": true
+    }
   },
-  "order": ["Main.dc.html", "A-Stil.dc.html", "A-App.dc.html", "B-Stil.dc.html", "B-App.dc.html", "C-Stil.dc.html", "C-App.dc.html", "B-Fach1.dc.html", "B-Fach2.dc.html", "B-Fach3.dc.html", "B-Fach4.dc.html", "B-Navi.dc.html", "B-Fach5.dc.html", "D-Stil.dc.html", "D-App.dc.html"],
+  "order": [
+    "Main.dc.html",
+    "A-Stil.dc.html",
+    "A-App.dc.html",
+    "B-Stil.dc.html",
+    "B-App.dc.html",
+    "C-Stil.dc.html",
+    "C-App.dc.html",
+    "B-Fach1.dc.html",
+    "B-Fach2.dc.html",
+    "B-Fach3.dc.html",
+    "B-Fach4.dc.html",
+    "B-Navi.dc.html",
+    "B-Fach5.dc.html",
+    "D-Stil.dc.html",
+    "D-App.dc.html",
+    "B-App2.dc.html"
+  ],
   "notes": {
-    "tA": {"x": 0, "y": 990, "text": "A · Klar und ruhig", "kind": "title1", "maxW": 1616},
-    "tB": {"x": 0, "y": 2360, "text": "B · Lernwelt mit Weg", "kind": "title1", "maxW": 1616},
-    "tC": {"x": 0, "y": 3730, "text": "C · Studio für Große", "kind": "title1", "maxW": 1616},
-    "tF": {"x": 0, "y": 5100, "text": "Startseite je Fach: fünf Konzepte (Stil B)", "kind": "title1", "maxW": 5140},
-    "tD": {"x": 0, "y": 6470, "text": "D · Ein Weg mit Misch-Stationen (Prinzipien großer Sprach-Apps)", "kind": "title1", "maxW": 1616},
-    "f1hinweis": {"x": -480, "y": 5360, "w": 420, "fill": "red", "text": "Problem bei Konzept 1 (Rückmeldung): Hier hat jedes Paket eine eigene Strecke. Die App ist aber anders gedacht: Ein neues Paket lernt man zuerst allein, dann mischt man es mit Paketen, die schon sitzen. Module gelten für die gewählte Mischung, manche nur für bestimmte Pakete (z. B. Aufgaben-Mission nur für Pakete 5–8). Konzept 5 und Entwurf D zeigen das."},
-    "aufbau": {"x": 1700, "y": 1250, "w": 420, "fill": "orange", "text": "Gleicher Aufbau in allen drei Richtungen, damit nur der Stil verglichen wird:\n\nUnten vier Reiter: Heute · Fächer · Gemeinsam · Ich.\n\nHeute: Countdown zur Arbeit, eine große Karte „Als Nächstes“, der Tagesplan.\nFächer → Fach → Paket → Übung → Ergebnis.\nIm Paket sind die Module nach Zweck sortiert: Verstehen, Üben, Erleben, Testen.\nEltern-Bereich liegt unter Ich, mit Sperre.\n\nIm Dummy lässt sich klicken: Heute → Los geht’s → Übung → Antwort → Ergebnis, und über Fächer → Mathe → Paket."}
+    "tA": {
+      "x": 0,
+      "y": 990,
+      "text": "A · Klar und ruhig",
+      "kind": "title1",
+      "maxW": 1616
+    },
+    "tB": {
+      "x": 0,
+      "y": 2360,
+      "text": "B · Lernwelt mit Weg",
+      "kind": "title1",
+      "maxW": 2464
+    },
+    "tC": {
+      "x": 0,
+      "y": 3730,
+      "text": "C · Studio für Große",
+      "kind": "title1",
+      "maxW": 1616
+    },
+    "tF": {
+      "x": 0,
+      "y": 5100,
+      "text": "Startseite je Fach: fünf Konzepte (Stil B)",
+      "kind": "title1",
+      "maxW": 5140
+    },
+    "tD": {
+      "x": 0,
+      "y": 6470,
+      "text": "D · Ein Weg mit Misch-Stationen (Prinzipien großer Sprach-Apps)",
+      "kind": "title1",
+      "maxW": 1616
+    },
+    "f1hinweis": {
+      "x": -480,
+      "y": 5360,
+      "w": 420,
+      "fill": "red",
+      "text": "Problem bei Konzept 1 (Rückmeldung): Hier hat jedes Paket eine eigene Strecke. Die App ist aber anders gedacht: Ein neues Paket lernt man zuerst allein, dann mischt man es mit Paketen, die schon sitzen. Module gelten für die gewählte Mischung, manche nur für bestimmte Pakete (z. B. Aufgaben-Mission nur für Pakete 5–8). Konzept 5 und Entwurf D zeigen das."
+    },
+    "aufbau": {
+      "x": 1700,
+      "y": 1250,
+      "w": 420,
+      "fill": "orange",
+      "text": "Gleicher Aufbau in allen drei Richtungen, damit nur der Stil verglichen wird:\n\nUnten vier Reiter: Heute · Fächer · Gemeinsam · Ich.\n\nHeute: Countdown zur Arbeit, eine große Karte „Als Nächstes“, der Tagesplan.\nFächer → Fach → Paket → Übung → Ergebnis.\nIm Paket sind die Module nach Zweck sortiert: Verstehen, Üben, Erleben, Testen.\nEltern-Bereich liegt unter Ich, mit Sperre.\n\nIm Dummy lässt sich klicken: Heute → Los geht’s → Übung → Antwort → Ergebnis, und über Fächer → Mathe → Paket."
+    },
+    "ablaufalt": {
+      "x": 2544,
+      "y": 2620,
+      "w": 420,
+      "fill": "red",
+      "text": "Rückmeldung: In den Dummies A, B, C (und im Weg von D) wählt man ein Paket, danach sind dessen Module fest. So sieht man nicht, dass dieselben Module für mehrere Pakete gelten, und man kann nicht mehrere Pakete zusammen lernen.\n\nNeu: Klick-Dummy 2 links daneben. Erst „Was?“ (ein oder mehrere Pakete), dann „Wie?“ (Modul frei wählen). Jedes Modul zeigt, aus welchen der gewählten Pakete es Aufgaben nimmt."
+    }
   },
   "designSystems": []
 }
