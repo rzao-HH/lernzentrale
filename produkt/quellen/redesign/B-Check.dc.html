@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Funktions-Check</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+.t{display:grid;grid-template-columns:250px minmax(0,1fr) 110px;gap:10px;align-items:center;padding:5px 0;border-bottom:2px dashed #e3cfa9;font-size:13.5px;line-height:1.3}
+.t b{font-weight:800}
+.g{padding:3px 8px;border:2px solid #2b2140;border-radius:999px;font-size:12px;font-weight:800;text-align:center}
+.ja{background:#c9f2d9}.teil{background:#ffe9a6}.nein{background:#ffd9cf}
+.sec{font-family:'Baloo 2',sans-serif;font-size:17px;font-weight:800;margin-top:8px;color:#a24a14}
+</style>
+</helmet>
+<div style="width: 1000px; height: 1024px; box-sizing: border-box; padding: 30px 36px; background: #fff4e2; color: #2b2140; font-family: Nunito, sans-serif; display: flex; flex-direction: column; gap: 2px">
+  <h1 style="margin: 0 0 4px; font-family: 'Baloo 2', sans-serif; font-size: 32px; font-weight: 800; line-height: 1">Funktions-Check: Was steckt wo?</h1>
+  <div style="display: flex; gap: 14px; font-size: 13px; font-weight: 800; margin-bottom: 4px"><span class="g ja">gezeigt</span><span class="g teil">nur angedeutet</span><span class="g nein">fehlt noch</span><span style="color: #5b4a36">in den Klick-Dummies</span></div>
+  <div class="sec">Lernen</div>
+  <div class="t"><b>Pakete, einzeln oder gemischt</b><span>Fach-Seite: 1 „Was übst du?“</span><span class="g ja">gezeigt</span></div>
+  <div class="t"><b>Viele Module je Auswahl</b><span>Fach-Seite: 2 „Wie übst du?“, mit Hinweis, aus welchen Paketen</span><span class="g ja">gezeigt</span></div>
+  <div class="t"><b>Wissen, Zauberbuch, Akte lesen</b><span>Modul „Wissen lesen“; Lernzettel am Abschnitt</span><span class="g teil">angedeutet</span></div>
+  <div class="t"><b>Lernkarten mit Suche</b><span>Modul; Suche über alle Karten oben im Fach</span><span class="g nein">fehlt</span></div>
+  <div class="t"><b>Experimente, Labor, Szenen</b><span>Module unter „Erleben“ (Kessel, Kreislauf, Café, Verhör)</span><span class="g teil">angedeutet</span></div>
+  <div class="t"><b>Stufen: ansehen, wählen, schreiben</b><span>in jedem Modul oben umschaltbar (leicht, mittel, ohne Hilfe)</span><span class="g nein">fehlt</span></div>
+  <div class="t"><b>Fotos der Arbeitsblätter</b><span>beim Paket: „Buch S. 13–14“ antippen</span><span class="g nein">fehlt</span></div>
+  <div class="sec">Prüfen und Punkte</div>
+  <div class="t"><b>Kurztest, Abschlusstest, Note</b><span>Modul „Kurztest“; Abschlusstest am Ende des Fachs bzw. im Plan</span><span class="g ja">gezeigt</span></div>
+  <div class="t"><b>Schreibtest, Probearbeit drucken</b><span>Module unter „Testen“, Drucken im Ergebnis</span><span class="g nein">fehlt</span></div>
+  <div class="t"><b>Punkte: voll, wenig, Bonus</b><span>Münze an jedem Modul + Erklärung (Themen-Baukasten)</span><span class="g ja">gezeigt</span></div>
+  <div class="t"><b>Rang mit Symbol und Ziel</b><span>oben im Fach: Symbol, Name, Balken „noch 220 bis …“</span><span class="g ja">gezeigt</span></div>
+  <div class="t"><b>Lernstand neu · noch üben · sicher</b><span>an jedem Paket; Ergebnis pro Paket</span><span class="g ja">gezeigt</span></div>
+  <div class="t"><b>Wiederholung nach 1–16 Tagen</b><span>„Heute“ und Krabbi-Vorschlag: „wieder dran“</span><span class="g teil">angedeutet</span></div>
+  <div class="t"><b>Selbsteinschätzung, Checkliste</b><span>nach jeder Runde eine Frage „Wie ging es?“; Liste unter Ich</span><span class="g nein">fehlt</span></div>
+  <div class="t"><b>Lernverlauf, Fehlerarten</b><span>Ich › Mein Verlauf; für Eltern unter Für Eltern</span><span class="g nein">fehlt</span></div>
+  <div class="sec">Planen</div>
+  <div class="t"><b>Lernplan bis zur Arbeit</b><span>Heute (Countdown) + Fach-Start „Plan“</span><span class="g ja">gezeigt</span></div>
+  <div class="t"><b>Heute lohnt sich besonders</b><span>Heute: Karte „Als Nächstes“ mit Münze</span><span class="g teil">angedeutet</span></div>
+  <div class="sec">Gemeinsam und Familie</div>
+  <div class="t"><b>Lerngruppen, Rangliste</b><span>Reiter Gemeinsam</span><span class="g ja">gezeigt</span></div>
+  <div class="t"><b>Arena, Geister-Duell, Power-ups, Glücksrad</b><span>Gemeinsam › Duell; Modul „Duell“ mit der eigenen Auswahl</span><span class="g teil">angedeutet</span></div>
+  <div class="t"><b>Mehrere Kinder, Person wechseln</b><span>Ich › „Wer lernt gerade?“</span><span class="g nein">fehlt</span></div>
+  <div class="t"><b>Elternübersicht</b><span>Ich › Für Eltern (mit Code)</span><span class="g teil">angedeutet</span></div>
+  <div class="t"><b>Geräte verbinden, Neu anfangen</b><span>Ich › Einstellungen</span><span class="g teil">angedeutet</span></div>
+  <div class="t" style="border-bottom: 0"><b>Was ist neu?, Offline</b><span>Ich › Neuigkeiten; kleiner Hinweis, wenn ohne Netz</span><span class="g nein">fehlt</span></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1000,"height":1024}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

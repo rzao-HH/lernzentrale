@@ -105,6 +105,28 @@ Angelehnt an den Aufbau großer Sprach-Apps (Duolingo), **ohne deren Gestaltung 
 **Abgeglichen mit echten Bildschirmen:** Die offiziellen App-Store-Bilder von Duolingo und Khan Academy Kids (apps.apple.com, in der Umgebung „lernzentrale“ freigegeben) zeigen die Übungsbildschirme: weißer Grund, dünner runder Fortschrittsbalken mit „… in Folge“ darüber, oben eine Anweisung, große Bild- oder Wortkacheln (gewählt = hellblau), eine Figur stellt die Frage mit Sprechblase, unten ein hellgrüner Streifen „Sehr gut!“ mit breitem „Weiter“. Entwurf D folgt dem; ergänzt wurden „3 richtig in Folge“ über dem Balken und Krabbi, der die Frage in einer Sprechblase stellt. Den Lernweg selbst zeigen die Store-Bilder nicht.
 **Stilvorbilder der Konkurrenzanalyse:** Die Session „Konkurrenzanalyse Lern-Apps“ hat 130 Aufnahmen der Webseiten von StudySmarter, Duolingo, Prodigy, Knowunity, Khanmigo und Photomath gemacht (Artefakt „Stilvorbilder“, https://claude.ai/artifact/XoV1Vka1YbEpkVBV5C7xoP#galerie). Das sind Werbeseiten, keine App-Bildschirme; brauchbar für Farben, Schrift und Tasten, nicht für Aufbau. Echte App-Bildschirme: App-Store-/Play-Einträge oder eigene Screenshots vom Handy.
 
+## Themen: Grunddesign + Themenhaut (Themen-Baukasten auf der Arbeitsfläche)
+
+Jede Welt folgt einem Thema, und das soll man auch sehen, ohne dass Bedienung und Aufbau sich ändern. Deshalb gibt es **ein Grunddesign** (Aufbau, Schrift, Knöpfe mit Umriss, Krabbi, Tab-Leiste) und darüber **eine Themenhaut** aus festen Bausteinen:
+
+| Baustein | Weltraum (Mathe) | Zauberschule (NWT) | Küste (Englisch) | Detektiv-Büro (Deutsch) | Eigenes, z. B. Dinos (KI) |
+|---|---|---|---|---|---|
+| Hintergrund | heller Sternenhimmel | Türkis mit Blasen | Sand mit Wellenlinien | Papier mit Linien | Hügel und Farn |
+| Farben | Blau + Sternengelb | Türkis + Zauberlila | Koralle + Himmelblau | Braun + Gelb | Grün + Gelb |
+| Form der Pakete | Sterne | Tropfen | Rettungsringe | Lupen | Dino-Eier |
+| Krabbi trägt | Antennen mit Sternen | Zaubermütze | Kapitänsmütze | Detektivhut | Dino-Kapuze |
+| Fliegt ab und zu vorbei | Sternschnuppe | Seifenblasen | Möwe | Fußspuren | Flugsaurier |
+| Ränge (mit Symbol) | Sternenstaub … Galaxis-Legende | Funke … Elementar-Meisterschaft | Schiffsjunge … Admiral | Praktikant … Meisterdetektiv | Dino-Ei … Dino-Legende |
+| Wörter | Mission, Landung | Zauber, Kessel | an Bord, Hafen | Akte, Fall | Ei, Nest, Expedition |
+
+Effekte bleiben im Hintergrund (langsam, blass, abschaltbar, bei „weniger Bewegung“ aus). Weil ein Thema nur diese Liste ist, kann später die KI ein **eigenes Thema** eines Kindes füllen, ohne die App zu ändern.
+
+**Punkte und Ränge** gehören sichtbar dazu: oben im Fach Rang-Symbol, Rangname, Punkte und Balken „noch 220 bis Planet“; an jedem Modul eine Münze „volle Punkte“ (neu oder noch üben), „+20 % Bonus“ (lange nicht geübt) oder „wenige Punkte“ (sicher, noch nicht wieder fällig), mit kurzem Grund.
+
+## Funktions-Check (auf der Arbeitsfläche)
+
+Alle heutigen Funktionen haben einen Platz im neuen Aufbau. In den Klick-Dummies **noch nicht gezeigt**: Lernkarten-Suche, Schwierigkeitsstufen im Modul, Fotos der Arbeitsblätter, Schreibtest und Probearbeit drucken, Selbsteinschätzung und Checkliste, Lernverlauf und Fehlerarten, Person wechseln, Neuigkeiten und Offline-Hinweis. **Nur angedeutet**: Wissen/Lernzettel, Experimente und Szenen, Wiederholung nach Tagen, „Heute lohnt sich“, Arena mit Geister-Duell, Power-ups und Glücksrad, Elternübersicht, Geräte verbinden.
+
 ## Nächste Schritte
 
 1. Fach-Startseite entscheiden (Konzepte 2–5 und Entwurf D vergleichen, Robin anklicken lassen), dann Stil festlegen (Favorit B, ggf. mit der Weg-Logik aus D).

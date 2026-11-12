@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Themen-Baukasten</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:Nunito,sans-serif;cursor:pointer;color:#2b2140}
+.h{font-family:'Baloo 2',sans-serif;font-weight:800;margin:0;line-height:1.05}
+.stk{background:#fff;border:3px solid #2b2140;border-radius:22px;box-shadow:0 5px 0 #2b2140;box-sizing:border-box}
+.fly{position:absolute;left:-120px;z-index:0;opacity:.75;animation:fly 13s linear infinite}
+.fly.b{animation-duration:19s;animation-delay:-8s;opacity:.5}
+@keyframes fly{0%{transform:translateX(0) translateY(0)}50%{transform:translateX(500px) translateY(-24px)}100%{transform:translateX(1000px) translateY(0)}}
+.bob{animation:bob 2.4s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.fly,.bob{animation:none}}
+.pk{display:flex;align-items:center;gap:10px;min-height:56px;padding:0 12px;border:3px solid #2b2140;border-radius:16px;font-size:15px;font-weight:800;text-align:left;box-sizing:border-box;background:#fff}
+.mod{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:92px;padding:12px 14px;border:3px solid #2b2140;border-radius:18px;background:#fff;box-shadow:0 4px 0 #2b2140;font-size:16px;font-weight:800;text-align:left;box-sizing:border-box}
+.coin{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border:2px solid #2b2140;border-radius:999px;font-size:12px;font-weight:800}
+.tb{min-height:48px;padding:0 14px;border:3px solid #2b2140;border-radius:14px;background:#fff;font-size:15px;font-weight:800;text-align:left;display:flex;align-items:center;gap:10px}
+.tb.on{box-shadow:0 4px 0 #2b2140;transform:translateY(-2px)}
+.row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;font-size:14px;line-height:1.35;padding:7px 0;border-bottom:2px dashed #e3cfa9}
+.row b{font-weight:800}
+</style>
+</helmet>
+<div style="width: 1320px; height: 1024px; display: flex; background: #f3ead9; font-family: Nunito, sans-serif; color: #2b2140">
+
+  <div style="width: 768px; height: 1024px; position: relative; overflow: hidden; background: {{bg}}; flex: none">
+    <svg class="fly" width="110" height="60" viewBox="0 0 110 60" style="top: 150px" aria-hidden="true"><path d="{{flyPath}}" fill="{{flyFill}}" stroke="{{flyStroke}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <svg class="fly b" width="80" height="44" viewBox="0 0 110 60" style="top: 640px" aria-hidden="true"><path d="{{flyPath}}" fill="{{flyFill}}" stroke="{{flyStroke}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <div style="position: relative; z-index: 1; padding: 24px 32px; box-sizing: border-box; height: 100%; display: flex; flex-direction: column; gap: 14px">
+
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+        <div style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: {{ink}}">{{fach}}</span><h1 class="h" style="font-size: 34px">{{welt}}</h1></div>
+        <div class="stk" style="display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px">
+          <span style="width: 48px; height: 48px; border-radius: 14px; border: 3px solid #2b2140; background: {{acc2}}; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="{{rankIcon}}" fill="{{acc}}" stroke="#2b2140" stroke-width="1.6" stroke-linejoin="round"></path></svg></span>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 170px">
+            <span style="font-size: 15px; font-weight: 800">{{rang}} · 280 Punkte</span>
+            <span style="height: 10px; border: 2px solid #2b2140; border-radius: 999px; background: #fff; overflow: hidden"><span style="display: block; width: 12%; height: 100%; background: {{acc}}"></span></span>
+            <span style="font-size: 12px; font-weight: 800; color: #5b4a36">noch 220 bis {{next}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: flex-end; gap: 6px">
+        <svg class="bob" width="104" height="104" viewBox="-6 -34 104 100" aria-hidden="true">
+          <g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22 M58 36 Q72 30 74 14"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+          <path d="{{hatA}}" fill="{{hatFill}}" stroke="#2b2140" stroke-width="2" stroke-linejoin="round"></path>
+          <path d="{{hatB}}" fill="{{hatFill2}}" stroke="#2b2140" stroke-width="1.6" stroke-linejoin="round"></path>
+        </svg>
+        <div class="stk" style="flex-grow: 1; padding: 12px 16px; border-radius: 20px 20px 20px 6px; font-size: 16px; font-weight: 700; line-height: 1.4">{{krabbi}}</div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px"><span style="width: 34px; height: 34px; border-radius: 50%; border: 3px solid #2b2140; background: {{acc2}}; display: flex; align-items: center; justify-content: center; font: 800 17px 'Baloo 2', sans-serif">1</span><strong class="h" style="font-size: 23px">Was übst du?</strong></div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{pakete}}" as="p" hint-placeholder-count="4">
+          <div class="pk" style="background: {{p.bg}}; color: {{p.fg}}">
+            <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" style="flex: none"><path d="{{shape}}" fill="{{p.shapeFill}}" stroke="#2b2140" stroke-width="1.5" stroke-linejoin="round"></path><text x="12" y="16" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="10" fill="#2b2140">{{p.n}}</text></svg>
+            <span style="flex-grow: 1">{{p.name}}</span>
+            <span style="font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #fff; color: #2b2140; border: 2px solid #2b2140">{{p.st}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div class="stk" style="background: {{acc}}; color: {{accInk}}; padding: 10px 16px; font-size: 17px; font-weight: 800">Du übst: Paket 1 + 2 + 3 gemischt</div>
+
+      <div style="display: flex; align-items: center; gap: 10px"><span style="width: 34px; height: 34px; border-radius: 50%; border: 3px solid #2b2140; background: {{acc2}}; display: flex; align-items: center; justify-content: center; font: 800 17px 'Baloo 2', sans-serif">2</span><strong class="h" style="font-size: 23px">Wie übst du?</strong><span style="font-size: 14px; font-weight: 700; color: #5b4a36">Münze zeigt, wo es gerade viele Punkte gibt</span></div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+        <sc-for list="{{mods}}" as="m" hint-placeholder-count="6">
+          <div class="mod">
+            <span>{{m.t}}</span>
+            <span class="coin" style="background: {{m.cbg}}"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#ffd34d" stroke="#2b2140" stroke-width="2.4"></circle></svg>{{m.p}}</span>
+            <span style="font-size: 12px; font-weight: 700; color: #5b4a36">{{m.why}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top: auto; display: flex; gap: 10px; align-items: center; font-size: 13px; font-weight: 800; color: #5b4a36">
+        <span class="coin" style="background: #ffd34d">volle Punkte</span>neu oder noch üben
+        <span class="coin" style="background: #c9f2d9">+20 % Bonus</span>lange nicht geübt
+        <span class="coin" style="background: #fff">wenige</span>sicher, noch nicht fällig
+      </div>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1; padding: 28px 30px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+    <h2 class="h" style="font-size: 32px">Grunddesign + Themenhaut</h2>
+    <p style="margin: 0; font-size: 15px; font-weight: 700; line-height: 1.45; color: #5b4a36">Aufbau, Schrift, Knöpfe und Krabbi bleiben gleich. Jede Welt legt eine Haut darüber: Hintergrund, Farben, Formen, Krabbis Mütze, fliegende Dinge, Ränge.</p>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+      <sc-for list="{{themes}}" as="t" hint-placeholder-count="4">
+        <button type="button" class="tb {{t.on}}" style="background: {{t.bg}}" onClick="{{t.pick}}" aria-pressed="{{t.sel}}"><span style="width: 18px; height: 18px; border-radius: 50%; border: 2px solid #2b2140; background: {{t.dot}}"></span>{{t.name}}</button>
+      </sc-for>
+    </div>
+    <div class="stk" style="padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: none">
+      <label for="eigen" style="font-size: 14px; font-weight: 800">Eigenes Thema erfinden (später mit KI)</label>
+      <div style="display: flex; gap: 8px">
+        <input id="eigen" value="{{eigen}}" onChange="{{typeEigen}}" style="flex-grow: 1; min-height: 46px; padding: 0 12px; border: 3px solid #2b2140; border-radius: 12px; font: 700 16px Nunito, sans-serif; color: #2b2140; background: #fffaf0">
+        <button type="button" class="tb" style="background: #ff6b4a" onClick="{{bauen}}">Thema bauen</button>
+      </div>
+      <span style="font-size: 12px; font-weight: 700; color: #5b4a36">Im Dummy wird immer das vorbereitete Dino-Thema gezeigt.</span>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <div class="row"><b>Hintergrund</b><span>{{rBg}}</span></div>
+      <div class="row"><b>Farben</b><span>{{rCol}}</span></div>
+      <div class="row"><b>Form der Pakete</b><span>{{rShape}}</span></div>
+      <div class="row"><b>Krabbi trägt</b><span>{{rHat}}</span></div>
+      <div class="row"><b>Fliegt vorbei</b><span>{{rFly}}</span></div>
+      <div class="row"><b>Ränge</b><span>{{rRank}}</span></div>
+      <div class="row" style="border-bottom: 0"><b>Sprache</b><span>{{rLang}}</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1320,"height":1024}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { t: 0, eigen: 'Dinos' }; }
+  renderVals() {
+    const STAR = 'M12 1.8l3 6.4 7 .9-5.1 4.8 1.3 6.9L12 17.4l-6.2 3.4 1.3-6.9L2 9.1l7-.9z';
+    const T = [
+      { name: 'Weltraum (Mathe)', fach: 'Mathe', welt: 'Winkel-Akademie', dot: '#3557e8',
+        bg: 'radial-gradient(circle at 12% 18%, #ffffff 0 2px, transparent 3px), radial-gradient(circle at 82% 12%, #ffffff 0 2.5px, transparent 3.5px), radial-gradient(circle at 70% 64%, #ffffff 0 2px, transparent 3px), radial-gradient(circle at 25% 80%, #ffffff 0 1.5px, transparent 2.5px), linear-gradient(#dfe5ff, #eef0ff)',
+        acc: '#3557e8', acc2: '#ffd34d', accInk: '#ffffff', ink: '#2c3ea8', shape: STAR,
+        rank: 'Komet', next: 'Planet', rankIcon: STAR,
+        hatA: 'M28 8 L28 -8 M52 8 L52 -8', hatB: 'M28 -14 l2.2 4.4 4.8.6-3.5 3.3.9 4.7L28 -3.3 23.6 -1l.9-4.7-3.5-3.3 4.8-.6zM52 -14 l2.2 4.4 4.8.6-3.5 3.3.9 4.7L52 -3.3 47.6 -1l.9-4.7-3.5-3.3 4.8-.6z',
+        hatFill: 'none', hatFill2: '#ffd34d',
+        flyPath: 'M6 40 L70 18 M70 18 l4.4 8.8 9.6 1.2-7 6.6 1.8 9.4L70 39.6 61.6 44l1.8-9.4-7-6.6 9.6-1.2z', flyFill: '#ffd34d', flyStroke: '#2c3ea8',
+        krabbi: 'Drei Pakete im Raumschiff. Bei Paket 3 gibt es gerade die meisten Punkte.',
+        rBg: 'heller Sternenhimmel, kleine weiße Sterne', rCol: 'Blau mit Sternengelb', rShape: 'Sterne', rHat: 'Antennen mit Sternen', rFly: 'Sternschnuppe',
+        rRank: 'Sternenstaub, Meteor, Komet, Planet, Pulsar, Supernova, Galaxis-Legende', rLang: 'Raumschiff, Mission, Landung' },
+      { name: 'Zauberschule (NWT)', fach: 'NWT', welt: 'Wasser-Zauberschule', dot: '#13a596',
+        bg: 'radial-gradient(circle at 15% 30%, rgba(255,255,255,.9) 0 10px, transparent 11px), radial-gradient(circle at 85% 20%, rgba(255,255,255,.8) 0 14px, transparent 15px), radial-gradient(circle at 75% 75%, rgba(255,255,255,.7) 0 8px, transparent 9px), linear-gradient(#d4f3ee, #ecfaf7)',
+        acc: '#13a596', acc2: '#e6d4ff', accInk: '#ffffff', ink: '#0b6662', shape: 'M12 2C12 2 4.5 10.5 4.5 15a7.5 7.5 0 0 0 15 0C19.5 10.5 12 2 12 2z',
+        rank: 'Tautropfen', next: 'Nebelhauch', rankIcon: 'M12 2C12 2 4.5 10.5 4.5 15a7.5 7.5 0 0 0 15 0C19.5 10.5 12 2 12 2z',
+        hatA: 'M22 9 L40 -32 L58 9 Z', hatB: 'M22 9 Q40 3 58 9 L58 13 Q40 7 22 13 Z M40 -14 l1.6 3.2 3.5.5-2.5 2.4.6 3.5L40 -6 36.8 -4.4l.6-3.5-2.5-2.4 3.5-.5z',
+        hatFill: '#6a3fd6', hatFill2: '#ffd34d',
+        flyPath: 'M20 30 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0 M60 22 a6 6 0 1 0 12 0 a6 6 0 1 0 -12 0 M84 36 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0', flyFill: '#ffffff', flyStroke: '#13a596',
+        krabbi: 'Abrakadabra: Drei Pakete im Zauberkessel. Bei Paket 3 gibt es gerade die meisten Punkte.',
+        rBg: 'helles Türkis mit schwebenden Blasen', rCol: 'Türkis mit Zauberlila', rShape: 'Tropfen', rHat: 'Zaubermütze mit Stern', rFly: 'Seifenblasen',
+        rRank: 'Funke, Tautropfen, Nebelhauch, Eiskristall, Dampfwirbel, Sturmzauber, Elementar-Meisterschaft', rLang: 'Zauber, Kessel, Haus' },
+      { name: 'Küste (Englisch)', fach: 'Englisch', welt: 'Küsten-Crew', dot: '#ff6b4a',
+        bg: 'repeating-radial-gradient(ellipse at 50% 160%, transparent 0 46px, rgba(15,109,104,.08) 46px 49px), linear-gradient(#fdf1dc, #fff8ec)',
+        acc: '#ff6b4a', acc2: '#bfe9ff', accInk: '#2b2140', ink: '#a2381f', shape: 'M12 3a9 9 0 1 1 0 18a9 9 0 1 1 0-18zM12 7a5 5 0 1 0 0 10a5 5 0 1 0 0-10z',
+        rank: 'Matrose', next: 'Bootsmann', rankIcon: 'M12 3v15M7 8h10M5 13c0 5 3.5 7 7 7s7-2 7-7M12 3a1.6 1.6 0 1 1 0 3.2a1.6 1.6 0 1 1 0-3.2',
+        hatA: 'M20 8 Q40 -16 60 8 Z', hatB: 'M16 8 L64 8 L60 13 L20 13 Z M37 -4 h6 M40 -7 v6',
+        hatFill: '#1f3b73', hatFill2: '#ffffff',
+        flyPath: 'M10 30 Q30 10 50 30 Q70 10 90 30', flyFill: 'none', flyStroke: '#2b2140',
+        krabbi: 'Ahoi! Drei Pakete an Bord. Bei Paket 3 gibt es gerade die meisten Punkte.',
+        rBg: 'Sand mit sanften Wellenlinien', rCol: 'Korallenrot mit Himmelblau', rShape: 'Rettungsringe', rHat: 'Kapitänsmütze', rFly: 'Möwe',
+        rRank: 'Schiffsjunge, Matrose, Bootsmann, Steuermann, Erster Offizier, Kapitän, Admiral', rLang: 'an Bord, Mission, Hafen' },
+      { name: 'Detektiv-Büro (Deutsch)', fach: 'Deutsch', welt: 'Detektiv-Büro', dot: '#9c5418',
+        bg: 'repeating-linear-gradient(0deg, transparent 0 31px, rgba(156,84,24,.07) 31px 32px), linear-gradient(#f6ecdf, #fbf5ec)',
+        acc: '#9c5418', acc2: '#ffd34d', accInk: '#ffffff', ink: '#7d420f', shape: 'M10 3a7 7 0 1 1 0 14a7 7 0 1 1 0-14z',
+        rank: 'Spurensucher', next: 'Detektiv', rankIcon: 'M10 3a6 6 0 1 1 0 12a6 6 0 1 1 0-12zM14.5 14.5L20 20',
+        hatA: 'M20 9 Q40 -20 60 9 Z', hatB: 'M14 9 Q40 2 66 9 L64 12 Q40 6 16 12 Z',
+        hatFill: '#8a5a2b', hatFill2: '#5e3b17',
+        flyPath: 'M10 38 l14 -6 l-2 10 z M44 26 l14 -6 l-2 10 z M78 34 l14 -6 l-2 10 z', flyFill: '#9c5418', flyStroke: '#5e3b17',
+        krabbi: 'Neuer Fall: drei Akten auf dem Tisch. Bei Akte 3 gibt es gerade die meisten Punkte.',
+        rBg: 'Papier mit feinen Linien', rCol: 'Braun mit Gelb', rShape: 'Lupen', rHat: 'Detektivhut', rFly: 'Fußspuren',
+        rRank: 'Praktikant, Spurensucher, Detektiv, Kommissar, Chefinspektor, Meisterdetektiv', rLang: 'Akte statt Paket, Fall, Ermittlung' },
+      { name: 'Eigenes: Dinos (KI)', fach: 'Eigenes Thema', welt: 'Dino-Tal', dot: '#5aa832',
+        bg: 'radial-gradient(ellipse at 10% 95%, #b9e48f 0 120px, transparent 121px), radial-gradient(ellipse at 90% 100%, #a5d978 0 160px, transparent 161px), linear-gradient(#e9f7d8, #f6fbee)',
+        acc: '#5aa832', acc2: '#ffd34d', accInk: '#ffffff', ink: '#3d7a1e', shape: 'M12 2.5C7.5 2.5 4.5 9 4.5 13.5a7.5 7.5 0 0 0 15 0C19.5 9 16.5 2.5 12 2.5z',
+        rank: 'Schlüpfling', next: 'Jungsaurier', rankIcon: 'M12 2.5C7.5 2.5 4.5 9 4.5 13.5a7.5 7.5 0 0 0 15 0C19.5 9 16.5 2.5 12 2.5z',
+        hatA: 'M20 10 Q40 -14 60 10 Z', hatB: 'M26 2 l4 -10 l4 9 l4 -11 l4 11 l4 -9 l4 10 Z',
+        hatFill: '#5aa832', hatFill2: '#ffd34d',
+        flyPath: 'M8 30 L40 22 L56 8 L60 22 L100 26 L60 30 L54 42 L42 30 Z', flyFill: '#7a5aa8', flyStroke: '#2b2140',
+        krabbi: 'Rrrr! Drei Dino-Eier im Nest. Bei Ei 3 gibt es gerade die meisten Punkte.',
+        rBg: 'Hügel und Farn, sehr hell', rCol: 'Grün mit Gelb', rShape: 'Dino-Eier', rHat: 'Dino-Kapuze mit Zacken', rFly: 'Flugsaurier',
+        rRank: 'Dino-Ei, Schlüpfling, Jungsaurier, Raptor, Brachio, T-Rex, Dino-Legende', rLang: 'Ei statt Paket, Nest, Expedition' }
+    ];
+    const i = this.state.t, t = T[i];
+    const P = [['Spitz & recht', 'sicher'], ['Stumpf & gestreckt', 'noch üben'], ['Überstumpf', 'neu'], ['Grenzfälle', 'neu']];
+    const pakete = P.map(([name, st], k) => ({ n: k + 1, name: (i === 3 ? 'Akte ' : (i === 4 ? 'Ei ' : 'Paket ')) + (k + 1) + ' · ' + name, st, bg: k < 3 ? t.acc : '#ffffff', fg: k < 3 ? t.accInk : '#2b2140', shapeFill: k < 3 ? t.acc2 : '#ffffff' }));
+    const mods = [
+      ['Winkelart erkennen', 'volle Punkte', '#ffd34d', 'Paket 2 und 3'],
+      ['Messen', 'volle Punkte', '#ffd34d', 'Paket 3 ist neu'],
+      ['Schätzen', '+20 % Bonus', '#c9f2d9', 'lange nicht geübt'],
+      ['Winkel zeichnen', 'volle Punkte', '#ffd34d', 'Paket 2 noch üben'],
+      ['Zeitrunde', 'wenige Punkte', '#ffffff', 'Rekord: 14'],
+      ['Kurztest', 'volle Punkte', '#ffd34d', 'mit Note']
+    ].map(([t2, p, cbg, why]) => ({ t: t2, p, cbg, why }));
+    const themes = T.map((x, k) => ({ name: x.name, dot: x.dot, bg: k === i ? '#ffd34d' : '#ffffff', on: k === i ? 'on' : '', sel: k === i, pick: () => this.setState({ t: k }) }));
+    return Object.assign({}, t, {
+      fach: t.fach, pakete, mods, themes, eigen: this.state.eigen,
+      typeEigen: (e) => this.setState({ eigen: e && e.target ? e.target.value : this.state.eigen }),
+      bauen: () => this.setState({ t: 4 }),
+      rang: t.rank, next: t.next
+    });
+  }
+}
+</script>
+</body>
+</html>

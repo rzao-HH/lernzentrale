@@ -132,6 +132,21 @@
       "h": 1024,
       "title": "B · Klick-Dummy 2 · Pakete wählen und mischen",
       "is_interactive": true
+    },
+    "B-Themen.dc.html": {
+      "x": 0,
+      "y": 8100,
+      "w": 1320,
+      "h": 1024,
+      "title": "Themen-Baukasten · Grunddesign + Themenhaut",
+      "is_interactive": true
+    },
+    "B-Check.dc.html": {
+      "x": 1400,
+      "y": 8100,
+      "w": 1000,
+      "h": 1024,
+      "title": "Funktions-Check · was steckt wo"
     }
   },
   "order": [
@@ -150,7 +165,9 @@
     "B-Fach5.dc.html",
     "D-Stil.dc.html",
     "D-App.dc.html",
-    "B-App2.dc.html"
+    "B-App2.dc.html",
+    "B-Themen.dc.html",
+    "B-Check.dc.html"
   ],
   "notes": {
     "tA": {
@@ -208,6 +225,13 @@
       "w": 420,
       "fill": "red",
       "text": "Rückmeldung: In den Dummies A, B, C (und im Weg von D) wählt man ein Paket, danach sind dessen Module fest. So sieht man nicht, dass dieselben Module für mehrere Pakete gelten, und man kann nicht mehrere Pakete zusammen lernen.\n\nNeu: Klick-Dummy 2 links daneben. Erst „Was?“ (ein oder mehrere Pakete), dann „Wie?“ (Modul frei wählen). Jedes Modul zeigt, aus welchen der gewählten Pakete es Aufgaben nimmt."
+    },
+    "tT": {
+      "x": 0,
+      "y": 7840,
+      "text": "Themen, Punkte, Ränge und Funktions-Check",
+      "kind": "title1",
+      "maxW": 2400
     }
   },
   "designSystems": []
