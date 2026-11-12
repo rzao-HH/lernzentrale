@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Richtung B: Klick-Dummy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:Nunito,sans-serif;cursor:pointer}
+.scr{position:absolute;left:0;right:0;top:0;bottom:100px;padding:34px 40px;box-sizing:border-box;display:flex;flex-direction:column;gap:22px;overflow:hidden}
+.full{bottom:0}
+.h{font-family:'Baloo 2',sans-serif;font-weight:800;margin:0;line-height:1.05}
+.lab{font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#a24a14}
+.stk{background:#fff;border:3px solid #2b2140;border-radius:24px;box-shadow:0 6px 0 #2b2140;padding:22px;box-sizing:border-box}
+.btn{min-height:62px;padding:0 30px;border:3px solid #2b2140;border-radius:18px;background:#ff6b4a;color:#2b2140;font-size:20px;font-weight:800;box-shadow:0 5px 0 #2b2140}
+.btn2{min-height:62px;padding:0 26px;border:3px solid #2b2140;border-radius:18px;background:#fff;color:#2b2140;font-size:18px;font-weight:800;box-shadow:0 5px 0 #2b2140}
+.back{align-self:flex-start;display:flex;align-items:center;gap:6px;min-height:46px;padding:0 16px 0 10px;border:3px solid #2b2140;border-radius:14px;background:#fff;color:#2b2140;font-size:16px;font-weight:800;box-shadow:0 3px 0 #2b2140}
+.ans{min-height:80px;border:3px solid #2b2140;border-radius:20px;background:#fff;color:#2b2140;font-size:22px;font-weight:800;box-shadow:0 5px 0 #2b2140}
+.ans.ok{border-color:#12704a;background:#c9f2d9;color:#0c5a3a;box-shadow:0 5px 0 #12704a}.ans.bad{border-color:#a3261a;background:#ffd9d1;color:#8c1f14;box-shadow:0 5px 0 #a3261a}
+.tabs{position:absolute;left:16px;right:16px;bottom:14px;height:78px;background:#fff;border:3px solid #2b2140;border-radius:26px;box-shadow:0 5px 0 #2b2140;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:hidden}
+.tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:14px;font-weight:800;color:#7d6a52}
+.tab.on{color:#2b2140;background:#ffd34d}
+.mod{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:84px;padding:14px 16px;border:3px solid #2b2140;border-radius:20px;background:#fff;box-shadow:0 4px 0 #2b2140;font-size:17px;font-weight:800;color:#2b2140;text-align:left;box-sizing:border-box}
+.mod small{font-size:14px;font-weight:700;color:#7d6a52}
+.node{position:absolute;border-radius:50%;border:3px solid #2b2140;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-weight:800}
+</style>
+</helmet>
+<div style="width: 768px; height: 1024px; position: relative; overflow: hidden; background: #fff4e2; color: #2b2140; font-family: Nunito, sans-serif">
+
+<sc-if value="{{isHeute}}" hint-placeholder-val="{{ true }}">
+  <div class="scr">
+    <div style="display: flex; align-items: flex-end; gap: 14px">
+      <svg width="150" height="124" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22 M58 36 Q72 30 74 14"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path></svg>
+      <div class="stk" style="flex-grow: 1; border-radius: 26px 26px 26px 6px; padding: 18px 22px">
+        <h1 class="h" style="font-size: 36px">Hallo Robin!</h1>
+        <p style="margin: 6px 0 0; font-size: 18px; font-weight: 700; line-height: 1.4">Noch 5 Tage bis zur Mathearbeit. Heute sind die stumpfen Winkel dran.</p>
+      </div>
+    </div>
+    <div class="stk" style="background: #3557e8; color: #ffffff; display: flex; flex-direction: column; gap: 10px; padding: 26px">
+      <span style="font-size: 15px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #ffe08a">Als Nächstes · Mathe · Paket 2</span>
+      <strong class="h" style="font-size: 34px">Stumpfe Winkel erkennen</strong>
+      <span style="font-size: 17px; font-weight: 700; opacity: .92">10 Aufgaben · ca. 8 Minuten</span>
+      <button type="button" class="btn" style="align-self: flex-start; margin-top: 6px; background: #ffd34d" onClick="{{goUebung}}">Los geht’s!</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <span class="lab">Heute im Plan</span>
+      <div style="display: flex; align-items: center; gap: 0">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 200px"><span style="width: 64px; height: 64px; border-radius: 50%; border: 3px solid #2b2140; background: #ffd34d; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 0 #2b2140"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2b2140" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg></span><span style="font-size: 15px; font-weight: 800; text-align: center">Wissen lesen</span></div>
+        <span style="flex-grow: 1; border-top: 4px dotted #2b2140; margin-bottom: 30px"></span>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 200px"><span style="width: 76px; height: 76px; border-radius: 50%; border: 3px solid #2b2140; background: #3557e8; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 #2b2140; color: #fff; font: 800 28px 'Baloo 2', sans-serif">2</span><span style="font-size: 15px; font-weight: 800; text-align: center">Winkelart erkennen</span></div>
+        <span style="flex-grow: 1; border-top: 4px dotted #b9a383; margin-bottom: 30px"></span>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 200px"><span style="width: 64px; height: 64px; border-radius: 50%; border: 3px dashed #b9a383; display: flex; align-items: center; justify-content: center; color: #8d7a5f; font: 800 24px 'Baloo 2', sans-serif">3</span><span style="font-size: 15px; font-weight: 800; text-align: center; color: #7d6a52">Wiederholen</span></div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isFaecher}}" hint-placeholder-val="{{ false }}">
+  <div class="scr">
+    <h1 class="h" style="font-size: 44px">Deine Welten</h1>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+      <button type="button" class="stk" style="text-align: left; display: flex; flex-direction: column; gap: 8px; background: #3557e8; color: #fff; min-height: 220px" onClick="{{goFach}}">
+        <span style="font-size: 15px; font-weight: 800; text-transform: uppercase; color: #ffe08a">Mathe</span>
+        <strong class="h" style="font-size: 32px">Winkel-Akademie</strong>
+        <span style="margin-top: auto; font-size: 16px; font-weight: 700">Rang Komet · 1 von 8 Paketen</span>
+      </button>
+      <button type="button" class="stk" style="text-align: left; display: flex; flex-direction: column; gap: 8px; background: #13a596; color: #fff; min-height: 220px">
+        <span style="font-size: 15px; font-weight: 800; text-transform: uppercase; color: #d6fff7">NWT</span>
+        <strong class="h" style="font-size: 32px">Wasser-Zauberschule</strong>
+        <span style="margin-top: auto; font-size: 16px; font-weight: 700">Rang Funke · 3 von 6 Paketen</span>
+      </button>
+      <button type="button" class="stk" style="text-align: left; display: flex; flex-direction: column; gap: 8px; background: #ff6b4a; color: #2b2140; min-height: 220px">
+        <span style="font-size: 15px; font-weight: 800; text-transform: uppercase; color: #5a1a0c">Englisch</span>
+        <strong class="h" style="font-size: 32px">Küsten-Crew</strong>
+        <span style="margin-top: auto; font-size: 16px; font-weight: 700">Rang Schiffsjunge · 5 von 9</span>
+      </button>
+      <button type="button" class="stk" style="text-align: left; display: flex; flex-direction: column; gap: 8px; background: #f2a516; color: #2b2140; min-height: 220px">
+        <span style="font-size: 15px; font-weight: 800; text-transform: uppercase; color: #5a3a06">Deutsch</span>
+        <strong class="h" style="font-size: 32px">Detektiv-Büro</strong>
+        <span style="margin-top: auto; font-size: 16px; font-weight: 700">Rang Praktikant · 2 von 7</span>
+      </button>
+    </div>
+    <div class="stk" style="display: flex; align-items: center; gap: 16px; border-style: dashed; box-shadow: none; background: transparent">
+      <span style="width: 56px; height: 56px; border-radius: 50%; border: 3px solid #2b2140; background: #ffd34d; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2b2140" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span>
+      <div style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 19px; font-weight: 800">Neue Welt aus einem Arbeitsblatt</strong><span style="font-size: 15px; font-weight: 700; color: #7d6a52">Foto machen, Krabbi baut die Pakete · kommt bald</span></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isFach}}" hint-placeholder-val="{{ false }}">
+  <div class="scr" style="gap: 0">
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <button type="button" class="back" onClick="{{goFaecher}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Welten</button>
+      <span style="padding: 8px 16px; border: 3px solid #2b2140; border-radius: 999px; background: #ffd34d; font-weight: 800; font-size: 15px">Rang Komet · 280 Punkte</span>
+    </div>
+    <h1 class="h" style="font-size: 44px; margin-top: 14px">Winkel-Akademie</h1>
+    <div style="position: relative; flex-grow: 1">
+      <svg width="688" height="700" viewBox="0 0 688 700" style="position: absolute; left: 0; top: 0" aria-hidden="true"><path d="M140 60 C 420 60, 520 120, 500 190 S 180 260, 200 330 S 520 420, 480 480 S 160 560, 220 640" stroke="#2b2140" stroke-width="5" stroke-dasharray="2 14" stroke-linecap="round" fill="none"></path></svg>
+      <span class="node" style="left: 100px; top: 22px; width: 80px; height: 80px; background: #ffd34d; box-shadow: 0 5px 0 #2b2140"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2b2140" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg></span>
+      <span style="position: absolute; left: 196px; top: 46px; font-weight: 800; font-size: 17px">Spitz und recht</span>
+      <button type="button" class="node" style="left: 444px; top: 140px; width: 104px; height: 104px; background: #3557e8; color: #fff; font-size: 40px; box-shadow: 0 6px 0 #2b2140" onClick="{{goPaket}}" aria-label="Paket 2: Stumpf und gestreckt">2</button>
+      <button type="button" class="stk" style="position: absolute; left: 150px; top: 150px; padding: 12px 18px; text-align: left; border-radius: 20px 20px 6px 20px; display: flex; flex-direction: column; gap: 2px" onClick="{{goPaket}}"><strong style="font-size: 18px; font-weight: 800">Stumpf und gestreckt</strong><span style="font-size: 15px; font-weight: 700; color: #7d6a52">gerade dran · antippen</span></button>
+      <svg width="86" height="72" viewBox="-6 -20 104 86" style="position: absolute; left: 560px; top: 196px" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22 M58 36 Q72 34 72 22"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><circle cx="72" cy="17" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="31" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="47" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path></svg>
+      <span class="node" style="left: 160px; top: 292px; width: 80px; height: 80px; border-style: dashed; border-color: #b9a383; background: #fff4e2; color: #8d7a5f; font-size: 30px">3</span>
+      <span style="position: absolute; left: 256px; top: 316px; font-weight: 800; font-size: 17px; color: #7d6a52">Überstumpf</span>
+      <span class="node" style="left: 440px; top: 440px; width: 80px; height: 80px; border-style: dashed; border-color: #b9a383; background: #fff4e2; color: #8d7a5f; font-size: 30px">4</span>
+      <span style="position: absolute; left: 260px; top: 464px; font-weight: 800; font-size: 17px; color: #7d6a52">Grenzfälle</span>
+      <span class="node" style="left: 180px; top: 600px; width: 90px; height: 90px; border-color: #2b2140; background: #ff6b4a; box-shadow: 0 5px 0 #2b2140"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2b2140" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"></path><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"></path></svg></span>
+      <span style="position: absolute; left: 290px; top: 620px; display: flex; flex-direction: column"><strong style="font-weight: 800; font-size: 18px">Abschlusstest</strong><span style="font-weight: 700; font-size: 15px; color: #7d6a52">alle Pakete, mit Note</span></span>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isPaket}}" hint-placeholder-val="{{ false }}">
+  <div class="scr" style="gap: 18px">
+    <button type="button" class="back" onClick="{{goFach}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Winkel-Akademie</button>
+    <div class="stk" style="background: #3557e8; color: #fff; display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 15px; font-weight: 800; text-transform: uppercase; color: #ffe08a">Paket 2</span>
+      <h1 class="h" style="font-size: 38px">Stumpf und gestreckt</h1>
+      <p style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45">Stumpfe Winkel (zwischen 90° und 180°) und gestreckte Winkel (180°) erkennen und messen. Buch S. 13–14.</p>
+      <div style="display: flex; align-items: center; gap: 12px; margin-top: 6px"><span style="flex-grow: 1; height: 16px; border-radius: 999px; background: rgba(255,255,255,.3); border: 2px solid #2b2140; overflow: hidden"><span style="display: block; width: 60%; height: 100%; background: #ffd34d"></span></span><span style="font-weight: 800">12 von 20</span></div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+      <div style="grid-column: span 3" class="lab">Verstehen</div>
+      <button type="button" class="mod">Wissen lesen<small>5 Minuten</small></button>
+      <button type="button" class="mod" style="border-style: dashed; box-shadow: none; color: #7d6a52">Unterrichtsstunde<small>kommt bald</small></button>
+      <span></span>
+      <div style="grid-column: span 3" class="lab">Üben</div>
+      <button type="button" class="mod" style="background: #ffd34d" onClick="{{goUebung}}">Winkelart erkennen<small style="color: #5a3a06">Krabbi empfiehlt</small></button>
+      <button type="button" class="mod">Messen<small>mit Geodreieck</small></button>
+      <button type="button" class="mod">Schätzen<small>Augenmaß</small></button>
+      <div style="grid-column: span 3" class="lab">Erleben und Testen</div>
+      <button type="button" class="mod">Winkel zeichnen<small>mit dem Finger</small></button>
+      <button type="button" class="mod">Zeitrunde<small>60 Sekunden</small></button>
+      <button type="button" class="mod">Kurztest<small>mit Note</small></button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isUebung}}" hint-placeholder-val="{{ false }}">
+  <div class="scr full" style="gap: 22px">
+    <div style="display: flex; align-items: center; gap: 16px">
+      <button type="button" aria-label="Übung beenden" class="back" style="padding: 0 12px" onClick="{{goHeute}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      <span style="flex-grow: 1; height: 22px; border-radius: 999px; border: 3px solid #2b2140; background: #ffffff; overflow: hidden"><span style="display: block; width: 30%; height: 100%; background: #13a596"></span></span>
+      <span style="font-size: 17px; font-weight: 800">3 / 10</span>
+    </div>
+    <div class="stk" style="display: flex; justify-content: center; padding: 30px 20px; background: #fffdf8">
+      <svg width="560" height="250" viewBox="0 0 640 260" role="img" aria-label="Ein Winkel von 125 Grad"><path d="M300 230 L580 230" stroke="#2b2140" stroke-width="8" stroke-linecap="round"></path><path d="M300 230 L151 17" stroke="#3557e8" stroke-width="8" stroke-linecap="round"></path><path d="M360 230 A60 60 0 0 0 265.6 180.9" fill="#ffd34d" stroke="#2b2140" stroke-width="3"></path><circle cx="300" cy="230" r="9" fill="#2b2140"></circle></svg>
+    </div>
+    <h2 class="h" style="font-size: 32px; text-align: center">Welche Winkelart ist das?</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+      <sc-for list="{{opts}}" as="o" hint-placeholder-count="4">
+        <button type="button" class="ans {{o.cls}}" onClick="{{o.pick}}">{{o.t}}</button>
+      </sc-for>
+    </div>
+    <sc-if value="{{answered}}" hint-placeholder-val="{{ false }}">
+      <div class="stk" style="display: flex; align-items: center; gap: 16px; background: {{fbBg}}; margin-top: auto">
+        <span style="flex-grow: 1; font-size: 19px; font-weight: 800; line-height: 1.4">{{fbText}}</span>
+        <button type="button" class="btn" style="background: #ffd34d" onClick="{{goErgebnis}}">Weiter</button>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{isErgebnis}}" hint-placeholder-val="{{ false }}">
+  <div class="scr full" style="align-items: center; justify-content: center; text-align: center; gap: 22px; background: #ffe6a8">
+    <div style="display: flex; gap: 10px">
+      <svg width="70" height="70" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2 6.4 20.2l1.1-6.3L2.9 9.5l6.3-.9z" fill="#ffd34d" stroke="#2b2140" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+      <svg width="86" height="86" viewBox="0 0 24 24" style="margin-top: -14px" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2 6.4 20.2l1.1-6.3L2.9 9.5l6.3-.9z" fill="#ffd34d" stroke="#2b2140" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+      <svg width="70" height="70" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2 6.4 20.2l1.1-6.3L2.9 9.5l6.3-.9z" fill="#ffd34d" stroke="#2b2140" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+    </div>
+    <h1 class="h" style="font-size: 56px">Super, Robin!</h1>
+    <p style="margin: 0; font-size: 22px; font-weight: 800">9 von 10 richtig · +45 Punkte</p>
+    <div class="stk" style="width: 540px; display: flex; align-items: center; gap: 14px; text-align: left">
+      <svg width="90" height="74" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 30 6 14 M58 36 Q72 30 74 14"></path></g><circle cx="6" cy="9" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M32 44 Q40 56 48 44 Z" fill="#7A2A1A"></path></svg>
+      <span style="font-size: 18px; font-weight: 800; line-height: 1.4">Noch eine gute Runde, dann sitzt Paket 2 und der Weg geht weiter.</span>
+    </div>
+    <div style="display: flex; gap: 16px">
+      <button type="button" class="btn2" onClick="{{goUebung}}">Noch eine Runde</button>
+      <button type="button" class="btn" onClick="{{goHeute}}">Weiter im Plan</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isGemeinsam}}" hint-placeholder-val="{{ false }}">
+  <div class="scr">
+    <h1 class="h" style="font-size: 44px">Gemeinsam</h1>
+    <div style="display: flex; gap: 12px"><span style="padding: 10px 20px; border: 3px solid #2b2140; border-radius: 999px; background: #ffd34d; font-weight: 800">Familie</span><span style="padding: 10px 20px; border: 3px solid #2b2140; border-radius: 999px; background: #fff; font-weight: 800">Klasse 6b</span></div>
+    <div class="stk" style="display: flex; align-items: flex-end; justify-content: center; gap: 22px; padding-top: 30px">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><strong style="font-size: 18px">Tina</strong><span style="width: 130px; height: 110px; border: 3px solid #2b2140; border-radius: 14px 14px 0 0; background: #13a596; display: flex; align-items: center; justify-content: center; color: #fff; font: 800 34px 'Baloo 2', sans-serif">2</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><strong style="font-size: 20px">Robin</strong><span style="width: 140px; height: 150px; border: 3px solid #2b2140; border-radius: 14px 14px 0 0; background: #ffd34d; display: flex; align-items: center; justify-content: center; font: 800 40px 'Baloo 2', sans-serif">1</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><strong style="font-size: 18px">Roya</strong><span style="width: 130px; height: 84px; border: 3px solid #2b2140; border-radius: 14px 14px 0 0; background: #ff6b4a; display: flex; align-items: center; justify-content: center; font: 800 30px 'Baloo 2', sans-serif">3</span></div>
+    </div>
+    <div class="stk" style="display: flex; align-items: center; gap: 16px; background: #3557e8; color: #fff">
+      <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1"><strong class="h" style="font-size: 26px">Tauziehen-Duell</strong><span style="font-size: 16px; font-weight: 700">Fragen beantworten, das Seil zu sich ziehen</span></div>
+      <button type="button" class="btn" style="background: #ffd34d">Herausfordern</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isIch}}" hint-placeholder-val="{{ false }}">
+  <div class="scr">
+    <div style="display: flex; align-items: center; gap: 18px">
+      <span style="width: 84px; height: 84px; border-radius: 50%; border: 3px solid #2b2140; background: #ffd34d; display: flex; align-items: center; justify-content: center; font: 800 36px 'Baloo 2', sans-serif; box-shadow: 0 4px 0 #2b2140">R</span>
+      <div><h1 class="h" style="font-size: 40px">Robin</h1><span style="font-size: 17px; font-weight: 700; color: #7d6a52">2.840 Punkte · 4 Ränge</span></div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+      <button type="button" class="mod">Lernplan<small>Mathearbeit in 5 Tagen</small></button>
+      <button type="button" class="mod">Abzeichen<small>12 gesammelt</small></button>
+      <button type="button" class="mod">Einstellungen<small>Ton, Schrift, Farben</small></button>
+      <button type="button" class="mod">Geräte verbinden<small>Lernstand mitnehmen</small></button>
+      <button type="button" class="mod" style="grid-column: span 2; background: #fffdf8; flex-direction: row; align-items: center; gap: 14px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2b2140" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Für Eltern<small>mit Code</small></button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{showTabs}}" hint-placeholder-val="{{ true }}">
+  <nav class="tabs" aria-label="Hauptmenü">
+    <button type="button" class="tab {{tH}}" onClick="{{goHeute}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Heute</button>
+    <button type="button" class="tab {{tF}}" onClick="{{goFaecher}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"></path></svg>Welten</button>
+    <button type="button" class="tab {{tG}}" onClick="{{goGemeinsam}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><circle cx="17" cy="9" r="2.8"></circle><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"></path></svg>Gemeinsam</button>
+    <button type="button" class="tab {{tI}}" onClick="{{goIch}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"></path></svg>Ich</button>
+  </nav>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { scr: 'heute', ans: null }; }
+  renderVals() {
+    const s = this.state.scr, a = this.state.ans;
+    const go = (k) => () => this.setState({ scr: k, ans: null });
+    const names = ['spitz', 'recht', 'stumpf', 'gestreckt'];
+    const opts = names.map((t, i) => ({ t, cls: a === null ? '' : (i === 2 ? 'ok' : (i === a ? 'bad' : '')), pick: () => { if (this.state.ans === null) this.setState({ ans: i }); } }));
+    const ok = a === 2;
+    const fach = s === 'faecher' || s === 'fach' || s === 'paket';
+    return {
+      isHeute: s === 'heute', isFaecher: s === 'faecher', isFach: s === 'fach', isPaket: s === 'paket',
+      isUebung: s === 'uebung', isErgebnis: s === 'ergebnis', isGemeinsam: s === 'gemeinsam', isIch: s === 'ich',
+      showTabs: s !== 'uebung' && s !== 'ergebnis',
+      tH: s === 'heute' ? 'on' : '', tF: fach ? 'on' : '', tG: s === 'gemeinsam' ? 'on' : '', tI: s === 'ich' ? 'on' : '',
+      goHeute: go('heute'), goFaecher: go('faecher'), goFach: go('fach'), goPaket: go('paket'), goUebung: go('uebung'),
+      goErgebnis: go('ergebnis'), goGemeinsam: go('gemeinsam'), goIch: go('ich'),
+      opts, answered: a !== null,
+      fbBg: ok ? '#c9f2d9' : '#ffd9d1',
+      fbText: ok ? 'Richtig! Zwischen 90° und 180° heißt der Winkel stumpf.' : 'Fast! Größer als 90° und kleiner als 180°, das ist stumpf.'
+    };
+  }
+}
+</script>
+</body>
+</html>

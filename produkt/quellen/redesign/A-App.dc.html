@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Richtung A: Klick-Dummy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:Lexend,sans-serif;cursor:pointer}
+.scr{position:absolute;left:0;right:0;top:0;bottom:96px;padding:36px 40px;box-sizing:border-box;display:flex;flex-direction:column;gap:22px;overflow:hidden}
+.full{bottom:0}
+.lab{font-size:14px;font-weight:600;color:#5a6185}
+.card{background:#fff;border:1px solid #e3e6ef;border-radius:24px;padding:24px;box-sizing:border-box}
+.btn{min-height:60px;padding:0 30px;border:0;border-radius:18px;background:#2f4be0;color:#fff;font-size:19px;font-weight:600}
+.btn2{min-height:60px;padding:0 26px;border:2px solid #dfe2ec;border-radius:18px;background:#fff;color:#18203a;font-size:18px;font-weight:600}
+.back{align-self:flex-start;display:flex;align-items:center;gap:6px;min-height:44px;padding:0 14px 0 8px;border:0;border-radius:12px;background:transparent;color:#2f4be0;font-size:17px;font-weight:600}
+.row{display:flex;align-items:center;gap:16px;min-height:64px;padding:12px 18px;border:1px solid #e3e6ef;border-radius:18px;background:#fff;text-align:left;color:#18203a;font-size:17px;font-weight:500;width:100%;box-sizing:border-box}
+.chip{padding:5px 12px;border-radius:999px;font-size:14px;font-weight:600;white-space:nowrap}
+.sitzt{background:#e3f3ea;color:#17703d}.uebt{background:#fbeedd;color:#8f4b10}.neu{background:#eceef5;color:#4a5175}
+.bar{height:10px;border-radius:999px;background:#e3e6ef;overflow:hidden}.bar i{display:block;height:100%;border-radius:999px;background:#2f4be0}
+.ans{min-height:76px;border:2px solid #dfe2ec;border-radius:18px;background:#fff;color:#18203a;font-size:21px;font-weight:600}
+.ans.ok{border-color:#1f8a4c;background:#e3f3ea;color:#17703d}.ans.bad{border-color:#c2361f;background:#fbe6e1;color:#a12b17}
+.tabs{position:absolute;left:0;right:0;bottom:0;height:96px;background:#fff;border-top:1px solid #e3e6ef;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:600;color:#6b7194}
+.tab.on{color:#2f4be0}
+.grp{display:flex;flex-direction:column;gap:10px}
+.mod{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:0 18px;border:1px solid #e3e6ef;border-radius:16px;background:#fff;font-size:17px;font-weight:500;color:#18203a;text-align:left;width:100%;box-sizing:border-box}
+</style>
+</helmet>
+<div style="width: 768px; height: 1024px; position: relative; overflow: hidden; background: #f4f5f8; color: #18203a; font-family: Lexend, sans-serif">
+
+<sc-if value="{{isHeute}}" hint-placeholder-val="{{ true }}">
+  <div class="scr">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span class="lab">Donnerstag, 12. November</span>
+        <h1 style="margin: 0; font-size: 36px; font-weight: 700">Hallo Robin</h1>
+      </div>
+      <span style="width: 52px; height: 52px; border-radius: 50%; background: #2f4be0; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700" aria-label="Robin">R</span>
+    </div>
+    <div class="card" style="background: #2f4be0; border: 0; color: #ffffff; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <span style="font-size: 17px; font-weight: 500; opacity: .9">Mathearbeit · Winkel</span>
+        <span style="font-size: 17px; font-weight: 500; opacity: .9">Lernplan Tag 2 von 7</span>
+      </div>
+      <strong style="font-size: 34px; font-weight: 700">in 5 Tagen</strong>
+      <div style="height: 10px; border-radius: 999px; background: rgba(255,255,255,.25); overflow: hidden"><div style="width: 28%; height: 100%; background: #ffffff; border-radius: 999px"></div></div>
+    </div>
+    <div class="card" style="display: flex; flex-direction: column; gap: 14px; padding: 28px">
+      <span class="lab">Als Nächstes</span>
+      <strong style="font-size: 28px; font-weight: 700; line-height: 1.15">Stumpfe Winkel erkennen</strong>
+      <span style="font-size: 17px; color: #4a5175">Mathe · Paket 2 · Winkelart erkennen · ca. 8 Minuten</span>
+      <button type="button" class="btn" style="align-self: flex-start; margin-top: 6px" onClick="{{goUebung}}">Los geht’s</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <span class="lab">Heute im Plan</span>
+      <div class="row"><span style="width: 32px; height: 32px; border-radius: 50%; background: #1f8a4c; color: #fff; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg></span><span style="flex-grow: 1; color: #6b7194; text-decoration: line-through">Wissen: Stumpf und gestreckt</span><span class="lab">5 Min.</span></div>
+      <div class="row" style="border: 2px solid #2f4be0"><span style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #2f4be0; box-sizing: border-box"></span><span style="flex-grow: 1; font-weight: 600">Winkelart erkennen</span><span class="lab">8 Min.</span></div>
+      <div class="row"><span style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #c9cde0; box-sizing: border-box"></span><span style="flex-grow: 1">Wiederholen: Spitz und recht</span><span class="lab">5 Min.</span></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isFaecher}}" hint-placeholder-val="{{ false }}">
+  <div class="scr">
+    <h1 style="margin: 0; font-size: 36px; font-weight: 700">Fächer</h1>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+      <button type="button" class="card" style="text-align: left; display: flex; flex-direction: column; gap: 12px; border-top: 8px solid #2f4be0; color: #18203a" onClick="{{goFach}}">
+        <span class="lab" style="color: #2f4be0">Mathe</span>
+        <strong style="font-size: 24px; font-weight: 700">Winkel-Akademie</strong>
+        <span style="font-size: 15px; color: #4a5175">1 von 8 Paketen sitzt</span>
+        <span class="bar" style="width: 100%"><i style="width: 18%"></i></span>
+      </button>
+      <button type="button" class="card" style="text-align: left; display: flex; flex-direction: column; gap: 12px; border-top: 8px solid #0e8a7e; color: #18203a">
+        <span class="lab" style="color: #0e8a7e">NWT</span>
+        <strong style="font-size: 24px; font-weight: 700">Wasser-Zauberschule</strong>
+        <span style="font-size: 15px; color: #4a5175">3 von 6 Paketen sitzen</span>
+        <span class="bar" style="width: 100%"><i style="width: 50%; background: #0e8a7e"></i></span>
+      </button>
+      <button type="button" class="card" style="text-align: left; display: flex; flex-direction: column; gap: 12px; border-top: 8px solid #e0583a; color: #18203a">
+        <span class="lab" style="color: #c2461f">Englisch</span>
+        <strong style="font-size: 24px; font-weight: 700">Küsten-Crew</strong>
+        <span style="font-size: 15px; color: #4a5175">5 von 9 Paketen sitzen</span>
+        <span class="bar" style="width: 100%"><i style="width: 56%; background: #e0583a"></i></span>
+      </button>
+      <button type="button" class="card" style="text-align: left; display: flex; flex-direction: column; gap: 12px; border-top: 8px solid #c27a12; color: #18203a">
+        <span class="lab" style="color: #9a5f0c">Deutsch</span>
+        <strong style="font-size: 24px; font-weight: 700">Detektiv-Büro</strong>
+        <span style="font-size: 15px; color: #4a5175">2 von 7 Paketen sitzen</span>
+        <span class="bar" style="width: 100%"><i style="width: 28%; background: #c27a12"></i></span>
+      </button>
+    </div>
+    <div class="card" style="display: flex; align-items: center; gap: 18px">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2f4be0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1"><strong style="font-size: 19px">Neues Lernmaterial hinzufügen</strong><span style="font-size: 15px; color: #4a5175">Arbeitsblatt fotografieren, die App macht Pakete daraus · kommt bald</span></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isFach}}" hint-placeholder-val="{{ false }}">
+  <div class="scr">
+    <button type="button" class="back" onClick="{{goFaecher}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Fächer</button>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end">
+      <div style="display: flex; flex-direction: column; gap: 4px"><span class="lab" style="color: #2f4be0">Mathe</span><h1 style="margin: 0; font-size: 36px; font-weight: 700">Winkel-Akademie</h1></div>
+      <span class="chip neu">Rang: Komet</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <button type="button" class="row"><span style="width: 40px; font-weight: 700; color: #2f4be0">1</span><span style="flex-grow: 1">Spitz und recht</span><span class="chip sitzt">sitzt</span></button>
+      <button type="button" class="row" style="border: 2px solid #2f4be0" onClick="{{goPaket}}"><span style="width: 40px; font-weight: 700; color: #2f4be0">2</span><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px"><span style="font-weight: 600">Stumpf und gestreckt</span><span class="bar" style="width: 70%"><i style="width: 60%; background: #b8641a"></i></span></span><span class="chip uebt">übt</span></button>
+      <button type="button" class="row"><span style="width: 40px; font-weight: 700; color: #2f4be0">3</span><span style="flex-grow: 1">Überstumpf</span><span class="chip neu">neu</span></button>
+      <button type="button" class="row"><span style="width: 40px; font-weight: 700; color: #2f4be0">4</span><span style="flex-grow: 1">Null, voll und Grenzfälle</span><span class="chip neu">neu</span></button>
+      <button type="button" class="row"><span style="width: 40px; font-weight: 700; color: #2f4be0">5</span><span style="flex-grow: 1">Kompass und Kurs</span><span class="chip neu">neu</span></button>
+      <button type="button" class="row"><span style="width: 40px; font-weight: 700; color: #2f4be0">6</span><span style="flex-grow: 1">Winkel benennen</span><span class="chip neu">neu</span></button>
+    </div>
+    <div class="card" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #eef1ff; border: 0">
+      <div style="display: flex; flex-direction: column; gap: 4px"><strong style="font-size: 19px">Abschlusstest</strong><span style="font-size: 15px; color: #4a5175">Alle Pakete, wie in der Arbeit, mit Note</span></div>
+      <button type="button" class="btn2">Starten</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isPaket}}" hint-placeholder-val="{{ false }}">
+  <div class="scr" style="gap: 18px">
+    <button type="button" class="back" onClick="{{goFach}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Winkel-Akademie</button>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span class="lab" style="color: #2f4be0">Paket 2</span>
+      <h1 style="margin: 0; font-size: 34px; font-weight: 700">Stumpf und gestreckt</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 1.5; color: #4a5175">Stumpfe Winkel (zwischen 90° und 180°) und gestreckte Winkel (180°) erkennen und messen. Buch S. 13–14.</p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px"><span class="chip uebt">übt</span><span class="bar" style="flex-grow: 1"><i style="width: 60%; background: #b8641a"></i></span><span style="font-size: 15px; color: #4a5175">12 von 20 richtig</span></div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 20px">
+      <div class="grp"><span class="lab">Verstehen</span>
+        <button type="button" class="mod"><span>Wissen lesen</span><span class="lab">5 Min.</span></button>
+        <button type="button" class="mod" style="color: #6b7194"><span>Unterrichtsstunde</span><span class="chip neu">bald</span></button>
+      </div>
+      <div class="grp"><span class="lab">Üben</span>
+        <button type="button" class="mod" style="border: 2px solid #2f4be0" onClick="{{goUebung}}"><span style="font-weight: 600">Winkelart erkennen</span><span class="chip" style="background: #2f4be0; color: #fff">empfohlen</span></button>
+        <button type="button" class="mod"><span>Messen mit Geodreieck</span></button>
+        <button type="button" class="mod"><span>Schätzen</span></button>
+      </div>
+      <div class="grp"><span class="lab">Erleben</span>
+        <button type="button" class="mod"><span>Winkel zeichnen</span></button>
+        <button type="button" class="mod"><span>Zeitrunde</span><span class="lab">60 s</span></button>
+      </div>
+      <div class="grp"><span class="lab">Testen</span>
+        <button type="button" class="mod"><span>Kurztest zum Paket</span><span class="lab">mit Note</span></button>
+        <button type="button" class="mod"><span>Duell</span></button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isUebung}}" hint-placeholder-val="{{ false }}">
+  <div class="scr full" style="gap: 24px">
+    <div style="display: flex; align-items: center; gap: 18px">
+      <button type="button" aria-label="Übung beenden" style="width: 48px; height: 48px; border: 0; border-radius: 14px; background: #e8eaf2; color: #18203a; display: flex; align-items: center; justify-content: center" onClick="{{goHeute}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      <span class="bar" style="flex-grow: 1; height: 14px"><i style="width: 30%"></i></span>
+      <span style="font-size: 16px; font-weight: 600; color: #4a5175">3 von 10</span>
+    </div>
+    <div class="card" style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 36px 24px">
+      <svg width="560" height="250" viewBox="0 0 640 260" role="img" aria-label="Ein Winkel von 125 Grad"><path d="M300 230 L580 230" stroke="#18203a" stroke-width="6" stroke-linecap="round"></path><path d="M300 230 L151 17" stroke="#2f4be0" stroke-width="6" stroke-linecap="round"></path><path d="M360 230 A60 60 0 0 0 265.6 180.9" fill="rgba(47,75,224,.12)" stroke="#2f4be0" stroke-width="3"></path><circle cx="300" cy="230" r="7" fill="#18203a"></circle></svg>
+    </div>
+    <h2 style="margin: 0; font-size: 28px; font-weight: 700; text-align: center">Welche Winkelart ist das?</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+      <sc-for list="{{opts}}" as="o" hint-placeholder-count="4">
+        <button type="button" class="ans {{o.cls}}" onClick="{{o.pick}}">{{o.t}}</button>
+      </sc-for>
+    </div>
+    <sc-if value="{{answered}}" hint-placeholder-val="{{ false }}">
+      <div class="card" style="display: flex; align-items: center; gap: 18px; background: {{fbBg}}; border: 0; margin-top: auto">
+        <span style="flex-grow: 1; font-size: 18px; line-height: 1.45; font-weight: 500; color: {{fbInk}}">{{fbText}}</span>
+        <button type="button" class="btn" onClick="{{goErgebnis}}">Weiter</button>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{isErgebnis}}" hint-placeholder-val="{{ false }}">
+  <div class="scr full" style="align-items: center; justify-content: center; text-align: center; gap: 24px">
+    <svg width="150" height="124" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 30 6 14 M58 36 Q72 30 74 14"></path></g><circle cx="6" cy="9" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M32 44 Q40 56 48 44 Z" fill="#7A2A1A"></path></svg>
+    <h1 style="margin: 0; font-size: 44px; font-weight: 700">Geschafft!</h1>
+    <p style="margin: 0; font-size: 22px; color: #4a5175">9 von 10 richtig · +45 Punkte</p>
+    <div class="card" style="width: 520px; display: flex; flex-direction: column; gap: 12px; text-align: left">
+      <div style="display: flex; justify-content: space-between"><strong style="font-size: 18px">Stumpf und gestreckt</strong><span class="chip uebt">fast sicher</span></div>
+      <span class="bar"><i style="width: 85%; background: #b8641a"></i></span>
+      <span style="font-size: 15px; color: #4a5175">Noch eine gute Runde, dann sitzt das Paket.</span>
+    </div>
+    <div style="display: flex; gap: 14px">
+      <button type="button" class="btn2" onClick="{{goUebung}}">Noch eine Runde</button>
+      <button type="button" class="btn" onClick="{{goHeute}}">Weiter im Plan</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isGemeinsam}}" hint-placeholder-val="{{ false }}">
+  <div class="scr">
+    <h1 style="margin: 0; font-size: 36px; font-weight: 700">Gemeinsam</h1>
+    <div style="display: flex; gap: 10px"><span class="chip" style="background: #2f4be0; color: #fff; font-size: 16px; padding: 10px 18px">Familie</span><span class="chip neu" style="font-size: 16px; padding: 10px 18px">Klasse 6b</span><span class="chip neu" style="font-size: 16px; padding: 10px 18px">+ Lerngruppe</span></div>
+    <div class="card" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 24px">
+      <div style="display: flex; align-items: center; gap: 16px; min-height: 60px; border-bottom: 1px solid #eceef5"><strong style="width: 28px">1</strong><span style="flex-grow: 1; font-weight: 600">Robin</span><span style="font-weight: 600">1.520</span></div>
+      <div style="display: flex; align-items: center; gap: 16px; min-height: 60px; border-bottom: 1px solid #eceef5"><strong style="width: 28px">2</strong><span style="flex-grow: 1">Tina</span><span>960</span></div>
+      <div style="display: flex; align-items: center; gap: 16px; min-height: 60px"><strong style="width: 28px">3</strong><span style="flex-grow: 1">Roya</span><span>940</span></div>
+    </div>
+    <div class="card" style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 4px"><strong style="font-size: 19px">Duell</strong><span style="font-size: 15px; color: #4a5175">Tauziehen mit Fragen, live oder als Geister-Duell</span></div>
+      <button type="button" class="btn">Herausfordern</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isIch}}" hint-placeholder-val="{{ false }}">
+  <div class="scr">
+    <div style="display: flex; align-items: center; gap: 18px">
+      <span style="width: 72px; height: 72px; border-radius: 50%; background: #2f4be0; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700">R</span>
+      <div style="display: flex; flex-direction: column; gap: 4px"><h1 style="margin: 0; font-size: 32px; font-weight: 700">Robin</h1><span style="font-size: 16px; color: #4a5175">Klasse 6 · 2.840 Punkte</span></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <button type="button" class="row"><span style="flex-grow: 1">Lernplan</span><span class="lab">Mathearbeit in 5 Tagen</span></button>
+      <button type="button" class="row"><span style="flex-grow: 1">Ränge und Abzeichen</span><span class="lab">4 Fächer</span></button>
+      <button type="button" class="row"><span style="flex-grow: 1">Einstellungen</span><span class="lab">Ton, Schriftgröße, Dunkel</span></button>
+      <button type="button" class="row"><span style="flex-grow: 1">Geräte verbinden</span></button>
+      <button type="button" class="row" style="background: #eef1ff; border: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2f4be0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><span style="flex-grow: 1; font-weight: 600">Für Eltern</span><span class="lab">mit Code</span></button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{showTabs}}" hint-placeholder-val="{{ true }}">
+  <nav class="tabs" aria-label="Hauptmenü">
+    <button type="button" class="tab {{tH}}" onClick="{{goHeute}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Heute</button>
+    <button type="button" class="tab {{tF}}" onClick="{{goFaecher}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect x="14" y="3" width="7" height="7" rx="2"></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"></rect></svg>Fächer</button>
+    <button type="button" class="tab {{tG}}" onClick="{{goGemeinsam}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><circle cx="17" cy="9" r="2.8"></circle><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"></path></svg>Gemeinsam</button>
+    <button type="button" class="tab {{tI}}" onClick="{{goIch}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"></path></svg>Ich</button>
+  </nav>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { scr: 'heute', ans: null }; }
+  renderVals() {
+    const s = this.state.scr, a = this.state.ans;
+    const go = (k) => () => this.setState({ scr: k, ans: null });
+    const names = ['spitz', 'recht', 'stumpf', 'gestreckt'];
+    const opts = names.map((t, i) => ({ t, cls: a === null ? '' : (i === 2 ? 'ok' : (i === a ? 'bad' : '')), pick: () => { if (this.state.ans === null) this.setState({ ans: i }); } }));
+    const ok = a === 2;
+    const fach = s === 'faecher' || s === 'fach' || s === 'paket';
+    return {
+      isHeute: s === 'heute', isFaecher: s === 'faecher', isFach: s === 'fach', isPaket: s === 'paket',
+      isUebung: s === 'uebung', isErgebnis: s === 'ergebnis', isGemeinsam: s === 'gemeinsam', isIch: s === 'ich',
+      showTabs: s !== 'uebung' && s !== 'ergebnis',
+      tH: s === 'heute' ? 'on' : '', tF: fach ? 'on' : '', tG: s === 'gemeinsam' ? 'on' : '', tI: s === 'ich' ? 'on' : '',
+      goHeute: go('heute'), goFaecher: go('faecher'), goFach: go('fach'), goPaket: go('paket'), goUebung: go('uebung'),
+      goErgebnis: go('ergebnis'), goGemeinsam: go('gemeinsam'), goIch: go('ich'),
+      opts, answered: a !== null,
+      fbBg: ok ? '#e3f3ea' : '#fbe6e1', fbInk: ok ? '#17703d' : '#a12b17',
+      fbText: ok ? 'Richtig! Zwischen 90° und 180° heißt der Winkel stumpf.' : 'Nicht ganz. Der Winkel ist größer als 90° und kleiner als 180°, also stumpf.'
+    };
+  }
+}
+</script>
+</body>
+</html>

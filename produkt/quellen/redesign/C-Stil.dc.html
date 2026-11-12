@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Richtung C: Stilblatt</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.lab{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#a9aec6}
+.sw{display:flex;flex-direction:column;gap:6px;font-size:13px;color:#a9aec6}
+.sw i{display:block;height:56px;border-radius:12px}
+</style>
+</helmet>
+<div style="width: 768px; height: 1024px; box-sizing: border-box; padding: 44px; background: #12141d; color: #eef0f8; font-family: Inter, sans-serif; display: flex; flex-direction: column; gap: 30px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <span class="lab" style="color: #c6f432">Richtung C</span>
+    <h1 style="margin: 0; font-size: 44px; font-weight: 700; font-family: 'Space Grotesk', sans-serif">Studio</h1>
+    <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #a9aec6">Wie eine App für Große: dunkel, klare Zahlen, kräftige Akzente. Krabbi taucht nur bei Lob und Tipps auf. Eine helle Fassung gehört dazu.</p>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span class="lab">Farben</span>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px">
+      <div class="sw"><i style="background:#12141d;border:1px solid #2c3146"></i>Grund</div>
+      <div class="sw"><i style="background:#1c2030;border:1px solid #2c3146"></i>Karte</div>
+      <div class="sw"><i style="background:#c6f432"></i>Aktion</div>
+      <div class="sw"><i style="background:#7c8cff"></i>Mathe</div>
+      <div class="sw"><i style="background:#3fe0c5"></i>NWT</div>
+      <div class="sw"><i style="background:#ff8a65"></i>Englisch</div>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <span class="lab">Schrift: Space Grotesk für Zahlen und Titel, Inter für Text</span>
+    <div style="font-family: 'Space Grotesk', sans-serif; font-size: 72px; font-weight: 700; line-height: 1; color: #c6f432">5 Tage</div>
+    <div style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 600">Überschrift 26 · Als Nächstes</div>
+    <div style="font-size: 17px; line-height: 1.5; color: #d6d9e8">Text 17 · Zwischen 90° und 180° heißt der Winkel stumpf.</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <span class="lab">Bausteine</span>
+    <div style="display: flex; gap: 12px; align-items: center">
+      <button type="button" style="min-height: 58px; padding: 0 28px; border: 0; border-radius: 14px; background: #c6f432; color: #12141d; font: 600 18px Inter, sans-serif">Starten</button>
+      <button type="button" style="min-height: 58px; padding: 0 24px; border: 1px solid #3a4058; border-radius: 14px; background: #1c2030; color: #eef0f8; font: 600 17px Inter, sans-serif">Noch eine Runde</button>
+      <svg width="64" height="64" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="#2c3146" stroke-width="5"></circle><circle cx="18" cy="18" r="15" fill="none" stroke="#7c8cff" stroke-width="5" stroke-dasharray="57 95" stroke-linecap="round" transform="rotate(-90 18 18)"></circle></svg>
+      <span style="font-size: 14px; color: #a9aec6">Fortschritt als Ring</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <button type="button" style="min-height: 64px; border: 1px solid #3a4058; border-radius: 14px; background: #1c2030; font: 600 18px Inter, sans-serif; color: #eef0f8">Antwort</button>
+      <button type="button" style="min-height: 64px; border: 2px solid #c6f432; border-radius: 14px; background: #2a3315; font: 600 18px Inter, sans-serif; color: #e4ff8a">richtig</button>
+      <button type="button" style="min-height: 64px; border: 2px solid #ff6b6b; border-radius: 14px; background: #3a1d24; font: 600 18px Inter, sans-serif; color: #ffb3b3">falsch</button>
+    </div>
+  </div>
+  <div style="display: flex; gap: 14px; margin-top: auto">
+    <div style="flex: 1; background: #1c2030; border: 1px solid #2c3146; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 6px"><span class="lab">Serie</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 36px">4 Tage</strong></div>
+    <div style="flex: 1; background: #f4f5f8; color: #12141d; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 6px"><span class="lab" style="color: #4a5175">Helle Fassung</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 36px">4 Tage</strong></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

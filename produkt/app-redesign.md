@@ -1,0 +1,74 @@
+# App-Redesign: Konzept und erste Entwürfe
+
+Stand: 12.11.2026 · in Arbeit
+
+**Warum:** Die App ist historisch gewachsen. Jede Lernwelt sieht anders aus, die Startseite ist voll, vieles ist Text, und es gibt keinen eigenen Stil. Bevor neue Funktionen kommen (siehe `funktionen.html`, Teil B), soll die App aufgeräumt, schnell verständlich, zugänglich und auf ein professionelles Niveau gebracht werden. Danach werden Produktseite und Videos mit den neuen Bildschirmen neu gemacht. Inhalt und Aufbau der Produktseite bleiben (`produktseite.md`).
+
+**Entwürfe:** eigene Design-Arbeitsfläche „App-Redesign Lernzentrale“ (getrennt von der Produktseite), Link: https://claude.ai/artifact/4dGcpa3J5DwZv9Be49Upyj (privat, nur für die Besitzerin sichtbar, bis sie geteilt wird). Kopie der Quellen in `produkt/quellen/redesign/`.
+
+## Was heute stört (Bestandsaufnahme)
+
+- **Jede Lernwelt ist eine eigene App:** eigene Schrift (z. B. Schreibmaschine im Detektiv-Büro), eigene Kopfleiste, eigener Aufbau. Man muss jedes Fach neu lernen.
+- **Startseite überladen:** Anmeldung, Personenwahl, Lernplan, „Heute lohnt sich“, vier App-Karten mit je zwei Knöpfen, Arena, Lerngruppen, Rangliste, Neuigkeiten. Es ist nicht klar, was man jetzt tun soll.
+- **Kopfleiste nur aus Emojis** (🏠 ⚔️ 📄 🙂 🗓️ 🔊), ohne Beschriftung; auf schmalen Geräten rutscht sie aus dem Bild.
+- **Erst Pakete ankreuzen, dann Modus wählen:** zwei getrennte Schritte, und viele Modi stehen gleichberechtigt nebeneinander (8–10 pro Fach).
+- **Paketkarten voller Text:** Lernziel, Buchseite, „Fortschritt: 0 von 16 Treffern (aus den letzten 20 Aufgaben)“, „Volle Punkte – neu“.
+- **Einstellungen mittendrin** (Leicht/Profi, Rekorde, Zurücksetzen) zwischen den Lerninhalten.
+
+## Grundsätze für die neue App
+
+Aus der Recherche (Nielsen Norman Group zu Kindern 3–12, Analysen von Duolingo und Khan Academy Kids) und aus der Bestandsaufnahme:
+
+1. **Eine App, ein Stil.** Alle Fächer nutzen dieselben Bausteine. Ein Fach erkennt man an Farbe, Name und Bild, nicht an anderer Bedienung.
+2. **Immer klar, was als Nächstes dran ist.** Die Startseite heißt „Heute“ und zeigt eine große Karte „Als Nächstes“ (aus Lernplan und „lohnt sich“), dazu den Countdown zur Arbeit. Duolingo hat aus demselben Grund auf einen einzigen Weg umgestellt.
+3. **Flache Navigation.** Unten vier Reiter: Heute · Fächer · Gemeinsam · Ich. Höchstens drei Ebenen bis zur Übung (Fach → Paket → Übung).
+4. **Eine Aufgabe pro Bildschirm.** In der Übung keine Leisten, nur Fortschritt, Aufgabe, große Antworten, Rückmeldung.
+5. **Große Tippflächen** (mindestens 56–64 px hoch), Text mindestens 16–17 px, gute Kontraste (WCAG AA). Farbe nie als einziges Signal (immer auch Wort oder Häkchen).
+6. **Symbole statt Emojis:** eine Liniensymbol-Familie mit Beschriftung.
+7. **Fortschritt als Bild** (Balken, Ring, Weg) und ein Wort („neu“, „übt“, „sitzt“) statt Zahlenkolonnen. Zahlen nur auf Nachfrage.
+8. **Module nach Zweck sortiert** statt als lange Liste: Verstehen · Üben · Erleben · Testen, eins davon „empfohlen“.
+9. **Nicht kindisch.** Die Zielgruppe ist etwa 9–13. Freundlich, aber erwachsen genug (Tweens empfinden Kleinkind-Optik als peinlich).
+10. **Krabbi bleibt** als Begleiter: für Tipps, Lob, „Als Nächstes“. Wie präsent, hängt von der Richtung ab.
+
+## Neuer Aufbau (in allen Entwürfen gleich)
+
+- **Heute:** Begrüßung, Countdown zur nächsten Arbeit mit Lernplan-Fortschritt, Karte „Als Nächstes“ mit einem Knopf, „Heute im Plan“ (3 Punkte, abhakbar).
+- **Fächer:** vier Kacheln (Fach, Lernwelt, Fortschritt). Darunter später „Neues Lernmaterial hinzufügen“ (Foto → Pakete, kommt bald).
+- **Fach:** Name, Rang, Pakete der Reihe nach mit Status (sitzt / übt / neu), am Ende der Abschlusstest.
+- **Paket:** Lernziel, Buchseite, Fortschritt, Module in vier Gruppen (Verstehen, Üben, Erleben, Testen), eins empfohlen.
+- **Übung:** Schließen, Fortschritt, Aufgabe, große Antworten, Rückmeldung mit Erklärung, „Weiter“.
+- **Ergebnis:** Lob, „9 von 10“, Punkte, was das für das Paket heißt, „Noch eine Runde“ / „Weiter im Plan“.
+- **Gemeinsam:** Lerngruppen als Reiter, Rangliste, Duell.
+- **Ich:** Lernplan, Ränge und Abzeichen, Einstellungen (Ton, Schriftgröße, hell/dunkel), Geräte verbinden, **Für Eltern** (mit Code gesperrt).
+
+Die Spielwelten (Küsten-Crew, Detektiv-Büro …) bleiben als Name, Bild und Rang erhalten, aber nicht mehr als eigener Bedienstil.
+
+## Drei Stilrichtungen (zum Auswählen oder Mischen)
+
+| | A · Klar | B · Lernwelt | C · Studio |
+|---|---|---|---|
+| Gefühl | ruhig, aufgeräumt, viel Weißraum | warm, verspielt, Abenteuer | modern, dunkel, für Große |
+| Schrift | Lexend (für flüssiges Lesen entwickelt) | Baloo 2 + Nunito | Space Grotesk + Inter |
+| Farben | hellgrauer Grund, 4 Fachfarben gedämpft | Sandgrund, kräftige Farben, schwarze Umrisse wie Aufkleber | fast schwarz, Neon-Limette als Aktion, helle Fassung dazu |
+| Fach-Ansicht | Liste der Pakete | Weg mit Stationen (wie eine Karte), Krabbi läuft mit | Kacheln mit Fortschrittsringen |
+| Krabbi | klein, bei Lob | groß, spricht in Sprechblasen | nur bei Lob und Tipps |
+| Passt gut für | breite Zielgruppe, Eltern, Lesbarkeit | Klasse 4–6, Spielspaß | Klasse 6–8, „nicht kindisch“ |
+| Risiko | wirkt evtl. zu nüchtern | wirkt ab Klasse 7 evtl. zu kindlich | dunkel ist abends gut, tagsüber Geschmackssache |
+
+Denkbar ist auch eine Mischung, z. B. Aufbau und Lesbarkeit von A, Weg-Ansicht der Fächer aus B, Zahlen-Kacheln aus C. Eine Hell/Dunkel-Umschaltung kann jede Richtung bekommen.
+
+## Nächste Schritte
+
+1. Richtung wählen (oder Mischung), am besten zusammen mit Robin und ein, zwei anderen Kindern anklicken lassen.
+2. Daraus ein kleines Designsystem: Farben, Schrift, Abstände, Bausteine (Knöpfe, Karten, Antworten, Reiter, Statuschips, Fortschritt), Symbolsatz, Krabbi-Posen.
+3. Weitere Bildschirme entwerfen: Lernplan, Elternbereich, Wissen lesen, Geodreieck/Experimente im neuen Rahmen, Duell, Anmeldung und erster Start, Handy-Querformat und Telefonformat.
+4. Umbau der App Schritt für Schritt: erst gemeinsamer Rahmen (Reiter, Heute, Fächer, Paket), dann die Übungen je Fach.
+5. Danach Produktseite und Videos mit den neuen Bildschirmen neu aufnehmen.
+
+## Quellen der Recherche
+
+- Nielsen Norman Group: Physical Development and UX for children (https://www.nngroup.com/articles/children-ux-physical-development/), Kids' cognition (https://www.nngroup.com/articles/kids-cognition/)
+- Duolingo, neuer Lernweg auf der Startseite: UX-Analysen (https://uxplanet.org/analyzing-duolingo-from-product-design-perspective-after-400-days-of-non-stop-practice-c4d4809bdb37, https://medium.com/usabilitygeek/ux-case-study-duolingo-ade986ec7450)
+- Khan Academy Kids, Lernweg mit Figuren: https://screenwiseapp.com/guides/khan-academy-kids-learning-game
+- Gestaltung für 9–12-Jährige (Praxisartikel): https://gapsystudio.com/blog/ux-design-for-kids, https://uxdesign.cc/children-first-802bd12fe28c
+- Dribbble ließ sich aus der Sitzung nicht automatisch ansehen (die Seite blockiert automatische Browser). Beispielbilder von dort am besten selbst sammeln und als Bilder in den Chat legen.

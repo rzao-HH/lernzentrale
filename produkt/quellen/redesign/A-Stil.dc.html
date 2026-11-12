@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Richtung A: Stilblatt</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.lab{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#5a6185}
+.sw{display:flex;flex-direction:column;gap:6px;font-size:13px;color:#4a5175}
+.sw i{display:block;height:56px;border-radius:14px}
+</style>
+</helmet>
+<div style="width: 768px; height: 1024px; box-sizing: border-box; padding: 44px; background: #f4f5f8; color: #18203a; font-family: Lexend, sans-serif; display: flex; flex-direction: column; gap: 30px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <span class="lab">Richtung A</span>
+    <h1 style="margin: 0; font-size: 40px; font-weight: 700">Klar</h1>
+    <p style="margin: 0; font-size: 17px; line-height: 1.5; color: #4a5175">Ruhig und aufgeräumt. Eine Aufgabe pro Bildschirm, große Flächen zum Tippen, Farbe nur dort, wo sie etwas bedeutet.</p>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span class="lab">Farben</span>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px">
+      <div class="sw"><i style="background:#18203a"></i>Schrift</div>
+      <div class="sw"><i style="background:#f4f5f8;border:1px solid #dfe2ec"></i>Grund</div>
+      <div class="sw"><i style="background:#2f4be0"></i>Mathe</div>
+      <div class="sw"><i style="background:#0e8a7e"></i>NWT</div>
+      <div class="sw"><i style="background:#e0583a"></i>Englisch</div>
+      <div class="sw"><i style="background:#c27a12"></i>Deutsch</div>
+    </div>
+    <div style="display: flex; gap: 10px; font-size: 13px; color: #4a5175">
+      <span style="display: flex; align-items: center; gap: 6px"><i style="width: 14px; height: 14px; border-radius: 50%; background: #1f8a4c"></i>richtig, sitzt</span>
+      <span style="display: flex; align-items: center; gap: 6px"><i style="width: 14px; height: 14px; border-radius: 50%; background: #b8641a"></i>übt noch</span>
+      <span style="display: flex; align-items: center; gap: 6px"><i style="width: 14px; height: 14px; border-radius: 50%; background: #c2361f"></i>falsch</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span class="lab">Schrift: Lexend (entwickelt für flüssiges Lesen)</span>
+    <div style="font-size: 34px; font-weight: 700; line-height: 1.1">Titel 34 · Hallo Robin</div>
+    <div style="font-size: 22px; font-weight: 600">Überschrift 22 · Als Nächstes</div>
+    <div style="font-size: 17px; line-height: 1.5">Text 17 · Zwischen 90° und 180° heißt der Winkel stumpf.</div>
+    <div style="font-size: 14px; color: #4a5175">Klein 14 · Mathe · Paket 2 · ca. 8 Minuten</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span class="lab">Bausteine</span>
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap">
+      <button type="button" style="min-height: 56px; padding: 0 28px; border: 0; border-radius: 16px; background: #2f4be0; color: #ffffff; font: 600 18px Lexend, sans-serif">Los geht’s</button>
+      <button type="button" style="min-height: 56px; padding: 0 24px; border: 2px solid #dfe2ec; border-radius: 16px; background: #ffffff; color: #18203a; font: 600 17px Lexend, sans-serif">Noch eine Runde</button>
+      <span style="padding: 6px 12px; border-radius: 999px; background: #e3f3ea; color: #17703d; font-size: 14px; font-weight: 600">sitzt</span>
+      <span style="padding: 6px 12px; border-radius: 999px; background: #fbeedd; color: #8f4b10; font-size: 14px; font-weight: 600">übt</span>
+      <span style="padding: 6px 12px; border-radius: 999px; background: #eceef5; color: #4a5175; font-size: 14px; font-weight: 600">neu</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <button type="button" style="min-height: 64px; border: 2px solid #dfe2ec; border-radius: 16px; background: #ffffff; font: 600 18px Lexend, sans-serif; color: #18203a">Antwort</button>
+      <button type="button" style="min-height: 64px; border: 2px solid #1f8a4c; border-radius: 16px; background: #e3f3ea; font: 600 18px Lexend, sans-serif; color: #17703d">richtig</button>
+      <button type="button" style="min-height: 64px; border: 2px solid #c2361f; border-radius: 16px; background: #fbe6e1; font: 600 18px Lexend, sans-serif; color: #a12b17">falsch</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="height: 10px; border-radius: 999px; background: #e3e6ef; overflow: hidden"><div style="width: 60%; height: 100%; background: #2f4be0; border-radius: 999px"></div></div>
+      <span style="font-size: 13px; color: #4a5175">Fortschritt: ein Balken, keine Zahlenkolonnen</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span class="lab">Symbole: Linien, gleiche Strichstärke, keine Emojis</span>
+    <div style="display: flex; gap: 22px; color: #18203a">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect x="14" y="3" width="7" height="7" rx="2"></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"></rect></svg>
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><circle cx="17" cy="9" r="2.8"></circle><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"></path></svg>
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"></path></svg>
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>App-Redesign: drei Richtungen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&amp;family=Baloo+2:wght@500;600;700;800&amp;family=Nunito:wght@600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:inherit}a:hover{opacity:.9}
+</style>
+</helmet>
+<div style="width: 1280px; height: 900px; box-sizing: border-box; padding: 56px 64px; background: #f4f5f8; color: #18203a; font-family: Lexend, sans-serif; display: flex; flex-direction: column; gap: 36px">
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #5a6185">Lernzentrale · App-Redesign · Vorschau</span>
+    <h1 style="margin: 0; font-size: 52px; font-weight: 700; line-height: 1.05">Drei Richtungen für die neue App</h1>
+    <p style="margin: 0; font-size: 19px; line-height: 1.5; color: #4a5175; max-width: 860px">Ein gemeinsamer, aufgeräumter Aufbau für alle vier Fächer. Jede Richtung zeigt ihn in einem anderen Stil. Jeder Dummy ist klickbar.</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; flex-grow: 1">
+
+    <div style="background: #ffffff; border: 1px solid #e3e6ef; border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 18px">
+      <span style="font-size: 14px; font-weight: 600; color: #2f4be0">Richtung A</span>
+      <h2 style="margin: 0; font-size: 30px; font-weight: 700">Klar</h2>
+      <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #4a5175">Ruhig, viel Weißraum, eine Schrift, die fürs Lesenlernen gemacht ist. Die Fächer erkennt man an ihrer Farbe, nicht an einem eigenen Stil.</p>
+      <div style="display: flex; gap: 8px"><span style="width: 40px; height: 40px; border-radius: 12px; background: #2f4be0"></span><span style="width: 40px; height: 40px; border-radius: 12px; background: #0e8a7e"></span><span style="width: 40px; height: 40px; border-radius: 12px; background: #e0583a"></span><span style="width: 40px; height: 40px; border-radius: 12px; background: #c27a12"></span><span style="width: 40px; height: 40px; border-radius: 12px; background: #f4f5f8; border: 1px solid #e3e6ef"></span></div>
+      <div style="margin-top: auto; background: #f4f5f8; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 13px; font-weight: 600; color: #5a6185">Als Nächstes</span>
+        <strong style="font-size: 20px; font-weight: 700">Stumpfe Winkel messen</strong>
+        <span style="font-size: 14px; color: #4a5175">Mathe · Paket 2 · ca. 10 Minuten</span>
+      </div>
+      <a href="A-App.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 14px; background: #2f4be0; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 17px">Dummy A ansehen</a>
+    </div>
+
+    <div style="background: #fff4e2; border: 1px solid #f1dcb6; border-radius: 28px; padding: 28px; display: flex; flex-direction: column; gap: 18px; font-family: Nunito, sans-serif">
+      <span style="font-size: 14px; font-weight: 800; color: #b5541b">Richtung B</span>
+      <h2 style="margin: 0; font-size: 34px; font-weight: 800; font-family: 'Baloo 2', sans-serif; line-height: 1">Lernwelt</h2>
+      <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #5b4a36">Jedes Fach ist eine Welt mit einem Weg aus Paketen. Krabbi führt. Warm, verspielt, aber nicht kleinkindhaft.</p>
+      <div style="display: flex; gap: 8px"><span style="width: 40px; height: 40px; border-radius: 50%; background: #3557e8"></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #13a596"></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #ff6b4a"></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #f2a516"></span><span style="width: 40px; height: 40px; border-radius: 50%; background: #2b2140"></span></div>
+      <div style="margin-top: auto; background: #ffffff; border: 3px solid #2b2140; border-radius: 22px; padding: 16px 18px; box-shadow: 0 6px 0 #2b2140; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 13px; font-weight: 800; color: #b5541b">Als Nächstes</span>
+        <strong style="font-size: 22px; font-weight: 800; font-family: 'Baloo 2', sans-serif; line-height: 1.1; color: #2b2140">Stumpfe Winkel messen</strong>
+        <span style="font-size: 14px; font-weight: 700; color: #5b4a36">Mathe · Paket 2 · ca. 10 Minuten</span>
+      </div>
+      <a href="B-App.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 16px; background: #ff6b4a; color: #2b2140; text-decoration: none; font-weight: 800; font-size: 17px; border: 3px solid #2b2140; box-shadow: 0 4px 0 #2b2140">Dummy B ansehen</a>
+    </div>
+
+    <div style="background: #12141d; border: 1px solid #262a3a; border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 18px; color: #eef0f8; font-family: Inter, sans-serif">
+      <span style="font-size: 14px; font-weight: 600; color: #c6f432">Richtung C</span>
+      <h2 style="margin: 0; font-size: 32px; font-weight: 700; font-family: 'Space Grotesk', sans-serif">Studio</h2>
+      <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #a9aec6">Dunkel, klare Zahlen, kräftige Akzente. Für Kinder ab etwa 10, die alles mit Krabbe zu kindlich finden. Hell geht auch.</p>
+      <div style="display: flex; gap: 8px"><span style="width: 40px; height: 40px; border-radius: 10px; background: #7c8cff"></span><span style="width: 40px; height: 40px; border-radius: 10px; background: #3fe0c5"></span><span style="width: 40px; height: 40px; border-radius: 10px; background: #ff8a65"></span><span style="width: 40px; height: 40px; border-radius: 10px; background: #ffd23f"></span><span style="width: 40px; height: 40px; border-radius: 10px; background: #c6f432"></span></div>
+      <div style="margin-top: auto; background: #1c2030; border: 1px solid #2c3146; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 13px; font-weight: 600; color: #c6f432">Als Nächstes</span>
+        <strong style="font-size: 21px; font-weight: 700; font-family: 'Space Grotesk', sans-serif">Stumpfe Winkel messen</strong>
+        <span style="font-size: 14px; color: #a9aec6">Mathe · Paket 2 · ca. 10 Minuten</span>
+      </div>
+      <a href="C-App.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 14px; background: #c6f432; color: #12141d; text-decoration: none; font-weight: 600; font-size: 17px">Dummy C ansehen</a>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

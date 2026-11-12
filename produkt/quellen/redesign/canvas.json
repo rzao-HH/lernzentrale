@@ -1,0 +1,24 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-12T00:30:00Z"},
+  "title": "App-Redesign Lernzentrale",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 900, "title": "Übersicht · drei Richtungen", "is_interactive": true},
+    "A-Stil.dc.html": {"x": 0, "y": 1250, "w": 768, "h": 1024, "title": "A · Klar · Stilblatt"},
+    "A-App.dc.html": {"x": 848, "y": 1250, "w": 768, "h": 1024, "title": "A · Klar · Klick-Dummy", "is_interactive": true},
+    "B-Stil.dc.html": {"x": 0, "y": 2620, "w": 768, "h": 1024, "title": "B · Lernwelt · Stilblatt"},
+    "B-App.dc.html": {"x": 848, "y": 2620, "w": 768, "h": 1024, "title": "B · Lernwelt · Klick-Dummy", "is_interactive": true},
+    "C-Stil.dc.html": {"x": 0, "y": 3990, "w": 768, "h": 1024, "title": "C · Studio · Stilblatt"},
+    "C-App.dc.html": {"x": 848, "y": 3990, "w": 768, "h": 1024, "title": "C · Studio · Klick-Dummy", "is_interactive": true}
+  },
+  "order": ["Main.dc.html", "A-Stil.dc.html", "A-App.dc.html", "B-Stil.dc.html", "B-App.dc.html", "C-Stil.dc.html", "C-App.dc.html"],
+  "notes": {
+    "tA": {"x": 0, "y": 990, "text": "A · Klar und ruhig", "kind": "title1", "maxW": 1616},
+    "tB": {"x": 0, "y": 2360, "text": "B · Lernwelt mit Weg", "kind": "title1", "maxW": 1616},
+    "tC": {"x": 0, "y": 3730, "text": "C · Studio für Große", "kind": "title1", "maxW": 1616},
+    "aufbau": {"x": 1700, "y": 1250, "w": 420, "fill": "orange", "text": "Gleicher Aufbau in allen drei Richtungen, damit nur der Stil verglichen wird:\n\nUnten vier Reiter: Heute · Fächer · Gemeinsam · Ich.\n\nHeute: Countdown zur Arbeit, eine große Karte „Als Nächstes“, der Tagesplan.\nFächer → Fach → Paket → Übung → Ergebnis.\nIm Paket sind die Module nach Zweck sortiert: Verstehen, Üben, Erleben, Testen.\nEltern-Bereich liegt unter Ich, mit Sperre.\n\nIm Dummy lässt sich klicken: Heute → Los geht’s → Übung → Antwort → Ergebnis, und über Fächer → Mathe → Paket."}
+  },
+  "designSystems": []
+}
