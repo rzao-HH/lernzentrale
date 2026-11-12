@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Navigation: von heute nach neu</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+.h{font-family:'Baloo 2',sans-serif;font-weight:800;margin:0;line-height:1.05}
+.r{display:grid;grid-template-columns:260px 40px minmax(0,1fr);align-items:center;gap:8px;min-height:50px;border-bottom:2px dashed #e3cfa9}
+.old{font-size:15px;font-weight:800;color:#7d6a52}
+.new{font-size:15px;font-weight:700}
+.new b{font-weight:800}
+</style>
+</helmet>
+<div style="width: 900px; height: 1024px; box-sizing: border-box; padding: 40px 44px; background: #fff4e2; color: #2b2140; font-family: Nunito, sans-serif; display: flex; flex-direction: column; gap: 20px">
+  <h1 class="h" style="font-size: 38px">Navigation: von heute nach neu</h1>
+  <div style="display: flex; gap: 18px; align-items: stretch">
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 14px; font-weight: 800; text-transform: uppercase; color: #a24a14">Heute: Kopfleiste in jedem Fach</span>
+      <div style="display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #ffffff; border: 2px solid #d9c6a3; border-radius: 14px; font-size: 13px; font-weight: 800; color: #7d6a52; flex-wrap: wrap">Logo · Rang · Haus · Schwerter · Blatt · Gesicht · Kalender · Lautsprecher</div>
+      <span style="font-size: 13px; font-weight: 700; color: #7d6a52">acht Symbole ohne Beschriftung, rutschen auf schmalen Geräten aus dem Bild</span>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 14px; font-weight: 800; text-transform: uppercase; color: #a24a14">Neu: oben nur drei Dinge, unten vier Reiter</span>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; background: #ffffff; border: 3px solid #2b2140; border-radius: 14px; box-shadow: 0 3px 0 #2b2140"><span style="font-size: 14px; font-weight: 800">‹ Welten</span><span style="font-family: 'Baloo 2', sans-serif; font-size: 18px; font-weight: 800">Winkel-Akademie</span><span style="padding: 3px 10px; border: 2px solid #2b2140; border-radius: 999px; background: #ffd34d; font-size: 12px; font-weight: 800">Komet</span></div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 8px; background: #ffffff; border: 3px solid #2b2140; border-radius: 16px; box-shadow: 0 3px 0 #2b2140; text-align: center; font-size: 13px; font-weight: 800"><span>Heute</span><span style="background: #ffd34d; border-radius: 8px">Welten</span><span>Gemeinsam</span><span>Ich</span></div>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column">
+    <div class="r"><span class="old">Haus (zur Startseite)</span><span>→</span><span class="new">Reiter <b>Heute</b> unten, immer erreichbar</span></div>
+    <div class="r"><span class="old">Schwerter (Arena, Duell)</span><span>→</span><span class="new">Reiter <b>Gemeinsam</b>; im Fach zusätzlich beim Schritt <b>Prüfen</b></span></div>
+    <div class="r"><span class="old">Blatt (Lernzettel)</span><span>→</span><span class="new">im Paket beim Schritt <b>Verstehen</b></span></div>
+    <div class="r"><span class="old">Gesicht (Person wechseln)</span><span>→</span><span class="new">Reiter <b>Ich</b>, ganz oben „Wer lernt gerade?“</span></div>
+    <div class="r"><span class="old">Kalender (Lernplan)</span><span>→</span><span class="new"><b>Heute</b> zeigt den Plan; im Fach als Startseite (Konzept 4); einstellen unter <b>Ich</b></span></div>
+    <div class="r"><span class="old">Lautsprecher (Ton)</span><span>→</span><span class="new"><b>Ich › Einstellungen</b></span></div>
+    <div class="r"><span class="old">Rang (z. B. Sternenstaub)</span><span>→</span><span class="new">Chip oben rechts im Fach; alle Ränge unter <b>Ich › Ränge</b></span></div>
+    <div class="r"><span class="old">Pakete ankreuzen, dann Modus</span><span>→</span><span class="new">entfällt: <b>Paket antippen</b>, die Schritte führen; mehrere Pakete nur im Abschlusstest, automatisch</span></div>
+    <div class="r"><span class="old">Checkliste „Karte und Kompass“</span><span>→</span><span class="new">wird zu den Haken an den Paket-Schritten; Liste für Eltern unter <b>Ich › Für Eltern</b></span></div>
+    <div class="r"><span class="old">Leicht / Profi, Rekorde</span><span>→</span><span class="new"><b>Ich › Einstellungen</b> (je Fach) und <b>Ich › Ränge</b></span></div>
+    <div class="r"><span class="old">Zurücksetzen</span><span>→</span><span class="new"><b>Ich › Einstellungen</b>, ganz unten, mit Nachfrage</span></div>
+    <div class="r"><span class="old">Elternübersicht</span><span>→</span><span class="new"><b>Ich › Für Eltern</b>, mit Code</span></div>
+    <div class="r"><span class="old">Lerngruppen, Rangliste</span><span>→</span><span class="new">Reiter <b>Gemeinsam</b></span></div>
+    <div class="r" style="border-bottom: 0"><span class="old">Neuigkeiten</span><span>→</span><span class="new"><b>Ich › Neuigkeiten</b>, mit Punkt am Reiter, wenn es etwas Neues gibt</span></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":900,"height":1024}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

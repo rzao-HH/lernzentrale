@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Fach-Start 2: Krabbi schlägt vor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:Nunito,sans-serif;cursor:pointer;color:#2b2140}
+.h{font-family:'Baloo 2',sans-serif;font-weight:800;margin:0;line-height:1.05}
+.stk{background:#fff;border:3px solid #2b2140;border-radius:22px;box-shadow:0 5px 0 #2b2140;box-sizing:border-box}
+.back{display:flex;align-items:center;gap:6px;min-height:46px;padding:0 16px 0 10px;border:3px solid #2b2140;border-radius:14px;background:#fff;font-size:16px;font-weight:800;box-shadow:0 3px 0 #2b2140}
+.btn{min-height:60px;padding:0 28px;border:3px solid #2b2140;border-radius:18px;background:#ffd34d;font-size:20px;font-weight:800;box-shadow:0 5px 0 #2b2140}
+.lnk{min-height:44px;padding:0 14px;border:0;background:transparent;font-size:16px;font-weight:800;text-decoration:underline;color:#ffffff}
+.dr{width:100%;display:flex;align-items:center;gap:14px;min-height:76px;padding:0 18px;border:0;background:transparent;text-align:left}
+.ic{width:48px;height:48px;flex:none;border-radius:14px;border:3px solid #2b2140;display:flex;align-items:center;justify-content:center}
+.item{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:54px;padding:0 16px;border:2px solid #2b2140;border-radius:14px;background:#fff;font-size:16px;font-weight:800;text-align:left;width:100%;box-sizing:border-box}
+.item small{font-size:14px;font-weight:700;color:#7d6a52}
+.dots{display:flex;gap:6px}.dots i{width:18px;height:18px;border-radius:50%;border:2px solid #2b2140;display:block}
+.tabs{position:absolute;left:16px;right:16px;bottom:14px;height:78px;background:#fff;border:3px solid #2b2140;border-radius:26px;box-shadow:0 5px 0 #2b2140;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:hidden}
+.tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:14px;font-weight:800;color:#7d6a52}
+.tab.on{color:#2b2140;background:#ffd34d}
+</style>
+</helmet>
+<div style="width: 768px; height: 1024px; position: relative; overflow: hidden; background: #fff4e2; color: #2b2140; font-family: Nunito, sans-serif">
+  <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 106px; padding: 28px 36px 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; overflow-y: auto">
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <button type="button" class="back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Welten</button>
+      <span style="padding: 8px 16px; border: 3px solid #2b2140; border-radius: 999px; background: #ffd34d; font-weight: 800; font-size: 15px">Rang Komet · 280 Punkte</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end">
+      <h1 class="h" style="font-size: 42px">Winkel-Akademie</h1>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px"><div class="dots" aria-label="Pakete: 1 sitzt, 1 übt, 6 neu"><i style="background: #ffd34d"></i><i style="background: #3557e8"></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span style="font-size: 13px; font-weight: 800; color: #7d6a52">1 sitzt · 1 übt · 6 neu</span></div>
+    </div>
+
+    <div class="stk" style="background: #3557e8; color: #ffffff; padding: 0; overflow: hidden">
+      <div style="display: flex; gap: 6px; align-items: flex-end; padding: 22px 22px 0">
+        <svg width="110" height="90" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22 M58 36 Q72 30 74 14"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path></svg>
+        <div style="background: #ffffff; color: #2b2140; border: 3px solid #2b2140; border-radius: 20px 20px 20px 6px; padding: 12px 16px; font-size: 17px; font-weight: 800; margin-bottom: 14px">Mein Vorschlag für heute:</div>
+      </div>
+      <div style="padding: 6px 26px 22px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #ffe08a">Paket 2 · Schritt Üben · ca. 8 Minuten</span>
+        <strong class="h" style="font-size: 36px">Stumpfe Winkel erkennen</strong>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px">
+          <button type="button" class="btn">Los geht’s!</button>
+          <button type="button" class="lnk" onClick="{{toggleWhy}}" aria-expanded="{{why}}">Warum das?</button>
+        </div>
+        <sc-if value="{{why}}" hint-placeholder-val="{{ false }}">
+          <div style="background: rgba(255,255,255,.14); border: 2px solid #ffffff; border-radius: 16px; padding: 14px 16px; font-size: 16px; font-weight: 700; line-height: 1.45">Beim letzten Mal waren 4 von 10 stumpfen Winkeln falsch. Wenn die sitzen, ist Paket 2 geschafft und Paket 3 kommt dran. Bis zur Mathearbeit sind es noch 5 Tage.</div>
+        </sc-if>
+      </div>
+    </div>
+
+    <span style="font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #a24a14">Oder selbst aussuchen</span>
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <sc-for list="{{drawers}}" as="d" hint-placeholder-count="4">
+        <div class="stk" style="padding: 0">
+          <button type="button" class="dr" onClick="{{d.toggle}}" aria-expanded="{{d.open}}">
+            <span class="ic" style="background: {{d.color}}">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2b2140" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{d.icon}}"></path></svg>
+            </span>
+            <span style="display: flex; flex-direction: column; flex-grow: 1"><strong style="font-size: 19px; font-weight: 800">{{d.title}}</strong><span style="font-size: 14px; font-weight: 700; color: #7d6a52">{{d.sub}}</span></span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{d.rot}}"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+          <sc-if value="{{d.open}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 0 16px 16px">
+              <sc-for list="{{d.items}}" as="it" hint-placeholder-count="3"><button type="button" class="item"><span>{{it.t}}</span><small>{{it.s}}</small></button></sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <nav class="tabs" aria-label="Hauptmenü">
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Heute</button>
+    <button type="button" class="tab on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"></path></svg>Welten</button>
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><circle cx="17" cy="9" r="2.8"></circle><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"></path></svg>Gemeinsam</button>
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"></path></svg>Ich</button>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { why: false, open: -1 }; }
+  renderVals() {
+    const D = [
+      { title: 'Neues lernen', sub: 'Das nächste Paket anfangen', color: '#c9d4ff', icon: 'M4 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H4zM20 5h-7a3 3 0 0 0-3 3', items: [{ t: 'Paket 3 · Überstumpf: Wissen lesen', s: '5 Min.' }, { t: 'Lernzettel zu allen Winkelarten', s: 'zum Ausdrucken' }] },
+      { title: 'Üben, was wackelt', sub: 'Da sind noch Fehler', color: '#ffd34d', icon: 'M12 3l2.6 5.6 6 .8-4.4 4.2 1.1 6L12 16.8 6.7 19.6l1.1-6L3.4 9.4l6-.8z', items: [{ t: 'Stumpfe Winkel erkennen', s: 'Paket 2' }, { t: 'Messen mit dem Geodreieck', s: 'Paket 2' }, { t: 'Wiederholen: Spitz und recht', s: 'lange her' }] },
+      { title: 'Spielen und ausprobieren', sub: 'Zeichnen, Schätzen, Zeitrunde', color: '#c9f2d9', icon: 'M6 12h4M8 10v4M15 11h.01M18 13h.01M7 6h10a5 5 0 0 1 5 5v1a4 4 0 0 1-7 2.6H9A4 4 0 0 1 2 12v-1a5 5 0 0 1 5-5z', items: [{ t: 'Winkel zeichnen', s: 'mit dem Finger' }, { t: 'Schätzen', s: 'Augenmaß' }, { t: 'Zeitrunde', s: '60 Sekunden' }] },
+      { title: 'Testen', sub: 'Zeigen, dass es sitzt', color: '#ffd9cf', icon: 'M7 4h10v5a5 5 0 0 1-10 0zM12 14v4M8 21h8', items: [{ t: 'Kurztest Paket 2', s: 'mit Note' }, { t: 'Abschlusstest', s: 'alle Pakete' }, { t: 'Duell', s: 'gegen Familie oder Klasse' }] }
+    ];
+    const drawers = D.map((d, i) => ({ ...d, open: this.state.open === i, rot: this.state.open === i ? 'rotate(180deg)' : 'none', toggle: () => this.setState({ open: this.state.open === i ? -1 : i }) }));
+    return { why: this.state.why, toggleWhy: () => this.setState({ why: !this.state.why }), drawers };
+  }
+}
+</script>
+</body>
+</html>

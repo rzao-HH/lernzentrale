@@ -1,6 +1,6 @@
 # App-Redesign: Konzept und erste Entwürfe
 
-Stand: 12.11.2026 · in Arbeit
+Stand: 12.11.2026 · in Arbeit · Favorit bisher: **Richtung B (Lernwelt)**: leicht spielerisch (Sprechblase, Krabbi hat eine Rolle), klare Linien, gut gruppiert und abgegrenzt.
 
 **Warum:** Die App ist historisch gewachsen. Jede Lernwelt sieht anders aus, die Startseite ist voll, vieles ist Text, und es gibt keinen eigenen Stil. Bevor neue Funktionen kommen (siehe `funktionen.html`, Teil B), soll die App aufgeräumt, schnell verständlich, zugänglich und auf ein professionelles Niveau gebracht werden. Danach werden Produktseite und Videos mit den neuen Bildschirmen neu gemacht. Inhalt und Aufbau der Produktseite bleiben (`produktseite.md`).
 
@@ -57,9 +57,39 @@ Die Spielwelten (Küsten-Crew, Detektiv-Büro …) bleiben als Name, Bild und Ra
 
 Denkbar ist auch eine Mischung, z. B. Aufbau und Lesbarkeit von A, Weg-Ansicht der Fächer aus B, Zahlen-Kacheln aus C. Eine Hell/Dunkel-Umschaltung kann jede Richtung bekommen.
 
+## Wichtig: So wird gelernt (Lernmodell, muss die Führung tragen)
+
+Ein Paket hat **keine eigene Lernstrecke**. Module gelten für die **gewählte Auswahl an Paketen**, nicht für ein einzelnes Paket:
+- Ein **neues Paket lernt man zuerst allein**.
+- Danach **nimmt man es zu den Paketen dazu, die schon sitzen**, und übt alles **gemischt** (so bleibt Altes frisch, und die Aufgaben kommen wie in der Arbeit durcheinander).
+- Manche Module gehen nur mit bestimmten Paketen (Winkel-Akademie: Messen, Winkelart, Schätzen, Zeichnen, Zeitrunde nur mit Paketen 1–4; Aufgaben-Mission nur mit 5–8; Test mit jeder Auswahl). Die Oberfläche muss zeigen, **warum** ein Modul gerade nicht geht.
+
+Heute geschieht das mit „Pakete ankreuzen, dann Modus wählen“. Das ist richtig gedacht, aber nicht erklärt.
+
+## Startseite je Fach: fünf Konzepte (Stil B, auf der Arbeitsfläche, alle klickbar)
+
+1. **Weg mit Schritten** (Pakete als Akkordeon, jedes mit Verstehen → Üben → Erleben → Prüfen). **Verworfen** in dieser Form: Es tut so, als hätte jedes Paket eine eigene Strecke, Module kämen mehrfach vor, und Mischen ginge nicht.
+2. **Krabbi schlägt vor:** oben ein einziger Vorschlag mit „Warum das?“, darunter vier zugeklappte Schubladen (Neues lernen, Üben was wackelt, Spielen und ausprobieren, Testen).
+3. **Was willst du heute?** Vier große Türen nach Absicht, darunter erscheint nur das Passende.
+4. **Plan bis zur Arbeit:** Wenn eine Arbeit eingetragen ist, ist der Lernplan die Startseite (Tag für Tag, heute aufgeklappt, Probearbeit, Arbeit).
+5. **Lernrucksack:** zeigt das Lernmodell direkt. Oben steht, was gerade „im Rucksack“ ist (ein Paket allein oder mehrere gemischt), mit „Allein lernen“ für das neue Paket und „Alles, was ich kann“. Darunter die Module, die für diese Mischung gelten; nicht passende sind ausgegraut mit Grund („braucht Paket 1–4“).
+
+Die Konzepte lassen sich kombinieren, z. B. Vorschlag oben (2) + Rucksack darunter (5), oder Plan (4), wenn eine Arbeit ansteht, sonst Weg (D).
+
+## Navigation: von heute nach neu
+
+Oben im Fach nur noch: zurück, Fachname, Rang. Unten vier Reiter (Heute, Welten, Gemeinsam, Ich). Haus → Reiter Heute; Schwerter/Arena → Gemeinsam und beim Testen; Lernzettel → beim Verstehen bzw. am Abschnitt; Person wechseln, Ton, Leicht/Profi, Rekorde, Zurücksetzen, Neuigkeiten → Ich; Lernplan → Heute und Fach-Start (Konzept 4); Checkliste und Elternübersicht → Ich › Für Eltern; Pakete ankreuzen → Rucksack bzw. automatisch auf dem Weg.
+
+## Entwurf D: ein Weg mit Misch-Stationen (Prinzipien großer Sprach-Apps)
+
+Angelehnt an den Aufbau großer Sprach-Apps (Duolingo), **ohne deren Gestaltung zu kopieren**: Die Startseite ist der Weg. Abschnitte mit farbigem Band und Lernzettel; runde Stationen mit „Tastenkante“; Infos erst beim Antippen; eine Aufgabe pro Bildschirm; „Prüfen“, dann Rückmeldung als Streifen von unten; Ergebnis mit drei Kacheln.
+**Passt zum Lernmodell:** Auf dem Weg wechseln sich neue Pakete (allein) und **Misch-Stationen** (alle bisherigen Pakete zusammen) ab, am Ende ein Abschnittstest. Beispiel Winkel: Paket 1 → Paket 2 → Mischen 1+2 → Paket 3 → Mischen 1–3 → Paket 4 → Mischen 1–4 → Abschnittstest; dann Abschnitt 2 (Pakete 5–8).
+**Bewusst anders als dort:** keine Leben, kein Sperren nach Fehlern, Serie ohne Druck, Krabbi statt Eule, eigene Farben; jede Station lässt sich trotzdem antippen („Trotzdem ausprobieren“), freies Üben bleibt möglich.
+Den Analyse-Artikel zu Duolingo konnte die Sitzung nicht öffnen (Seite nicht freigegeben); die Prinzipien stammen aus allgemeinem Wissen über den Aufbau der App.
+
 ## Nächste Schritte
 
-1. Richtung wählen (oder Mischung), am besten zusammen mit Robin und ein, zwei anderen Kindern anklicken lassen.
+1. Fach-Startseite entscheiden (Konzepte 2–5 und Entwurf D vergleichen, Robin anklicken lassen), dann Stil festlegen (Favorit B, ggf. mit der Weg-Logik aus D).
 2. Daraus ein kleines Designsystem: Farben, Schrift, Abstände, Bausteine (Knöpfe, Karten, Antworten, Reiter, Statuschips, Fortschritt), Symbolsatz, Krabbi-Posen.
 3. Weitere Bildschirme entwerfen: Lernplan, Elternbereich, Wissen lesen, Geodreieck/Experimente im neuen Rahmen, Duell, Anmeldung und erster Start, Handy-Querformat und Telefonformat.
 4. Umbau der App Schritt für Schritt: erst gemeinsamer Rahmen (Reiter, Heute, Fächer, Paket), dann die Übungen je Fach.

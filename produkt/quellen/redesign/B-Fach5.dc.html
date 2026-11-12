@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Fach-Start 5: Lernrucksack</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:Nunito,sans-serif;cursor:pointer;color:#2b2140}
+.h{font-family:'Baloo 2',sans-serif;font-weight:800;margin:0;line-height:1.05}
+.stk{background:#fff;border:3px solid #2b2140;border-radius:22px;box-shadow:0 5px 0 #2b2140;box-sizing:border-box}
+.back{display:flex;align-items:center;gap:6px;min-height:46px;padding:0 16px 0 10px;border:3px solid #2b2140;border-radius:14px;background:#fff;font-size:16px;font-weight:800;box-shadow:0 3px 0 #2b2140}
+.lab{font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#a24a14}
+.pk{display:flex;align-items:center;gap:10px;min-height:56px;padding:0 12px;border:3px solid #2b2140;border-radius:16px;font-size:15px;font-weight:800;text-align:left;box-sizing:border-box}
+.pk.on{background:#3557e8;color:#fff;box-shadow:0 4px 0 #2b2140}
+.pk.off{background:#fffaf0;border-style:dashed;border-color:#b9a383;color:#5b4a36}
+.n{width:30px;height:30px;flex:none;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font:800 15px 'Baloo 2',sans-serif}
+.st{margin-left:auto;font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px;background:#fff;color:#2b2140;border:2px solid #2b2140}
+.mod{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:78px;padding:12px 14px;border:3px solid #2b2140;border-radius:18px;background:#fff;box-shadow:0 4px 0 #2b2140;font-size:16px;font-weight:800;text-align:left;box-sizing:border-box}
+.mod small{font-size:13px;font-weight:700;color:#7d6a52}
+.mod.no{background:#f3ead9;border-color:#c9b48f;box-shadow:none;color:#8d7a5f}
+.qb{min-height:44px;padding:0 14px;border:2px solid #2b2140;border-radius:12px;background:#fff;font-size:14px;font-weight:800}
+.tabs{position:absolute;left:16px;right:16px;bottom:14px;height:78px;background:#fff;border:3px solid #2b2140;border-radius:26px;box-shadow:0 5px 0 #2b2140;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:hidden}
+.tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:14px;font-weight:800;color:#7d6a52}
+.tab.on{color:#2b2140;background:#ffd34d}
+</style>
+</helmet>
+<div style="width: 768px; height: 1024px; position: relative; overflow: hidden; background: #fff4e2; color: #2b2140; font-family: Nunito, sans-serif">
+  <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 106px; padding: 26px 36px 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <button type="button" class="back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Welten</button>
+      <h1 class="h" style="font-size: 30px">Winkel-Akademie</h1>
+      <span style="padding: 6px 14px; border: 3px solid #2b2140; border-radius: 999px; background: #ffd34d; font-weight: 800; font-size: 14px">Komet</span>
+    </div>
+
+    <div class="stk" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: #ffe9a6">
+      <span style="padding: 4px 10px; border: 2px solid #2b2140; border-radius: 999px; background: #ff6b4a; font-size: 13px; font-weight: 800">neu</span>
+      <div style="display: flex; flex-direction: column; flex-grow: 1"><strong style="font-size: 18px">Paket 3 · Überstumpf</strong><span style="font-size: 14px; font-weight: 700; color: #5b4a36">Ein neues Paket lernt man erst allein kennen.</span></div>
+      <button type="button" class="qb" style="background: #ff6b4a; box-shadow: 0 3px 0 #2b2140" onClick="{{onlyNew}}">Allein lernen</button>
+    </div>
+
+    <div class="stk" style="padding: 18px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+        <span style="display: flex; align-items: center; gap: 10px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2b2140" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2M4 13h16M10 13v2h4v-2"></path></svg><strong class="h" style="font-size: 26px">Im Rucksack: {{count}}</strong></span>
+        <span style="display: flex; gap: 8px"><button type="button" class="qb" onClick="{{allKnown}}">Alles, was ich kann</button><button type="button" class="qb" onClick="{{clear}}">Leeren</button></span>
+      </div>
+      <div style="display: flex; align-items: flex-end; gap: 8px">
+        <svg width="70" height="58" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22 M58 36 Q72 30 74 14"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><circle cx="74" cy="9" r="9" fill="#FF7A5C"></circle><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path></svg>
+        <div style="flex-grow: 1; background: #fffaf0; border: 2px solid #2b2140; border-radius: 16px 16px 16px 4px; padding: 10px 14px; font-size: 15px; font-weight: 700; line-height: 1.4">{{krabbi}}</div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{pakete}}" as="p" hint-placeholder-count="8">
+          <button type="button" class="pk {{p.cls}}" onClick="{{p.toggle}}" aria-pressed="{{p.on}}"><span class="n">{{p.n}}</span><span>{{p.name}}</span><span class="st">{{p.st}}</span></button>
+        </sc-for>
+      </div>
+    </div>
+
+    <span class="lab">Damit üben · gilt für alles im Rucksack</span>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{mods}}" as="m" hint-placeholder-count="9">
+        <button type="button" class="mod {{m.cls}}"><span>{{m.t}}</span><small>{{m.s}}</small></button>
+      </sc-for>
+    </div>
+  </div>
+  <nav class="tabs" aria-label="Hauptmenü">
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Heute</button>
+    <button type="button" class="tab on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"></path></svg>Welten</button>
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><circle cx="17" cy="9" r="2.8"></circle><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"></path></svg>Gemeinsam</button>
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"></path></svg>Ich</button>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { sel: [0, 1, 4] }; }
+  renderVals() {
+    const P = [['Spitz & recht','sitzt'],['Stumpf & gestreckt','übt'],['Überstumpf','neu'],['Grenzfälle','neu'],['Kompass & Kurs','sitzt'],['Winkel benennen','neu'],['Winkel berechnen','neu'],['Senkrecht & parallel','neu']];
+    const sel = this.state.sel;
+    const has = (i) => sel.indexOf(i) >= 0;
+    const set = (s) => this.setState({ sel: s });
+    const pakete = P.map(([name, st], i) => ({ n: i + 1, name, st, on: has(i), cls: has(i) ? 'on' : 'off',
+      toggle: () => set(has(i) ? sel.filter(x => x !== i) : sel.concat([i]).sort()) }));
+    const arten = sel.some(i => i < 4), auf = sel.some(i => i >= 4), any = sel.length > 0;
+    const M = [
+      ['Wissen lesen', 'zu jedem Paket', true, ''],
+      ['Winkelart erkennen', 'Pakete 1–4', arten, 'braucht Paket 1–4'],
+      ['Messen', 'mit Geodreieck', arten, 'braucht Paket 1–4'],
+      ['Schätzen', 'Augenmaß', arten, 'braucht Paket 1–4'],
+      ['Winkel zeichnen', 'mit dem Finger', arten, 'braucht Paket 1–4'],
+      ['Aufgaben-Mission', 'Pakete 5–8', auf, 'braucht Paket 5–8'],
+      ['Zeitrunde', '60 Sekunden', arten, 'braucht Paket 1–4'],
+      ['Kurztest', 'mit Note', any, 'Rucksack ist leer'],
+      ['Duell', 'mit dieser Mischung', any, 'Rucksack ist leer']
+    ];
+    const mods = M.map(([t, s, ok, why]) => ({ t, s: ok ? s : why, cls: ok ? '' : 'no' }));
+    const names = sel.map(i => i + 1).join(', ');
+    let krabbi = 'Pack mindestens ein Paket ein. Tipp: „Alles, was ich kann“ für eine gemischte Wiederholung.';
+    if (sel.length === 1) krabbi = 'Paket ' + names + ' allein: gut zum Kennenlernen. Wenn es klappt, pack die alten Pakete dazu.';
+    if (sel.length > 1) krabbi = 'Gemischt: Pakete ' + names + ' zusammen. So bleibt Altes frisch, und die Aufgaben kommen durcheinander wie in der Arbeit.';
+    return { pakete, mods, krabbi, count: sel.length === 0 ? 'leer' : (sel.length === 1 ? '1 Paket' : sel.length + ' Pakete'),
+      onlyNew: () => set([2]), allKnown: () => set([0, 1, 4]), clear: () => set([]) };
+  }
+}
+</script>
+</body>
+</html>

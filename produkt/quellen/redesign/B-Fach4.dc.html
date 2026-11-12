@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Fach-Start 4: Plan bis zur Arbeit</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:Nunito,sans-serif;cursor:pointer;color:#2b2140}
+.h{font-family:'Baloo 2',sans-serif;font-weight:800;margin:0;line-height:1.05}
+.stk{background:#fff;border:3px solid #2b2140;border-radius:22px;box-shadow:0 5px 0 #2b2140;box-sizing:border-box}
+.back{display:flex;align-items:center;gap:6px;min-height:46px;padding:0 16px 0 10px;border:3px solid #2b2140;border-radius:14px;background:#fff;font-size:16px;font-weight:800;box-shadow:0 3px 0 #2b2140}
+.day{display:flex;gap:16px;align-items:stretch}
+.rail{display:flex;flex-direction:column;align-items:center;width:56px;flex:none}
+.dot{width:52px;height:52px;border-radius:50%;border:3px solid #2b2140;display:flex;flex-direction:column;align-items:center;justify-content:center;font:800 14px Nunito,sans-serif;line-height:1}
+.line{flex-grow:1;width:0;border-left:4px dotted #b9a383;margin:4px 0}
+.dh{width:100%;display:flex;align-items:center;gap:12px;min-height:56px;padding:0 16px;border:0;background:transparent;text-align:left;font-size:18px;font-weight:800}
+.task{display:flex;align-items:center;gap:12px;min-height:58px;padding:0 14px;border:2px solid #2b2140;border-radius:14px;background:#fff;font-size:16px;font-weight:800;text-align:left;width:100%;box-sizing:border-box}
+.task small{display:block;font-size:13px;font-weight:700;color:#7d6a52}
+.go{min-height:44px;padding:0 16px;border:2px solid #2b2140;border-radius:12px;background:#ff6b4a;font-size:15px;font-weight:800;box-shadow:0 3px 0 #2b2140}
+.tabs{position:absolute;left:16px;right:16px;bottom:14px;height:78px;background:#fff;border:3px solid #2b2140;border-radius:26px;box-shadow:0 5px 0 #2b2140;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:hidden}
+.tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:14px;font-weight:800;color:#7d6a52}
+.tab.on{color:#2b2140;background:#ffd34d}
+</style>
+</helmet>
+<div style="width: 768px; height: 1024px; position: relative; overflow: hidden; background: #fff4e2; color: #2b2140; font-family: Nunito, sans-serif">
+  <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 106px; padding: 28px 36px 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <button type="button" class="back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Welten</button>
+      <span style="padding: 8px 16px; border: 3px solid #2b2140; border-radius: 999px; background: #ffd34d; font-weight: 800; font-size: 15px">Rang Komet · 280 Punkte</span>
+    </div>
+    <div class="stk" style="background: #3557e8; color: #fff; padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #ffe08a">Winkel-Akademie · Mathearbeit am Di, 17.11.</span>
+        <strong class="h" style="font-size: 40px">Noch 5 Tage</strong>
+        <span style="font-size: 16px; font-weight: 700">Tag 2 von 7 · Krabbi hat den Plan aus deinen Paketen gemacht</span>
+      </div>
+      <svg width="96" height="80" viewBox="-6 -20 104 86" aria-hidden="true"><g stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 46 L8 54 M24 50 L14 60 M60 46 L72 54 M56 50 L66 60"></path><path d="M22 36 Q8 34 8 22"></path></g><circle cx="8" cy="17" r="9" fill="#FF7A5C"></circle><g><path d="M58 36 Q72 34 72 22" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round" fill="none"></path><circle cx="72" cy="17" r="9" fill="#FF7A5C"></circle><path d="M75 22 L75 -16" stroke="#2b2140" stroke-width="2.5"></path><path d="M75 -16 L94 -10 L75 -4Z" fill="#ffd34d"></path></g><ellipse cx="40" cy="42" rx="24" ry="16" fill="#FF7A5C"></ellipse><path d="M32 28 L32 20 M48 28 L48 20" stroke="#FF7A5C" stroke-width="3" stroke-linecap="round"></path><circle cx="32" cy="16" r="6" fill="#fff"></circle><circle cx="48" cy="16" r="6" fill="#fff"></circle><circle cx="33" cy="16" r="2.6" fill="#0A1B27"></circle><circle cx="49" cy="16" r="2.6" fill="#0A1B27"></circle><path d="M33 46 Q40 53 47 46" stroke="#7A2A1A" stroke-width="2.4" fill="none" stroke-linecap="round"></path></svg>
+    </div>
+
+    <div style="display: flex; flex-direction: column">
+      <sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+        <div class="day">
+          <div class="rail">
+            <span class="dot" style="background: {{d.dotBg}}; color: {{d.dotInk}}"><span>{{d.wd}}</span><span style="font-size: 12px">{{d.date}}</span></span>
+            <sc-if value="{{d.notLast}}" hint-placeholder-val="{{ true }}"><span class="line"></span></sc-if>
+          </div>
+          <div class="stk" style="flex-grow: 1; padding: 0; margin-bottom: 14px; background: {{d.cardBg}}; box-shadow: {{d.shadow}}">
+            <button type="button" class="dh" onClick="{{d.toggle}}" aria-expanded="{{d.open}}">
+              <span style="flex-grow: 1; display: flex; flex-direction: column"><span>{{d.title}}</span><span style="font-size: 14px; font-weight: 700; color: #7d6a52">{{d.sub}}</span></span>
+              <span style="font-size: 14px; font-weight: 800">{{d.state}}</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{d.rot}}"><path d="M6 9l6 6 6-6"></path></svg>
+            </button>
+            <sc-if value="{{d.open}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 8px; padding: 0 14px 14px">
+                <sc-for list="{{d.tasks}}" as="t" hint-placeholder-count="2">
+                  <div class="task" style="opacity: {{t.op}}"><span style="flex-grow: 1">{{t.t}}<small>{{t.s}}</small></span><sc-if value="{{t.go}}" hint-placeholder-val="{{ false }}"><button type="button" class="go">Los</button></sc-if><sc-if value="{{t.done}}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12704a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg></sc-if></div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div class="stk" style="padding: 14px 18px; box-shadow: none; border-style: dashed; background: transparent; font-size: 15px; font-weight: 700; color: #5b4a36">Keine Arbeit in Sicht? Dann zeigt die Seite den Weg durch die Pakete (Konzept 1). Frei üben geht immer über „Alle Pakete“.</div>
+  </div>
+  <nav class="tabs" aria-label="Hauptmenü">
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Heute</button>
+    <button type="button" class="tab on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"></path></svg>Welten</button>
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><circle cx="17" cy="9" r="2.8"></circle><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"></path></svg>Gemeinsam</button>
+    <button type="button" class="tab"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"></path></svg>Ich</button>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { open: 1 }; }
+  renderVals() {
+    const D = [
+      { wd: 'Mi', date: '11.', title: 'Spitz und recht', sub: 'Paket 1 wiederholen', st: 'done', tasks: [['Spitz und recht üben', '10 Aufgaben'], ['Kurztest Paket 1', 'Note 2']] },
+      { wd: 'Do', date: '12.', title: 'Heute: Stumpf und gestreckt', sub: 'Paket 2 · noch 2 Aufgaben', st: 'now', tasks: [['Wissen lesen', 'erledigt'], ['Stumpfe Winkel erkennen', '8 Minuten'], ['Messen mit dem Geodreieck', '6 Minuten']] },
+      { wd: 'Fr', date: '13.', title: 'Überstumpf', sub: 'Paket 3 neu', st: 'later', tasks: [['Wissen lesen', '5 Minuten'], ['Winkel zeichnen', '8 Minuten']] },
+      { wd: 'Sa', date: '14.', title: 'Frei', sub: 'Wochenende', st: 'free', tasks: [] },
+      { wd: 'So', date: '15.', title: 'Grenzfälle und Wiederholung', sub: 'Paket 4 und alles, was wackelt', st: 'later', tasks: [['Was wackelt üben', 'Krabbi sucht aus']] },
+      { wd: 'Mo', date: '16.', title: 'Probearbeit', sub: 'Abschlusstest mit Note', st: 'later', tasks: [['Abschlusstest', 'alle Pakete, ca. 20 Minuten']] },
+      { wd: 'Di', date: '17.', title: 'Mathearbeit', sub: 'Viel Erfolg!', st: 'goal', tasks: [] }
+    ];
+    const days = D.map((d, i) => {
+      const open = this.state.open === i;
+      const now = d.st === 'now', done = d.st === 'done';
+      return { wd: d.wd, date: d.date, title: d.title, sub: d.sub, open, notLast: i < D.length - 1,
+        rot: open ? 'rotate(180deg)' : 'none',
+        dotBg: done ? '#ffd34d' : (now ? '#3557e8' : (d.st === 'goal' ? '#ff6b4a' : '#fff4e2')), dotInk: now ? '#ffffff' : '#2b2140',
+        cardBg: now ? '#ffffff' : (done ? '#fffaf0' : '#fffaf0'), shadow: now ? '0 5px 0 #2b2140' : 'none',
+        state: done ? 'geschafft' : (now ? 'heute' : ''),
+        tasks: d.tasks.map(([t, s], j) => ({ t, s, done: done || (now && j === 0), go: now && j === 1, op: (now || done) ? 1 : .7 })),
+        toggle: () => this.setState({ open: this.state.open === i ? -1 : i }) };
+    });
+    return { days };
+  }
+}
+</script>
+</body>
+</html>
