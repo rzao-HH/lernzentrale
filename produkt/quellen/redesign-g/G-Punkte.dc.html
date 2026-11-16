@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>G · Punkte-Rechner</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;text-align:left}
+button:disabled{cursor:default}
+button:focus-visible,a:focus-visible{outline:3px solid #2F6BFF;outline-offset:3px}
+a{color:#2B3FA8}a:hover{color:#1D1B3A}
+.h{font-family:'Baloo 2','Trebuchet MS',sans-serif;font-weight:800;margin:0;line-height:1.08}
+.cap{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.scr{position:absolute;left:0;top:0;width:768px;height:1024px;display:flex;flex-direction:column}
+.card{background:#FFFBF2;border:3px solid #1D1B3A;border-radius:22px;box-shadow:0 5px 0 #1D1B3A}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:60px;padding:0 26px;border:3px solid #1D1B3A;border-radius:18px;background:#FFC83D;box-shadow:0 5px 0 #1D1B3A;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:21px;text-align:center;text-decoration:none;color:#1D1B3A}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #1D1B3A}
+.btn2{display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 20px;border:3px solid #1D1B3A;border-radius:16px;background:#FFFFFF;box-shadow:0 4px 0 #1D1B3A;font-weight:700;font-size:17px;text-align:center;text-decoration:none;color:#1D1B3A}
+.btn2:active{transform:translateY(2px);box-shadow:0 2px 0 #1D1B3A}
+.btn:disabled,.btn2:disabled{background:#E4E2EC;color:#5E5B78;border-color:#8F8BA8;box-shadow:0 4px 0 #8F8BA8}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;border:2px solid #1D1B3A;background:#FFFFFF;font-size:14px;font-weight:700;line-height:1.2;white-space:nowrap}
+.bubble{position:relative;background:#FFFFFF;border:3px solid #1D1B3A;border-radius:20px 20px 20px 6px;padding:12px 16px;font-size:17px;font-weight:700;line-height:1.35;box-shadow:0 4px 0 #1D1B3A}
+.muted{color:#4F4C6E}
+@keyframes wipp{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
+.kr{animation:wipp 5s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes flug{0%{transform:translate(-160px,40px)}60%{transform:translate(900px,-60px)}100%{transform:translate(900px,-60px)}}
+.komet{animation:flug 11s linear infinite}
+@keyframes funk{0%,100%{opacity:.25}50%{opacity:1}}
+.fu{animation:funk 3.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.kr,.komet,.fu{animation:none}}
+
+.band{position:relative;flex:none;background:#1E2257;color:#FFFFFF;overflow:hidden}
+.sb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:64px;padding:6px 6px;border:3px solid #1D1B3A;border-radius:14px;background:#FFFFFF;font-weight:700;font-size:15px;text-align:center;line-height:1.15}
+.sb b{font-family:'Baloo 2',sans-serif;font-size:20px}
+.sb.on{background:#FFC83D;box-shadow:0 4px 0 #1D1B3A}
+.tg{display:flex;align-items:center;gap:10px;min-height:56px;padding:6px 12px;border:3px solid #1D1B3A;border-radius:14px;background:#FFFFFF;font-weight:700;font-size:15px;text-align:left;line-height:1.2}
+.tg.on{background:#DDE6FF;border-color:#2B3FA8}
+.box{width:26px;height:26px;flex:none;border-radius:8px;border:3px solid currentColor;display:flex;align-items:center;justify-content:center}
+.line{display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:2px dotted #C9C3B0;font-size:16px}
+</style>
+</helmet>
+<div style="width:768px;height:1024px;position:relative;overflow:hidden;background:#EEF0FA;color:#1D1B3A;font-family:'Atkinson Hyperlegible',Verdana,sans-serif;font-size:17px;line-height:1.4;display:flex;flex-direction:column"><div class="band" style="height:150px;padding:20px 32px 0"><svg width="768" height="150" viewBox="0 0 768 150" aria-hidden="true" style="position:absolute;left:0;top:0"><circle cx="15" cy="22" r="2.2" fill="#FFFFFF" opacity="0.9" class="fu" style="animation-delay:0.4s"></circle><circle cx="39" cy="137" r="1.3" fill="#FFFFFF" opacity="0.9"></circle><circle cx="544" cy="25" r="1" fill="#FFFFFF" opacity="0.9"></circle><circle cx="507" cy="25" r="2.2" fill="#FFFFFF" opacity="0.9"></circle><circle cx="404" cy="34" r="1" fill="#FFFFFF" opacity="0.9" class="fu" style="animation-delay:0.4s"></circle><circle cx="588" cy="128" r="1.6" fill="#FFFFFF" opacity="0.9"></circle><circle cx="156" cy="52" r="1.6" fill="#FFFFFF" opacity="0.9"></circle><circle cx="457" cy="40" r="1.3" fill="#FFFFFF" opacity="0.9"></circle><circle cx="321" cy="97" r="1" fill="#FFFFFF" opacity="0.9" class="fu" style="animation-delay:2.9s"></circle><circle cx="640" cy="55" r="1.3" fill="#FFFFFF" opacity="0.9"></circle><circle cx="118" cy="116" r="2.2" fill="#FFFFFF" opacity="0.9"></circle><circle cx="29" cy="107" r="2.2" fill="#FFFFFF" opacity="0.9"></circle><circle cx="498" cy="36" r="2.2" fill="#FFFFFF" opacity="0.9" class="fu" style="animation-delay:2.2s"></circle><circle cx="153" cy="94" r="1.3" fill="#FFFFFF" opacity="0.9"></circle><circle cx="370" cy="42" r="1.6" fill="#FFFFFF" opacity="0.9"></circle><circle cx="259" cy="61" r="1.6" fill="#FFFFFF" opacity="0.9"></circle><circle cx="733" cy="141" r="1" fill="#FFFFFF" opacity="0.9" class="fu" style="animation-delay:2.4s"></circle><circle cx="238" cy="30" r="1.6" fill="#FFFFFF" opacity="0.9"></circle><circle cx="77" cy="33" r="1.6" fill="#FFFFFF" opacity="0.9"></circle><circle cx="532" cy="19" r="2.2" fill="#FFFFFF" opacity="0.9"></circle><circle cx="221" cy="48" r="1.3" fill="#FFFFFF" opacity="0.9" class="fu" style="animation-delay:0.3s"></circle><circle cx="159" cy="52" r="2.2" fill="#FFFFFF" opacity="0.9"></circle><circle cx="602" cy="84" r="1" fill="#FFFFFF" opacity="0.9"></circle><circle cx="208" cy="126" r="1" fill="#FFFFFF" opacity="0.9"></circle><circle cx="732" cy="34" r="1.3" fill="#FFFFFF" opacity="0.9" class="fu" style="animation-delay:2.1s"></circle><circle cx="652" cy="72" r="2.2" fill="#FFFFFF" opacity="0.9"></circle><circle cx="468" cy="77" r="1.6" fill="#FFFFFF" opacity="0.9"></circle><circle cx="748" cy="74" r="1" fill="#FFFFFF" opacity="0.9"></circle><circle cx="652" cy="73" r="2.2" fill="#FFFFFF" opacity="0.9" class="fu" style="animation-delay:2.9s"></circle><circle cx="586" cy="41" r="2.2" fill="#FFFFFF" opacity="0.9"></circle><circle cx="270" cy="8" r="2.2" fill="#FFFFFF" opacity="0.9"></circle><circle cx="447" cy="68" r="1" fill="#FFFFFF" opacity="0.9"></circle><circle cx="106" cy="84" r="1" fill="#FFFFFF" opacity="0.9" class="fu" style="animation-delay:2.8s"></circle><circle cx="676" cy="115" r="1.6" fill="#FFFFFF" opacity="0.9"></circle></svg><div style="position:relative;display:flex;align-items:center;gap:16px"><span class="kr" style="display:block"><svg width="84" height="101" viewBox="0 -24 120 144" role="img" aria-label="Krabbi" style="flex:none;overflow:visible"><path d="M54 50L44 2M66 50l10-48" stroke="#1D1B3A" stroke-width="3" stroke-linecap="round" fill="none"></path><path d="M44 -12l2.6 5.3 5.8.8-4.2 4.1 1 5.8L44 1.2l-5.2 2.8 1-5.8-4.2-4.1 5.8-.8Z" fill="#FFC83D" stroke="#1D1B3A" stroke-width="2" stroke-linejoin="round"></path><path d="M76 -12l2.6 5.3 5.8.8-4.2 4.1 1 5.8L76 1.2l-5.2 2.8 1-5.8-4.2-4.1 5.8-.8Z" fill="#FFC83D" stroke="#1D1B3A" stroke-width="2" stroke-linejoin="round"></path><path d="M30 88l-11 8M27 79l-13 4M90 88l11 8M93 79l13 4" stroke="#C75A12" stroke-width="5" stroke-linecap="round" fill="none"></path><path d="M33 68C22 63 17 56 17 46M87 68c11-5 16-12 16-22" stroke="#F47B20" stroke-width="7" stroke-linecap="round" fill="none"></path><circle cx="17" cy="38" r="12" fill="#F47B20" stroke="#1D1B3A" stroke-width="2.5"></circle><path d="M17 40L9 25h14Z" fill="#C75A12"></path><circle cx="103" cy="38" r="12" fill="#F47B20" stroke="#1D1B3A" stroke-width="2.5"></circle><path d="M103 40l8-15H97Z" fill="#C75A12"></path><path d="M50 54L46 32M70 54l4-22" stroke="#F47B20" stroke-width="6" stroke-linecap="round" fill="none"></path><ellipse cx="60" cy="74" rx="34" ry="26" fill="#F47B20" stroke="#1D1B3A" stroke-width="3"></ellipse><ellipse cx="60" cy="83" rx="21" ry="11" fill="#FFA24D"></ellipse><circle cx="46" cy="27" r="10" fill="#FFFFFF" stroke="#1D1B3A" stroke-width="2.5"></circle><circle cx="74" cy="27" r="10" fill="#FFFFFF" stroke="#1D1B3A" stroke-width="2.5"></circle><circle cx="48" cy="28" r="4.5" fill="#1D1B3A"></circle><circle cx="76" cy="28" r="4.5" fill="#1D1B3A"></circle><path d="M52 73q8 7 16 0" stroke="#1D1B3A" stroke-width="3" stroke-linecap="round" fill="none"></path><circle cx="41" cy="72" r="4" fill="#FF8F6B"></circle><circle cx="79" cy="72" r="4" fill="#FF8F6B"></circle></svg></span><div><span class="cap" style="color:#C9CCFF">So bekommst du Punkte</span><h1 class="h" style="font-size:38px">Punkte-Rechner</h1><div style="color:#E3E4FF">Tipp an, was du machst. Ich rechne dir vor, was eine richtige Antwort bringt.</div></div></div><svg width="768" height="34" viewBox="0 0 768 34" aria-hidden="true" style="position:absolute;left:0;bottom:-1px;display:block"><path d="M0 34V22Q384 -8 768 22V34Z" fill="#EEF0FA"></path></svg></div><div style="flex:1;padding:8px 32px 20px;display:flex;flex-direction:column;gap:12px"><div class="card" style="padding:12px 16px"><b style="font-size:18px">1 · Was machst du?</b><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px"><sc-for list="{{arts}}" as="o" hint-placeholder-count="4"><button type="button" class="{{o.cls}}" onClick="{{o.pick}}" aria-pressed="{{o.on}}"><b>{{o.v}}</b>{{o.t}}</button></sc-for></div></div><div class="card" style="padding:12px 16px"><b style="font-size:18px">2 · Wie steht das Paket?</b><div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:8px"><sc-for list="{{sts}}" as="o" hint-placeholder-count="5"><button type="button" class="{{o.cls}}" onClick="{{o.pick}}" aria-pressed="{{o.on}}"><b>{{o.v}}</b>{{o.t}}</button></sc-for></div></div><div class="card" style="padding:12px 16px"><b style="font-size:18px">3 · Was stimmt noch?</b><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px"><sc-for list="{{tgs}}" as="o" hint-placeholder-count="5"><button type="button" class="{{o.cls}}" onClick="{{o.pick}}" aria-pressed="{{o.on}}"><span class="box"><sc-if value="{{o.on}}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></span>{{o.t}}</button></sc-for></div></div><div class="card" style="padding:14px 18px;background:#FFFFFF;display:flex;gap:18px;align-items:stretch"><div style="flex:1"><span class="cap muted">So rechne ich</span><sc-for list="{{steps}}" as="l" hint-placeholder-count="3"><div class="line"><span style="flex:1">{{l.t}}</span><b class="h" style="font-size:20px;font-weight:700">{{l.v}}</b></div></sc-for></div><div style="width:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px;border:3px solid #1D1B3A;border-radius:20px;background:{{resBg}};text-align:center"><span style="font-size:15px;font-weight:700">eine richtige Antwort</span><span class="h" style="font-size:64px;line-height:1">{{pts}}</span><span style="font-size:16px;font-weight:700">{{ptsWord}}</span><span class="muted" style="font-size:14px">10 richtige: {{pts10}}</span></div></div><div style="display:flex;align-items:flex-end;gap:10px"><svg width="56" height="67" viewBox="0 -24 120 144" aria-hidden="true" style="flex:none;overflow:visible"><path d="M54 50L44 2M66 50l10-48" stroke="#1D1B3A" stroke-width="3" stroke-linecap="round" fill="none"></path><path d="M44 -12l2.6 5.3 5.8.8-4.2 4.1 1 5.8L44 1.2l-5.2 2.8 1-5.8-4.2-4.1 5.8-.8Z" fill="#FFC83D" stroke="#1D1B3A" stroke-width="2" stroke-linejoin="round"></path><path d="M76 -12l2.6 5.3 5.8.8-4.2 4.1 1 5.8L76 1.2l-5.2 2.8 1-5.8-4.2-4.1 5.8-.8Z" fill="#FFC83D" stroke="#1D1B3A" stroke-width="2" stroke-linejoin="round"></path><path d="M30 88l-11 8M27 79l-13 4M90 88l11 8M93 79l13 4" stroke="#C75A12" stroke-width="5" stroke-linecap="round" fill="none"></path><path d="M33 68C22 63 17 56 17 46M87 68c11-5 16-12 16-22" stroke="#F47B20" stroke-width="7" stroke-linecap="round" fill="none"></path><circle cx="17" cy="38" r="12" fill="#F47B20" stroke="#1D1B3A" stroke-width="2.5"></circle><path d="M17 40L9 25h14Z" fill="#C75A12"></path><circle cx="103" cy="38" r="12" fill="#F47B20" stroke="#1D1B3A" stroke-width="2.5"></circle><path d="M103 40l8-15H97Z" fill="#C75A12"></path><path d="M50 54L46 32M70 54l4-22" stroke="#F47B20" stroke-width="6" stroke-linecap="round" fill="none"></path><ellipse cx="60" cy="74" rx="34" ry="26" fill="#F47B20" stroke="#1D1B3A" stroke-width="3"></ellipse><ellipse cx="60" cy="83" rx="21" ry="11" fill="#FFA24D"></ellipse><circle cx="46" cy="27" r="10" fill="#FFFFFF" stroke="#1D1B3A" stroke-width="2.5"></circle><circle cx="74" cy="27" r="10" fill="#FFFFFF" stroke="#1D1B3A" stroke-width="2.5"></circle><circle cx="48" cy="28" r="4.5" fill="#1D1B3A"></circle><circle cx="76" cy="28" r="4.5" fill="#1D1B3A"></circle><path d="M52 73q8 7 16 0" stroke="#1D1B3A" stroke-width="3" stroke-linecap="round" fill="none"></path><circle cx="41" cy="72" r="4" fill="#FF8F6B"></circle><circle cx="79" cy="72" r="4" fill="#FF8F6B"></circle></svg><div class="bubble" style="flex:1">{{say}}</div></div><a class="btn2" href="G-App.dc.html" style="align-self:flex-start"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>Zurück zur App</a></div></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":768,"height":1024}}'>
+
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { art: 'selbst', st: 'ueben', kann: false, mix: true, deckel: false, zweit: false, fast: false }; }
+  renderVals() {
+    const s = this.state, d = (x) => String(x).replace('.', ',');
+    const A = [['tippen', 'Antippen', 4], ['ordnen', 'Ordnen', 6], ['selbst', 'Selbst machen', 10], ['lesen', 'Lesen', 0]];
+    const S = [['neu', 'neu', 1], ['ueben', 'noch üben', 1], ['dran', 'wieder dran', 1], ['lange', 'lange nicht geübt', 1.2], ['sicher', 'sicher, nicht dran', 0.15]];
+    const set = (k, v) => () => this.setState({ [k]: v });
+    const arts = A.map((a) => ({ t: a[1], v: a[2], on: s.art === a[0], cls: 'sb' + (s.art === a[0] ? ' on' : ''), pick: set('art', a[0]) }));
+    const sts = S.map((a) => ({ t: a[1], v: a[2] === 1 ? '×1' : '×' + d(a[2]), on: s.st === a[0], cls: 'sb' + (s.st === a[0] ? ' on' : ''), pick: set('st', a[0]) }));
+    const T = [['kann', 'Ich kann es schon selbst (Können-Haken)'], ['mix', 'Gemischt mit anderen Paketen'], ['deckel', 'Schon die 3. Runde mit dem Paket heute'], ['zweit', 'Erst im zweiten Versuch richtig'], ['fast', 'Sehr schnell getippt, ohne zu lesen']];
+    const tgs = T.map((t) => ({ t: t[1], on: !!s[t[0]], cls: 'tg' + (s[t[0]] ? ' on' : ''), pick: () => this.setState({ [t[0]]: !s[t[0]] }) }));
+    const a = A.find((x) => x[0] === s.art), st = S.find((x) => x[0] === s.st);
+    const steps = []; let pts = 0, say = '', zero = false;
+    if (s.art === 'lesen') { zero = true; steps.push({ t: 'Lesen und Lernkarten umdrehen', v: '0' }); say = 'Lesen bringt keine Punkte. Es macht die Aufgaben danach leichter, und der kurze Check danach zählt.'; }
+    else if (s.fast && s.art !== 'selbst') { zero = true; steps.push({ t: a[1] + ': ' + a[2], v: a[2] }); steps.push({ t: 'Zu schnell, also geraten', v: '= 0' }); say = 'Raten bringt nichts. Lies die Frage in Ruhe, dann zählt deine Antwort, auch für die Haken.'; }
+    else if (s.zweit && s.art !== 'selbst') { zero = true; steps.push({ t: a[1] + ': ' + a[2], v: a[2] }); steps.push({ t: 'Zweiter Versuch beim Antippen', v: '= 0' }); say = 'Beim Antippen bleibt im zweiten Versuch ja fast nur noch Raten übrig. Darum gibt es dafür nichts.'; }
+    else {
+      let f = 1; steps.push({ t: a[1], v: a[2] });
+      if (st[2] !== 1) { f *= st[2]; steps.push({ t: st[0] === 'lange' ? 'lange nicht geübt: Bonus' : 'kannst du schon, nicht wieder dran', v: '× ' + d(st[2]) }); }
+      else steps.push({ t: st[1] + ': volle Punkte', v: '× 1' });
+      if (s.kann && s.art === 'tippen') { f *= 0.5; steps.push({ t: 'Antippen ist für dich leicht', v: '× 0,5' }); }
+      if (s.mix) { f *= 1.2; steps.push({ t: 'gemischt wie in der Arbeit', v: '× 1,2' }); }
+      if (s.deckel) { f *= 0.15; steps.push({ t: 'heute schon viel geübt', v: '× 0,15' }); }
+      if (f > 1.5) { f = 1.5; steps.push({ t: 'höchstens', v: '× 1,5' }); }
+      pts = Math.max(1, Math.round(a[2] * f));
+      if (s.zweit) { pts = Math.max(1, Math.round(pts / 2)); steps.push({ t: 'zweiter Versuch: die Hälfte', v: '÷ 2' }); }
+      steps.push({ t: 'gerundet, mindestens 1', v: '= ' + pts });
+      if (s.fast) say = 'Beim Selbstmachen kann man nicht raten. Schnell sein ist hier in Ordnung.';
+      else if (pts >= 10) say = 'Super Wahl! Selbst machen und mischen, so lernst du am meisten.';
+      else if (s.deckel) say = 'Heute hast du das schon oft geübt. Morgen gibt es wieder volle Punkte. Probier doch ein anderes Paket!';
+      else if (st[0] === 'sicher') say = 'Das kannst du schon. Volle Punkte gibt es wieder, wenn das Paket wieder dran ist.';
+      else if (pts <= 3) say = 'Das ist für dich leicht, darum gibt es wenig. Probier es mal selbst, dann gibt es mehr.';
+      else say = 'Gut! Noch mehr gibt es, wenn du es selbst machst oder mit anderen Paketen mischst.';
+    }
+    return { arts, sts, tgs, steps, pts, pts10: (pts * 10) + ' Punkte', ptsWord: pts === 1 ? 'Punkt' : 'Punkte', say, resBg: zero ? '#FFE9D6' : pts >= 10 ? '#DDF5E7' : '#FFF1C7' };
+  }
+}
+
+</script>
+</body>
+</html>

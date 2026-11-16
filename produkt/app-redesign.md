@@ -2,6 +2,8 @@
 
 Stand: 12.11.2026 · in Arbeit · Favorit bisher: **Richtung B (Lernwelt)**: leicht spielerisch (Sprechblase, Krabbi hat eine Rolle), klare Linien, gut gruppiert und abgegrenzt.
 
+**Neu (16.11.2026): Entwurf G zu Usability, Lenkung und Punkten** in `app-redesign-G.md`: Ein Paket wird durch drei Haken sicher (Kennen · Können · Behalten), Punkte richten sich danach, wie viel man selbst denkt (Antippen 4, Selbst machen 10, Raten 0), Krabbi bietet drei Vorschläge plus „Los“, „Selbst zusammenstellen“ bleibt ohne Sperren offen, Eltern stellen Frei · Ausgewogen · Geführt ein. Klick-Dummy in der Reihe „G“ auf der Arbeitsfläche, Quellen in `produkt/quellen/redesign-g/`.
+
 **Warum:** Die App ist historisch gewachsen. Jede Lernwelt sieht anders aus, die Startseite ist voll, vieles ist Text, und es gibt keinen eigenen Stil. Bevor neue Funktionen kommen (siehe `funktionen.html`, Teil B), soll die App aufgeräumt, schnell verständlich, zugänglich und auf ein professionelles Niveau gebracht werden. Danach werden Produktseite und Videos mit den neuen Bildschirmen neu gemacht. Inhalt und Aufbau der Produktseite bleiben (`produktseite.md`).
 
 **Entwürfe:** eigene Design-Arbeitsfläche „App-Redesign Lernzentrale“ (getrennt von der Produktseite), Link: https://claude.ai/artifact/4dGcpa3J5DwZv9Be49Upyj (privat, nur für die Besitzerin sichtbar, bis sie geteilt wird). Kopie der Quellen in `produkt/quellen/redesign/`.
