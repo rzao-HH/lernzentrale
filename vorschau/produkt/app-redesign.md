@@ -1,0 +1,251 @@
+# App-Redesign: Konzept und erste Entwürfe
+
+Stand: 12.11.2026 · in Arbeit · Favorit bisher: **Richtung B (Lernwelt)**: leicht spielerisch (Sprechblase, Krabbi hat eine Rolle), klare Linien, gut gruppiert und abgegrenzt.
+
+**Neu (16.11.2026): Entwurf G zu Usability, Lenkung und Punkten** in `app-redesign-G.md`: Ein Paket wird durch drei Haken sicher (Kennen · Können · Behalten), Punkte richten sich danach, wie viel man selbst denkt (Antippen 4, Selbst machen 10, Raten 0), Krabbi bietet drei Vorschläge plus „Los“, „Selbst zusammenstellen“ bleibt ohne Sperren offen, Eltern stellen Frei · Ausgewogen · Geführt ein. Klick-Dummy in der Reihe „G“ auf der Arbeitsfläche, Quellen in `produkt/quellen/redesign-g/`.
+
+**Warum:** Die App ist historisch gewachsen. Jede Lernwelt sieht anders aus, die Startseite ist voll, vieles ist Text, und es gibt keinen eigenen Stil. Bevor neue Funktionen kommen (siehe `funktionen.html`, Teil B), soll die App aufgeräumt, schnell verständlich, zugänglich und auf ein professionelles Niveau gebracht werden. Danach werden Produktseite und Videos mit den neuen Bildschirmen neu gemacht. Inhalt und Aufbau der Produktseite bleiben (`produktseite.md`).
+
+**Entwürfe:** eigene Design-Arbeitsfläche „App-Redesign Lernzentrale“ (getrennt von der Produktseite), Link: https://claude.ai/artifact/4dGcpa3J5DwZv9Be49Upyj (privat, nur für die Besitzerin sichtbar, bis sie geteilt wird). Kopie der Quellen in `produkt/quellen/redesign/`.
+
+## Was heute stört (Bestandsaufnahme)
+
+- **Jede Lernwelt ist eine eigene App:** eigene Schrift (z. B. Schreibmaschine im Detektiv-Büro), eigene Kopfleiste, eigener Aufbau. Man muss jedes Fach neu lernen.
+- **Startseite überladen:** Anmeldung, Personenwahl, Lernplan, „Heute lohnt sich“, vier App-Karten mit je zwei Knöpfen, Arena, Lerngruppen, Rangliste, Neuigkeiten. Es ist nicht klar, was man jetzt tun soll.
+- **Kopfleiste nur aus Emojis** (🏠 ⚔️ 📄 🙂 🗓️ 🔊), ohne Beschriftung; auf schmalen Geräten rutscht sie aus dem Bild.
+- **Erst Pakete ankreuzen, dann Modus wählen:** zwei getrennte Schritte, und viele Modi stehen gleichberechtigt nebeneinander (8–10 pro Fach).
+- **Paketkarten voller Text:** Lernziel, Buchseite, „Fortschritt: 0 von 16 Treffern (aus den letzten 20 Aufgaben)“, „Volle Punkte – neu“.
+- **Einstellungen mittendrin** (Leicht/Profi, Rekorde, Zurücksetzen) zwischen den Lerninhalten.
+
+## Grundsätze für die neue App
+
+Aus der Recherche (Nielsen Norman Group zu Kindern 3–12, Analysen von Duolingo und Khan Academy Kids) und aus der Bestandsaufnahme:
+
+1. **Eine App, ein Stil.** Alle Fächer nutzen dieselben Bausteine. Ein Fach erkennt man an Farbe, Name und Bild, nicht an anderer Bedienung.
+2. **Immer klar, was als Nächstes dran ist.** Die Startseite heißt „Heute“ und zeigt eine große Karte „Als Nächstes“ (aus Lernplan und „lohnt sich“), dazu den Countdown zur Arbeit. Duolingo hat aus demselben Grund auf einen einzigen Weg umgestellt.
+3. **Flache Navigation.** Unten vier Reiter: Heute · Fächer · Gemeinsam · Ich. Höchstens drei Ebenen bis zur Übung (Fach → Paket → Übung).
+4. **Eine Aufgabe pro Bildschirm.** In der Übung keine Leisten, nur Fortschritt, Aufgabe, große Antworten, Rückmeldung.
+5. **Große Tippflächen** (mindestens 56–64 px hoch), Text mindestens 16–17 px, gute Kontraste (WCAG AA). Farbe nie als einziges Signal (immer auch Wort oder Häkchen).
+6. **Symbole statt Emojis:** eine Liniensymbol-Familie mit Beschriftung.
+7. **Fortschritt als Bild** (Balken, Ring, Weg) und ein Wort („neu“, „noch üben“, „sicher“) statt Zahlenkolonnen. Zahlen nur auf Nachfrage.
+8. **Module nach Zweck sortiert** statt als lange Liste: Verstehen · Üben · Erleben · Testen, eins davon „empfohlen“.
+9. **Nicht kindisch.** Die Zielgruppe ist etwa 9–13. Freundlich, aber erwachsen genug (Tweens empfinden Kleinkind-Optik als peinlich).
+10. **Krabbi bleibt** als Begleiter: für Tipps, Lob, „Als Nächstes“. Wie präsent, hängt von der Richtung ab.
+
+## Begriffe
+
+- Stufen eines Pakets: **neu · noch üben · sicher**.
+- Nicht verwenden: „wackelt“, „wackelig“, „noch nicht sitzt“ (wirkt abwertend bzw. unklar). Die heutige App sagt an einer Stelle „Volle Punkte – noch wackelig“ (Startseite, „Heute lohnt sich besonders“); beim Umbau ändern.
+
+## Neuer Aufbau (in allen Entwürfen gleich)
+
+- **Heute:** Begrüßung, Countdown zur nächsten Arbeit mit Lernplan-Fortschritt, Karte „Als Nächstes“ mit einem Knopf, „Heute im Plan“ (3 Punkte, abhakbar).
+- **Fächer:** vier Kacheln (Fach, Lernwelt, Fortschritt). Darunter später „Neues Lernmaterial hinzufügen“ (Foto → Pakete, kommt bald).
+- **Fach:** Name, Rang, Pakete der Reihe nach mit Status (sicher / noch üben / neu), am Ende der Abschlusstest.
+- **Paket:** Lernziel, Buchseite, Fortschritt, Module in vier Gruppen (Verstehen, Üben, Erleben, Testen), eins empfohlen.
+- **Übung:** Schließen, Fortschritt, Aufgabe, große Antworten, Rückmeldung mit Erklärung, „Weiter“.
+- **Ergebnis:** Lob, „9 von 10“, Punkte, was das für das Paket heißt, „Noch eine Runde“ / „Weiter im Plan“.
+- **Gemeinsam:** Lerngruppen als Reiter, Rangliste, Duell.
+- **Ich:** Lernplan, Ränge und Abzeichen, Einstellungen (Ton, Schriftgröße, hell/dunkel), Geräte verbinden, **Für Eltern** (mit Code gesperrt).
+
+Die Spielwelten (Küsten-Crew, Detektiv-Büro …) bleiben als Name, Bild und Rang erhalten, aber nicht mehr als eigener Bedienstil.
+
+## Drei Stilrichtungen (zum Auswählen oder Mischen)
+
+| | A · Klar | B · Lernwelt | C · Studio |
+|---|---|---|---|
+| Gefühl | ruhig, aufgeräumt, viel Weißraum | warm, verspielt, Abenteuer | modern, dunkel, für Große |
+| Schrift | Lexend (für flüssiges Lesen entwickelt) | Baloo 2 + Nunito | Space Grotesk + Inter |
+| Farben | hellgrauer Grund, 4 Fachfarben gedämpft | Sandgrund, kräftige Farben, schwarze Umrisse wie Aufkleber | fast schwarz, Neon-Limette als Aktion, helle Fassung dazu |
+| Fach-Ansicht | Liste der Pakete | Weg mit Stationen (wie eine Karte), Krabbi läuft mit | Kacheln mit Fortschrittsringen |
+| Krabbi | klein, bei Lob | groß, spricht in Sprechblasen | nur bei Lob und Tipps |
+| Passt gut für | breite Zielgruppe, Eltern, Lesbarkeit | Klasse 4–6, Spielspaß | Klasse 6–8, „nicht kindisch“ |
+| Risiko | wirkt evtl. zu nüchtern | wirkt ab Klasse 7 evtl. zu kindlich | dunkel ist abends gut, tagsüber Geschmackssache |
+
+Denkbar ist auch eine Mischung, z. B. Aufbau und Lesbarkeit von A, Weg-Ansicht der Fächer aus B, Zahlen-Kacheln aus C. Eine Hell/Dunkel-Umschaltung kann jede Richtung bekommen.
+
+## Wichtig: So wird gelernt (Lernmodell, muss die Führung tragen)
+
+Ein Paket hat **keine eigene Lernstrecke**. Module gelten für die **gewählte Auswahl an Paketen**, nicht für ein einzelnes Paket:
+- Ein **neues Paket lernt man zuerst allein**.
+- Danach **nimmt man es zu den Paketen dazu, die schon sitzen**, und übt alles **gemischt** (so bleibt Altes frisch, und die Aufgaben kommen wie in der Arbeit durcheinander).
+- Manche Module gehen nur mit bestimmten Paketen (Winkel-Akademie: Messen, Winkelart, Schätzen, Zeichnen, Zeitrunde nur mit Paketen 1–4; Aufgaben-Mission nur mit 5–8; Test mit jeder Auswahl). Die Oberfläche muss zeigen, **warum** ein Modul gerade nicht geht.
+
+Heute geschieht das mit „Pakete ankreuzen, dann Modus wählen“. Das ist richtig gedacht, aber nicht erklärt.
+
+## Grundablauf neu: erst „Was?“, dann „Wie?“ (Klick-Dummy 2, Stil B)
+
+Rückmeldung zu den ersten Dummies (A, B, C) und zum festen Weg in D: Wer erst ein Paket wählt und dann dessen Module bekommt, sieht nicht, dass dieselben Module für mehrere Pakete gelten, kann nicht mehrere Pakete zusammen lernen und hat in D sogar einen festen Weg statt freier Wahl. Deshalb gilt ab jetzt dieser Grundablauf auf der Fach-Seite:
+
+1. **Was übst du?** Pakete antippen: eins allein oder mehrere zusammen. Schnellwahl: „Neu: nur Paket 3“, „Alles, was ich kann“, „Neues + Bekanntes“.
+2. Ein Band zeigt die Auswahl in Worten: „Du übst: Paket 1 + 2 + 3 gemischt“.
+3. **Wie übst du?** Alle Module frei wählbar. Jedes Modul zeigt, **aus welchen der gewählten Pakete** es Aufgaben nimmt („aus Paket 1 und 2“). Passt ein Modul zu keinem gewählten Paket, ist es ausgegraut mit Grund („nur mit Paket 5–8“).
+4. In der Übung steht oben „Winkelart erkennen · Paket 1 + 2 + 3 gemischt“, und an jeder Aufgabe, **aus welchem Paket sie kommt**.
+5. Das Ergebnis zeigt **pro Paket**, wie es lief. So sieht man, welches Paket man noch üben sollte.
+
+Krabbi erklärt je nach Auswahl in einem Satz, was das bedeutet (allein = kennenlernen, gemischt = wie in der Arbeit, Altes bleibt frisch). Vorschläge (Konzept 2), Plan (4) und Weg (D) können darauf aufbauen, indem sie eine Auswahl plus ein Modul vorschlagen, statt den Weg festzulegen.
+
+## Startseite je Fach: fünf Konzepte (Stil B, auf der Arbeitsfläche, alle klickbar)
+
+1. **Weg mit Schritten** (Pakete als Akkordeon, jedes mit Verstehen → Üben → Erleben → Prüfen). **Verworfen** in dieser Form: Es tut so, als hätte jedes Paket eine eigene Strecke, Module kämen mehrfach vor, und Mischen ginge nicht.
+2. **Krabbi schlägt vor:** oben ein einziger Vorschlag mit „Warum das?“, darunter vier zugeklappte Schubladen (Neues lernen, Noch üben, Spielen und ausprobieren, Testen).
+3. **Was willst du heute?** Vier große Türen nach Absicht, darunter erscheint nur das Passende.
+4. **Plan bis zur Arbeit:** Wenn eine Arbeit eingetragen ist, ist der Lernplan die Startseite (Tag für Tag, heute aufgeklappt, Probearbeit, Arbeit).
+5. **Lernrucksack:** zeigt das Lernmodell direkt. Oben steht, was gerade „im Rucksack“ ist (ein Paket allein oder mehrere gemischt), mit „Allein lernen“ für das neue Paket und „Alles, was ich kann“. Darunter die Module, die für diese Mischung gelten; nicht passende sind ausgegraut mit Grund („braucht Paket 1–4“).
+
+Die Konzepte lassen sich kombinieren, z. B. Vorschlag oben (2) + Rucksack darunter (5), oder Plan (4), wenn eine Arbeit ansteht, sonst Weg (D).
+
+## Navigation: von heute nach neu
+
+Oben im Fach nur noch: zurück, Fachname, Rang. Unten vier Reiter (Heute, Welten, Gemeinsam, Ich). Haus → Reiter Heute; Schwerter/Arena → Gemeinsam und beim Testen; Lernzettel → beim Verstehen bzw. am Abschnitt; Person wechseln, Ton, Leicht/Profi, Rekorde, Zurücksetzen, Neuigkeiten → Ich; Lernplan → Heute und Fach-Start (Konzept 4); Checkliste und Elternübersicht → Ich › Für Eltern; Pakete ankreuzen → Rucksack bzw. automatisch auf dem Weg.
+
+## Entwurf D: ein Weg mit Misch-Stationen (Prinzipien großer Sprach-Apps)
+
+Angelehnt an den Aufbau großer Sprach-Apps (Duolingo), **ohne deren Gestaltung zu kopieren**: Die Startseite ist der Weg. Abschnitte mit farbigem Band und Lernzettel; runde Stationen mit „Tastenkante“; Infos erst beim Antippen; eine Aufgabe pro Bildschirm; „Prüfen“, dann Rückmeldung als Streifen von unten; Ergebnis mit drei Kacheln.
+**Passt zum Lernmodell:** Auf dem Weg wechseln sich neue Pakete (allein) und **Misch-Stationen** (alle bisherigen Pakete zusammen) ab, am Ende ein Abschnittstest. Beispiel Winkel: Paket 1 → Paket 2 → Mischen 1+2 → Paket 3 → Mischen 1–3 → Paket 4 → Mischen 1–4 → Abschnittstest; dann Abschnitt 2 (Pakete 5–8).
+**Bewusst anders als dort:** keine Leben, kein Sperren nach Fehlern, Serie ohne Druck, Krabbi statt Eule, eigene Farben; jede Station lässt sich trotzdem antippen („Trotzdem ausprobieren“), freies Üben bleibt möglich.
+**Abgeglichen mit echten Bildschirmen:** Die offiziellen App-Store-Bilder von Duolingo und Khan Academy Kids (apps.apple.com, in der Umgebung „lernzentrale“ freigegeben) zeigen die Übungsbildschirme: weißer Grund, dünner runder Fortschrittsbalken mit „… in Folge“ darüber, oben eine Anweisung, große Bild- oder Wortkacheln (gewählt = hellblau), eine Figur stellt die Frage mit Sprechblase, unten ein hellgrüner Streifen „Sehr gut!“ mit breitem „Weiter“. Entwurf D folgt dem; ergänzt wurden „3 richtig in Folge“ über dem Balken und Krabbi, der die Frage in einer Sprechblase stellt. Den Lernweg selbst zeigen die Store-Bilder nicht.
+**Stilvorbilder der Konkurrenzanalyse:** Die Session „Konkurrenzanalyse Lern-Apps“ hat 130 Aufnahmen der Webseiten von StudySmarter, Duolingo, Prodigy, Knowunity, Khanmigo und Photomath gemacht (Artefakt „Stilvorbilder“, https://claude.ai/artifact/XoV1Vka1YbEpkVBV5C7xoP#galerie). Das sind Werbeseiten, keine App-Bildschirme; brauchbar für Farben, Schrift und Tasten, nicht für Aufbau. Echte App-Bildschirme: App-Store-/Play-Einträge oder eigene Screenshots vom Handy.
+
+## Entscheidung in Arbeit: geführter Lernweg statt freier Wahl (Stand 12.11.2026)
+
+**Anlass:** Mit der freien Wahl hat Robin oft nur Spiele und Auswahlaufgaben gemacht, wild geklickt, dafür Punkte bekommen und den Stoff nicht verstanden. Deshalb führt künftig ein **fester Lernweg** wie bei Duolingo. Wichtig bleibt: Man lernt **nicht erst alle Lernkarten eines Pakets vollständig**, sondern wechselt ständig die Perspektive. So setzt sich der Stoff, und es wird nicht dröge.
+
+**Regeln für den Weg:**
+1. **Stationen = Modul + Pakete.** Jede Station ist ein bestimmtes Modul mit einem oder mehreren Paketen (Farbe = Paket, mehrfarbig = gemischt).
+2. **Perspektiven wechseln sich ab,** von leicht zu anspruchsvoll, aber gemischt: Wissen lesen → Erkennen (mit Auswahl) → selbst machen (Zeichnen, Messen) → ohne Hilfen (Schätzen, Schreiben) → gegen die Uhr, Duell → Test. Kein Modul kommt zweimal direkt hintereinander.
+3. **Ein neues Paket kommt dazu,** wenn das vorige **einigermaßen klappt**, nicht erst bei 100 %. Vorschlag: mindestens 7 von 10 in seinen letzten zwei Stationen. Danach folgt eine **Misch-Station** mit allen bisherigen Paketen.
+4. **Weiter geht es ab 7 von 10** in einer Station. Klappt es nicht, wird nicht gesperrt und nicht bestraft: Krabbi setzt eine **Extra-Station** ein, dasselbe noch einmal, aber aus anderer Perspektive (z. B. als Spiel oder mit Bildern).
+5. **Wiederholung ist eingebaut:** Wird ein altes Paket fällig (1, 2, 4, 8, 16 Tage), erscheint eine **Bonus-Truhe** im Weg (+20 % Punkte).
+6. **Zurückgehen geht immer:** Fertige Stationen sind gold und lassen sich wiederholen, mit weniger Punkten, solange nichts fällig ist.
+7. **Neues ist sichtbar, aber zu:** Kommende Stationen zeigen ihr Modul (grau), beim ersten Auftreten mit **NEU**. Am Abschnitt steht „Kommt noch: Schätzen, Duell, Abschnittstest“. Antippen erklärt, wann es aufgeht. Überspringen gibt es nicht.
+8. **„Frei üben“ nur mit Erreichtem:** eigene Mischung nur aus Paketen und Modulen, die man auf dem Weg schon erreicht hat, mit weniger Punkten. Neues gibt es nur auf dem Weg.
+9. **Gegen wildes Klicken:** Punkte nur für richtige Antworten. Sehr schnelle Antworten hintereinander bringen keine Punkte (Krabbi: „Langsam, lies die Frage zuerst“). Auswahlaufgaben kommen vor allem früh; später muss man selbst zeichnen, messen oder schreiben.
+10. **Jede Station sagt, warum** sie gerade dran ist („Warum hier? Erst erkennen, mit Auswahl …“).
+
+Diese Regeln passen zur vorhandenen Lernlogik (Stufen 0–5, verteilte Wiederholung, volle oder wenige Punkte) und ersetzen die Paket-Auswahl als Hauptweg. Offen: genaue Schwellen, wie viele Stationen pro Paket, wie der Lernplan bis zur Arbeit den Weg beschleunigt (z. B. mehr Misch-Stationen und Test kurz vor der Arbeit).
+
+## Entwurf D2: nach Duolingos eigenem Artikel zum Lernweg
+
+Rückmeldung zu D: optisch keine verspielten Elemente, vom Vorbild nichts wiederzuerkennen. Zu Recht: D war aus dem Gedächtnis gebaut, der Artikel war nicht lesbar. Jetzt gelesen: Duolingo-Blog „introducing the new duolingo learning path“ (blog.duolingo.com, 2022, mit Bildern). Der UX-Planet-Artikel blockt automatische Browser und bleibt ungelesen.
+
+**Was der Artikel sagt (und für uns passt):**
+- Startseite ist ein Weg; jeder Kreis eine Stufe. Grund: Viele waren unsicher, ob sie die App „richtig“ benutzen.
+- **Stufen aus verschiedenen Themen sind im Weg verteilt und gemischt** (verteilte Wiederholung), Übungsrunden sind eingebaut. Das entspricht unserem Modell „allein lernen, dann mischen, später wiederholen“.
+- Stationen haben keine Beschriftung; Antippen zeigt ein Popup mit Thema, Stufe und Start. Abschnitte haben ein farbiges Band mit beschreibendem Titel und einem „Guidebook“ (bei uns: Lernzettel).
+- Abgeschlossene Stationen sind gold und lassen sich wiederholen; freies Üben gibt es zusätzlich in einem eigenen Übungsbereich.
+- Figuren stehen am Weg und feuern an.
+
+**Was man in den Bildern sieht:** kräftige Vollfarben; runde Stationen mit dem **Symbol ihres Themas**, Stufen-Abzeichen mit Zahl; dicker Ring und „START“ an der aktuellen Station; Tasten und Karten mit dunklerer Unterkante statt Umriss; oben bunte Werte (Flamme, Edelsteine, Herzen), unten bunte Reiter-Symbole.
+
+**Rückmeldung zur ersten Fassung von D2:** Module nicht zu sehen (Popup zeigte nur „Wissen“), wieder nüchtern. **Überarbeitet:** Jede Station ist ein bestimmtes **Modul** (Symbol + Schild, z. B. „Messen · P3“, „Zeitrunde · P1+2“), die **Farbe zeigt das Paket**, Misch-Stationen sind **mehrfarbig**. Das Popup nennt Paket und Modul und bietet „Oder lieber anders üben:“ mit den anderen Modulen. Lebendiger: Farbflächen im Hintergrund, Planeten, funkelnde Sterne, eine Rakete fliegt durchs Bild, Krabbi als Astronaut an der aktuellen Station, Bonus-Truhe, Duell-Station, Konfetti im Ergebnis. Paket-Legende oben am Weg.
+
+**D2 setzt das um:** Jedes Paket hat Farbe und Symbol; dasselbe Paket kommt im Weg später wieder (z. B. Paket 1 Stufe 3 mit Bonus); grüne Misch-Stationen für „Paket 1 + 2“, „1 + 2 + 3“; Popup mit Stufe und Punkten; Reiter **„Frei üben“** mit Was/Wie (eigene Mischung, Module frei); Lektion mit „3 in Folge“, Krabbi stellt die Frage, „Prüfen“, grüner bzw. roter Streifen; Ergebnis mit drei Kacheln. Bewusst anders: keine Leben, Serie ohne Druck, eigene Symbole und Krabbi.
+
+## Entwurf E (Fable): die Flugkarte, ein Linienplan statt einer Perlenkette
+
+Auf der Arbeitsfläche (Reihe „E · Entwurf von Fable“ ganz unten): `E-App` (Klick-Dummy), `E-Themen` (Themenhaut, Fach wechseln), `E-Stil` (Stilblatt). Von einem anderen Modell (Fable 5.2) unabhängig von A–D2 entworfen; es kannte nur Anforderungen, Lernmodell und Weg-Regeln. Quellen in `produkt/quellen/redesign-e/`.
+
+**Leitidee:** Der Lernweg ist kein einzelner Pfad aus Knoten, sondern ein **Linienplan** wie bei der U-Bahn. Jedes Paket ist eine farbige, nummerierte **Leuchtspur**, die von oben nach unten läuft. Jede Station ist eine Zeile. Sitzt sie auf einer Spur, wird ein Paket allein geübt. Verbindet eine Kapsel mehrere Spuren, wird gemischt. So zeigt die Karte das Lernmodell selbst:
+
+- **Neu, zuerst allein:** Eine neue Spur beginnt sichtbar an der Stelle, an der das Paket dazukommt.
+- **Dann gemischt:** Die Kapsel spannt sich über alle beteiligten Spuren.
+- **Wiederholung:** Eine einzelne Station sitzt wieder auf einer alten Spur („nachleuchten“, +20 %).
+- **Perspektivwechsel:** Rechts in jeder Zeile stehen Lernform und Symbol; keine Lernform steht zweimal direkt hintereinander.
+
+**Was neu ist und welche Anforderung es löst**
+
+1. **Flugkarte als Liste mit Spuren.** Links das Bild (Spuren, Kapseln), rechts Klartext („Erkennen · gemischt“, „jetzt dran · volle Punkte“, „geht auf nach 2 Stationen“). Jede Station ist eine 56 px hohe Zeile, die ganze Zeile ist die Tippfläche.
+2. **Heute-Karte mit Tagesdosis.** Krabbi sagt in einem Satz, was heute dran ist und warum. Darunter drei Stationen als Chips (etwa 12 Minuten) und ein großer Knopf „Weiterfliegen“. Nach drei Stationen: „Für heute bist du fertig. Du kannst aufhören oder noch weiterfliegen.“
+3. **Station antippen: Mischung als Balken.** Das Blatt zeigt, was man tut, die Zusammensetzung der 10 Aufgaben als farbigen Balken („5 × Überstumpf, neu dabei · 3 × Spitz & recht · 2 × Stumpf & gestreckt“), „Warum jetzt?“, die Punkte-Münze mit Grund und „Danach kommt“.
+4. **Vorfreude ohne Überspringen.** Kommende Stationen stehen mit Lernform, Symbol und Marken (NEU, +20 %, Note) gestrichelt und blass in der Karte; Antippen erklärt, wann sie aufgehen, ohne Start-Knopf. Am Ende steht „Im Fernrohr“ der nächste Abschnitt.
+5. **Extra-Station statt Sperre.** Klappt eine Station nicht, erscheint eine Zeile „Sortieren · Extra-Station“: gleicher Stoff, andere Perspektive. Nichts wird gesperrt oder abgezogen.
+6. **Zwei Bremsen gegen wildes Klicken.** „Antippen, dann prüfen“ (Wahl vor dem Prüfen änderbar) und eine Tempo-Regel: Wer zu schnell prüft, sieht „Richtig, aber sehr schnell. Dafür gibt es diesmal keine Punkte.“ Lernen wird nie blockiert, nur die Punkte entfallen.
+7. **Herkunft jeder Aufgabe.** Über jeder Aufgabe steht „Paket 3 · Überstumpf · neu dabei“ oder „kennst du schon“. Das Ergebnis rechnet je Paket ab.
+8. **Sternbild der Woche statt Serie.** Jeder Lerntag lässt einen Stern leuchten. Freie Tage löschen nichts; keine Flamme, keine Leben, kein Verlust.
+9. **Frei üben erklärt die Punkte.** Erst „Was?“ (nur erreichte Pakete), dann „Wie?“ (nur erreichte Lernformen, unpassende mit Grund). Die Zusammenfassung zeigt je Paket die Münze mit Grund.
+10. **Grunddesign: Bühne und Papier.** Alles zum Lesen und Tippen liegt auf hellen Papier-Karten und sieht in jedem Fach gleich aus. Das Thema färbt nur die Bühne dahinter. Ein Thema ist ein Steckbrief aus sieben Angaben: Bühne, Farben, Paketform, Krabbis Kostüm, Vorbeiflieger, Rangnamen, Wörter. `E-Themen` zeigt vier feste Themen und ein eigenes (Tiefsee).
+
+**Stil:** Bricolage Grotesque (Überschriften), Atkinson Hyperlegible (Lesetext, für gute Lesbarkeit entworfen). Weltraum: Nachtblau #171A45, Papier #FBF8F1, Tinte #15173A, Sternengelb #FFC83D, Krabbi-Orange #F47B20. Richtig grün mit Häkchen und Wort; „Noch nicht ganz“ orange und gestrichelt, nie rot. Knöpfe mindestens 56 px, Bewegung sparsam und bei „weniger Bewegung“ aus. Krabbis Kostüme: Raumhelm, Zauberhut, Südwester, Mütze mit Lupe, Taucherbrille.
+
+**Navigation:** Flugkarte (je Thema anders benannt: Seekarte, Spurenkarte …) · Frei üben · Gemeinsam · Ich (Eltern-Bereich hinter Code). In der Übung keine Reiter.
+
+**Annahmen von Fable:** Stationsreihenfolge, Aufteilung 5/3/2 in Misch-Stationen, Rang-Schwellen und 10 Punkte je Antwort, Tempo-Grenze 1,5 s (Demowert), Kind heißt im Dummy „Mika“, eigene Wörter („nachleuchten“, „wieder dran“), eigene Paketformen (Planeten, Tropfen, Signalflaggen, Aktenreiter, Seesterne).
+
+**Offene Fragen von Fable:** Trägt der Linienplan bei 8+ Paketen (Vorschlag: höchstens 4 Spuren je Abschnitt, ältere gebündelt)? Startet „Weiterfliegen“ direkt oder erst mit dem Warum-Blatt? Wie groß ist die Tagesdosis und wie verändert sie der Lernplan bis zur Arbeit? Fachwechsel per Umschalter oder Reiter? Punkte bei zu schnellem Tippen wirklich streichen oder nur Hinweis? Quellenangabe je Paket ins Paket-Blatt. Duell als Station gegen Krabbi oder gegen echte Person?
+
+**Im Dummy noch nicht gezeigt:** Countdown und Lernplan, andere Übungsarten (Zeichnen, Messen, Schätzen, Duell), Lernkarten-Suche, Fotos der Arbeitsblätter, Schreibtest, Selbsteinschätzung, Inhalt des Eltern-Bereichs.
+
+## Entwurf F (Fable): Regal und Treppe – Pakete oben wählen, Lernformen darunter
+
+Auf der Arbeitsfläche (Reihe „F · Pakete wählen, Module darunter (Fable)“ ganz unten): `F-Englisch` (Küste, 24 Pakete) und `F-Mathe` (Weltraum, 8 Pakete), dieselbe App mit anderem Fach. Anlass: Die Spuren aus Entwurf E tragen nicht bei 20 und mehr Paketen. F zeigt die freie Wahl („Was?“ oben, „Wie?“ darunter) mit einer Lenkung, die ein Kind ohne Erklärung versteht. Optik bewusst anders als E: helle Fläche, farbiges Kopfband mit Wellenkante, runde Schrift (Fredoka, Figtree), Pakete als runde Marken, keine Reiterleiste unten. Quellen in `produkt/quellen/redesign-f/`.
+
+**Ein Bildschirm, drei Zonen**
+
+1. **Regal („1 · Was möchtest du lernen?“).** Pakete sind runde Marken, nach Gruppen sortiert (Unit 1, Unit 2, Unregelmäßige Verben …). Jede Gruppe ist eine Zeile zum Auf- und Zuklappen; zugeklappt zeigt sie eine Punktreihe mit dem Lernstand und die Zählung („3 noch üben · 3 neu“). Offen sind zuerst nur Gruppen, in denen gerade etwas läuft. So passen 24 Pakete auf eine halbe Seite, und 8 sehen genauso aus.
+   - Lernstand an der Marke: leer und gestrichelt = neu, halb gefüllt = noch üben, voll = sicher, dazu immer das Wort.
+   - Schnellwahl: „Krabbis Vorschlag“ (Neues plus Bekanntes), „Was dran ist“, „Noch üben“, „Nächstes neues Paket“, „Leeren“. Suchfeld. Höchstens 6 Pakete pro Runde.
+2. **Treppe („2 · Wie möchtest du üben?“).** Vier Stufen: **Kennenlernen → Mit Auswahl → Selbst machen → Ohne Hilfen**. Auf jeder Stufe liegen Lernformen als Kacheln (Englisch: Lernkarten, Hör-Kapitän | Quiz, Buchstabenrätsel | Schreiben, Lückensätze | Zeitrunde, Duell). Die gewählten Pakete stehen als kleine Marken auf der Stufe, die sie erreicht haben.
+3. **Startleiste.** Gewählte Lernform, Mischung als Balken mit Paketnummern, Punkte je Paket (volle Punkte, +20 %, wenige), welche Pakete noch nicht mitmachen. Ein Knopf: „Runde starten“.
+
+**Freischalten in einem Satz:** „Zwei gute Runden, und ein Paket steigt eine Stufe höher.“
+
+- Der Stand gilt **je Paket**. Gute Runde = mindestens 7 von 10 richtig und in Ruhe beantwortet. Punkte schalten nichts frei.
+- Eine Lernform nimmt Aufgaben nur aus den gewählten Paketen, die ihre Stufe erreicht haben („mit allen 3 Paketen“, „mit 1 von 3 Paketen“).
+- Passt keins: Kachel gestrichelt mit Schloss und Bedingung („Paket 9: noch 2 gute Runden auf Stufe 1“, „erst Stufe 3 schaffen“, „passt nicht zu Paket 3“).
+- Der Kurztest mit Note geht immer (z. B. vor einer Arbeit).
+- Klappt eine Runde nicht, bleibt das Paket auf seiner Stufe; Krabbi rät zu einer anderen Lernform derselben Stufe.
+
+So stehen Spiele und Zeitrunden sichtbar oben (Vorfreude), sind für ein Paket aber erst erreichbar, wenn Erkennen und Selbermachen klappen. Abwechslung bleibt, weil jede Stufe mehrere Lernformen hat und „Krabbis Tipp“ nach jeder Runde wechselt.
+
+**Standort bestimmen (gelenkter Weg):** Im Kopfband „Standort bestimmen“: etwa 12 kurze Fragen quer durch alle begonnenen Pakete, ohne Note und Punkte. Danach „Hier stehst du“ und „Krabbis Fokus für dich“ (2–3 Pakete mit Grund). „Fokus übernehmen“ setzt die Auswahl. „Selbst wählen“ bleibt möglich.
+
+**Ohne Erklärung verständlich:** Krabbis Vorschlag ist beim Öffnen gewählt, eine Lernform als „Krabbis Tipp“ markiert; wer nur „Runde starten“ drückt, lernt sinnvoll. Die Treppe ist das Bild der Regel. Jedes Schloss nennt seine Bedingung als Zahl. Das Ergebnis sagt je Paket, was die Runde gebracht hat; bei Aufstieg „Neue Stufe frei“. „So geht die Treppe“ erklärt alles in vier Sätzen.
+
+**Aus E übernommen:** Mischung als Balken, Herkunft jeder Aufgabe, „antippen, dann prüfen“, Tempo-Bremse, Tagesdosis, Sternbild der Woche, Themenhaut.
+
+**Navigation:** keine Reiterleiste; die Lernseite ist die Startseite, „Gemeinsam“ und „Ich“ (Eltern-Bereich hinter Code) als Knöpfe im Kopfband.
+
+**Annahmen von Fable:** Stufennamen und Zuordnung, Schwellen (2 gute Runden, 7 von 10, max. 6 Pakete), Beispiel-Pakete Englisch erfunden, Fokus nach Standort fest hinterlegt.
+
+**Offene Fragen von Fable:** Stand je Paket oder je Gruppe? Weniger Punkte für Lernformen unterhalb der erreichten Stufe? Soll ein sicheres Paket wieder sinken? Neue Pakete frei wählbar oder nur das nächste je Gruppe? Wie oft Standort bestimmen, ändert er den Lernstand? E und F kombinieren (E als geführter Weg, F als „Frei üben“)? Trägt die Navigation ohne Reiterleiste mit Fachwechsel und Lernplan?
+
+**Noch nicht gezeigt:** Fachwechsel, Countdown und Lernplan, andere Aufgabenarten als Auswahl, Themen-Vorbeiflieger, Stilblatt.
+
+## Themen: Grunddesign + Themenhaut (Themen-Baukasten auf der Arbeitsfläche)
+
+Jede Welt folgt einem Thema, und das soll man auch sehen, ohne dass Bedienung und Aufbau sich ändern. Deshalb gibt es **ein Grunddesign** (Aufbau, Schrift, Knöpfe mit Umriss, Krabbi, Tab-Leiste) und darüber **eine Themenhaut** aus festen Bausteinen:
+
+| Baustein | Weltraum (Mathe) | Zauberschule (NWT) | Küste (Englisch) | Detektiv-Büro (Deutsch) | Eigenes, z. B. Dinos (KI) |
+|---|---|---|---|---|---|
+| Hintergrund | heller Sternenhimmel | Türkis mit Blasen | Sand mit Wellenlinien | Papier mit Linien | Hügel und Farn |
+| Farben | Blau + Sternengelb | Türkis + Zauberlila | Koralle + Himmelblau | Braun + Gelb | Grün + Gelb |
+| Form der Pakete | Sterne | Tropfen | Rettungsringe | Lupen | Dino-Eier |
+| Krabbi trägt | Antennen mit Sternen | Zaubermütze | Kapitänsmütze | Detektivhut | Dino-Kapuze |
+| Fliegt ab und zu vorbei | Sternschnuppe | Seifenblasen | Möwe | Fußspuren | Flugsaurier |
+| Ränge (mit Symbol) | Sternenstaub … Galaxis-Legende | Funke … Elementar-Meisterschaft | Schiffsjunge … Admiral | Praktikant … Meisterdetektiv | Dino-Ei … Dino-Legende |
+| Wörter | Mission, Landung | Zauber, Kessel | an Bord, Hafen | Akte, Fall | Ei, Nest, Expedition |
+
+Effekte bleiben im Hintergrund (langsam, blass, abschaltbar, bei „weniger Bewegung“ aus). Weil ein Thema nur diese Liste ist, kann später die KI ein **eigenes Thema** eines Kindes füllen, ohne die App zu ändern.
+
+**Punkte und Ränge** gehören sichtbar dazu: oben im Fach Rang-Symbol, Rangname, Punkte und Balken „noch 220 bis Planet“; an jedem Modul eine Münze „volle Punkte“ (neu oder noch üben), „+20 % Bonus“ (lange nicht geübt) oder „wenige Punkte“ (sicher, noch nicht wieder fällig), mit kurzem Grund.
+
+## Funktions-Check (auf der Arbeitsfläche)
+
+Alle heutigen Funktionen haben einen Platz im neuen Aufbau. In den Klick-Dummies **noch nicht gezeigt**: Lernkarten-Suche, Schwierigkeitsstufen im Modul, Fotos der Arbeitsblätter, Schreibtest und Probearbeit drucken, Selbsteinschätzung und Checkliste, Lernverlauf und Fehlerarten, Person wechseln, Neuigkeiten und Offline-Hinweis. **Nur angedeutet**: Wissen/Lernzettel, Experimente und Szenen, Wiederholung nach Tagen, „Heute lohnt sich“, Arena mit Geister-Duell, Power-ups und Glücksrad, Elternübersicht, Geräte verbinden.
+
+## Nächste Schritte
+
+1. Fach-Startseite entscheiden (Konzepte 2–5 und Entwurf D vergleichen, Robin anklicken lassen), dann Stil festlegen (Favorit B, ggf. mit der Weg-Logik aus D).
+2. Daraus ein kleines Designsystem: Farben, Schrift, Abstände, Bausteine (Knöpfe, Karten, Antworten, Reiter, Statuschips, Fortschritt), Symbolsatz, Krabbi-Posen.
+3. Weitere Bildschirme entwerfen: Lernplan, Elternbereich, Wissen lesen, Geodreieck/Experimente im neuen Rahmen, Duell, Anmeldung und erster Start, Handy-Querformat und Telefonformat.
+4. Umbau der App Schritt für Schritt: erst gemeinsamer Rahmen (Reiter, Heute, Fächer, Paket), dann die Übungen je Fach.
+5. Danach Produktseite und Videos mit den neuen Bildschirmen neu aufnehmen.
+
+## Quellen der Recherche
+
+- Nielsen Norman Group: Physical Development and UX for children (https://www.nngroup.com/articles/children-ux-physical-development/), Kids' cognition (https://www.nngroup.com/articles/kids-cognition/)
+- Duolingo, neuer Lernweg auf der Startseite: UX-Analysen (https://uxplanet.org/analyzing-duolingo-from-product-design-perspective-after-400-days-of-non-stop-practice-c4d4809bdb37, https://medium.com/usabilitygeek/ux-case-study-duolingo-ade986ec7450)
+- Khan Academy Kids, Lernweg mit Figuren: https://screenwiseapp.com/guides/khan-academy-kids-learning-game
+- Gestaltung für 9–12-Jährige (Praxisartikel): https://gapsystudio.com/blog/ux-design-for-kids, https://uxdesign.cc/children-first-802bd12fe28c
+- Dribbble ließ sich aus der Sitzung nicht automatisch ansehen (die Seite blockiert automatische Browser). Beispielbilder von dort am besten selbst sammeln und als Bilder in den Chat legen.

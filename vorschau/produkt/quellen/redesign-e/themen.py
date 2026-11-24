@@ -1,0 +1,137 @@
+import sys, json
+sys.path.insert(0, sys.argv[1]); out = sys.argv[2]
+from common import *
+
+CSS = r"""
+body{margin:0}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;text-align:left}
+button:focus-visible{outline:3px solid #FF8A00;outline-offset:2px}
+.h{font-family:'Bricolage Grotesque','Trebuchet MS',sans-serif;font-weight:800;letter-spacing:-.01em;margin:0}
+.cap13{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.fach{flex:1;min-height:60px;padding:6px 10px;border-radius:16px;display:flex;flex-direction:column;justify-content:center;line-height:1.2;border:2px solid transparent}
+.fach b{font-size:16px}.fach span{font-size:13px}
+.row{display:flex;align-items:center;gap:14px;height:54px;padding:0 24px}
+.weave{position:relative;flex:none;width:168px;height:54px;display:block}
+.ln{position:absolute;width:4px;border-radius:2px;display:block}
+.cap{position:absolute;top:7px;height:40px;border-radius:20px;display:block}
+.nd{position:absolute;top:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.kv{display:flex;flex-direction:column;gap:1px;font-size:15px;line-height:1.3}
+.kv b{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:#5A5C78}
+@keyframes fly{0%{transform:translateX(-90px)}100%{transform:translateX(860px)}}
+.fly{position:absolute;left:0;top:96px;opacity:.55;animation:fly 24s linear infinite;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.fly{animation:none;transform:translateX(600px)}}
+"""
+
+def kif(flag, costume, label):
+    return '<sc-if value="{{%s}}" hint-placeholder-val="{{ %s }}">%s</sc-if>' % (flag, 'true' if flag == 'isW' else 'false', krabbi(112, costume, label=label))
+def fif(flag, svg):
+    return '<sc-if value="{{%s}}" hint-placeholder-val="{{ false }}"><div class="fly" aria-hidden="true">%s</div></sc-if>' % (flag, svg)
+
+FLY = (fif('isW', '<svg width="70" height="14" viewBox="0 0 70 14"><path d="M2 7h50" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path><circle cx="60" cy="7" r="5" fill="#FFC83D"></circle></svg>')
+ + fif('isZ', '<svg width="60" height="30" viewBox="0 0 60 30"><path d="M10 4l2 6 6 2-6 2-2 6-2-6-6-2 6-2ZM36 12l1.500 4.500 4.500 1.500-4.500 1.500-1.500 4.500-1.500-4.500-4.500-1.500 4.500-1.500ZM52 2l1 3 3 1-3 1-1 3-1-3-3-1 3-1Z" fill="#FFD75E"></path></svg>'.replace('.500', '.5'))
+ + fif('isK', '<svg width="56" height="24" viewBox="0 0 56 24"><path d="M3 16q10-14 20 0q10-14 20 0" stroke="#10314A" stroke-width="3" stroke-linecap="round" fill="none"></path></svg>')
+ + fif('isD', '<svg width="48" height="36" viewBox="0 0 48 36"><path d="M3 16L44 3 30 33 23 21Z" fill="#FFFFFF" stroke="#2B2118" stroke-width="2" stroke-linejoin="round"></path><path d="M23 21L44 3" stroke="#2B2118" stroke-width="2"></path></svg>')
+ + fif('isT', '<svg width="40" height="48" viewBox="0 0 40 48"><path d="M6 22a14 14 0 0 1 28 0Z" fill="#9FD0FF"></path><path d="M11 24v14M17 24v20M23 24v20M29 24v14" stroke="#9FD0FF" stroke-width="2.500" stroke-linecap="round"></path></svg>'.replace('.500', '.5')))
+
+BODY = '''<div style="width:768px;height:1024px;position:relative;overflow:hidden;font-family:''' + BODYFONT + ''';font-size:17px;line-height:1.4;display:flex;flex-direction:column;background-color:{{T.stage}};background-image:{{T.bgImg}};background-size:{{T.bgSize}};color:{{T.text}}">
+''' + FLY + '''
+<div role="group" aria-label="Fach wechseln" style="position:relative;display:flex;gap:8px;padding:16px 20px 0;flex:none">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
+<button type="button" class="fach" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="background:{{c.bg}};color:{{c.ink}};border-color:{{c.bd}}"><b>{{c.fach}}</b><span>{{c.thema}}</span></button>
+</sc-for>
+</div>
+<div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 24px 0;flex:none">
+<div><span class="cap13" style="color:{{T.mute}}">{{T.fach}} · {{T.thema}}</span><h1 class="h" style="font-size:28px;line-height:1.1">{{T.welt}}</h1></div>
+<div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:24px;background:{{T.panel}};color:{{T.panelInk}}"><span style="width:14px;height:14px;border-radius:50%;background:{{T.accent}};flex:none"></span><span style="line-height:1.15"><b style="font-size:16px">Rang: {{T.rang}}</b><br><span style="font-size:14px">Ränge von {{T.range}}</span></span></div>
+</div>
+<div style="position:relative;display:flex;align-items:flex-end;gap:6px;padding:10px 24px 0 14px;flex:none">
+<div style="flex:none;margin-bottom:-4px">''' + kif('isW', 'helm', 'Krabbi mit Raumhelm') + kif('isZ', 'hut', 'Krabbi mit Zauberhut') + kif('isK', 'suedwester', 'Krabbi mit Südwester') + kif('isD', 'detektiv', 'Krabbi mit Mütze und Lupe') + kif('isT', 'taucher', 'Krabbi mit Taucherbrille') + '''</div>
+<div style="position:relative;flex:1;background:#FBF8F1;color:#15173A;border-radius:24px;padding:14px 20px 16px;display:flex;flex-direction:column;gap:10px">
+<div style="position:absolute;left:-8px;bottom:40px;width:18px;height:18px;background:#FBF8F1;transform:rotate(45deg);border-radius:3px"></div>
+<span class="cap13" style="color:#5A5C78">Heute · 3 {{T.stationPl}} · etwa 12 Minuten</span>
+<p style="margin:0;font-size:18px">{{T.says}}</p>
+<button type="button" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:18px;font-weight:700;font-size:19px;background:{{T.accent}};color:{{T.accentInk}}">{{T.cta}} ''' + icon('pfeil', 22) + '''</button>
+</div>
+</div>
+<div style="position:relative;display:flex;align-items:center;gap:14px;padding:14px 24px 4px;flex:none">
+<div style="display:flex;width:168px;flex:none">
+<sc-for list="{{heads}}" as="p" hint-placeholder-count="3">
+<span style="width:56px;height:44px;display:flex;align-items:center;justify-content:center"><span style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;background:{{p.col}};color:{{T.nodeInk}};clip-path:{{T.shape}};opacity:{{p.op}}">{{p.n}}</span></span>
+</sc-for>
+</div>
+<div style="flex:1"><h2 class="h" style="font-size:20px">{{T.plan}}</h2><p style="margin:0;font-size:14px;color:{{T.mute}}">Pakete als {{T.form}}. Wo Spuren zusammenlaufen, wird gemischt.</p></div>
+</div>
+<div style="position:relative;flex:none">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+<div class="row" style="background:{{r.rowBg}}">
+<span class="weave">
+<sc-for list="{{r.lines}}" as="l" hint-placeholder-count="2"><span class="ln" style="left:{{l.x}}px;top:{{l.top}}px;height:{{l.h}}px;background:{{l.bg}};opacity:{{l.op}}"></span></sc-for>
+<span class="cap" style="left:{{r.capX}}px;width:{{r.capW}}px;background:{{r.capBg}};border:{{r.capBd}}"></span>
+<sc-for list="{{r.nodes}}" as="n" hint-placeholder-count="2"><span class="nd" style="left:{{n.x}}px;background:{{n.bg}};color:{{T.nodeInk}};clip-path:{{T.shape}};opacity:{{n.op}}">{{n.n}}</span></sc-for>
+</span>
+<span style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-weight:700;font-size:17px">{{r.title}}</span><span style="font-size:14px;color:{{T.mute}}">{{r.sub}}</span></span>
+<sc-if value="{{r.hasBadge}}" hint-placeholder-val="{{ false }}"><span style="padding:3px 10px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:.04em;background:{{T.accent}};color:{{T.accentInk}}">{{r.badge}}</span></sc-if>
+</div>
+</sc-for>
+</div>
+<div style="flex:1"></div>
+<div style="position:relative;margin:0 20px 20px;background:#FBF8F1;color:#15173A;border-radius:24px;padding:16px 20px;flex:none">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h2 class="h" style="font-size:20px">Themen-Steckbrief: {{T.thema}}</h2><span style="font-size:14px;color:#5A5C78">{{T.herkunft}}</span></div>
+<div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px 16px;margin-top:10px">
+<div class="kv"><b>Bühne</b><span>{{T.buehne}}</span></div>
+<div class="kv"><b>Paketform</b><span>{{T.form}}</span></div>
+<div class="kv"><b>Krabbi trägt</b><span>{{T.kost}}</span></div>
+<div class="kv"><b>Fliegt vorbei</b><span>{{T.flieger}}</span></div>
+<div class="kv"><b>Farben</b><span style="display:flex;gap:4px;margin-top:3px"><sc-for list="{{swatches}}" as="w" hint-placeholder-count="6"><span style="width:20px;height:20px;border-radius:6px;background:{{w.c}};border:1px solid #15173A"></span></sc-for></span></div>
+<div class="kv"><b>Ränge</b><span>{{T.range}}</span></div>
+<div class="kv" style="grid-column:span 2"><b>Wörter</b><span>{{T.plan}} · {{T.station}} · „{{T.cta}}“</span></div>
+</div>
+<p style="margin:10px 0 0;font-size:15px;color:#3D3F63">Mehr legt ein Thema nicht fest. Aufbau, Schrift, Knöpfe und Bedienung bleiben in jedem Fach gleich. Deshalb kann später auch dein eigenes Thema entstehen: Du beschreibst es, die KI füllt diesen Steckbrief.</p>
+</div>
+</div>'''
+
+TH = {
+ 'w': dict(fach='Mathe', thema='Weltraum', welt='Winkel-Akademie', stage='#171A45', text='#FFFFFF', mute='#C3C8F2', panel='#262B6B', panelInk='#FFFFFF', accent='#FFC83D', accentInk='#15173A', lanes=['#FFC83D','#5FE3C0','#FF93B8'], nodeInk='#15173A', shape='circle(50%)', capCur='#FFFFFF', capDone='rgba(255,255,255,.16)', curBg='rgba(255,200,61,.17)', bgImg='radial-gradient(rgba(255,255,255,.45) 1px, transparent 1.6px)', bgSize='92px 68px', plan='Flugkarte', station='Station', stationPl='Stationen', cta='Weiterfliegen', rang='Meteor', range='Sternenstaub bis Galaxis-Legende', form='Planeten', kost='Raumhelm', flieger='Sternschnuppe', buehne='Nachthimmel mit Sternen', says='Überstumpf kennst du jetzt allein. Heute mischen wir es mit Paket 1 und 2.', herkunft='fest eingebaut'),
+ 'z': dict(fach='NWT', thema='Zauberschule', welt='Wasser-Zauberschule', stage='#2A1650', text='#FFFFFF', mute='#D6C8F7', panel='#3F2675', panelInk='#FFFFFF', accent='#7FE7E0', accentInk='#15173A', lanes=['#7FE7E0','#FFD75E','#FF9EC4'], nodeInk='#15173A', shape='polygon(50% 0%, 68% 26%, 86% 52%, 90% 72%, 78% 91%, 50% 100%, 22% 91%, 10% 72%, 14% 52%, 32% 26%)', capCur='#FFFFFF', capDone='rgba(255,255,255,.16)', curBg='rgba(127,231,224,.16)', bgImg='radial-gradient(rgba(127,231,224,.22) 2px, transparent 3px)', bgSize='64px 64px', plan='Zauberkarte', station='Zauber', stationPl='Zauber', cta='Weiterzaubern', rang='Funke', range='Funke bis Elementar-Meisterschaft', form='Tropfen', kost='Zauberhut', flieger='Glitzerfunken', buehne='Abendlila mit Funken', says='Verwandlungen kennst du jetzt allein. Heute mischen wir sie mit den Zuständen.', herkunft='fest eingebaut'),
+ 'k': dict(fach='Englisch', thema='Küste', welt='Küsten-Crew', stage='#D6EEF7', text='#10314A', mute='#35556E', panel='#FFFFFF', panelInk='#10314A', accent='#FF7A5C', accentInk='#10314A', lanes=['#C03A1B','#0E5FA8','#0B7A68'], nodeInk='#FFFFFF', shape='polygon(0% 10%, 100% 10%, 80% 50%, 100% 90%, 0% 90%)', capCur='#10314A', capDone='rgba(16,49,74,.12)', curBg='rgba(255,122,92,.2)', bgImg='repeating-linear-gradient(0deg, transparent 0 46px, rgba(14,95,168,.12) 46px 48px)', bgSize='auto', plan='Seekarte', station='Hafen', stationPl='Häfen', cta='Leinen los', rang='Schiffsjunge', range='Schiffsjunge bis Admiral', form='Signalflaggen', kost='Südwester', flieger='Möwe', buehne='Heller Himmel über dem Meer', says='Die neuen Vokabeln kennst du jetzt allein. Heute mischen wir sie mit Paket 1.', herkunft='fest eingebaut'),
+ 'd': dict(fach='Deutsch', thema='Detektiv-Büro', welt='Detektiv-Büro', stage='#EADFC6', text='#2B2118', mute='#5C4A36', panel='#FFFFFF', panelInk='#2B2118', accent='#F2C230', accentInk='#2B2118', lanes=['#8C2F1B','#1F4E79','#3E6B2A'], nodeInk='#FFFFFF', shape='polygon(0% 24%, 36% 24%, 46% 6%, 100% 6%, 100% 94%, 0% 94%)', capCur='#2B2118', capDone='rgba(43,33,24,.12)', curBg='rgba(242,194,48,.3)', bgImg='repeating-linear-gradient(0deg, transparent 0 31px, rgba(43,33,24,.1) 31px 32px)', bgSize='auto', plan='Spurenkarte', station='Spur', stationPl='Spuren', cta='Fall fortsetzen', rang='Praktikant', range='Praktikant bis Meisterdetektiv', form='Aktenreiter', kost='Mütze und Lupe', flieger='Papierflieger', buehne='Aktenpapier mit Linien', says='Das Satzgefüge kennst du jetzt allein. Heute mischen wir es mit der Satzreihe.', herkunft='fest eingebaut'),
+ 't': dict(fach='Eigenes', thema='Tiefsee', welt='Tiefsee-Station', stage='#06283D', text='#FFFFFF', mute='#B5D6E6', panel='#0E3F5C', panelInk='#FFFFFF', accent='#7CF0C8', accentInk='#06283D', lanes=['#7CF0C8','#FFB86B','#FF9EC4'], nodeInk='#06283D', shape='polygon(50% 0%, 63% 30%, 98% 35%, 72% 58%, 79% 92%, 50% 75%, 21% 92%, 28% 58%, 2% 35%, 37% 30%)', capCur='#FFFFFF', capDone='rgba(255,255,255,.16)', curBg='rgba(124,240,200,.14)', bgImg='radial-gradient(rgba(255,255,255,.14) 3px, transparent 4px)', bgSize='120px 96px', plan='Tauchkarte', station='Tauchgang', stationPl='Tauchgänge', cta='Abtauchen', rang='Plankton', range='Plankton bis Tiefsee-Legende', form='Seesterne', kost='Taucherbrille und Schnorchel', flieger='Qualle', buehne='Dunkles Meer mit Luftblasen', says='Paket 2 kennst du jetzt allein. Heute mischen wir es mit Paket 1.', herkunft='von einem Kind beschrieben, von der KI gefüllt (Beispiel)'),
+}
+
+JS = r"""
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { th: null }; }
+  renderVals() {
+    const TH = __TH__;
+    const key = this.state.th || this.props.thema || 'w', T = TH[key];
+    const cx = (i) => 28 + i * 56;
+    const ROWS = [
+      { t: 'Wissen lesen · Paket 2', pk: [1], s: 'done' },
+      { t: 'Erkennen · gemischt', pk: [0, 1], s: 'cur' },
+      { t: 'Paket 1 auffrischen', pk: [0], s: 'lock', badge: '+20 %' },
+      { t: 'Wissen lesen · Paket 3', pk: [2], s: 'lock', start: 2 },
+      { t: 'Duell · gemischt', pk: [0, 1, 2], s: 'lock', badge: 'NEU' }
+    ];
+    const rows = ROWS.map((r, i) => {
+      const lines = [];
+      for (let l = 0; l < 3; l++) { if (l === 2 && i < 3) continue; const st = r.start === l;
+        lines.push({ x: cx(l) - 2, top: st ? 27 : 0, h: st ? 27 : 54, bg: T.lanes[l], op: r.s === 'lock' ? 0.35 : 1 }); }
+      const lo = r.pk[0], hi = r.pk[r.pk.length - 1], away = i - 1;
+      return { title: r.t, sub: r.s === 'done' ? 'geschafft' : r.s === 'cur' ? 'jetzt dran · volle Punkte' : away === 1 ? 'als Nächstes' : 'geht auf nach ' + away + ' ' + T.stationPl,
+        lines, nodes: r.pk.map((p) => ({ n: p + 1, x: cx(p) - 17, bg: T.lanes[p], op: r.s === 'lock' ? 0.55 : 1 })),
+        capX: cx(lo) - 23, capW: (hi - lo) * 56 + 46, capBg: r.s === 'cur' ? T.capCur : r.s === 'done' ? T.capDone : 'transparent', capBd: r.s === 'lock' ? '2px dashed ' + T.mute : '2px solid transparent',
+        rowBg: r.s === 'cur' ? T.curBg : 'transparent', hasBadge: !!r.badge, badge: r.badge || '' };
+    });
+    return { T, rows, isW: key === 'w', isZ: key === 'z', isK: key === 'k', isD: key === 'd', isT: key === 't',
+      heads: T.lanes.map((c, i) => ({ n: i + 1, col: c, op: i < 2 ? 1 : 0.55 })),
+      swatches: [T.stage, T.accent].concat(T.lanes).map((c) => ({ c })),
+      chips: ['w', 'z', 'k', 'd', 't'].map((k) => ({ fach: TH[k].fach, thema: TH[k].thema, on: k === key,
+        bg: k === key ? T.accent : T.panel, ink: k === key ? T.accentInk : T.panelInk, bd: k === key ? T.accentInk : 'transparent',
+        pick: () => this.setState({ th: k }) })) };
+  }
+}
+""".replace('__TH__', json.dumps(TH, ensure_ascii=False))
+
+PROPS = '{"thema":{"editor":"enum","options":["w","z","k","d","t"],"default":"w"},"$preview":{"width":768,"height":1024}}'
+open(out, 'w').write(page('E · Themenhaut · Fach wechseln', CSS, BODY, JS, PROPS))
