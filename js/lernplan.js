@@ -14,6 +14,8 @@ function lzSet(u,o){try{localStorage.setItem(LZK+u,JSON.stringify(o));}catch(e){
 function lzDay(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
 function lzSync(){try{const r=localStorage.getItem(PK);if(r){const o=JSON.parse(r);S.n=o.n||0;S.done=o.done||[];}}catch(e){}
   const p=lzGet(LZU);S.ok=[];for(let i=1;i<=Math.min(p.count,S.n);i++)S.ok.push(i);S.today=Math.max(1,Math.min(p.count+1,S.n||1));}
+/* Neuer Stoff (C.ver geändert, z. B. neue Unit): alter Plan und Lernplan-Fortschritt gelten nicht mehr, Plan wird neu eingestellt */
+if(C.ver&&S.ver!==C.ver){const had=S.n>0;S={n:0,done:[],today:1,ok:[],ver:C.ver};save();if(had){lzSet(LZU,{count:0,doneDate:"",log:{}});try{if(parent&&parent!==window&&parent.lzPlanReset)parent.lzPlanReset(C.prefix);}catch(e){}}}
 lzSync();
 
 

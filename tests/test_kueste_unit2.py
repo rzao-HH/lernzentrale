@@ -34,5 +34,24 @@ async def main():
     await p.goto('http://app.test/lernzettel/englisch-unit5-6.html'); await p.wait_for_timeout(800)
     g=await p.inner_text('.gtitle'); print('Lernzettel:',g); assert 'Unit 2' in g
     await p.click('.card'); await p.wait_for_timeout(500); assert 'S. 247' in await p.inner_text('#vTitle')
+    # Lernplan: nur Unit 2; ein alter Unit-5/6-Plan wird beim ersten Öffnen zurückgesetzt
+    c2=await br.new_context(viewport={'width':1024,'height':1366}); await c2.route('**/*',handle)
+    await c2.add_init_script(acct('Robin')+"""if(!localStorage.getItem('s2')){localStorage.setItem('s2','1');localStorage.setItem('lernplan-englisch@u1',JSON.stringify({n:5,done:['v1'],today:3,ok:[1,2]}));localStorage.setItem('lzp-E@u1',JSON.stringify({count:2,doneDate:'',log:{1:{end:1},2:{end:2}}}));}""")
+    p=await c2.new_page(); errs=[]; p.on('pageerror',lambda e:errs.append(str(e)))
+    await p.goto('http://app.test/#E'); await p.wait_for_timeout(2500)
+    f=[fr for fr in p.frames if fr!=p.main_frame][0]
+    lp=await f.evaluate("JSON.parse(localStorage.getItem('lernplan-englisch@u1'))"); lz=await f.evaluate("JSON.parse(localStorage.getItem('lzp-E@u1'))")
+    print('Plan nach Umstellung',lp,lz['count']); assert lp['n']==0 and lp['ver']=='u2' and lz['count']==0
+    await f.evaluate("document.getElementById('lpBtn').click()"); await p.wait_for_timeout(500)
+    body=await f.inner_text('#lpBody'); print('Einstellen:',body[:300].replace('\n',' | '))
+    assert 'Unit 2: Vokabeln 1–16' in body and 'Unit 2: Vokabeln 17–32' in body and 'Vokabeln 1–15' not in body and 'Grammatik' not in body
+    await f.click('#lpP'); await f.click('#lpGo'); await p.wait_for_timeout(500)
+    plan=await f.inner_text('#lpBody'); print('Plan:',plan[:400].replace('\n',' | ')); assert 'Unit 2' in plan
+    await p.screenshot(path=OUTDIR+'e-unit2-lernplan.png')
+    lp=await f.evaluate("JSON.parse(localStorage.getItem('lernplan-englisch@u1'))"); print(lp); assert lp['n']==6 and lp['ver']=='u2'
+    # erneutes Laden setzt den neuen Plan nicht wieder zurück
+    await p.reload(); await p.wait_for_timeout(2500); f=[fr for fr in p.frames if fr!=p.main_frame][0]
+    assert (await f.evaluate("JSON.parse(localStorage.getItem('lernplan-englisch@u1')).n"))==6
+    print('errors',errs); assert not errs,errs
     await br.close()
 asyncio.run(main())

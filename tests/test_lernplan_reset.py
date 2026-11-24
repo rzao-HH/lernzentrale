@@ -4,7 +4,7 @@ from harness import *
 OLD=int(time.time()*1000)-86400000
 SEED=acct('Robin')+"""if(!localStorage.getItem('seeded')){localStorage.setItem('seeded','1');
 const P={n:5,done:['p1'],today:3,ok:[1,2]};
-['winkel','wasser','englisch','deutsch'].forEach(x=>localStorage.setItem('lernplan-'+x+'@u1',JSON.stringify(P)));
+['winkel','wasser','englisch','deutsch'].forEach(x=>localStorage.setItem('lernplan-'+x+'@u1',JSON.stringify(x==='englisch'?Object.assign({ver:'u2'},P):P)));
 ['W','Z','E','D'].forEach(x=>localStorage.setItem('lzp-'+x+'@u1',JSON.stringify({count:2,doneDate:'',log:{1:{c:{learn:1},g:{},end:1},2:{c:{},g:{},end:2}}})));
 localStorage.setItem('winkelakademie-v1',JSON.stringify({xp:640,sel:['p1'],stats:{p1:{h:[1,1,1],done:true}},grades:{'p1':1},high:{'p1':90},cl:{'1':'1.10.'},vl:{'p1|art':{n:3}},ab:{x:{s:1,a:0,w:0}},self:{a:{v:1}},note:{a:{t:'?'}},konOk:4}));
 localStorage.setItem('wasserzauberschule-v1',JSON.stringify({xp:300,house:'h1',sel:['p1'],stats:{p1:{h:[1,1],done:true}},grades:{p1:2},wgrades:{p1:2},bk:{'p1:0':2},werk:{'a:1':1},mixm:{m1:1},high:{p1:50}}));
